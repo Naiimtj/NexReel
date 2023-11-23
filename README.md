@@ -1,4 +1,4 @@
-# <img src="https://github.com/IronHackNaiimTJ/NexReel/blob/main/web/public/img/logo.svg" width="50" height="50" alt="NexReel_Logo"> NexReel
+# <img src="https://github.com/Naiimtj/NexReel/blob/main/web/public/img/logo.svg" width="50" height="50" alt="NexReel_Logo"> NexReel
 
 ## Descripción
 
@@ -14,13 +14,13 @@ NexReel es una plataforma integral que ofrece a los usuarios la posibilidad de e
 
 ## Capturas de Pantalla
 
-![Screenshot 1](https://github.com/IronHackNaiimTJ/NexReel/blob/main/web/public/img/Screenshot_1.jpg)
-![Screenshot 2](https://github.com/IronHackNaiimTJ/NexReel/blob/main/web/public/img/Screenshot_2.jpg)
-![Screenshot 3](https://github.com/IronHackNaiimTJ/NexReel/blob/main/web/public/img/Screenshot_3.jpg)
+![Screenshot 1](https://github.com/Naiimtj/NexReel/blob/main/web/public/img/Screenshot_1.jpg)
+![Screenshot 2](https://github.com/Naiimtj/NexReel/blob/main/web/public/img/Screenshot_2.jpg)
+![Screenshot 3](https://github.com/Naiimtj/NexReel/blob/main/web/public/img/Screenshot_3.jpg)
 
 ## Instalación
 
-1. Clona el repositorio: `git clone https://github.com/IronHackNaiimTJ/NexReel.git`
+1. Clona el repositorio: `git clone https://github.com/Naiimtj/NexReel.git`
 2. Instala las dependencias: `npm install`
 3. Inicio de la api: `npm run dev`
 4. Inicia la aplicación: `npm run start`
@@ -45,9 +45,7 @@ Las contribuciones son bienvenidas. Si quieres contribuir a este proyecto:
 Emocionado es poco, estas son algunas de las próximas actualizaciones que mejorarán tu experiencia en NexReel:
 
 - **Aplicación Móvil en Desarrollo**: Desarrollo de una aplicación móvil para NexReel, disponible tanto para Android como para iOS, ¡para que puedas disfrutar de NexReel en cualquier lugar!
-  
 - **Notificaciones Personalizadas**: Mantente al tanto de nuevos episodios, estrenos y disponibilidad de videojuegos con nuestras notificaciones personalizadas.
-  
 - **Salas Privadas de Debate**: Crea y gestiona salas de debates privadas con múltiples administradores para discutir temas específicos en profundidad.
 
 - **¡Quedamos para Ver Algo!**: Únete a la Zona Quedamos para coordinar encuentros con otros miembros de NexReel y compartir experiencias en eventos, cine u otros temas de interés común.
@@ -57,11 +55,11 @@ Emocionado es poco, estas son algunas de las próximas actualizaciones que mejor
 ¡Estas nuevas características están en camino para ofrecerte una experiencia aún más enriquecedora en NexReel!
 
 ## Autor
+
   <a href="https://github.com/Naiimtj" target="_blank">
-    <img src="https://github.com/IronHackNaiimTJ/NexReel/blob/main/web/public/img/github.png" width="30" height="30">
+    <img src="https://github.com/Naiimtj/NexReel/blob/main/web/public/img/github.png" width="30" height="30">
   </a>
   <a href="https://github.com/Naiimtj" target="_blank" style="text-decoration: none; color: #9C92F8;">Naiim Taefy</a>
-
 
 ## Licencia
 
