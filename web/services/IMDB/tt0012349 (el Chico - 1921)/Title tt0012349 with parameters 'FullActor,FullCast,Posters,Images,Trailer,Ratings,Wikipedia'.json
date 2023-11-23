@@ -1,0 +1,1426 @@
+{
+  "id": "tt0012349",
+  "title": "The Kid",
+  "originalTitle": "",
+  "fullTitle": "The Kid (1921)",
+  "type": "Movie",
+  "year": "1921",
+  "image": "https://m.media-amazon.com/images/M/MV5BZjhhMThhNDItNTY2MC00MmU1LTliNDEtNDdhZjdlNTY5ZDQ1XkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_Ratio0.6762_AL_.jpg",
+  "releaseDate": "1921-02-06",
+  "runtimeMins": "68",
+  "runtimeStr": "1h 8min",
+  "plot": "The Tramp cares for an abandoned child, but events put their relationship in jeopardy.",
+  "plotLocal": "",
+  "plotLocalIsRtl": false,
+  "awards": "Top rated movie #129 | Awards, 2 wins",
+  "directors": "Charles Chaplin",
+  "directorList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    }
+  ],
+  "writers": "Charles Chaplin",
+  "writerList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    }
+  ],
+  "stars": "Charles Chaplin, Edna Purviance, Jackie Coogan",
+  "starList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    },
+    {
+      "id": "nm0701012",
+      "name": "Edna Purviance"
+    },
+    {
+      "id": "nm0001067",
+      "name": "Jackie Coogan"
+    }
+  ],
+  "actorList": [
+    {
+      "id": "nm0000122",
+      "image": "https://m.media-amazon.com/images/M/MV5BNDcwMDc0ODAzOF5BMl5BanBnXkFtZTgwNTY2OTI1MDE@._V1_Ratio0.7273_AL_.jpg",
+      "name": "Charles Chaplin",
+      "asCharacter": "A Tramp (as Charlie Chaplin)"
+    },
+    {
+      "id": "nm0001067",
+      "image": "https://m.media-amazon.com/images/M/MV5BMzg1MjkwYTAtMjk1NS00NjNkLWEzNTUtOGIwNWI0ZjQzY2NmXkEyXkFqcGdeQXVyMDc2NTEzMw@@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Jackie Coogan",
+      "asCharacter": "The Child (as Jack Coogan)"
+    },
+    {
+      "id": "nm0588033",
+      "image": "https://m.media-amazon.com/images/M/MV5BNzk0MmVhOWItZjEyYy00MjM1LWEzMGUtMjE4OTA5MzE5Y2NmXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+      "name": "Carl Miller",
+      "asCharacter": "The Man"
+    },
+    {
+      "id": "nm0701012",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTgzMTI2MTcwNV5BMl5BanBnXkFtZTcwMjY4NjYxOA@@._V1_Ratio0.7727_AL_.jpg",
+      "name": "Edna Purviance",
+      "asCharacter": "The Woman"
+    },
+    {
+      "id": "nm0042317",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzVjMDQxM2ItZjJmNy00ZmZjLWI5MTQtNmQ1Yzk1ZWI1MjhiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_Ratio1.3182_AL_.jpg",
+      "name": "Albert Austin",
+      "asCharacter": "Car Thief / Man in Shelter (uncredited)"
+    },
+    {
+      "id": "nm0047800",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Beulah Bains",
+      "asCharacter": "Bride (uncredited)"
+    },
+    {
+      "id": "nm0048798",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Nellie Bly Baker",
+      "asCharacter": "Slum Nurse (uncredited)"
+    },
+    {
+      "id": "nm0074788",
+      "image": "https://m.media-amazon.com/images/M/MV5BN2NjNGQxZWMtMjI3NC00ZjE0LTkzMzktMGE4NzNiNmJkODZiXkEyXkFqcGdeQXVyMDUyOTUyNQ@@._V1_Ratio1.1818_AL_.jpg",
+      "name": "Henry Bergman",
+      "asCharacter": "Professor Guido / Night Shelter Keeper (uncredited)"
+    },
+    {
+      "id": "nm0080930",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzA0YjcxNTUtYjdjZC00MmNjLWI0MGMtZjE5Nzc1YjEyMDgzXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7727_AL_.jpg",
+      "name": "Edward Biby",
+      "asCharacter": "Orphan Asylum Driver (uncredited)"
+    },
+    {
+      "id": "nm0088471",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzcxYWRjN2UtNTA1OC00ZDExLTk5ZmItNjI3YmUyNWQ2MmU3XkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+      "name": "B.F. Blinn",
+      "asCharacter": "His Assistant (uncredited)"
+    },
+    {
+      "id": "nm0102901",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Kitty Bradbury",
+      "asCharacter": "Bride's Mother (uncredited)"
+    },
+    {
+      "id": "nm0132955",
+      "image": "https://m.media-amazon.com/images/M/MV5BMWM1OWE0OTktY2EzZC00ZWI4LTljMWQtNTAyY2E4YjkzZmFmXkEyXkFqcGdeQXVyMDMxMjQwMw@@._V1_Ratio0.8182_AL_.jpg",
+      "name": "Frank Campeau",
+      "asCharacter": "Welfare Officer (uncredited)"
+    },
+    {
+      "id": "nm0156618",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Bliss Chevalier",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm1064968",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Frances Cochran",
+      "asCharacter": "Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm1067463",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Elsie Codd",
+      "asCharacter": "Extra in Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm0176846",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Jack Coogan Sr.",
+      "asCharacter": "Pickpocket / Guest / Devil (uncredited)"
+    },
+    {
+      "id": "nm1067466",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Estelle Cook",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm1067468",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Lillian Crane",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm1065021",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Philip D'Oench",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0226978",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Dan Dillon",
+      "asCharacter": "Bum (uncredited)"
+    },
+    {
+      "id": "nm0241867",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Robert Dunbar",
+      "asCharacter": "Bridegroom (uncredited)"
+    },
+    {
+      "id": "nm1065208",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Florette Faulkner",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0269738",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Gloria Faythe",
+      "asCharacter": "Little Girl (uncredited)"
+    },
+    {
+      "id": "nm0291537",
+      "image": "https://m.media-amazon.com/images/M/MV5BOGQ1NzIyNTQtMjkzMi00ODliLWFkYjgtMDhkYzIwYWJhNDcyXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+      "name": "Rupert Franklin",
+      "asCharacter": "Bride's father / Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm0330585",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Sadie Gordon",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm0340614",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTc4MzQyMjcwMV5BMl5BanBnXkFtZTYwNzU2NDQ2._V1_Ratio0.7727_AL_.jpg",
+      "name": "Lita Grey",
+      "asCharacter": "Flirtatious Angel (uncredited)"
+    },
+    {
+      "id": "nm1067097",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Frank Hale",
+      "asCharacter": "Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm1067511",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Martha Hall",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0359836",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Jules Hanft",
+      "asCharacter": "Physician (uncredited)"
+    },
+    {
+      "id": "nm1065435",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Louise Hathaway",
+      "asCharacter": "Extra in Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm0368860",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Silas Hathaway",
+      "asCharacter": "The Kid as a Baby (uncredited)"
+    },
+    {
+      "id": "nm0397289",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Flora Howard",
+      "asCharacter": "Bridesmaid (uncredited)"
+    },
+    {
+      "id": "nm1064246",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Ed Hunt",
+      "asCharacter": "Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm0421038",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Lulu Jenks",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm1067530",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Irene Jennings",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0443101",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Kathleen Kay",
+      "asCharacter": "Maid (uncredited)"
+    },
+    {
+      "id": "nm1067542",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Grace Keller",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0449521",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Sarah Kernan",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0498063",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Raymond Lee",
+      "asCharacter": "His Kid Brother (uncredited)"
+    },
+    {
+      "id": "nm0528490",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Walter Lynch",
+      "asCharacter": "Tough Cop (uncredited)"
+    },
+    {
+      "id": "nm1067187",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "V. Madison",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0564149",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Clyde McAtee",
+      "asCharacter": "Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm7625780",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Michael J. McCarthy",
+      "asCharacter": "Extra (angel) Heaven & (cook) Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm0571950",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "John McKinnon",
+      "asCharacter": "Chief of Police (uncredited)"
+    },
+    {
+      "id": "nm1067611",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Ethel O'Neil",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm0662448",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTU4NzU3NTQzMl5BMl5BanBnXkFtZTgwMjAzMzM0MjE@._V1_Ratio1.3182_AL_.jpg",
+      "name": "Lew Parker",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm1067268",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Charles I. Pierce",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0689485",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Laura Pollard",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm1067281",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Evans Quirk",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0707803",
+      "image": "https://m.media-amazon.com/images/M/MV5BMjM3NDQwOTI4MV5BMl5BanBnXkFtZTgwMjQwOTY3MTE@._V1_Ratio0.7727_AL_.jpg",
+      "name": "Esther Ralston",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm0715056",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Granville Redmond",
+      "asCharacter": "The Man's Friend (uncredited)"
+    },
+    {
+      "id": "nm0718469",
+      "image": "https://m.media-amazon.com/images/M/MV5BZDYyZDFiODktOTNkZS00YTExLWExM2EtMWQ4MGZkMWY4ZGNiXkEyXkFqcGdeQXVyMTcyODY2NDQ@._V1_Ratio1.2727_AL_.jpg",
+      "name": "Charles Reisner",
+      "asCharacter": "Bully (uncredited)"
+    },
+    {
+      "id": "nm1067303",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Henry Roser",
+      "asCharacter": "Extra in Heaven Scene (uncredited)"
+    },
+    {
+      "id": "nm1067308",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "J.B. Russell",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    },
+    {
+      "id": "nm0791022",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "George V. Sheldon",
+      "asCharacter": "Extra in Reception Scene (uncredited)"
+    },
+    {
+      "id": "nm0792702",
+      "image": "https://m.media-amazon.com/images/M/MV5BNGRjYzY2MDUtMjExMi00NzVjLWE1MjYtMGU1MjRkMzFhZmMxXkEyXkFqcGdeQXVyMTk2MzI2Ng@@._V1_Ratio1.3182_AL_.jpg",
+      "name": "Edgar Sherrod",
+      "asCharacter": "Priest (uncredited)"
+    },
+    {
+      "id": "nm0801820",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Elsie Sindora",
+      "asCharacter": "Bridesmaid (uncredited)"
+    },
+    {
+      "id": "nm0824196",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Minnie Stearns",
+      "asCharacter": "Fierce Woman (uncredited)"
+    },
+    {
+      "id": "nm0856916",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Arthur Thalasso",
+      "asCharacter": "Car Thief with gun (uncredited)"
+    },
+    {
+      "id": "nm0884775",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Edith Valk",
+      "asCharacter": "Lady with Baby Carriage (uncredited)"
+    },
+    {
+      "id": "nm1066804",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Mother Vinot",
+      "asCharacter": "Extra in Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm0925201",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "May White",
+      "asCharacter": "Edna's Maid (uncredited)"
+    },
+    {
+      "id": "nm0928277",
+      "image": "https://m.media-amazon.com/images/M/MV5BNjU1OWFkMjctN2JmYS00YmZiLTliNTUtYzMzOTU5NDg1YzY1XkEyXkFqcGdeQXVyMTI3MDk3MzQ@._V1_Ratio1.3182_AL_.jpg",
+      "name": "S.D. Wilcox",
+      "asCharacter": "Cop (uncredited)"
+    },
+    {
+      "id": "nm0933030",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Baby Wilson",
+      "asCharacter": "Baby in Carriage (uncredited)"
+    },
+    {
+      "id": "nm0934232",
+      "image": "https://m.media-amazon.com/images/M/MV5BMGJjMzVkZDgtYzk5Yi00YTMxLWE1NzktMjBkMzEzZmVjODVlXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7727_AL_.jpg",
+      "name": "Tom Wilson",
+      "asCharacter": "Policeman (uncredited)"
+    },
+    {
+      "id": "nm1066889",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Amanda Yanez",
+      "asCharacter": "Extra in Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm1066890",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Baby Yanez",
+      "asCharacter": "Extra in Alley Scene (uncredited)"
+    },
+    {
+      "id": "nm1036994",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Elsie Young",
+      "asCharacter": "Extra in Wedding Scene (uncredited)"
+    }
+  ],
+  "fullCast": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "directors": {
+      "job": "Director",
+      "items": [
+        {
+          "id": "nm0000122",
+          "name": "Charles Chaplin",
+          "description": "(as Charlie Chaplin)"
+        }
+      ]
+    },
+    "writers": {
+      "job": "Writer",
+      "items": [
+        {
+          "id": "nm0000122",
+          "name": "Charles Chaplin",
+          "description": "(written by) (as Charlie Chaplin)"
+        }
+      ]
+    },
+    "actors": [
+      {
+        "id": "nm0000122",
+        "image": "https://m.media-amazon.com/images/M/MV5BNDcwMDc0ODAzOF5BMl5BanBnXkFtZTgwNTY2OTI1MDE@._V1_Ratio0.7273_AL_.jpg",
+        "name": "Charles Chaplin",
+        "asCharacter": "A Tramp (as Charlie Chaplin)"
+      },
+      {
+        "id": "nm0001067",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzg1MjkwYTAtMjk1NS00NjNkLWEzNTUtOGIwNWI0ZjQzY2NmXkEyXkFqcGdeQXVyMDc2NTEzMw@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Jackie Coogan",
+        "asCharacter": "The Child (as Jack Coogan)"
+      },
+      {
+        "id": "nm0588033",
+        "image": "https://m.media-amazon.com/images/M/MV5BNzk0MmVhOWItZjEyYy00MjM1LWEzMGUtMjE4OTA5MzE5Y2NmXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+        "name": "Carl Miller",
+        "asCharacter": "The Man"
+      },
+      {
+        "id": "nm0701012",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTgzMTI2MTcwNV5BMl5BanBnXkFtZTcwMjY4NjYxOA@@._V1_Ratio0.7727_AL_.jpg",
+        "name": "Edna Purviance",
+        "asCharacter": "The Woman"
+      },
+      {
+        "id": "nm0042317",
+        "image": "https://m.media-amazon.com/images/M/MV5BYzVjMDQxM2ItZjJmNy00ZmZjLWI5MTQtNmQ1Yzk1ZWI1MjhiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_Ratio1.3182_AL_.jpg",
+        "name": "Albert Austin",
+        "asCharacter": "Car Thief / Man in Shelter (uncredited)"
+      },
+      {
+        "id": "nm0047800",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Beulah Bains",
+        "asCharacter": "Bride (uncredited)"
+      },
+      {
+        "id": "nm0048798",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Nellie Bly Baker",
+        "asCharacter": "Slum Nurse (uncredited)"
+      },
+      {
+        "id": "nm0074788",
+        "image": "https://m.media-amazon.com/images/M/MV5BN2NjNGQxZWMtMjI3NC00ZjE0LTkzMzktMGE4NzNiNmJkODZiXkEyXkFqcGdeQXVyMDUyOTUyNQ@@._V1_Ratio1.1818_AL_.jpg",
+        "name": "Henry Bergman",
+        "asCharacter": "Professor Guido / Night Shelter Keeper (uncredited)"
+      },
+      {
+        "id": "nm0080930",
+        "image": "https://m.media-amazon.com/images/M/MV5BYzA0YjcxNTUtYjdjZC00MmNjLWI0MGMtZjE5Nzc1YjEyMDgzXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7727_AL_.jpg",
+        "name": "Edward Biby",
+        "asCharacter": "Orphan Asylum Driver (uncredited)"
+      },
+      {
+        "id": "nm0088471",
+        "image": "https://m.media-amazon.com/images/M/MV5BYzcxYWRjN2UtNTA1OC00ZDExLTk5ZmItNjI3YmUyNWQ2MmU3XkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+        "name": "B.F. Blinn",
+        "asCharacter": "His Assistant (uncredited)"
+      },
+      {
+        "id": "nm0102901",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Kitty Bradbury",
+        "asCharacter": "Bride's Mother (uncredited)"
+      },
+      {
+        "id": "nm0132955",
+        "image": "https://m.media-amazon.com/images/M/MV5BMWM1OWE0OTktY2EzZC00ZWI4LTljMWQtNTAyY2E4YjkzZmFmXkEyXkFqcGdeQXVyMDMxMjQwMw@@._V1_Ratio0.8182_AL_.jpg",
+        "name": "Frank Campeau",
+        "asCharacter": "Welfare Officer (uncredited)"
+      },
+      {
+        "id": "nm0156618",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Bliss Chevalier",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm1064968",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Frances Cochran",
+        "asCharacter": "Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm1067463",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Elsie Codd",
+        "asCharacter": "Extra in Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm0176846",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Jack Coogan Sr.",
+        "asCharacter": "Pickpocket / Guest / Devil (uncredited)"
+      },
+      {
+        "id": "nm1067466",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Estelle Cook",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm1067468",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Lillian Crane",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm1065021",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Philip D'Oench",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0226978",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Dan Dillon",
+        "asCharacter": "Bum (uncredited)"
+      },
+      {
+        "id": "nm0241867",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Robert Dunbar",
+        "asCharacter": "Bridegroom (uncredited)"
+      },
+      {
+        "id": "nm1065208",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Florette Faulkner",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0269738",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Gloria Faythe",
+        "asCharacter": "Little Girl (uncredited)"
+      },
+      {
+        "id": "nm0291537",
+        "image": "https://m.media-amazon.com/images/M/MV5BOGQ1NzIyNTQtMjkzMi00ODliLWFkYjgtMDhkYzIwYWJhNDcyXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7273_AL_.jpg",
+        "name": "Rupert Franklin",
+        "asCharacter": "Bride's father / Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm0330585",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Sadie Gordon",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm0340614",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTc4MzQyMjcwMV5BMl5BanBnXkFtZTYwNzU2NDQ2._V1_Ratio0.7727_AL_.jpg",
+        "name": "Lita Grey",
+        "asCharacter": "Flirtatious Angel (uncredited)"
+      },
+      {
+        "id": "nm1067097",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Frank Hale",
+        "asCharacter": "Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm1067511",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Martha Hall",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0359836",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Jules Hanft",
+        "asCharacter": "Physician (uncredited)"
+      },
+      {
+        "id": "nm1065435",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Louise Hathaway",
+        "asCharacter": "Extra in Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm0368860",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Silas Hathaway",
+        "asCharacter": "The Kid as a Baby (uncredited)"
+      },
+      {
+        "id": "nm0397289",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Flora Howard",
+        "asCharacter": "Bridesmaid (uncredited)"
+      },
+      {
+        "id": "nm1064246",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Ed Hunt",
+        "asCharacter": "Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm0421038",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Lulu Jenks",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm1067530",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Irene Jennings",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0443101",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Kathleen Kay",
+        "asCharacter": "Maid (uncredited)"
+      },
+      {
+        "id": "nm1067542",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Grace Keller",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0449521",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Sarah Kernan",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0498063",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Raymond Lee",
+        "asCharacter": "His Kid Brother (uncredited)"
+      },
+      {
+        "id": "nm0528490",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Walter Lynch",
+        "asCharacter": "Tough Cop (uncredited)"
+      },
+      {
+        "id": "nm1067187",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "V. Madison",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0564149",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Clyde McAtee",
+        "asCharacter": "Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm7625780",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Michael J. McCarthy",
+        "asCharacter": "Extra (angel) Heaven & (cook) Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm0571950",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "John McKinnon",
+        "asCharacter": "Chief of Police (uncredited)"
+      },
+      {
+        "id": "nm1067611",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Ethel O'Neil",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm0662448",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTU4NzU3NTQzMl5BMl5BanBnXkFtZTgwMjAzMzM0MjE@._V1_Ratio1.3182_AL_.jpg",
+        "name": "Lew Parker",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm1067268",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Charles I. Pierce",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0689485",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Laura Pollard",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm1067281",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Evans Quirk",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0707803",
+        "image": "https://m.media-amazon.com/images/M/MV5BMjM3NDQwOTI4MV5BMl5BanBnXkFtZTgwMjQwOTY3MTE@._V1_Ratio0.7727_AL_.jpg",
+        "name": "Esther Ralston",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm0715056",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Granville Redmond",
+        "asCharacter": "The Man's Friend (uncredited)"
+      },
+      {
+        "id": "nm0718469",
+        "image": "https://m.media-amazon.com/images/M/MV5BZDYyZDFiODktOTNkZS00YTExLWExM2EtMWQ4MGZkMWY4ZGNiXkEyXkFqcGdeQXVyMTcyODY2NDQ@._V1_Ratio1.2727_AL_.jpg",
+        "name": "Charles Reisner",
+        "asCharacter": "Bully (uncredited)"
+      },
+      {
+        "id": "nm1067303",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Henry Roser",
+        "asCharacter": "Extra in Heaven Scene (uncredited)"
+      },
+      {
+        "id": "nm1067308",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "J.B. Russell",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      },
+      {
+        "id": "nm0791022",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "George V. Sheldon",
+        "asCharacter": "Extra in Reception Scene (uncredited)"
+      },
+      {
+        "id": "nm0792702",
+        "image": "https://m.media-amazon.com/images/M/MV5BNGRjYzY2MDUtMjExMi00NzVjLWE1MjYtMGU1MjRkMzFhZmMxXkEyXkFqcGdeQXVyMTk2MzI2Ng@@._V1_Ratio1.3182_AL_.jpg",
+        "name": "Edgar Sherrod",
+        "asCharacter": "Priest (uncredited)"
+      },
+      {
+        "id": "nm0801820",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Elsie Sindora",
+        "asCharacter": "Bridesmaid (uncredited)"
+      },
+      {
+        "id": "nm0824196",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Minnie Stearns",
+        "asCharacter": "Fierce Woman (uncredited)"
+      },
+      {
+        "id": "nm0856916",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Arthur Thalasso",
+        "asCharacter": "Car Thief with gun (uncredited)"
+      },
+      {
+        "id": "nm0884775",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Edith Valk",
+        "asCharacter": "Lady with Baby Carriage (uncredited)"
+      },
+      {
+        "id": "nm1066804",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Mother Vinot",
+        "asCharacter": "Extra in Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm0925201",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "May White",
+        "asCharacter": "Edna's Maid (uncredited)"
+      },
+      {
+        "id": "nm0928277",
+        "image": "https://m.media-amazon.com/images/M/MV5BNjU1OWFkMjctN2JmYS00YmZiLTliNTUtYzMzOTU5NDg1YzY1XkEyXkFqcGdeQXVyMTI3MDk3MzQ@._V1_Ratio1.3182_AL_.jpg",
+        "name": "S.D. Wilcox",
+        "asCharacter": "Cop (uncredited)"
+      },
+      {
+        "id": "nm0933030",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Baby Wilson",
+        "asCharacter": "Baby in Carriage (uncredited)"
+      },
+      {
+        "id": "nm0934232",
+        "image": "https://m.media-amazon.com/images/M/MV5BMGJjMzVkZDgtYzk5Yi00YTMxLWE1NzktMjBkMzEzZmVjODVlXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio0.7727_AL_.jpg",
+        "name": "Tom Wilson",
+        "asCharacter": "Policeman (uncredited)"
+      },
+      {
+        "id": "nm1066889",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Amanda Yanez",
+        "asCharacter": "Extra in Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm1066890",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Baby Yanez",
+        "asCharacter": "Extra in Alley Scene (uncredited)"
+      },
+      {
+        "id": "nm1036994",
+        "image": "https://imdb-api.com/images/original/nopicture.jpg",
+        "name": "Elsie Young",
+        "asCharacter": "Extra in Wedding Scene (uncredited)"
+      }
+    ],
+    "others": [
+      {
+        "job": "Produced by",
+        "items": [
+          {
+            "id": "nm0000122",
+            "name": "Charles Chaplin",
+            "description": "producer (as Charlie Chaplin)"
+          }
+        ]
+      },
+      {
+        "job": "Music by",
+        "items": [
+          {
+            "id": "nm0000122",
+            "name": "Charles Chaplin",
+            "description": "(as Charlie Chaplin) (1971)"
+          }
+        ]
+      },
+      {
+        "job": "Cinematography by",
+        "items": [
+          {
+            "id": "nm0005906",
+            "name": "Roland Totheroh",
+            "description": "(uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Editing by",
+        "items": [
+          {
+            "id": "nm0000122",
+            "name": "Charles Chaplin",
+            "description": "(uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Art Direction by",
+        "items": [
+          {
+            "id": "nm0355405",
+            "name": "Charles D. Hall",
+            "description": "(uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Second Unit Director or Assistant Director",
+        "items": [
+          {
+            "id": "nm0689811",
+            "name": "Frank Powolny",
+            "description": "assistant director (uncredited)"
+          },
+          {
+            "id": "nm0840042",
+            "name": "A. Edward Sutherland",
+            "description": "assistant director (uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Camera and Electrical Department",
+        "items": [
+          {
+            "id": "nm1073848",
+            "name": "H. Wenger",
+            "description": "assistant camera (uncredited)"
+          },
+          {
+            "id": "nm0933531",
+            "name": "Jack Wilson",
+            "description": "second camera operator (uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Costume and Wardrobe Department",
+        "items": [
+          {
+            "id": "nm1066804",
+            "name": "Mother Vinot",
+            "description": "seamstress (uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Music Department",
+        "items": [
+          {
+            "id": "nm0416479",
+            "name": "Eric James",
+            "description": "music associate: 1971 release"
+          },
+          {
+            "id": "nm0736864",
+            "name": "Eric Rogers",
+            "description": "conductor: 1971 re-release / orchestrator: 1971 re-release"
+          }
+        ]
+      },
+      {
+        "job": "Transportation Department",
+        "items": [
+          {
+            "id": "nm0465231",
+            "name": "Toraichi Kono",
+            "description": "driver: Mr. Chaplin (uncredited)"
+          }
+        ]
+      },
+      {
+        "job": "Additional Crew",
+        "items": [
+          {
+            "id": "nm0048798",
+            "name": "Nellie Bly Baker",
+            "description": "secretary: Mr. Chaplin (uncredited)"
+          },
+          {
+            "id": "nm1067463",
+            "name": "Elsie Codd",
+            "description": "unit publicist (uncredited)"
+          },
+          {
+            "id": "nm0364361",
+            "name": "Tom Harrington",
+            "description": "assistant: Mr. Chaplin (uncredited)"
+          },
+          {
+            "id": "nm0718469",
+            "name": "Charles Reisner",
+            "description": "associate director (uncredited)"
+          }
+        ]
+      }
+    ],
+    "errorMessage": ""
+  },
+  "genres": "Comedy, Drama, Family",
+  "genreList": [
+    {
+      "key": "Comedy",
+      "value": "Comedy"
+    },
+    {
+      "key": "Drama",
+      "value": "Drama"
+    },
+    {
+      "key": "Family",
+      "value": "Family"
+    }
+  ],
+  "companies": "Charles Chaplin Productions",
+  "companyList": [
+    {
+      "id": "co0028083",
+      "name": "Charles Chaplin Productions"
+    }
+  ],
+  "countries": "USA",
+  "countryList": [
+    {
+      "key": "USA",
+      "value": "USA"
+    }
+  ],
+  "languages": "English",
+  "languageList": [
+    {
+      "key": "English",
+      "value": "English"
+    }
+  ],
+  "contentRating": "Passed",
+  "imDbRating": "8.3",
+  "imDbRatingVotes": "129478",
+  "metacriticRating": null,
+  "ratings": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "imDb": "8.3",
+    "metacritic": "",
+    "theMovieDb": "8.2",
+    "rottenTomatoes": "100",
+    "filmAffinity": "8.4",
+    "errorMessage": ""
+  },
+  "wikipedia": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "language": "en",
+    "titleInLanguage": "The Kid (1921 film)",
+    "url": "https://en.wikipedia.org/wiki/The_Kid_(1921_film)",
+    "plotShort": {
+      "plainText": "The Kid is a 1921 American silent comedy-drama film written, produced, directed by and starring Charlie Chaplin, and features Jackie Coogan as his foundling baby, adopted son and sidekick. This was Chaplin's first full-length film as a director. It was a huge success and was the second-highest-grossing film in 1921. Now considered one of the greatest films of the silent era, in 2011 it was selected for preservation in the United States National Film Registry by the Library of Congress.",
+      "html": "<p>The Kid is a 1921 American silent comedy-drama film written, produced, directed by and starring Charlie Chaplin, and features Jackie Coogan as his foundling baby, adopted son and sidekick. This was Chaplin's first full-length film as a director. It was a huge success and was the second-highest-grossing film in 1921. Now considered one of the greatest films of the silent era, in 2011 it was selected for preservation in the United States National Film Registry by the Library of Congress.</p>"
+    },
+    "plotFull": {
+      "plainText": "The Kid is a 1921 American silent comedy-drama film written, produced, directed by and starring Charlie Chaplin, and features Jackie Coogan as his foundling baby, adopted son and sidekick. This was Chaplin's first full-length film as a director. It was a huge success and was the second-highest-grossing film in 1921. Now considered one of the greatest films of the silent era, in 2011 it was selected for preservation in the United States National Film Registry by the Library of Congress.\r\nPlot\r\nWith much anguish, an unwed Mother abandons her child, placing him in an expensive automobile with a handwritten note: \"Please love and care for this orphan child\". Two thieves steal the car and leave the baby in an alley, where he is found by The Tramp. After some attempts to hand off the child on to various passers-by, he finds the note and his heart melts. He takes the boy home, names him John and adjusts his household furniture for him. Meanwhile, the Mother has a change of heart and returns for her baby; when she learns that the car has been stolen, she faints.\r\nFive years pass. The Kid and the Tramp live in the same tiny room; they have little money but much love. They support themselves in a minor scheme: the Kid throws stones to break windows so that the Tramp, working as a glazier, can be paid to repair them. Meanwhile, the Mother has become a wealthy actress and does charity by giving presents to poor children. By chance, as she does so, the Mother and the Kid unknowingly cross paths.\r\nThe Kid later gets into a fight with another local boy as people in the area gather to watch the spectacle. The Kid wins, drawing the ire of the other boy's older brother, who attacks the Tramp as a result. The Mother breaks up the fight, but it starts again after she leaves and the Tramp keeps beating the \"Big Brother\" over the head with a brick between swings until he totters away.\r\nShortly afterward, the Mother advises the Tramp to call a doctor after the Kid falls ill. The doctor discovers that the Tramp is not the Kid's father and notifies authorities. Two men come to take the boy to an orphanage, but after a fight and a chase, the Tramp and the boy remain side by side. When the Mother comes back to see how the boy is doing she encounters the doctor, who shows her the note (which he had taken from the Tramp); she recognizes it as the one she left with her baby years ago.\r\nNow fugitives, the Tramp and the boy spend the night in a flophouse. Its proprietor learns of a $1,000 reward offered by the authorities and takes the Kid to the police station, while the Tramp is asleep. As the tearful Mother is reunited with her long-lost child, the Tramp searches frantically for the missing boy. Unsuccessful, he returns to the doorway of their humble lodgings, where he falls asleep, entering a \"Dreamland\" where his neighbors have turned into angels and devils. A policeman awakes him and drives him off to a mansion. There the door is opened by the Mother and the Kid, who jumps into the Tramp's arms, and he is welcomed in.\r\nCast\r\nCharlie Chaplin as The Tramp\r\nJackie Coogan as the Kid (\"John\")\r\nEdna Purviance as the Woman (John's mother)\r\nCarl Miller as the Man (John's father)\r\nTom Wilson as the Policeman\r\nHenry Bergman as night shelter keeper/Professor Guido/fat neighborhood man/apostle Peter\r\nCharles Reisner as neighborhood bully/angel's lover\r\nRaymond Lee as bully's little brother\r\nLita Grey as flirtatious angel in Dreamland scene\r\nJules Hanft as the country doctor\r\nFrank Campeau as welfare officer\r\nF. Blinn as welfare officer's assistant\r\nJack H. Coogan Jr. as Pickpocket/Guest/Devil\r\nGranville Redmond as the Man's friend\r\nMay White as the Woman's maid/apartment owner with broken window\r\nSilas Merric Hathaway as the infant Kid\r\nAlbert Austin as man in shelter/the car thief/Devil\r\nEsther Ralston as angel in the heaven scene\r\nArthur Thalasso as the car thief with gun/Devil\r\nProduction\r\nChaplin wrote, produced, directed, edited and starred in The Kid, and later composed a score. Innovative in its combination of comedic and dramatic elements, the film is considered one of the greatest of the silent era. Chaplin biographer Jeffrey Vance maintains that, with its \"perfect blend of comedy and drama, is arguably Chaplin's most personal and autobiographical work.”\r\nThe film made Coogan, then a vaudeville performer, into the first major child star of the movies. It has been speculated that the depth of the relationship portrayed in the film may have been connected with the death of Chaplin's firstborn infant son just ten days before the production began.\r\nFirst National wanted to release the film as 3 two reel comedies, not a seven reel feature. Chaplin wanted the film released as a complete work. Releasing it as 3 separate short films also meant First National owed Chaplin a much smaller salary. After production was completed in 1920, the film was caught up in the divorce actions of Chaplin's first wife Mildred Harris, who sought to attach Chaplin's assets. Chaplin and his associates smuggled the raw negative to Salt Lake City and edited it in a room at the Hotel Utah. To release the complete film and avoid it being part of his divorce proceedings, Chaplin showed First National executives a cut of the film. He used this screening to re-negotiate his contract. Before releasing the film, Chaplin negotiated to receive an enhanced financial deal based on the success of the final film. This included 50% of the box-office once First National's budget of $1.5 Million had been reached and full ownership returned to Chaplin after 5 years.\r\nChaplin eventually removed scenes he believed too sentimental for modern audiences and composed and recorded a new musical score for the film's theatrical reissue. This re-edited version of The Kid had its world premiere as the Film Society of Lincoln Center gala tribute to Chaplin held on April 4, 1972, at Philharmonic Hall, New York City, with Chaplin in attendance.\r\nReception\r\nThe Kid premiered on January 21, 1921, at Carnegie Hall in New York City as a benefit for the Children's Fund of the National Board of Review of Motion Pictures.\r\nThe Kid was acclaimed by film critics upon its release. The February 5, 1921 issue of Exhibitor's Herald, contained a full-spread advertisement for the film playing at the Randolph Theatre. The advertisement from First National Pictures featured high praise from Chicago-based newspapers including this review from The Chicago Herald and Examiner:\r\n\"The Kid settles once and for all the question as to who is the greatest theatrical artist in the world. Chaplin does some of the finest, most delicately shaded acting you ever saw anywhere, and for every slapstick furore in it there is a classic, exquisite scene. His action are riotous, convulsive, irresistible. The gentlest grandmother will bust a midriff. He's the best Hamlet alive today. Jackie Coogan is the best child actor you ever saw. Women wept just to see him. The Kid is two fisted. It's right glove is packed with the pearls of tears, its left with the horseshoe of laughter. The picture is perfection. Six reels that seem like one; six reels that are funnier than the work of any other human being; six reels that are sadder and simpler than anything in pictures; six reels that will atone for anything the movies have ever done.\"\r\nA reviewer from Theatre Magazine glowingly wrote, \" new picture, The Kid, certainly outdoes in humor and the special brand of Chaplin pathos anything this popular film star has yet produced. There are almost as many tears as laughs in the new First National release--which proves the contention that Chaplin as almost as good a tragedian as he is a comedian. The Kid may be counted as a screen masterpiece.\"\r\nThe reviewer for The New York Times had more of a mixed reception of the film writing, \"Charlie Chaplin is himself again - at his best, in some ways better than his previous best, and also, it is to be regretted, at his worst, only not with so much of his worst as has spoiled some of his earlier pictures.\" The reviewer praises the plot, the comedy, the characters, and the \"balance of sadness\" with Chaplin being \"more of a comedian than a clown,\" but writes that \"the blemish on The Kid is the same that has marred many of Chaplin's other pictures - vulgarity, or coarseness. There is only a little of it in the present work, just two scenes that will be found particularly offensive by some. They are funny. That cannot be denied. One laughs at them, but many try not to, and are provoked with themselves and Chaplin for their laughing. This is not good. The laugh that offends good taste doesn't win. And these scenes would never be missed from The Kid. It has plenty of unadulterated fun to go far and long without them. Why can't Chaplin leave out such stuff? Why don't the exhibitors delete it?\"\r\nLegacy\r\nChaplin biographer Jeffrey Vance writes of the legacy of Chaplin's The Kid: \"The Kid remains an important contribution to the art of film, not only because of Chaplin’s innovative use of dramatic sequences within a feature-length comedy, but also because of the revelations The Kid provides about its creator. Undoubtedly, when Chaplin penned the preface to The Kid, “A picture with a smile--and perhaps, a tear,” he had his own artistic credo—and life—in mind.\" Mary Pickford said of the film, \"The Kid is one of the finest examples of the screen language, depending upon its actions rather than upon subtitles\".\r\nIn December 2011, The Kid was chosen to be preserved in the Library of Congress' National Film Registry. The registry stated that the film is \"an artful melding of touching drama, social commentary and inventive comedy\" and praised Chaplin's ability to \"sustain his artistry beyond the length of his usual short subjects and could deftly elicit a variety of emotions from his audiences by skillfully blending slapstick and pathos.\"\r\nAs of January 2021, The Kid has earned a 100% rating on Rotten Tomatoes, based on 50 reviews, with a weighted average of 8.6/10. The website's critical consensus says: “Charles Chaplin' irascible Tramp is given able support from Jackie Coogan as The Kid in this slapstick masterpiece, balancing the guffaws with moments of disarming poignancy”.",
+      "html": "<p>The Kid is a 1921 American silent comedy-drama film written, produced, directed by and starring Charlie Chaplin, and features Jackie Coogan as his foundling baby, adopted son and sidekick. This was Chaplin's first full-length film as a director. It was a huge success and was the second-highest-grossing film in 1921. Now considered one of the greatest films of the silent era, in 2011 it was selected for preservation in the United States National Film Registry by the Library of Congress.</p><br/><h3>Plot</h3><p>With much anguish, an unwed Mother abandons her child, placing him in an expensive automobile with a handwritten note: \"Please love and care for this orphan child\". Two thieves steal the car and leave the baby in an alley, where he is found by The Tramp. After some attempts to hand off the child on to various passers-by, he finds the note and his heart melts. He takes the boy home, names him John and adjusts his household furniture for him. Meanwhile, the Mother has a change of heart and returns for her baby; when she learns that the car has been stolen, she faints.</p><p>Five years pass. The Kid and the Tramp live in the same tiny room; they have little money but much love. They support themselves in a minor scheme: the Kid throws stones to break windows so that the Tramp, working as a glazier, can be paid to repair them. Meanwhile, the Mother has become a wealthy actress and does charity by giving presents to poor children. By chance, as she does so, the Mother and the Kid unknowingly cross paths.</p><p>The Kid later gets into a fight with another local boy as people in the area gather to watch the spectacle. The Kid wins, drawing the ire of the other boy's older brother, who attacks the Tramp as a result. The Mother breaks up the fight, but it starts again after she leaves and the Tramp keeps beating the \"Big Brother\" over the head with a brick between swings until he totters away.</p><p>Shortly afterward, the Mother advises the Tramp to call a doctor after the Kid falls ill. The doctor discovers that the Tramp is not the Kid's father and notifies authorities. Two men come to take the boy to an orphanage, but after a fight and a chase, the Tramp and the boy remain side by side. When the Mother comes back to see how the boy is doing she encounters the doctor, who shows her the note (which he had taken from the Tramp); she recognizes it as the one she left with her baby years ago.</p><p>Now fugitives, the Tramp and the boy spend the night in a flophouse. Its proprietor learns of a $1,000 reward offered by the authorities and takes the Kid to the police station, while the Tramp is asleep. As the tearful Mother is reunited with her long-lost child, the Tramp searches frantically for the missing boy. Unsuccessful, he returns to the doorway of their humble lodgings, where he falls asleep, entering a \"Dreamland\" where his neighbors have turned into angels and devils. A policeman awakes him and drives him off to a mansion. There the door is opened by the Mother and the Kid, who jumps into the Tramp's arms, and he is welcomed in.</p><br/><h3>Cast</h3><ul><li>Charlie Chaplin as The Tramp</li><li>Jackie Coogan as the Kid (\"John\")</li><li>Edna Purviance as the Woman (John's mother)</li><li>Carl Miller as the Man (John's father)</li></ul><ul><li>Tom Wilson as the Policeman</li><li>Henry Bergman as night shelter keeper/Professor Guido/fat neighborhood man/apostle Peter</li><li>Charles Reisner as neighborhood bully/angel's lover</li><li>Raymond Lee as bully's little brother</li><li>Lita Grey as flirtatious angel in Dreamland scene</li><li>Jules Hanft as the country doctor</li><li>Frank Campeau as welfare officer</li><li>F. Blinn as welfare officer's assistant</li><li>Jack H. Coogan Jr. as Pickpocket/Guest/Devil</li><li>Granville Redmond as the Man's friend</li><li>May White as the Woman's maid/apartment owner with broken window</li><li>Silas Merric Hathaway as the infant Kid</li><li>Albert Austin as man in shelter/the car thief/Devil</li><li>Esther Ralston as angel in the heaven scene</li><li>Arthur Thalasso as the car thief with gun/Devil</li></ul><br/><h3>Production</h3><p>Chaplin wrote, produced, directed, edited and starred in The Kid, and later composed a score. Innovative in its combination of comedic and dramatic elements, the film is considered one of the greatest of the silent era. Chaplin biographer Jeffrey Vance maintains that, with its \"perfect blend of comedy and drama, is arguably Chaplin's most personal and autobiographical work.”</p><p>The film made Coogan, then a vaudeville performer, into the first major child star of the movies. It has been speculated that the depth of the relationship portrayed in the film may have been connected with the death of Chaplin's firstborn infant son just ten days before the production began.</p><p>First National wanted to release the film as 3 two reel comedies, not a seven reel feature. Chaplin wanted the film released as a complete work. Releasing it as 3 separate short films also meant First National owed Chaplin a much smaller salary. After production was completed in 1920, the film was caught up in the divorce actions of Chaplin's first wife Mildred Harris, who sought to attach Chaplin's assets. Chaplin and his associates smuggled the raw negative to Salt Lake City and edited it in a room at the Hotel Utah. To release the complete film and avoid it being part of his divorce proceedings, Chaplin showed First National executives a cut of the film. He used this screening to re-negotiate his contract. Before releasing the film, Chaplin negotiated to receive an enhanced financial deal based on the success of the final film. This included 50% of the box-office once First National's budget of $1.5 Million had been reached and full ownership returned to Chaplin after 5 years.</p><p>Chaplin eventually removed scenes he believed too sentimental for modern audiences and composed and recorded a new musical score for the film's theatrical reissue. This re-edited version of The Kid had its world premiere as the Film Society of Lincoln Center gala tribute to Chaplin held on April 4, 1972, at Philharmonic Hall, New York City, with Chaplin in attendance.</p><br/><h3>Reception</h3><p>The Kid premiered on January 21, 1921, at Carnegie Hall in New York City as a benefit for the Children's Fund of the National Board of Review of Motion Pictures.</p><p>The Kid was acclaimed by film critics upon its release. The February 5, 1921 issue of Exhibitor's Herald, contained a full-spread advertisement for the film playing at the Randolph Theatre. The advertisement from First National Pictures featured high praise from Chicago-based newspapers including this review from The Chicago Herald and Examiner:</p><blockquote>\"The Kid settles once and for all the question as to who is the greatest theatrical artist in the world. Chaplin does some of the finest, most delicately shaded acting you ever saw anywhere, and for every slapstick furore in it there is a classic, exquisite scene. His action are riotous, convulsive, irresistible. The gentlest grandmother will bust a midriff. He's the best Hamlet alive today. Jackie Coogan is the best child actor you ever saw. Women wept just to see him. The Kid is two fisted. It's right glove is packed with the pearls of tears, its left with the horseshoe of laughter. The picture is perfection. Six reels that seem like one; six reels that are funnier than the work of any other human being; six reels that are sadder and simpler than anything in pictures; six reels that will atone for anything the movies have ever done.\"</blockquote><p>A reviewer from Theatre Magazine glowingly wrote, \" new picture, The Kid, certainly outdoes in humor and the special brand of Chaplin pathos anything this popular film star has yet produced. There are almost as many tears as laughs in the new First National release--which proves the contention that Chaplin as almost as good a tragedian as he is a comedian. The Kid may be counted as a screen masterpiece.\"</p><p>The reviewer for The New York Times had more of a mixed reception of the film writing, \"Charlie Chaplin is himself again - at his best, in some ways better than his previous best, and also, it is to be regretted, at his worst, only not with so much of his worst as has spoiled some of his earlier pictures.\" The reviewer praises the plot, the comedy, the characters, and the \"balance of sadness\" with Chaplin being \"more of a comedian than a clown,\" but writes that \"the blemish on The Kid is the same that has marred many of Chaplin's other pictures - vulgarity, or coarseness. There is only a little of it in the present work, just two scenes that will be found particularly offensive by some. They are funny. That cannot be denied. One laughs at them, but many try not to, and are provoked with themselves and Chaplin for their laughing. This is not good. The laugh that offends good taste doesn't win. And these scenes would never be missed from The Kid. It has plenty of unadulterated fun to go far and long without them. Why can't Chaplin leave out such stuff? Why don't the exhibitors delete it?\"</p><br/><h3>Legacy</h3><p>Chaplin biographer Jeffrey Vance writes of the legacy of Chaplin's The Kid: \"The Kid remains an important contribution to the art of film, not only because of Chaplin’s innovative use of dramatic sequences within a feature-length comedy, but also because of the revelations The Kid provides about its creator. Undoubtedly, when Chaplin penned the preface to The Kid, “A picture with a smile--and perhaps, a tear,” he had his own artistic credo—and life—in mind.\" Mary Pickford said of the film, \"The Kid is one of the finest examples of the screen language, depending upon its actions rather than upon subtitles\".</p><p>In December 2011, The Kid was chosen to be preserved in the Library of Congress' National Film Registry. The registry stated that the film is \"an artful melding of touching drama, social commentary and inventive comedy\" and praised Chaplin's ability to \"sustain his artistry beyond the length of his usual short subjects and could deftly elicit a variety of emotions from his audiences by skillfully blending slapstick and pathos.\"</p><p>As of January 2021, The Kid has earned a 100% rating on Rotten Tomatoes, based on 50 reviews, with a weighted average of 8.6/10. The website's critical consensus says: “Charles Chaplin' irascible Tramp is given able support from Jackie Coogan as The Kid in this slapstick masterpiece, balancing the guffaws with moments of disarming poignancy”.</p><br/>"
+    },
+    "errorMessage": ""
+  },
+  "posters": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "posters": [],
+    "backdrops": [],
+    "errorMessage": ""
+  },
+  "images": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "items": [
+      {
+        "title": "Charles Chaplin and Lita Grey in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTk5NDIwMjcxNV5BMl5BanBnXkFtZTcwMjU2NzIwNw@@._V1_Ratio1.3600_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTkyMTY2MzYyMl5BMl5BanBnXkFtZTcwMzU2NzIwNw@@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, and Tom Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTQwMzE5MDI4N15BMl5BanBnXkFtZTcwNTU2NzIwNw@@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZTQzMTM4NGEtNGFjNy00YWNkLThkZjAtZmY4YWMyNTUyNzhkXkEyXkFqcGdeQXVyODc0OTEyNDU@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, and Tom Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzcxYzQzNDktNzBhNy00ZDFiLTk3MjgtMTUwNzZkZmVjYWI2XkEyXkFqcGdeQXVyODIyOTEyMzY@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTg1ODc2MTYyOV5BMl5BanBnXkFtZTgwODQ3MjI2MzE@._V1_Ratio1.2600_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTg2MTcxNzM1NV5BMl5BanBnXkFtZTgwNzQ3MjI2MzE@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTc1MTY5MjY3MV5BMl5BanBnXkFtZTgwOTY1MjgwMjE@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTA2Mjk1NzAzODBeQTJeQWpwZ15BbWU4MDA3NTI4MDIx._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMjEwNzIzODY5MF5BMl5BanBnXkFtZTgwODY1MjgwMjE@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTY4MzYzOTg4Ml5BMl5BanBnXkFtZTgwNzM5NTEyMTE@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BODQ2NjA3MDcwMF5BMl5BanBnXkFtZTgwODMxMjk5MDE@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTg2Njk2MTM4M15BMl5BanBnXkFtZTcwNTY4NzU2OQ@@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTMyNzcwMDg0N15BMl5BanBnXkFtZTcwOTY3MDc0NQ@@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZmJhNjAxZGEtMGQ5OC00YWM5LThiZWYtZmUwYjQwYzhiOTA1XkEyXkFqcGdeQXVyOTkyMzA3NDg@._V1_Ratio1.3400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Lita Grey in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYjA0N2Y0ODgtM2Q4Ny00NzY0LWFkY2QtNjQwMzFjMjU3OWU5XkEyXkFqcGdeQXVyMTU5MTU3ODMz._V1_Ratio1.5400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, and Raymond Lee in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzc4M2MwYjgtNDUzZS00ODM3LTk1ZTktYzlhZTRiODlkOWMyXkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.5600_AL_.jpg"
+      },
+      {
+        "title": "Tom Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BODhkNTVlZTItNDcwZi00MmM5LTgxZmUtZGM1YTNhZmJiODA4XkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Silas Hathaway, Edith Valk, and Baby Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BN2RlMGM5ZDQtOTAyZC00Mjc4LWFhODAtNjYxMThiZmFlMjIzXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2800_AL_.jpg"
+      },
+      {
+        "title": "Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMGRhZjk0MzEtNDgyOS00NjgwLWJmNzMtMWFmZDljMTBhNjZkXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2200_AL_.jpg"
+      },
+      {
+        "title": "Jackie Coogan and Edna Purviance in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYzYyZGRmNjItNjhmNi00M2I5LTk4YzgtYTkyODc2M2ViZDkzXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.1800_AL_.jpg"
+      },
+      {
+        "title": "Edna Purviance in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNTVkNWUwMmUtN2M4My00MWY1LTgyNWUtNjZkNzIzYzBiNzJmXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2600_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, and Jules Hanft in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNDZiMWM3NDktMGY3ZS00Y2FjLTg4YWQtNTFlNjRiNWI2ODlmXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Frank Campeau, and Tom Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYmJjOTRiM2ItNWZmZC00YzgwLWE1OTYtN2QxNDNmZmEwZGRmXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMGE5Yjg1MWMtNzliMC00NTRlLThhOWItNmVlYmQ1YmIwNzczXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.1200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Silas Hathaway in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYWYzZDRkYWEtOTc3My00NjYzLWFlOGQtZjIwYjNhYjc2NmZjXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Silas Hathaway in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BN2NkY2U5ZDUtZTBiOS00YzllLWI4NGItODYxOWRmYjA3MGNlXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Silas Hathaway in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZDNhZTM4Y2UtNjA5OC00MzI4LWFiZjktZWNhYWE3ZjIxODQxXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZjBmMWE5MGYtYTRhZC00MGNjLWI5OGEtY2UwMTQ1YWZiOTNhXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2800_AL_.jpg"
+      },
+      {
+        "title": "The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTNlYzY1YjEtZGNhNC00MTc1LWE3MzMtMDBiZWZmMWRkODBjXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.2800_AL_.jpg"
+      },
+      {
+        "title": "Nellie Bly Baker and Edna Purviance in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzBiMzQxNTAtMGI4NS00NjdlLWFlNjYtNGVhN2UxYTgyNGFhXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BN2QxZTViZWMtMzgwNC00MmQyLWJhMGUtZmYwZDViNjQ5NzQwXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.1800_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Tom Wilson in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYmY2OGVkZDUtNjE3ZS00ZTQ0LWJhODAtY2YzMTJhYTZkMWZjXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Charles Reisner in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BYzg3MWIwYmQtZGFhNi00ZGJhLTlkZWItMDZjNmVmYzY0ZmNhXkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNDRkOWE4ZWEtNGViMS00OTc3LWFkMDEtZmFjYTU3NTFhNTY1XkEyXkFqcGdeQXVyOTg5NzIwMDU@._V1_Ratio1.3000_AL_.jpg"
+      },
+      {
+        "title": "Edna Purviance in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNGE1ZTg3OTgtNzdlNC00ODFiLTg5YWUtYTdmZDVhMTBmODcyXkEyXkFqcGdeQXVyODc1NDEwNzQ@._V1_Ratio1.2800_AL_.jpg"
+      },
+      {
+        "title": "Raymond Lee in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZDRiNTFmOTktOTE0OS00OTY4LTkyMGEtMWE4ZjdjZDk3YmMwXkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.3200_AL_.jpg"
+      },
+      {
+        "title": "Jackie Coogan and Raymond Lee in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZmU1NDZlYzItZWNjMi00NmI2LTlhY2MtNDc2ZTdmNzhlMzJmXkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.3800_AL_.jpg"
+      },
+      {
+        "title": "Raymond Lee in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMTIwYjA0ZDQtNGIxZS00MmUwLWJmNGItY2QzNGQzMGYyZGQ2XkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.4800_AL_.jpg"
+      },
+      {
+        "title": "Raymond Lee and Charles Reisner in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNTM2ZjNiZjgtNTFjMy00NjE1LThkYWItNjE5MWZlODlmMWViXkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.4400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, Raymond Lee, and Charles Reisner in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BOTFhODFjM2UtMzNkZC00YzdkLTllY2YtYWM3ZDdiMDM1OTZmXkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.4200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin, Jackie Coogan, Raymond Lee, and Charles Reisner in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNWY1NjViMDAtZmUxNS00NDE4LTk5YTktMDc3MzI2MzBiYmM0XkEyXkFqcGdeQXVyMDU0Mzg3Nw@@._V1_Ratio1.4200_AL_.jpg"
+      },
+      {
+        "title": "Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BOTc0NjUyOTctYWRmNi00MGUzLTk1NmEtODA3NzQ4ZjkxNGM4XkEyXkFqcGdeQXVyNzM0MTUwNTY@._V1_Ratio1.3200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzgxNTU4NTgtNDU3NC00Yzg0LTg2N2ItYjk2ZWMyZjkxOTU4XkEyXkFqcGdeQXVyNzM0MTUwNTY@._V1_Ratio1.3400_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BNmFjZTZjNjAtNGZjNC00MmM0LWEzZjgtMTEwZWJhZGQ1OTg3XkEyXkFqcGdeQXVyNzM0MTUwNTY@._V1_Ratio1.3200_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMjAzZjk5YTYtMzVkZC00Zjg3LWEwZDYtYjUyNTFmZjI4ZWE2XkEyXkFqcGdeQXVyNjQ2NDA2ODM@._V1_Ratio1.0000_AL_.jpg"
+      },
+      {
+        "title": "Charles Chaplin and Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BZGY5OThlYWMtMzU3ZS00ZDFkLTllMTgtYTAxNmY2MjM2YTEzXkEyXkFqcGdeQXVyNjQ2NDA2ODM@._V1_Ratio1.3400_AL_.jpg"
+      },
+      {
+        "title": "Jackie Coogan in The Kid (1921)",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzA2OWZmOTctZjNiMi00NThhLWI5YjAtNzYwNjQ3M2FmOWJhXkEyXkFqcGdeQXVyNjQ2NDA2ODM@._V1_Ratio1.3200_AL_.jpg"
+      }
+    ],
+    "errorMessage": ""
+  },
+  "trailer": {
+    "imDbId": "tt0012349",
+    "title": "The Kid",
+    "fullTitle": "The Kid (1921)",
+    "type": "Movie",
+    "year": "1921",
+    "videoId": null,
+    "videoTitle": null,
+    "videoDescription": null,
+    "thumbnailUrl": null,
+    "uploadDate": null,
+    "link": null,
+    "linkEmbed": null,
+    "errorMessage": "404 Not Founded Error"
+  },
+  "boxOffice": {
+    "budget": "$250,000 (estimated)",
+    "openingWeekendUSA": "",
+    "grossUSA": "",
+    "cumulativeWorldwideGross": "$41,960"
+  },
+  "tagline": null,
+  "keywords": "orphan,the little tramp character,baby,boy,1910s",
+  "keywordList": [
+    "orphan",
+    "the little tramp character",
+    "baby",
+    "boy",
+    "1910s"
+  ],
+  "similars": [
+    {
+      "id": "tt0018773",
+      "title": "The Circus",
+      "image": "https://m.media-amazon.com/images/M/MV5BZDc4NjE1M2EtNWVjNi00NDRkLTg5MzctNzJhMGQ4Yjc5YzcyXkEyXkFqcGdeQXVyMDI2NDg0NQ@@._V1_Ratio0.7150_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt0118849",
+      "title": "Children of Heaven",
+      "image": "https://m.media-amazon.com/images/M/MV5BZTYwZWQ4ZTQtZWU0MS00N2YwLWEzMDItZWFkZWY0MWVjODVhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.2"
+    },
+    {
+      "id": "tt0038650",
+      "title": "It's a Wonderful Life",
+      "image": "https://m.media-amazon.com/images/M/MV5BZjc4NDZhZWMtNGEzYS00ZWU2LThlM2ItNTA0YzQ0OTExMTE2XkEyXkFqcGdeQXVyNjUwMzI2NzU@._V1_Ratio0.6860_AL_.jpg",
+      "imDbRating": "8.6"
+    },
+    {
+      "id": "tt3439758",
+      "title": "The Kid",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTUwNTc4NDczOF5BMl5BanBnXkFtZTgwMjMwNzA0MjE@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "6.7"
+    },
+    {
+      "id": "tt0114709",
+      "title": "Toy Story",
+      "image": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0032138",
+      "title": "The Wizard of Oz",
+      "image": "https://m.media-amazon.com/images/M/MV5BNjUyMTc4MDExMV5BMl5BanBnXkFtZTgwNDg0NDIwMjE@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt1028532",
+      "title": "Hachi: A Dog's Tale",
+      "image": "https://m.media-amazon.com/images/M/MV5BNzE4NDg5OWMtMzg3NC00ZDRjLTllMDMtZTRjNWZmNjBmMGZlXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt0435761",
+      "title": "Toy Story 3",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0986264",
+      "title": "Like Stars on Earth",
+      "image": "https://m.media-amazon.com/images/M/MV5BMDhjZWViN2MtNzgxOS00NmI4LThiZDQtZDI3MzM4MDE4NTc0XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0266543",
+      "title": "Finding Nemo",
+      "image": "https://m.media-amazon.com/images/M/MV5BZjMxYzBiNjUtZDliNC00MDAyLTg3N2QtOWNjNmNhZGQzNDg5XkEyXkFqcGdeQXVyNjE2MjQwNjc@._V1_Ratio0.6860_AL_.jpg",
+      "imDbRating": "8.2"
+    },
+    {
+      "id": "tt1049413",
+      "title": "Up",
+      "image": "https://m.media-amazon.com/images/M/MV5BYjBkM2RjMzItM2M3Ni00N2NjLWE3NzMtMGY4MzE4MDAzMTRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0110357",
+      "title": "The Lion King",
+      "image": "https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.5"
+    }
+  ],
+  "tvSeriesInfo": null,
+  "tvEpisodeInfo": null,
+  "errorMessage": ""
+}

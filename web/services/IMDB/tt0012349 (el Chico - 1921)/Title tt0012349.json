@@ -1,0 +1,293 @@
+{
+  "id": "tt0012349",
+  "title": "The Kid",
+  "originalTitle": "",
+  "fullTitle": "The Kid (1921)",
+  "type": "Movie",
+  "year": "1921",
+  "image": "https://m.media-amazon.com/images/M/MV5BZjhhMThhNDItNTY2MC00MmU1LTliNDEtNDdhZjdlNTY5ZDQ1XkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_Ratio0.6762_AL_.jpg",
+  "releaseDate": "1921-02-06",
+  "runtimeMins": "68",
+  "runtimeStr": "1h 8min",
+  "plot": "The Tramp cares for an abandoned child, but events put their relationship in jeopardy.",
+  "plotLocal": "",
+  "plotLocalIsRtl": false,
+  "awards": "Top rated movie #129 | Awards, 2 wins",
+  "directors": "Charles Chaplin",
+  "directorList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    }
+  ],
+  "writers": "Charles Chaplin",
+  "writerList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    }
+  ],
+  "stars": "Charles Chaplin, Edna Purviance, Jackie Coogan",
+  "starList": [
+    {
+      "id": "nm0000122",
+      "name": "Charles Chaplin"
+    },
+    {
+      "id": "nm0701012",
+      "name": "Edna Purviance"
+    },
+    {
+      "id": "nm0001067",
+      "name": "Jackie Coogan"
+    }
+  ],
+  "actorList": [
+    {
+      "id": "nm0000122",
+      "image": "https://m.media-amazon.com/images/M/MV5BNDcwMDc0ODAzOF5BMl5BanBnXkFtZTgwNTY2OTI1MDE@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Charles Chaplin",
+      "asCharacter": "A Tramp"
+    },
+    {
+      "id": "nm0701012",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTgzMTI2MTcwNV5BMl5BanBnXkFtZTcwMjY4NjYxOA@@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Edna Purviance",
+      "asCharacter": "The Woman"
+    },
+    {
+      "id": "nm0001067",
+      "image": "https://m.media-amazon.com/images/M/MV5BMzg1MjkwYTAtMjk1NS00NjNkLWEzNTUtOGIwNWI0ZjQzY2NmXkEyXkFqcGdeQXVyMDc2NTEzMw@@._V1_Ratio1.0286_AL_.jpg",
+      "name": "Jackie Coogan",
+      "asCharacter": "The Child"
+    },
+    {
+      "id": "nm0588033",
+      "image": "https://m.media-amazon.com/images/M/MV5BNzk0MmVhOWItZjEyYy00MjM1LWEzMGUtMjE4OTA5MzE5Y2NmXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Carl Miller",
+      "asCharacter": "The Man"
+    },
+    {
+      "id": "nm0042317",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzVjMDQxM2ItZjJmNy00ZmZjLWI5MTQtNmQ1Yzk1ZWI1MjhiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_Ratio1.3429_AL_.jpg",
+      "name": "Albert Austin",
+      "asCharacter": "Car Thief"
+    },
+    {
+      "id": "nm0047800",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Beulah Bains",
+      "asCharacter": "Bride"
+    },
+    {
+      "id": "nm0048798",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Nellie Bly Baker",
+      "asCharacter": "Slum Nurse"
+    },
+    {
+      "id": "nm0074788",
+      "image": "https://m.media-amazon.com/images/M/MV5BN2NjNGQxZWMtMjI3NC00ZjE0LTkzMzktMGE4NzNiNmJkODZiXkEyXkFqcGdeQXVyMDUyOTUyNQ@@._V1_Ratio1.1857_AL_.jpg",
+      "name": "Henry Bergman",
+      "asCharacter": "Professor Guido"
+    },
+    {
+      "id": "nm0080930",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzA0YjcxNTUtYjdjZC00MmNjLWI0MGMtZjE5Nzc1YjEyMDgzXkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Edward Biby",
+      "asCharacter": "Orphan Asylum Driver"
+    },
+    {
+      "id": "nm0088471",
+      "image": "https://m.media-amazon.com/images/M/MV5BYzcxYWRjN2UtNTA1OC00ZDExLTk5ZmItNjI3YmUyNWQ2MmU3XkEyXkFqcGdeQXVyMzI5NDcxNzI@._V1_Ratio1.0000_AL_.jpg",
+      "name": "B.F. Blinn",
+      "asCharacter": "His Assistant"
+    },
+    {
+      "id": "nm0102901",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Kitty Bradbury",
+      "asCharacter": "Bride's Mother"
+    },
+    {
+      "id": "nm0132955",
+      "image": "https://m.media-amazon.com/images/M/MV5BMWM1OWE0OTktY2EzZC00ZWI4LTljMWQtNTAyY2E4YjkzZmFmXkEyXkFqcGdeQXVyMDMxMjQwMw@@._V1_Ratio1.0000_AL_.jpg",
+      "name": "Frank Campeau",
+      "asCharacter": "Welfare Officer"
+    },
+    {
+      "id": "nm0156618",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Bliss Chevalier",
+      "asCharacter": "Extra in Wedding Scene"
+    },
+    {
+      "id": "nm1064968",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Frances Cochran",
+      "asCharacter": "Extra in Reception Scene"
+    },
+    {
+      "id": "nm1067463",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Elsie Codd",
+      "asCharacter": "Extra in Alley Scene"
+    },
+    {
+      "id": "nm0176846",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Jack Coogan Sr.",
+      "asCharacter": "Pickpocket"
+    },
+    {
+      "id": "nm1067466",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Estelle Cook",
+      "asCharacter": "Extra in Wedding Scene"
+    },
+    {
+      "id": "nm1067468",
+      "image": "https://imdb-api.com/images/original/nopicture.jpg",
+      "name": "Lillian Crane",
+      "asCharacter": "Extra in Wedding Scene"
+    }
+  ],
+  "fullCast": null,
+  "genres": "Comedy, Drama, Family",
+  "genreList": [
+    {
+      "key": "Comedy",
+      "value": "Comedy"
+    },
+    {
+      "key": "Drama",
+      "value": "Drama"
+    },
+    {
+      "key": "Family",
+      "value": "Family"
+    }
+  ],
+  "companies": "Charles Chaplin Productions",
+  "companyList": [
+    {
+      "id": "co0028083",
+      "name": "Charles Chaplin Productions"
+    }
+  ],
+  "countries": "USA",
+  "countryList": [
+    {
+      "key": "USA",
+      "value": "USA"
+    }
+  ],
+  "languages": "English",
+  "languageList": [
+    {
+      "key": "English",
+      "value": "English"
+    }
+  ],
+  "contentRating": "Passed",
+  "imDbRating": "8.3",
+  "imDbRatingVotes": "129478",
+  "metacriticRating": null,
+  "ratings": null,
+  "wikipedia": null,
+  "posters": null,
+  "images": null,
+  "trailer": null,
+  "boxOffice": {
+    "budget": "$250,000 (estimated)",
+    "openingWeekendUSA": "",
+    "grossUSA": "",
+    "cumulativeWorldwideGross": "$41,960"
+  },
+  "tagline": null,
+  "keywords": "orphan,the little tramp character,baby,boy,1910s",
+  "keywordList": [
+    "orphan",
+    "the little tramp character",
+    "baby",
+    "boy",
+    "1910s"
+  ],
+  "similars": [
+    {
+      "id": "tt0018773",
+      "title": "The Circus",
+      "image": "https://m.media-amazon.com/images/M/MV5BZDc4NjE1M2EtNWVjNi00NDRkLTg5MzctNzJhMGQ4Yjc5YzcyXkEyXkFqcGdeQXVyMDI2NDg0NQ@@._V1_Ratio0.7150_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt0118849",
+      "title": "Children of Heaven",
+      "image": "https://m.media-amazon.com/images/M/MV5BZTYwZWQ4ZTQtZWU0MS00N2YwLWEzMDItZWFkZWY0MWVjODVhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.2"
+    },
+    {
+      "id": "tt0038650",
+      "title": "It's a Wonderful Life",
+      "image": "https://m.media-amazon.com/images/M/MV5BZjc4NDZhZWMtNGEzYS00ZWU2LThlM2ItNTA0YzQ0OTExMTE2XkEyXkFqcGdeQXVyNjUwMzI2NzU@._V1_Ratio0.6860_AL_.jpg",
+      "imDbRating": "8.6"
+    },
+    {
+      "id": "tt3439758",
+      "title": "The Kid",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTUwNTc4NDczOF5BMl5BanBnXkFtZTgwMjMwNzA0MjE@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "6.7"
+    },
+    {
+      "id": "tt0114709",
+      "title": "Toy Story",
+      "image": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0032138",
+      "title": "The Wizard of Oz",
+      "image": "https://m.media-amazon.com/images/M/MV5BNjUyMTc4MDExMV5BMl5BanBnXkFtZTgwNDg0NDIwMjE@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt1028532",
+      "title": "Hachi: A Dog's Tale",
+      "image": "https://m.media-amazon.com/images/M/MV5BNzE4NDg5OWMtMzg3NC00ZDRjLTllMDMtZTRjNWZmNjBmMGZlXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.1"
+    },
+    {
+      "id": "tt0435761",
+      "title": "Toy Story 3",
+      "image": "https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0986264",
+      "title": "Like Stars on Earth",
+      "image": "https://m.media-amazon.com/images/M/MV5BMDhjZWViN2MtNzgxOS00NmI4LThiZDQtZDI3MzM4MDE4NTc0XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_Ratio0.7053_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0266543",
+      "title": "Finding Nemo",
+      "image": "https://m.media-amazon.com/images/M/MV5BZjMxYzBiNjUtZDliNC00MDAyLTg3N2QtOWNjNmNhZGQzNDg5XkEyXkFqcGdeQXVyNjE2MjQwNjc@._V1_Ratio0.6860_AL_.jpg",
+      "imDbRating": "8.2"
+    },
+    {
+      "id": "tt1049413",
+      "title": "Up",
+      "image": "https://m.media-amazon.com/images/M/MV5BYjBkM2RjMzItM2M3Ni00N2NjLWE3NzMtMGY4MzE4MDAzMTRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.3"
+    },
+    {
+      "id": "tt0110357",
+      "title": "The Lion King",
+      "image": "https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_Ratio0.6763_AL_.jpg",
+      "imDbRating": "8.5"
+    }
+  ],
+  "tvSeriesInfo": null,
+  "tvEpisodeInfo": null,
+  "errorMessage": ""
+}
