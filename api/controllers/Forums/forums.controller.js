@@ -135,14 +135,14 @@ module.exports.updateLike = async (req, res, next) => {
     if (!forum) {
       next(createError(404, "Like Forum not found"));
     }
-    const updateLikeforum = await Follower.findOneAndUpdate(
+    const updateLikeForum = await Follower.findOneAndUpdate(
       { forumId: forum.id, userId: req.user.id },
       {
         like: like,
       }
     );
-    if (updateLikeforum) {
-      res.status(200).json(updateLikeforum);
+    if (updateLikeForum) {
+      res.status(200).json(updateLikeForum);
     }
   } catch (error) {
     next(error);

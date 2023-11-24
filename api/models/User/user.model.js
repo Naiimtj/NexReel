@@ -89,6 +89,12 @@ userSchema.virtual("medias", {
   foreignField: "userId",
 });
 
+userSchema.virtual("forums", {
+  ref: "Forum",
+  localField: "_id",
+  foreignField: "author",
+});
+
 userSchema.virtual("playlists", {
   ref: "Playlist",
   localField: "_id",

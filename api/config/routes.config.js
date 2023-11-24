@@ -39,11 +39,11 @@ router.patch("/users/me/notifications", auth.isAuthenticated, users.updateNotifi
 router.delete("/users/me", auth.isAuthenticated, users.delete);
 // Followers User
 router.get("/user/followers", auth.isAuthenticated, users.followers);
-router.post("/users/:userId/followes", auth.isAuthenticated, users.following);
+router.post("/users/:userId/follows", auth.isAuthenticated, users.following);
 router.post("/users/:userId/follow", auth.isAuthenticated, users.followingConfirm);
 router.get("/users/:userId/follow", auth.isAuthenticated, users.followingDetail);
-router.delete("/users/:userId/followes", auth.isAuthenticated, users.unFollowing);
-router.delete("/users/:userId/unfollow", auth.isAuthenticated, users.unFollow);
+router.delete("/users/:userId/follows", auth.isAuthenticated, users.unFollowing);
+router.delete("/users/:userId/nofollow", auth.isAuthenticated, users.unFollow);
 
 // - MEDIA
 router.post("/medias", auth.isAuthenticated, medias.create);

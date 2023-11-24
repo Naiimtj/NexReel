@@ -1,7 +1,6 @@
 const createError = require("http-errors");
 const Playlist = require("../../models/Playlist/playlist.model");
-const PlaylisFollowers = require("../../models/Playlist/follower.model");
-const User = require("../../models/User/user.model");
+const PlaylistFollowers = require("../../models/Playlist/follower.model");
 
 module.exports.create = async (req, res, next) => {
   try {
@@ -127,7 +126,7 @@ module.exports.following = async (req, res, next) => {
   try {
     const playlist = await req.playlist;
 
-    const findPlaylist = await PlaylisFollowers.findOne({
+    const findPlaylist = await PlaylistFollowers.findOne({
       userId: req.user.id,
       playlistId: playlist.id,
     });
@@ -138,7 +137,7 @@ module.exports.following = async (req, res, next) => {
     if (req.user.id === playlist.author.toString()) {
       return next(createError(404, "You can't follow your own forum"));
     }
-    const addPlaylist = await PlaylisFollowers.create({
+    const addPlaylist = await PlaylistFollowers.create({
       userId: req.user.id,
       playlistId: playlist.id,
     });
@@ -155,7 +154,7 @@ module.exports.followingUser = async (req, res, next) => {
     if (!playlistsFollowers) {
       return next(createError(404, "Playlist does not exist"));
     }
-    const playlistUser = await PlaylisFollowers.findOne({
+    const playlistUser = await PlaylistFollowers.findOne({
       userId: req.user.id,
       playlistId: req.params.id,
     });
@@ -177,7 +176,7 @@ module.exports.updateLike = async (req, res, next) => {
     if (!playlist) {
       next(createError(404, "Like Playlist not found"));
     }
-    const updateLikePlaylist = await PlaylisFollowers.findOneAndUpdate(
+    const updateLikePlaylist = await PlaylistFollowers.findOneAndUpdate(
       { playlistId: playlist.id, userId: req.user.id },
       {
         like: like,
@@ -195,7 +194,7 @@ module.exports.unFollowing = async (req, res, next) => {
   try {
     const playlist = await req.playlist;
 
-    const deletePlaylist = await PlaylisFollowers.findOneAndDelete({
+    const deletePlaylist = await PlaylistFollowers.findOneAndDelete({
       userId: req.user.id,
       playlistId: playlist.id,
     });

@@ -64,14 +64,14 @@ module.exports.list = async (req, res, next) => {
 module.exports.search = async (req, res, next) => {
   try {
     const { username } = req.query;
-    const usersFinde = await User.find(
+    const usersFind = await User.find(
       { username: new RegExp(username, "i") },
       "avatarURL username"
     );
-    if (!usersFinde) {
+    if (!usersFind) {
       return next(createError(404, "Users not found"));
     }
-    const users = usersFinde.filter((user) => user.id !== req.user.id);
+    const users = usersFind.filter((user) => user.id !== req.user.id);
     if (!users) {
       return next(createError(404, "Users not found"));
     }
@@ -91,6 +91,7 @@ module.exports.detail = async (req, res, next) => {
           path: "followersPlaylist",
         },
       })
+      .populate("forums")
       .populate("followers")
       .populate("following");
     if (!user) {
