@@ -47,7 +47,7 @@ import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
 import Seasons from "../../components/TV/Seasons";
 
-function DetailsMovie({ info, crews, reparto, media }) {
+function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
   const userExist = !!user;
@@ -81,7 +81,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
     // .Default
     id,
   } = info;
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
   useEffect(() => {
     const Data = async () => {
@@ -162,7 +162,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
   };
   const [pendingSeen, setPendingSeen] = useState(false);
 
-  // ! USER COMPARATION
+  // ! USER COMPARATOR
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
@@ -187,7 +187,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
       try {
         await postPlaylistMedia(playlistId, {
           mediaId: `${id}`,
-          media_type: processInfo.type,
+          media_type: media,
           runtime: processInfo.runTime,
         });
       } catch (error) {
@@ -216,9 +216,9 @@ function DetailsMovie({ info, crews, reparto, media }) {
     };
   }, [isTimeout, errorAddPlaylists]);
 
-  // -REPARTO
+  // -MAIN CAST
   const size = 20;
-  const items = reparto && reparto.slice(0, size);
+  const items = cast && cast.slice(0, size);
   // Check if type trailer and change language
   const trailer =
     trailerListData &&
@@ -238,7 +238,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
       trailerListData.filter((crew) => crew.type === "Trailer");
     return trailer;
   }
-  // -PORTADA URL
+  // -POSTER URL
   const url =
     (poster_path && poster_path !== undefined) || (poster_path && poster_path)
       ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
@@ -322,45 +322,45 @@ function DetailsMovie({ info, crews, reparto, media }) {
         ).TimeConvert()
       : 0;
 
-  processInfo.watchinbuy =
+  processInfo.watchingBuy =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.buy
       ? detailsWatchList.ES.buy
       : null;
-  processInfo.watchin =
+  processInfo.watching =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.flatrate
       ? detailsWatchList.ES.flatrate
       : null;
-  processInfo.watchinFree =
+  processInfo.watchingFree =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.free
       ? detailsWatchList.ES.free
       : null;
-  processInfo.watchinAds =
+  processInfo.watchingAds =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.ads
       ? detailsWatchList.ES.ads
       : null;
 
   processInfo.NoWatch =
-    processInfo.watchin === null &&
-    processInfo.watchinFree === null &&
-    processInfo.watchinAds === null &&
-    processInfo.watchinbuy === null
+    processInfo.watching === null &&
+    processInfo.watchingFree === null &&
+    processInfo.watchingAds === null &&
+    processInfo.watchingBuy === null
       ? null
       : t("Available");
 
   processInfo.trailer = trailer && trailer[0] ? trailer[0].key : null;
-  processInfo.coleccion = belongs_to_collection;
+  processInfo.collection = belongs_to_collection;
   processInfo.status = media === "tv" ? status : null;
 
-  const directings = crews.filter((crew) => crew.department === "Directing");
+  const directing = crews.filter((crew) => crew.department === "Directing");
 
-  const writters = crews.filter((crew) => crew.department === "Writing");
+  const writers = crews.filter((crew) => crew.department === "Writing");
   const productions = crews.filter((crew) => crew.department === "Production");
 
-  const uniqueWritters = Array.from(new Set(writters.map((a) => a.id)))
-    .map((id) => writters.find((a) => a.id === id))
+  const uniqueWriters = Array.from(new Set(writers.map((a) => a.id)))
+    .map((id) => writers.find((a) => a.id === id))
     .slice(0, 6);
-  const uniqueDirectings = Array.from(new Set(directings.map((a) => a.id)))
-    .map((id) => directings.find((a) => a.id === id))
+  const uniqueDirecting = Array.from(new Set(directing.map((a) => a.id)))
+    .map((id) => directing.find((a) => a.id === id))
     .slice(0, 3);
   const uniqueProductions = Array.from(new Set(productions.map((a) => a.id)))
     .map((id) => productions.find((a) => a.id === id))
@@ -611,10 +611,10 @@ function DetailsMovie({ info, crews, reparto, media }) {
                 <h1 className="text-gray-400">{t("WHERE TO SEE IT")}</h1>
                 {processInfo.NoWatch === null ? t("Not Available") : null}
                 {/* // STREAM */}
-                {processInfo.watchin ? t("Stream") : null}
-                <div className={processInfo.watchin ? "" : ""}>
-                  {processInfo.watchin && processInfo.watchin
-                    ? processInfo.watchin.map((watchin, index) => (
+                {processInfo.watching ? t("Stream") : null}
+                <div className={processInfo.watching ? "" : ""}>
+                  {processInfo.watching && processInfo.watching
+                    ? processInfo.watching.map((watchin, index) => (
                         <img
                           className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
                           src={`https://image.tmdb.org/t/p/original/${watchin.logo_path}`}
@@ -625,8 +625,8 @@ function DetailsMovie({ info, crews, reparto, media }) {
                         />
                       ))
                     : null}
-                  {processInfo.watchinAds
-                    ? processInfo.watchinAds.map((watchin, index) => (
+                  {processInfo.watchingAds
+                    ? processInfo.watchingAds.map((watchin, index) => (
                         <img
                           className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
                           src={`https://image.tmdb.org/t/p/original/${watchin.logo_path}`}
@@ -640,15 +640,15 @@ function DetailsMovie({ info, crews, reparto, media }) {
                 </div>
               </div>
               {/* // BUY */}
-              <div className={processInfo.watchinbuy ? "text-left" : ""}>
-                {processInfo.watchinbuy ? t("Buy") : null}
-                <div className={processInfo.watchinbuy ? "pt-2" : ""}>
-                  {processInfo.watchinbuy && processInfo.watchinbuy
-                    ? processInfo.watchinbuy.map((watchinBuy, index) => (
+              <div className={processInfo.watchingBuy ? "text-left" : ""}>
+                {processInfo.watchingBuy ? t("Buy") : null}
+                <div className={processInfo.watchingBuy ? "pt-2" : ""}>
+                  {processInfo.watchingBuy && processInfo.watchingBuy
+                    ? processInfo.watchingBuy.map((watchingBuy, index) => (
                         <img
                           className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchinBuy.logo_path}`}
-                          alt={watchinBuy.provider_name}
+                          src={`https://image.tmdb.org/t/p/original/${watchingBuy.logo_path}`}
+                          alt={watchingBuy.provider_name}
                           key={Math.floor(
                             (1 + index + Math.random()) * 0x10000
                           )}
@@ -658,15 +658,15 @@ function DetailsMovie({ info, crews, reparto, media }) {
                 </div>
               </div>
               {/* // FREE */}
-              <div className={processInfo.watchinFree ? "text-left" : ""}>
-                {processInfo.watchinFree ? t("Free") : null}
-                <div className={processInfo.watchinFree ? "pt-2" : ""}>
-                  {processInfo.watchinFree && processInfo.watchinFree
-                    ? processInfo.watchinFree.map((watchinFree, index) => (
+              <div className={processInfo.watchingFree ? "text-left" : ""}>
+                {processInfo.watchingFree ? t("Free") : null}
+                <div className={processInfo.watchingFree ? "pt-2" : ""}>
+                  {processInfo.watchingFree && processInfo.watchingFree
+                    ? processInfo.watchingFree.map((watchingFree, index) => (
                         <img
                           className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchinFree.logo_path}`}
-                          alt={watchinFree.provider_name}
+                          src={`https://image.tmdb.org/t/p/original/${watchingFree.logo_path}`}
+                          alt={watchingFree.provider_name}
                           key={Math.floor(
                             (1 + index + Math.random()) * 0x10000
                           )}
@@ -956,7 +956,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
                               className={`inline-block ${
                                 index !== created_by.length - 1 ? "pr-1" : ""
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() => navegate(`/person/${created.id}`)}
+                              onClick={() => navigate(`/person/${created.id}`)}
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000 +
                                   created.id
@@ -979,7 +979,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
                           {", "}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() => navegate(`/${media}/${id}/credits`)}
+                            onClick={() => navigate(`/${media}/${id}/credits`)}
                           >
                             {t("more...")}
                           </button>
@@ -989,7 +989,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
                   </div>
                 ) : null}
                 {/* //-DIRECTED BY & PRODUCER */}
-                {uniqueDirectings ? (
+                {uniqueDirecting ? (
                   <div className="flex flex-row text-sm basis-1/2">
                     <div className="basis-1/2">
                       <div className="inline-block text-gray-400 mr-1">
@@ -997,18 +997,18 @@ function DetailsMovie({ info, crews, reparto, media }) {
                       </div>
                       <div className="inline-block">
                         {[
-                          uniqueDirectings &&
-                            uniqueDirectings.map((dire, index) => (
+                          uniqueDirecting &&
+                            uniqueDirecting.map((dire, index) => (
                               <button
                                 className="inline-block pr-1 cursor-pointer hover:text-gray-400"
-                                onClick={() => navegate(`/person/${dire.id}`)}
+                                onClick={() => navigate(`/person/${dire.id}`)}
                                 key={Math.floor(
                                   (1 + index + Math.random()) * 0x10000
                                 )}
                               >
                                 {dire.name}
-                                {uniqueDirectings &&
-                                index !== uniqueDirectings.length - 1
+                                {uniqueDirecting &&
+                                index !== uniqueDirecting.length - 1
                                   ? ", "
                                   : ""}
                               </button>
@@ -1017,13 +1017,13 @@ function DetailsMovie({ info, crews, reparto, media }) {
                             className="inline-block"
                             key={Math.floor((1 + Math.random()) * 0x10000)}
                           >
-                            {directings && directings.length > 3 ? (
+                            {directing && directing.length > 3 ? (
                               <div className="inline-block">
                                 {", "}
                                 <button
                                   className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                   onClick={() =>
-                                    navegate(`/${media}/${id}/credits`)
+                                    navigate(`/${media}/${id}/credits`)
                                   }
                                 >
                                   {t("more...")}
@@ -1062,29 +1062,28 @@ function DetailsMovie({ info, crews, reparto, media }) {
                   </div>
                 ) : null}
                 {/* //-WRITTEN BY */}
-                {uniqueWritters && uniqueWritters.length > 0 ? (
+                {uniqueWriters && uniqueWriters.length > 0 ? (
                   <div className="flex flex-row text-sm my-4">
                     <div className="inline-block text-gray-400 mr-1">
                       {`${t("WRITTEN BY")}:`}
                     </div>
                     <div className="inline-block text-gray-400">
-                      {uniqueWritters &&
-                        uniqueWritters.map((guio, index) => (
+                      {uniqueWriters &&
+                        uniqueWriters.map((guio, index) => (
                           <button
                             className={`inline-block ${
-                              uniqueWritters &&
-                              index !== uniqueWritters.length - 1
+                              uniqueWriters &&
+                              index !== uniqueWriters.length - 1
                                 ? "pr-1"
                                 : ""
                             } cursor-pointer text-gray-200 hover:text-gray-400`}
-                            onClick={() => navegate(`/person/${guio.id}`)}
+                            onClick={() => navigate(`/person/${guio.id}`)}
                             key={Math.floor(
                               (1 + index + Math.random()) * 0x10000
                             )}
                           >
                             {guio.name}
-                            {uniqueWritters &&
-                            index !== uniqueWritters.length - 1
+                            {uniqueWriters && index !== uniqueWriters.length - 1
                               ? ", "
                               : ""}
                           </button>
@@ -1094,12 +1093,12 @@ function DetailsMovie({ info, crews, reparto, media }) {
                       className="inline-block"
                       key={Math.floor((1 + Math.random()) * 0x10000)}
                     >
-                      {writters && writters.length > 3 ? (
+                      {writers && writers.length > 3 ? (
                         <div className="inline-block">
                           {", "}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() => navegate(`/${media}/${id}/credits`)}
+                            onClick={() => navigate(`/${media}/${id}/credits`)}
                           >
                             {t("more...")}
                           </button>
@@ -1127,7 +1126,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
                                   ? "pr-1"
                                   : ""
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() => navegate(`/person/${caract.id}`)}
+                              onClick={() => navigate(`/person/${caract.id}`)}
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000
                               )}
@@ -1149,7 +1148,7 @@ function DetailsMovie({ info, crews, reparto, media }) {
                               <button
                                 className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                 onClick={() =>
-                                  navegate(`/${media}/${id}/credits`)
+                                  navigate(`/${media}/${id}/credits`)
                                 }
                               >
                                 {t("more...")}
@@ -1191,9 +1190,9 @@ function DetailsMovie({ info, crews, reparto, media }) {
         ) : null}
         {/* //-COLLECTIONS / TEMPORADA */}
         <div className="text-lg">
-          {modal !== true && processInfo.coleccion ? (
+          {modal !== true && processInfo.collection ? (
             <Collections
-              idCollection={processInfo.coleccion.id}
+              idCollection={processInfo.collection.id}
               media={media}
             />
           ) : (
@@ -1239,12 +1238,12 @@ export default DetailsMovie;
 DetailsMovie.defaultProps = {
   info: {},
   crews: [],
-  reparto: [],
+  cast: [],
   media: "",
 };
 DetailsMovie.propTypes = {
   info: PropTypes.object,
   crews: PropTypes.array,
-  reparto: PropTypes.array,
+  cast: PropTypes.array,
   media: PropTypes.string,
 };

@@ -21,7 +21,7 @@ const SearchPlaylists = ({ hiden }) => {
     setSearchValue(e.target.value);
     setSearching(true);
   };
-  const ocultarSearch = () => {
+  const hideSearch = () => {
     setSearchValue("");
     setPlaylists({});
     setSearching(false);
@@ -58,7 +58,7 @@ const SearchPlaylists = ({ hiden }) => {
             searchValue={searchValue}
             listMedias={playlists}
             media={"playlists"}
-            ocultarSearch={ocultarSearch}
+            hideSearch={hideSearch}
           />
         </div>
       ) : null}

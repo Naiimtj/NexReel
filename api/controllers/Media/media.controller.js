@@ -16,6 +16,7 @@ module.exports.create = (Model, param) => {
           mediaId,
           media_type,
           runtime,
+          createdAt: Date.now(),
         });
         const dataSave = await media.save();
         if (!dataSave) {

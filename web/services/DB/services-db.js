@@ -172,7 +172,7 @@ export async function postConfirmFollow(id) {
 // . POST
 // Following
 export async function postFollow(id) {
-  const url = `/users/${id}/followes`;
+  const url = `/users/${id}/follows`;
   try {
     const response = await service.post(url);
     return response;
@@ -184,7 +184,7 @@ export async function postFollow(id) {
 // ! DELETE
 // delete
 export async function deleteFollower(id) {
-  const url = `/users/${id}/followes`;
+  const url = `/users/${id}/follows`;
   try {
     const response = await service.delete(url);
     return response;
@@ -196,7 +196,7 @@ export async function deleteFollower(id) {
 // ! DELETE
 // delete
 export async function UnFollow(id) {
-  const url = `/users/${id}/unfollow`;
+  const url = `/users/${id}/nofollow`;
   try {
     const response = await service.delete(url);
     return response;

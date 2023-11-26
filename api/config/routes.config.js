@@ -21,11 +21,6 @@ const {
 const Playlist = require("../models/Playlist/playlist.model");
 const Forum = require("../models/Forum/forum.model");
 
-// - MEDIA
-router.post("/playlists/:id/media", auth.isAuthenticated, authPlaylist.exists, authPlaylist.isOwnerOrAdmin, media.create(Playlist, "playlist"))
-router.delete("/playlists/:id/media", auth.isAuthenticated, authPlaylist.exists, authPlaylist.isOwnerOrAdmin, media.delete(Playlist, "playlist"));
-
-
 // < USER
 router.post("/login", users.login);
 router.post("/logout", users.logout);

@@ -25,6 +25,7 @@ import {
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
+import AddForum from "../../utils/Forum/AddForum";
 
 export const Multi = ({
   info,
@@ -36,11 +37,13 @@ export const Multi = ({
   isPlaylist,
   setPopSureDel,
   setIdDelete,
-  ocultarSearch,
+  hideSearch,
+  isForum,
+  basicForum,
 }) => {
   const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const userExist = !!user;
   const { media_type } = info;
   const id = isUser ? info.mediaId : info.id;
@@ -63,6 +66,7 @@ export const Multi = ({
       });
     }
   }, [i18next.language, id, changeSeenPending, pendingSeen, mediaType]);
+
   const {
     poster_path,
     vote_average,
@@ -95,9 +99,10 @@ export const Multi = ({
   }, [i18next.language, imdbID, mediaType]);
   // Poster
   const url =
-    (poster_path && poster_path !== undefined) ||
+    (poster_path && poster_path !== undefined) ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+    : null ||
     (profile_path && profile_path !== null)
-      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${profile_path}`
       : null;
   const BgPosterInfo = url || NoImage;
 
@@ -124,7 +129,7 @@ export const Multi = ({
   } else if (mediaTv) {
     processInfo.type = "tv";
   }
-  // ! USER COMPARATION
+  // ! USER COMPARATIVE
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
@@ -143,7 +148,7 @@ export const Multi = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataMediaUser]);
-  //- VISTO/NO VISTO
+  //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
     if (Object.keys(dataMediaUser).length) {
@@ -239,12 +244,12 @@ export const Multi = ({
     >
       <div
         className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-2 rounded-xl h-full"
-        onClick={ocultarSearch}
+        onClick={hideSearch}
       >
         <div
           className="relative"
           onClick={() =>
-            navegate(
+            navigate(
               `/${mediaMovie ? "movie" : mediaTv ? "tv" : mediaType}/${id}`
             )
           }
@@ -340,68 +345,80 @@ export const Multi = ({
         {userExist ? (
           <div className="mb-1 grid grid-cols-5 gap-2 bottom-0 absolute w-full pr-4">
             {/* //-ADD BUTTON PLAYLIST */}
-            <div className="relative text-base align-middle col-span-3 ">
-              <button
-                className={`cursor-pointer text-left font-semibold px:center ${
-                  !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-                } transition ease-in-out md:hover:scale-105 duration-300`}
-                onClick={(event) => {
-                  event.stopPropagation(), setPlaylistsList(!playlistsList);
-                }}
-              >
-                {!playlistsList ? (
-                  <IoMdAdd
-                    className="inline-block"
-                    size={20}
-                    alt={t("Add to one list")}
-                  />
-                ) : (
-                  <IoIosRemove
-                    className="inline-block"
-                    size={20}
-                    alt={t("Add to one list")}
-                  />
-                )}
-                {t("Playlists")}
-              </button>
-              {playlistsList ? (
-                <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
-                  {errorAddPlaylists ? (
-                    <div className="text-white bg-gray-50/20 px-1 font-bold">
-                      {t(errorAddPlaylists)}
-                    </div>
-                  ) : null}
-                  {user &&
-                    dataUser &&
-                    dataUser.playlists.map((i, index) => {
-                      const roundedTopItem =
-                        index === 0 ? "rounded-t-md" : null;
-                      const roundedBottomItem =
-                        user.playlists && user.playlists.length === index + 1
-                          ? "rounded-b-md"
-                          : null;
+            {!isForum ? (
+              <div className="relative text-base align-middle col-span-3 ">
+                <button
+                  className={`cursor-pointer text-left font-semibold px:center ${
+                    !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
+                  } transition ease-in-out md:hover:scale-105 duration-300`}
+                  onClick={(event) => {
+                    event.stopPropagation(), setPlaylistsList(!playlistsList);
+                  }}
+                >
+                  {!playlistsList ? (
+                    <IoMdAdd
+                      className="inline-block"
+                      size={20}
+                      alt={t("Add to one list")}
+                    />
+                  ) : (
+                    <IoIosRemove
+                      className="inline-block"
+                      size={20}
+                      alt={t("Add to one list")}
+                    />
+                  )}
+                  {t("Playlists")}
+                </button>
+                {playlistsList ? (
+                  <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
+                    {errorAddPlaylists ? (
+                      <div className="text-white bg-gray-50/20 px-1 font-bold">
+                        {t(errorAddPlaylists)}
+                      </div>
+                    ) : null}
+                    {user &&
+                      dataUser &&
+                      dataUser.playlists.map((i, index) => {
+                        const roundedTopItem =
+                          index === 0 ? "rounded-t-md" : null;
+                        const roundedBottomItem =
+                          user.playlists && user.playlists.length === index + 1
+                            ? "rounded-b-md"
+                            : null;
 
-                      return (
-                        <div
-                          key={i.id}
-                          className={`hover:bg-gray-50 px-1 ${
-                            user.playlists && user.playlists.length === 1
-                              ? "rounded-md"
-                              : null
-                          } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                          onClick={(event) => {
-                            event.stopPropagation(), handleAddPlaylist(i.id);
-                          }}
-                        >
-                          <div className="text-black text-left">
-                            · {i.title}
+                        return (
+                          <div
+                            key={i.id}
+                            className={`hover:bg-gray-50 px-1 ${
+                              user.playlists && user.playlists.length === 1
+                                ? "rounded-md"
+                                : null
+                            } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
+                            onClick={(event) => {
+                              event.stopPropagation(), handleAddPlaylist(i.id);
+                            }}
+                          >
+                            <div className="text-black text-left">
+                              · {i.title}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              ) : null}
-            </div>
+                        );
+                      })}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+            {isForum ? (
+              <AddForum
+                id={id}
+                runTime={processInfo.runTime}
+                type={processInfo.type}
+                basicForum={basicForum}
+                changeSeenPending={changeSeenPending}
+                setChangeSeenPending={setChangeSeenPending}
+              />
+            ) : null}
             {/* //-SEEN/UNSEEN */}
             <div className="text-right align-middle">
               {mediaType !== "person" ? (
@@ -473,7 +490,9 @@ Multi.defaultProps = {
   isPlaylist: "",
   setPopSureDel: () => {},
   setIdDelete: () => {},
-  ocultarSearch: () => {},
+  hideSearch: () => {},
+  basicForum: {},
+  isForum: false,
 };
 
 Multi.propTypes = {
@@ -486,5 +505,7 @@ Multi.propTypes = {
   isPlaylist: PropTypes.string,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
-  ocultarSearch: PropTypes.func,
+  hideSearch: PropTypes.func,
+  basicForum: PropTypes.object,
+  isForum: PropTypes.bool,
 };

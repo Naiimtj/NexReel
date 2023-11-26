@@ -37,7 +37,7 @@ export const MultiList = ({
   setIdDelete,
 }) => {
   const [t, i18next] = useTranslation("translation");
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const userExist = !!user;
   const { media_type } = info;
@@ -85,9 +85,10 @@ export const MultiList = ({
   }, [i18next.language, imdbID, mediaType]);
   // Poster
   const url =
-    (poster_path && poster_path !== undefined) ||
+    (poster_path && poster_path !== undefined) ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+    : null ||
     (profile_path && profile_path !== null)
-      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${profile_path}`
       : null;
   const BgPosterInfo = url || NoImage;
 
@@ -229,7 +230,7 @@ export const MultiList = ({
         <div
           className="relative"
           onClick={() =>
-            navegate(
+            navigate(
               `/${mediaMovie ? "movie" : mediaTv ? "tv" : mediaType}/${id}`
             )
           }

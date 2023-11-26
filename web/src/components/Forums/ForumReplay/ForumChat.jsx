@@ -54,16 +54,16 @@ const ForumChat = ({ id, isOtherUser, transl, userId }) => {
   const [reply, setReply] = useState({});
 
   return (
-    <div className="">
+    <>
       {errorDelete ? (
         <div className="text-red-600 bg-white/50 rounded-2xl text-center uppercase px-1 font-bold">
           {transl(errorDelete)}
         </div>
       ) : null}
-      <div className="grid md:grid-cols-4 lg:grid-cols-6">
+      {/* // - ADD MESSAGE */}
+      <div className="flex justify-end">
         <button
-          type="button"
-          className={`w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-2 p-1 border-2 border-[#7B6EF6] hover:bg-[#494949] hover:border-[#494949] uppercase  transition-colors`}
+          className='w-[200px] text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-2 p-1 border-2 border-[#7B6EF6] hover:bg-[#494949] hover:border-[#494949] uppercase  transition-colors'
           onClick={() => setCreateMessage(true)}
         >
           {transl("Add Message")}
@@ -112,7 +112,7 @@ const ForumChat = ({ id, isOtherUser, transl, userId }) => {
           />
         ) : null}
       </div>
-    </div>
+    </>
   );
 };
 

@@ -21,7 +21,7 @@ const SearchUsers = ({ hiden }) => {
     setSearchValue(e.target.value);
     setSearching(true);
   };
-  const ocultarSearch = () => {
+  const hideSearch = () => {
     setSearchValue("");
     setUsers({});
     setSearching(false);
@@ -57,7 +57,7 @@ const SearchUsers = ({ hiden }) => {
           searchValue={searchValue}
           listMedias={users}
           media={"user"}
-          ocultarSearch={ocultarSearch}
+          hideSearch={hideSearch}
         />
       ) : null}
     </div>

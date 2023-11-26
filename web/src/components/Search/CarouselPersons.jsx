@@ -6,7 +6,7 @@ import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Credits from "../Credits";
 
-const CarouselPersons = ({ title, id, info, media, isUser, ocultarSearch }) => {
+const CarouselPersons = ({ title, id, info, media, isUser, hideSearch }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const getCardsPerPage = () => {
     const screenWidth = window.innerWidth;
@@ -123,7 +123,7 @@ const CarouselPersons = ({ title, id, info, media, isUser, ocultarSearch }) => {
       {/* // - CARDS */}
       <div
         className={`mt-1 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:grid-cols-10 gap-1 text-gray-200 rounded-xl justify-items-center items-start`}
-        onClick={ocultarSearch}
+        onClick={hideSearch}
       >
         {visibleCards.map((card, index) => (
           <Credits
@@ -156,7 +156,7 @@ CarouselPersons.defaultProps = {
   setPopSureDel: () => {},
   setIdDelete: () => {},
   isAllCards: false,
-  ocultarSearch: () => {},
+  hideSearch: () => {},
 };
 
 CarouselPersons.propTypes = {
@@ -171,5 +171,5 @@ CarouselPersons.propTypes = {
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
   isAllCards: PropTypes.bool,
-  ocultarSearch: PropTypes.func,
+  hideSearch: PropTypes.func,
 };
