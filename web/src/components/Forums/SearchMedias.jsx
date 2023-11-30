@@ -84,8 +84,8 @@ const SearchMedias = ({ basicForum, hidden, setHidden, changeSeenPending,
           {/* // MOVIES */}
           {moviesList.results && moviesList.results.length > 0 ? (
             <div className="text-left">
-              <h1 className="ml-8 uppercase text-2xl">{t("Movies")}</h1>
               <SearchResults
+                title={t("Movies")}
                 listMedias={moviesList}
                 media={"movie"}
                 hideSearch={hideSearch}
@@ -99,8 +99,8 @@ const SearchMedias = ({ basicForum, hidden, setHidden, changeSeenPending,
           {/* // TV SHOWS */}
           {tvList.results && tvList.results.length > 0 ? (
             <div className="text-left">
-              <h1 className="ml-8 uppercase text-2xl">{t("tv shows")}</h1>
               <SearchResults
+                title={t("tv shows")}
                 listMedias={tvList}
                 media={"tv"}
                 hideSearch={hideSearch}

@@ -12,11 +12,12 @@ module.exports.create = (Model, param) => {
       if (mediaExists) {
         next(createError(404, `Is in the ${param}`));
       } else {
+        const createdAt = new Date().toISOString();
         media.medias.push({
           mediaId,
           media_type,
           runtime,
-          createdAt: Date.now(),
+          createdAt,
         });
         const dataSave = await media.save();
         if (!dataSave) {

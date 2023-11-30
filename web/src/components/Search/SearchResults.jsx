@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 // import { Link } from "react-router-dom";
-import Multi from "../MediaList/Multi";
 import CarouselPersons from "./CarouselPersons";
 import { IoClose } from "react-icons/io5";
 import PlaylistsList from "../Users/Playlist/PlaylistsList";
+import Carousel from "../../utils/Carousel/Carousel";
 
 const SearchResults = ({
+  title,
   listMedias,
   media,
   hideSearch,
@@ -39,32 +40,22 @@ const SearchResults = ({
       <div className="w-full px-4">
         {/* // - MOVIES & TV SHOWS */}
         {mediaMovie || mediaTv ? (
-          <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-1">
-            {listMedias &&
-              listMedias.results &&
-              listMedias.results.map((card, index) => {
-                const getCardsPerPage = () => {
-                  const screenWidth = window.innerWidth;
-                  if (screenWidth < 750) return 3;
-                  if (screenWidth < 1000) return 5;
-                  if (screenWidth < 1280) return 6;
-                  return 8;
-                };
-                const cardsPerPage = getCardsPerPage();
-                return index < cardsPerPage ? (
-                  <Multi
-                    key={`Square${index}${card.id}`}
-                    info={card}
-                    mediaMovie={mediaMovie}
-                    mediaTv={mediaTv}
-                    hideSearch={hideSearch}
-                    isForum={isForum}
-                    basicForum={basicForum}
-                    changeSeenPending={changeSeenPending}
-                    setChangeSeenPending={setChangeSeenPending}
-                  />
-                ) : null;
-              })}
+          <div className="w-full">
+            {listMedias && listMedias.results && listMedias.results ? (
+              <Carousel
+                title={t(title)}
+                info={listMedias.results}
+                mediaMovie={mediaMovie}
+                mediaTv={mediaTv}
+                media={media}
+                hideSearch={hideSearch}
+                isForum={isForum}
+                basicForum={basicForum}
+                changeSeenPending={changeSeenPending}
+                setChangeSeenPending={setChangeSeenPending}
+                isAllCards
+              />
+            ) : null}
           </div>
         ) : null}
         {/* // - PERSONS */}
@@ -137,6 +128,7 @@ const SearchResults = ({
 export default SearchResults;
 
 SearchResults.defaultProps = {
+  title: "",
   listMedias: {},
   media: "",
   hideSearch: () => {},
@@ -147,6 +139,7 @@ SearchResults.defaultProps = {
 };
 
 SearchResults.propTypes = {
+  title: PropTypes.string,
   listMedias: PropTypes.object,
   media: PropTypes.string,
   hideSearch: PropTypes.func,

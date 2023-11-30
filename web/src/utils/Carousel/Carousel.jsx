@@ -17,6 +17,9 @@ const Carousel = ({
   setPopSureDel,
   setIdDelete,
   isAllCards,
+  hideSearch,
+  isForum,
+  basicForum,
 }) => {
   const mediaMovie = media === "movie";
   const mediaTv = media === "tv";
@@ -151,6 +154,9 @@ const Carousel = ({
             isPlaylist={isPlaylist}
             setPopSureDel={setPopSureDel}
             setIdDelete={setIdDelete}
+            hideSearch={hideSearch}
+            isForum={isForum}
+            basicForum={basicForum}
           />
         ))}
       </div>
@@ -175,6 +181,9 @@ Carousel.defaultProps = {
   setPopSureDel: () => {},
   setIdDelete: () => {},
   isAllCards: false,
+  hideSearch: () => {},
+  basicForum: {},
+  isForum: false,
 };
 
 Carousel.propTypes = {
@@ -188,4 +197,7 @@ Carousel.propTypes = {
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
   isAllCards: PropTypes.bool,
+  hideSearch: PropTypes.func,
+  basicForum: PropTypes.object,
+  isForum: PropTypes.bool,
 };

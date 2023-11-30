@@ -99,9 +99,9 @@ export const Multi = ({
   }, [i18next.language, imdbID, mediaType]);
   // Poster
   const url =
-    (poster_path && poster_path !== undefined) ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
-    : null ||
-    (profile_path && profile_path !== null)
+    poster_path && poster_path !== undefined
+      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+      : null || (profile_path && profile_path !== null)
       ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${profile_path}`
       : null;
   const BgPosterInfo = url || NoImage;
@@ -411,7 +411,7 @@ export const Multi = ({
             ) : null}
             {isForum ? (
               <AddForum
-                id={id}
+                id={Number(id)}
                 runTime={processInfo.runTime}
                 type={processInfo.type}
                 basicForum={basicForum}

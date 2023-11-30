@@ -547,7 +547,6 @@ const ForumSingle = () => {
                           isPlaylist={!isOtherUser ? user.id : ""}
                           setPopSureDel={setPopSureDelMedia}
                           setIdDelete={setIdDelete}
-                          isForum
                         />
                       ) : null}
                       {/* // - SQUARE */}
@@ -563,7 +562,6 @@ const ForumSingle = () => {
                               isPlaylist={!isOtherUser ? user.id : ""}
                               setPopSureDel={setPopSureDelMedia}
                               setIdDelete={setIdDelete}
-                              isForum
                             />
                           ))}
                         </div>
@@ -581,7 +579,6 @@ const ForumSingle = () => {
                               isPlaylist={!isOtherUser ? user.id : ""}
                               setPopSureDel={setPopSureDelMedia}
                               setIdDelete={setIdDelete}
-                              isForum
                             />
                           ))}
                         </div>

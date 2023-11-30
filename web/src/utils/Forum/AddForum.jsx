@@ -18,7 +18,7 @@ const AddForum = ({
   const [t] = useTranslation("translation");
   const [errorAddForums, setErrorAddForums] = useState(false);
   const isInForum =
-    basicForum &&
+    basicForum && basicForum.medias &&
     basicForum.medias.some((media) => Number(media.mediaId) === id);
   const handleAddForum = async (forumId) => {
     try {
