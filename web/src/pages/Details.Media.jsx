@@ -8,14 +8,14 @@ import { useTranslation } from "react-i18next";
 const DetailsMedia = () => {
   const { id, media_type } = useParams();
   const [t] = useTranslation("translation");
-  const [repartoList, setRepartoList] = useState([]);
+  const [castList, setCastList] = useState([]);
   const [crewsList, setCrewsList] = useState([]);
   const [dataDetails, setDataDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (id && media_type) {
       getCredits(media_type, id, "credits", t("es-ES")).then((data) => {
-        setRepartoList(data.cast);
+        setCastList(data.cast);
         setCrewsList(data.crew);
       });
       getMediaDetails(media_type, id, t("es-ES")).then((data) => {
@@ -40,7 +40,7 @@ const DetailsMedia = () => {
       <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
         {!loading ? (
           <DetailsMovie
-            reparto={repartoList}
+            cast={castList}
             crews={crewsList}
             info={dataDetails}
             addButton={true}

@@ -67,13 +67,36 @@ export const MultiSmall = ({
           target="_blank"
         >
           <div className="relative">
-            {/* //-PORTADA*/}
+            {/* //-POSTER*/}
             <div className="transition ease-in-out md:hover:scale-105 duration-300 pb-3">
-              <img
-                className="static aspect-auto cursor-pointer rounded-lg"
-                src={processInfo.bgPoster}
-                alt={processInfo.title}
-              />
+              {url ? (
+                <img
+                  className="static aspect-auto cursor-pointer rounded-lg"
+                  src={processInfo.bgPoster}
+                  alt={processInfo.title}
+                />
+              ) : (
+                <div className="relative flex justify-center items-center">
+                  <img
+                    className="absolute h-24 opacity-10"
+                    src={
+                      processInfo.type === "movie"
+                        ? movie
+                        : processInfo.type === "tv"
+                        ? tv
+                        : processInfo.type === "person"
+                        ? people
+                        : null
+                    }
+                    alt={t("Icon people")}
+                  />
+                  <img
+                    className="static aspect-auto cursor-pointer rounded-lg"
+                    src={processInfo.bgPoster}
+                    alt={t("No photo")}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Link>

@@ -1,8 +1,8 @@
 class DateAndTimeConvert {
-  constructor(date, leng, secondsBool, noYear, noMonth, noTime, monthLonger) {
+  constructor(date, lang, secondsBool, noYear, noMonth, noTime, monthLonger) {
     this.date = date; // number
     this.time = date; // number
-    this.leng = leng; // t of useTranslation !Important for translation
+    this.lang = lang; // t of useTranslation !Important for translation
     this.secondsBool = secondsBool; // bool
     this.noYear = noYear; // bool
     this.noMonth = noMonth; // bool
@@ -12,18 +12,18 @@ class DateAndTimeConvert {
 
   DateTimeConvert() {
     const months = [
-      `${this.leng("Jan")}`,
-      `${this.leng("Feb")}`,
-      `${this.leng("Mar")}`,
-      `${this.leng("Apr")}`,
-      `${this.leng("May")}`,
-      `${this.leng("Jun")}`,
-      `${this.leng("Jul")}`,
-      `${this.leng("Aug")}`,
-      `${this.leng("Sep")}`,
-      `${this.leng("Oct")}`,
-      `${this.leng("Nov")}`,
-      `${this.leng("Dec")}`,
+      `${this.lang("Jan")}`,
+      `${this.lang("Feb")}`,
+      `${this.lang("Mar")}`,
+      `${this.lang("Apr")}`,
+      `${this.lang("May")}`,
+      `${this.lang("Jun")}`,
+      `${this.lang("Jul")}`,
+      `${this.lang("Aug")}`,
+      `${this.lang("Sep")}`,
+      `${this.lang("Oct")}`,
+      `${this.lang("Nov")}`,
+      `${this.lang("Dec")}`,
     ];
     let dateTime = this.date;
     const mydate = new Date(dateTime);
@@ -37,7 +37,7 @@ class DateAndTimeConvert {
     const hours = mydate.getHours();
     const hoursEN = hours > 12 ? hours - 12 : hours;
     const ampm = hours >= 12 ? "PM" : "AM";
-    const country = this.leng("en");
+    const country = this.lang("en");
     const time =
       country === "en" ? `${hoursEN}:${minuts} ${ampm}` : `${hours}:${minuts}`;
     const convertDate = `${currdate}${
@@ -59,7 +59,7 @@ class DateAndTimeConvert {
     const hours = Math.floor((((this.time % yearInMinutes) % monthInMinutes) % dayInMinutes) / hourInMinutes);
     const mins = (((this.time % yearInMinutes) % monthInMinutes) % dayInMinutes) % hourInMinutes;
     
-    const timeText = `${years > 0 ? years + this.leng("year(s)") : ""}${months > 0 ? months + this.leng(" month(s) ") : ""}${days > 0 ? days + this.leng(" day(s) ") : ""}${hours > 0 ? hours + this.leng(" h ") : ""}${mins > 0 ? mins + this.leng(" min") : ""}`;
+    const timeText = `${years > 0 ? years + this.lang("year(s)") : ""}${months > 0 ? months + this.lang(" month(s) ") : ""}${days > 0 ? days + this.lang(" day(s) ") : ""}${hours > 0 ? hours + this.lang(" h ") : ""}${mins > 0 ? mins + this.lang(" min") : ""}`;
 
     return timeText.trim();    
   }
@@ -68,7 +68,7 @@ class DateAndTimeConvert {
     let dateTime = this.date;
     const MonthLonger = this.monthLonger ? this.monthLonger : this.noMonth
     const MounthData = this.noMonth && !this.monthLonger ? undefined : MonthLonger
-    return new Date(dateTime).toLocaleString(this.leng('en-EN'), {
+    return new Date(dateTime).toLocaleString(this.lang('en-EN'), {
       day: 'numeric',
       month: !MounthData ? undefined : 'short',
       year: this.noYear ? undefined : 'numeric',

@@ -73,6 +73,7 @@ function Keyword() {
       detallesAPI();
     }
   }, [id, media_type, t]);
+  document.title = `${keywordName.name}`;
 
   return (
     <div className="w-full h-full px-8 pb-5 mt-6 mb-20 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">

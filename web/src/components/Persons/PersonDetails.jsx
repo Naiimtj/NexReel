@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { BsFillCaretRightFill } from "react-icons/bs";
-import { FaFacebookSquare, FaInstagram, FaTwitterSquare } from "react-icons/fa";
+import { FaFacebookSquare, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaSquareXTwitter, FaTiktok } from "react-icons/fa6";
+import { SiWikidata } from "react-icons/si";
 import Carousel from "../../utils/Carousel/Carousel";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import { NoImage } from "../../assets/image";
+import { NoImage, people } from "../../assets/image";
 import { getExternalId } from "../../../services/TMDB/services-tmdb";
 import { IoIosArrowBack, IoIosRemove, IoMdAdd } from "react-icons/io";
 import { getUser, postPlaylistMedia } from "../../../services/DB/services-db";
@@ -22,7 +24,7 @@ export const PersonDetails = ({
   titleMedia,
 }) => {
   const [t] = useTranslation("translation");
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const userExist = !!user;
   const [dataUser, setDataUser] = useState({});
@@ -49,6 +51,8 @@ export const PersonDetails = ({
     place_of_birth,
     imdb_id,
   } = info;
+  document.title = `${name}`;
+
   //-SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -66,19 +70,18 @@ export const PersonDetails = ({
     }
   }, [imdb_id, t]);
   // - EXTERNAL ID (SOCIAL)
-  const [externalId, setexternalId] = useState([]);
+  const [externalId, setExternalId] = useState([]);
   useEffect(() => {
     const externalIdAPI = async () => {
       const result = await getExternalId("person", id, t("es-ES"));
       if (result) {
-        setexternalId(result);
+        setExternalId(result);
       }
     };
     if (id) {
       externalIdAPI();
     }
   }, [id, t]);
-
   const facebookId =
     externalId && externalId.facebook_id !== "" && externalId.facebook_id
       ? externalId.facebook_id
@@ -91,30 +94,59 @@ export const PersonDetails = ({
     externalId && externalId.twitter_id !== "" && externalId.twitter_id
       ? externalId.twitter_id
       : null;
-
-  const imdbclean =
+  const tiktokId =
+    externalId && externalId.tiktok_id !== "" && externalId.tiktok_id
+      ? externalId.tiktok_id
+      : null;
+  const wikipediaId =
+    externalId && externalId.wikidata_id !== "" && externalId.wikidata_id
+      ? externalId.wikidata_id
+      : null;
+  const youtubeId =
+    externalId && externalId.youtube_id !== "" && externalId.youtube_id
+      ? externalId.youtube_id
+      : null;
+  const imdbClean =
     imdbPerson.id === undefined ? null : imdbPerson.id ? imdbPerson : null;
 
   const urlPerson = profile_path
     ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
     : null;
-
   const photo = profile_path ? urlPerson : NoImage;
-  const height = imdbclean ? imdbclean.height : null;
+  const height = imdbClean ? imdbClean.height : null;
   const biographyInfo =
     biography !== "" ? biography : infoEN ? infoEN.biography : null;
-  const birthdayDate = new DateAndTimeConvert(birthday, t).DateTimeConvert();
-  const deathdayDate = deathday ? null : deathday;
-  const age =
-    deathdayDate === null
+  const birthdayDate = birthday
+    ? new DateAndTimeConvert(
+        birthday,
+        t,
+        false,
+        false,
+        false,
+        true
+      ).DateTimeConvert()
+    : null;
+  const deathdayDate = deathday
+    ? new DateAndTimeConvert(
+        deathday,
+        t,
+        false,
+        false,
+        false,
+        true
+      ).DateTimeConvert()
+    : null;
+  const age = !deathdayDate
+    ? birthday
       ? new Date().getFullYear() - new Date(birthday).getFullYear()
-      : new Date(deathdayDate).getFullYear() - new Date(birthday).getFullYear();
-  const departament = imdbclean ? imdbclean.role : null;
-  // const knownFor = imdbclean ? imdbclean.knownFor : null;
-  const departamentKnown = known_for_department;
+      : null
+    : new Date(deathday).getFullYear() - new Date(birthday).getFullYear();
+  const department = imdbClean ? imdbClean.role : null;
+  // const knownFor = imdbClean ? imdbClean.knownFor : null;
+  const departmentKnown = known_for_department;
   const placeBirth = place_of_birth;
 
-  //-FILTERS REPETS
+  //-FILTERS REPEATS
   const uniqueCrewKnown = id
     ? Array.from(new Set(films.crew.map((a) => a.id))).map((id) => {
         return films.crew.find((a) => a.id === id);
@@ -137,7 +169,7 @@ export const PersonDetails = ({
       return [...uniqueKnown].find((a) => a.id === id);
     });
 
-  //-SEPARE FOR MEDIA
+  //-SPARE FOR MEDIA
   const knownNoDate =
     knownFor &&
     knownFor.filter(
@@ -205,17 +237,17 @@ export const PersonDetails = ({
       //must be equal to b
       return 0;
     });
-  //-PELÍCULAS CON MÁS NOTA
-  const knownForNota =
+  //-MOVIE MORE VOTE
+  const knownForVote =
     uniqueCastKnown &&
     Array.from(new Set(uniqueKnown.map((a) => a.id))).map((id) => {
       return uniqueKnown.find((a) => a.id === id);
     });
-  const conocidoFiltNota =
-    knownForNota && knownForNota.filter((nota) => nota.vote_average < 9);
+  const knowFilterVote =
+    knownForVote && knownForVote.filter((nota) => nota.vote_average < 9);
 
-  conocidoFiltNota &&
-    conocidoFiltNota.sort(function (a, b) {
+  knowFilterVote &&
+    knowFilterVote.sort(function (a, b) {
       if (a.vote_average < b.vote_average) {
         return 1;
       }
@@ -227,7 +259,7 @@ export const PersonDetails = ({
       return 0;
     });
   const size = 20;
-  const items = conocidoFiltNota && conocidoFiltNota.slice(0, size);
+  const items = knowFilterVote && knowFilterVote.slice(0, size);
 
   // - PLAYLIST
   const [playlistsList, setPlaylistsList] = useState(false);
@@ -281,11 +313,26 @@ export const PersonDetails = ({
         {/* //-PHOTO Y ADD PLAYLIST */}
         <div className="md:row-span-1 rounded-xl justify-center">
           <div className="flex justify-around">
-            <img
-              className="rounded-xl object-cover h-96"
-              src={photo}
-              alt={name}
-            />
+            {profile_path ? (
+              <img
+                className="rounded-xl object-cover h-96"
+                src={photo}
+                alt={name}
+              />
+            ) : (
+              <div className="relative flex justify-center items-center">
+                <img
+                  className="absolute h-36 opacity-10"
+                  src={people}
+                  alt={t("Icon people")}
+                />
+                <img
+                  className="rounded-xl object-cover h-96"
+                  src={photo}
+                  alt={t("No photo")}
+                />
+              </div>
+            )}
           </div>
           {/* //-ADD PLAYLIST */}
           {userExist ? (
@@ -352,13 +399,13 @@ export const PersonDetails = ({
           ) : null}
         </div>
         <div className="md:col-span-2">
-          <div className=" mt-6 px-2">
-            {/* //-NAME Y DEPARTAMENT */}
+          <div className="mt-6 px-2">
+            {/* //-NAME Y DEPARTMENT */}
             <div className="flex justify-between items-stretch mb-2">
               <h1 className="font-semibold text-4xl">{name}</h1>
-              {departamentKnown ? (
+              {departmentKnown ? (
                 <div>
-                  <div className="text-xs">{departamentKnown}</div>
+                  <div className="text-xs">{departmentKnown}</div>
                 </div>
               ) : null}
             </div>
@@ -372,7 +419,7 @@ export const PersonDetails = ({
               />
             ) : null}
             {twitterId ? (
-              <FaTwitterSquare
+              <FaSquareXTwitter
                 className="text-3xl inline-block hover:text-purpleNR cursor-pointer mr-1"
                 onClick={() => (
                   window.open(`https://twitter.com/${twitterId}`), "_blank"
@@ -388,48 +435,85 @@ export const PersonDetails = ({
                 )}
               />
             ) : null}
-            {departament ? (
+            {tiktokId ? (
+              <FaTiktok
+                className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
+                onClick={() => (
+                  window.open(`https://www.tiktok.com/@${tiktokId}`), "_blank"
+                )}
+              />
+            ) : null}
+            {youtubeId ? (
+              <FaYoutube
+                className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
+                onClick={() => (
+                  window.open(`https://www.youtube.com/@${youtubeId}`), "_blank"
+                )}
+              />
+            ) : null}
+            {wikipediaId ? (
+              <SiWikidata
+                className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
+                onClick={() => (
+                  window.open(`https://www.wikidata.org/wiki/${wikipediaId}`),
+                  "_blank"
+                )}
+              />
+            ) : null}
+            {department ? (
               <div className="flex items-stretch">
                 <div className="text-base">
                   <div className="text-gray-400">
                     <div className="text-gray-200 inline-block pl-1">
-                      {departament}
+                      {department}
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
-            {/* //-BIOGRAFY, BIRTHDAY, DEATHDAY AND PLACE BIRTH */}
-            <div className="row-span-2 mt-8">
-              <div className="pb-9">{biographyInfo}</div>
-              <div className="grid grid-rows-3 grid-flow-col gap-4 justify-between text-sm">
-                <div>
-                  <div className="inline-block text-gray-400">
-                    {deathdayDate
-                      ? `${t("DATES")}: `
-                      : `${t("DATE OF BIRTH")}: `}
+            {/* //-BIOGRAPHY, BIRTHDAY, DEATHDAY AND PLACE BIRTH */}
+            {biographyInfo || age || placeBirth || height ? (
+              <div className="row-span-2 mt-8">
+                {biographyInfo ? (
+                  <div className="pb-9">{biographyInfo}</div>
+                ) : null}
+                {age || placeBirth || height ? (
+                  <div className="grid grid-rows-3 grid-flow-col gap-4 justify-between text-sm">
+                    {age ? (
+                      <div>
+                        <div className="inline-block text-gray-400">
+                          {deathdayDate !== null
+                            ? `${t("DATES")}: `
+                            : `${t("DATE OF BIRTH")}: `}
+                        </div>
+                        <div className="inline-block pl-2">
+                          {birthdayDate}
+                          {deathdayDate && " - "}
+                          {deathdayDate ? deathdayDate : null}
+                          {` (${age} ${t("years")})`}
+                        </div>
+                      </div>
+                    ) : null}
+                    {placeBirth ? (
+                      <div>
+                        <div className="inline-block text-gray-400 uppercase">
+                          {t("Place of Birth")}:
+                        </div>
+                        <p className="inline-block pl-2">{placeBirth}</p>
+                      </div>
+                    ) : null}
+                    {height ? (
+                      <div>
+                        <div className="inline-block text-gray-400">
+                          {height ? `${t("Height")}:` : null}
+                        </div>
+                        <p className="inline-block pl-2">{height}</p>
+                      </div>
+                    ) : null}
                   </div>
-                  <div className="inline-block pl-2">
-                    {birthdayDate}
-                    {deathdayDate ? " -" : null}
-                    {deathdayDate ? { deathdayDate } : null}
-                    {`(${age} ${t("years")})`}
-                  </div>
-                </div>
-                <div>
-                  <div className="inline-block text-gray-400 uppercase">
-                    {t("Place of Birth")}:
-                  </div>
-                  <p className="inline-block pl-2">{placeBirth}</p>
-                </div>
-                <div>
-                  <div className="inline-block text-gray-400">
-                    {height ? `${t("Height")}:` : null}
-                  </div>
-                  <p className="inline-block pl-2">{height}</p>
-                </div>
+                ) : null}
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -440,7 +524,7 @@ export const PersonDetails = ({
             <div className="flex justify-end">
               <button
                 className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                onClick={() => navegate(`/person/${id}/bestRated`)}
+                onClick={() => navigate(`/person/${id}/bestRated`)}
               >
                 {t("Complete list")}
                 <BsFillCaretRightFill className="align-middle" size={16} />
@@ -462,7 +546,7 @@ export const PersonDetails = ({
             <div className="flex justify-end">
               <button
                 className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                onClick={() => navegate(`/person/${id}/listMovies`)}
+                onClick={() => navigate(`/person/${id}/listMovies`)}
               >
                 {t("Complete list")}
                 <BsFillCaretRightFill
@@ -489,7 +573,7 @@ export const PersonDetails = ({
                 {items && items.length > 0 ? (
                   <button
                     className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                    onClick={() => navegate(`/person/${id}/listTvShow`)}
+                    onClick={() => navigate(`/person/${id}/listTvShow`)}
                   >
                     {t("Complete list")}
                     <BsFillCaretRightFill

@@ -94,7 +94,6 @@ const Profile = ({
     //   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  document.title = `${Object.keys(user).length && t("Profile")}`;
 
   const newDate = new DateAndTimeConvert(
     user.createdAt,
@@ -252,6 +251,7 @@ const Profile = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  document.title = `${Object.keys(user).length && t("Profile") + " " + user.username}`;
 
   return (
     <>
@@ -754,8 +754,9 @@ const Profile = ({
                 ) : null}
               </div>
             </div>
-          ) : (
-            <div className="mt-4 border-t border-gray-800">
+          ) : 
+            isFollowing ? 
+              <div className="mt-4 border-t border-gray-800">
               {/* // - PLAYLISTS */}
               <div className="mt-4 flex items-center justify-between">
                 <Link
@@ -798,8 +799,8 @@ const Profile = ({
                   </div>
                 ) : null}
               </div>
-            </div>
-          )}
+            </div> : null
+          }
         </div>
       )}
     </>

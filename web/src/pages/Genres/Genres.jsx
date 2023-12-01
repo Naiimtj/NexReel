@@ -17,9 +17,9 @@ function Genres() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-  // -GENEROS TV
+  // -GENRES TV
   const processInfo = {
-    genreTV1: "Genero Peliculas",
+    genreTV1: "Genre Movie",
     genreTV2: "Genero si es la misma",
   };
   switch (idgen) {
@@ -44,10 +44,10 @@ function Genres() {
       processInfo.genreTV2 = null;
       break;
   }
-  // -GENERO MOVIE
+  // -GENRES MOVIE
   const processInfo2 = {
     genreMOVIE1: "Obtener el Genero Series",
-    genreMOVIE2: "Genero si es la misma",
+    genreMOVIE2: "Genre si es la misma",
   };
   switch (idgen) {
     case "28":
@@ -162,9 +162,9 @@ function Genres() {
     genreNameList.genres &&
     genreNameList.genres.filter((gene) => gene && gene.id === Number(idgen));
   const nombreGenero = genreName && genreName[0].name;
-  // -GENEROS NOMBRE
+  // -GENRES NOMBRE
   const processNameGen = {
-    genreName: "Genero Peliculas",
+    genreName: "Genero Movie",
   };
   switch (nombreGenero) {
     case "Action & Adventure":
@@ -188,6 +188,7 @@ function Genres() {
         )
       : null;
   const genreTotal = genreFinal !== null ? genreFinal : genreMovie;
+  document.title = `${processNameGen.genreName}`;
 
   return (
     <div className="w-full h-full px-8 pb-5 mt-6 mb-20 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">

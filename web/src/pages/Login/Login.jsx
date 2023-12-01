@@ -42,6 +42,7 @@ const Login = () => {
       })
       .catch(() => setErrorLogin(true));
   }
+  document.title = `${t("Log In")}`;
 
   return (
     <>

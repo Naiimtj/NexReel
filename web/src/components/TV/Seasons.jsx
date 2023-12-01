@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import SeasonList from "./SeasonList";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
-export const Seasons = ({ info, idSerie, dataUser, runTime }) => {
+export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
   const [t] = useTranslation("translation");
   // - SEASONS
   const [modalMoreSeasons, setModalMoreSeasons] = useState(false);
@@ -41,7 +41,7 @@ export const Seasons = ({ info, idSerie, dataUser, runTime }) => {
             <>
               {/* // - SEASONS */}
               {info &&
-                (modalMoreSeasons === false ? (
+                (!modalMoreSeasons ? (
                   <>
                     <div className="text-gray-200 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-1 p-2 md:pt-4 md:px-4">
                       {items &&
@@ -50,7 +50,7 @@ export const Seasons = ({ info, idSerie, dataUser, runTime }) => {
                             <SeasonList
                               season={season}
                               key={key}
-                              idSerie={idSerie}
+                              idTvShow={idTvShow}
                               dataUser={dataUser}
                               runTime={runTime}
                             />
@@ -75,7 +75,7 @@ export const Seasons = ({ info, idSerie, dataUser, runTime }) => {
                             <SeasonList
                               season={season}
                               key={key}
-                              idSerie={idSerie}
+                              idTvShow={idTvShow}
                               dataUser={dataUser}
                               runTime={runTime}
                             />
@@ -101,7 +101,7 @@ export const Seasons = ({ info, idSerie, dataUser, runTime }) => {
                     <SeasonList
                       season={season}
                       key={key}
-                      idSerie={idSerie}
+                      idTvShow={idTvShow}
                       dataUser={dataUser}
                       runTime={runTime}
                     />
@@ -119,14 +119,14 @@ export default Seasons;
 
 Seasons.defaultProps = {
   info: [],
-  idSerie: 0,
+  idTvShow: 0,
   dataUser: {},
   runTime: 0,
 };
 
 Seasons.propTypes = {
   info: PropTypes.array,
-  idSerie: PropTypes.number,
+  idTvShow: PropTypes.number,
   dataUser: PropTypes.object,
   runTime: PropTypes.number,
 };

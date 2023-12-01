@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { NoImage } from "../../assets/image";
+import { NoImage, tv } from "../../assets/image";
 import { useTranslation } from "react-i18next";
 import {
   IoCheckmarkCircleOutline,
@@ -13,9 +13,9 @@ import {
   postMedia,
 } from "../../../services/DB/services-db";
 
-export const SeasonList = ({ season, idSerie, dataUser, runTime }) => {
+export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
   const [t] = useTranslation("translation");
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const {
     //.TV
     name,
@@ -27,12 +27,11 @@ export const SeasonList = ({ season, idSerie, dataUser, runTime }) => {
     id,
   } = season;
   const url =
-    poster_path !== undefined
+    poster_path
       ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
       : null;
-  const poster = poster_path !== null ? url : NoImage;
-  const nombre = name && name;
-  const fecha =
+  const poster = poster_path ? url : NoImage;
+  const date =
     air_date === ""
       ? null
       : air_date === undefined
@@ -43,7 +42,7 @@ export const SeasonList = ({ season, idSerie, dataUser, runTime }) => {
   const numEpis = episode_count;
   const idInfo = id;
 
-  const NSeason = season_number;
+  const NumberSeason = season_number;
   const idSeason = idInfo;
   const [pendingSeen, setPendingSeen] = useState(false);
   const [dataMediaUser, setDataMediaUser] = useState({});
@@ -78,35 +77,53 @@ export const SeasonList = ({ season, idSerie, dataUser, runTime }) => {
     <div className="static text-gray-200 rounded-xl bg-cover w-full">
       <div className="cursor-pointer p-2 backdrop-blur-md rounded-xl h-full">
         <div className="flex justify-center">
-          {/* //-PORTADA*/}
+          {/* //-POSTER*/}
           <div className="transition ease-in-out md:hover:scale-105 duration-100 ">
-            <img
-              className="static aspect-auto rounded-xl justify-center"
-              src={poster}
-              alt={nombre}
-              onClick={() => season && navegate(`/tv/${idSerie}/${NSeason}`)}
-            />
+            {poster_path ? (
+              <img
+                className="static aspect-auto rounded-xl justify-center"
+                src={poster}
+                alt={name}
+                onClick={() => season && navigate(`/tv/${idTvShow}/${NumberSeason}`)}
+              />
+            ) : (
+              <div className="relative flex justify-center items-center">
+                <img
+                  className="absolute h-24 opacity-10"
+                  src={tv}
+                  alt={t("Icon people")}
+                />
+                <img
+                  className="static aspect-auto rounded-xl justify-center"
+                  src={poster}
+                  alt={name}
+                  onClick={() =>
+                    season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+                  }
+                />
+              </div>
+            )}
           </div>
         </div>
-        {/* //-FECHA */}
+        {/* //-DATE */}
         <div className="mt-4 px-2 ">
-          <div className="mb-1 ">
+          <div className="flex justify-between items-center pb-2">
+            <h2
+              className="cursor-pointer font-semibold text-base"
+              onClick={() => season && navigate(`/tv/${idTvShow}/${NumberSeason}`)}
+            >
+              {name}
+            </h2>
             <div className="text-right align-middle text-xs text-gray-500">
-              {fecha !== null ? fecha : null}
+              {date !== null ? date : null}
             </div>
           </div>
-          <h2
-            className="cursor-pointer font-semibold text-base pb-2"
-            onClick={() => season && navegate(`/tv/${idSerie}/${NSeason}`)}
-          >
-            {nombre}
-          </h2>
-          {/* //-TEMPORADA */}
+          {/* //-SEASON */}
           <div className="text-xs text-left col-span-2 w-full inset-x-0 px:center text-[#7B6EF6] flex justify-between">
             <div
               className="cursor-pointer"
               onClick={() =>
-                season && navegate(`/tv/${idSerie}/${NSeason}/${idSeason}`)
+                season && navigate(`/tv/${idTvShow}/${NumberSeason}/${idSeason}`)
               }
             >
               {`${t("Episodes")}: ${numEpis}`}
@@ -149,14 +166,14 @@ export default SeasonList;
 
 SeasonList.defaultProps = {
   season: {},
-  idSerie: 0,
+  idTvShow: 0,
   dataUser: {},
   runTime: 0,
 };
 
 SeasonList.propTypes = {
   season: PropTypes.object,
-  idSerie: PropTypes.number,
+  idTvShow: PropTypes.number,
   dataUser: PropTypes.object,
   runTime: PropTypes.number,
 };

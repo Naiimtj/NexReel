@@ -20,7 +20,7 @@ import Certification from "../../components/MediaList/Certification/Certificatio
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import calculateAverageVote from "../../components/MediaList/calculateAverageVote";
 // img
-import { NoImage, TMDB, IMDB, FILMA, star } from "../../assets/image";
+import { NoImage, TMDB, IMDB, FILMA, star, movie, tv } from "../../assets/image";
 // api
 import {
   getKeyWords,
@@ -259,7 +259,7 @@ function DetailsMovie({ info, crews, cast, media }) {
   processInfo.TimeHM =
     runtime > 0 && !episode_run_time
       ? new DateAndTimeConvert(processInfo.runTime, t, false).TimeConvert()
-      : episode_run_time[0]
+      : episode_run_time && episode_run_time[0]
       ? `${episode_run_time[0]} min.`
       : null;
   processInfo.numSeason = number_of_seasons;
@@ -365,6 +365,7 @@ function DetailsMovie({ info, crews, cast, media }) {
   const uniqueProductions = Array.from(new Set(productions.map((a) => a.id)))
     .map((id) => productions.find((a) => a.id === id))
     .slice(0, 5);
+    document.title = `${processInfo.title} (${processInfo.date})`;
 
   const keywordsGenre = modalKeywords ? (
     <div>
@@ -433,7 +434,31 @@ function DetailsMovie({ info, crews, cast, media }) {
       });
     }
   };
-  document.title = `${processInfo.title} (${processInfo.date})`;
+
+  const poster = poster_path ? (
+    <img
+      className="rounded-xl w-48 sm:w-auto justify-self-center"
+      src={processInfo.poster}
+      alt={name}
+    />
+  ) : (
+    <div className="relative flex justify-center items-center">
+      <img
+        className="absolute h-24 opacity-10"
+        src={media === "movie"
+        ? movie
+        : media === "tv"
+        ? tv
+        : null}
+        alt={t("Icon people")}
+      />
+      <img
+        className="rounded-xl w-48 sm:w-auto justify-self-center"
+        src={processInfo.poster}
+        alt={name}
+      />
+    </div>
+  )
 
   return (
     <>
@@ -480,11 +505,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   </div>
                 </div>
               )}
-              <img
-                className="rounded-xl w-48 sm:w-auto justify-self-center"
-                src={processInfo.poster}
-                alt={processInfo.title}
-              />
+              {poster}
               {userExist ? (
                 <div className="grid grid-cols-4 gap-4 text-center mt-5 justify-center justify-items-center">
                   {/* //-SEEN/UNSEEN */}
@@ -778,7 +799,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                       : null}
                   </div>
                 </div>
-                {/* //-VALORACIONES */}
+                {/* //-RATING OTHER PLATFORMS */}
                 <div className="text-right basis-3/12 md:basis-2/12">
                   {/* //.FILMAFFINITY */}
                   {processInfo.voteFILMA && processInfo.voteFILMA > 0 && (
@@ -844,10 +865,10 @@ function DetailsMovie({ info, crews, cast, media }) {
                   </div>
                 ) : (
                   <>
-                    {/* // .  TIME CAPÍTULO + NºTemporadas y Episodios & TRAILER */}
-                    {/* // TEMPORADAS+EPISODIOS */}
+                    {/* // .  TIME EPISODE + Nº Seasons y Episodes & TRAILER */}
+                    {/* // SEASONS+EPISODES */}
                     <div className="text-xs">
-                      {/* // TEMPORADAS+EPISODIOS */}
+                      {/* // SEASONS+EPISODES */}
                       {processInfo.numEpis &&
                         `(${processInfo.numSeason} ${t("S")}. ${
                           processInfo.numEpis
@@ -870,7 +891,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   </>
                 ) : null}
               </div>
-              {/* // . MARATON */}
+              {/* // . MARATHON */}
               {processInfo.TotalTime !== 0 ? (
                 <div className="text-xs ml-4 mt-0.5 pb-4 flex gap-1">
                   <p>{t("Binge-watch a series")}: </p>
@@ -989,7 +1010,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   </div>
                 ) : null}
                 {/* //-DIRECTED BY & PRODUCER */}
-                {uniqueDirecting ? (
+                {uniqueDirecting && uniqueDirecting.length > 0 ? (
                   <div className="flex flex-row text-sm basis-1/2">
                     <div className="basis-1/2">
                       <div className="inline-block text-gray-400 mr-1">
@@ -1188,7 +1209,7 @@ function DetailsMovie({ info, crews, cast, media }) {
             </div>
           </div>
         ) : null}
-        {/* //-COLLECTIONS / TEMPORADA */}
+        {/* //-COLLECTIONS / SEASONS */}
         <div className="text-lg">
           {modal !== true && processInfo.collection ? (
             <Collections
@@ -1199,7 +1220,7 @@ function DetailsMovie({ info, crews, cast, media }) {
             seasons && (
               <Seasons
                 info={seasons && seasons}
-                idSerie={id}
+                idTvShow={id}
                 dataUser={dataUser}
                 runTime={processInfo.runTime[0]}
               />

@@ -57,12 +57,12 @@ function Certification({ media, id, info, lang }) {
         }).filter((f) => f !== null)
       : null;
   const CountryFinal =
-    listCountry.length > 0
+  listCountry && listCountry.length && listCountry.length > 0
       ? listCountry[0] && {
           iso_3166_1: listCountry[0].iso,
           release_dates: listCountry[0].release,
         }
-      : CountriesWithRelease[0] && {
+      : CountriesWithRelease && CountriesWithRelease[0] && {
           iso_3166_1: CountriesWithRelease[0].iso,
           release_dates: CountriesWithRelease[0].release,
         };

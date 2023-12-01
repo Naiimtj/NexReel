@@ -11,7 +11,7 @@ import { NoImage } from "../../assets/image";
 
 function CompletCast() {
   const [t] = useTranslation("translation");
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const { id, media_type } = useParams();
   const [repartoList, setRepartoList] = useState([]);
   const [crewsList, setCrewsList] = useState([]);
@@ -171,7 +171,7 @@ function CompletCast() {
                   <div
                     className="flex-row pb-4 grid grid-cols-3 gap-4 items-center cursor-pointer transition ease-in-out md:hover:scale-105 duration-100"
                     onClick={() =>
-                      navegate(`/${media_type}/${id}/person/${team.id}`)
+                      navigate(`/${media_type}/${id}/person/${team.id}`)
                     }
                     role="button"
                     tabIndex={index}
@@ -212,19 +212,20 @@ function CompletCast() {
       </>
     );
   }
+  document.title = `${t("CAST COMPLETE")}`;
 
   return (
     <div className="w-full h-full pl-8 pb-5 mt-6 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
       {/* // .BACK MEDIA */}
       <button
         className="flex items-center ml-5 mb-4 pt-5 hover:text-[#6676a7]"
-        onClick={() => navegate(`/${media_type}/${id}`)}
+        onClick={() => navigate(`/${media_type}/${id}`)}
       >
         <IoIosArrowBack
           className="mr-1"
           size={25}
           alt="Before"
-          onClick={() => navegate(`/${media_type}/${id}`)}
+          onClick={() => navigate(`/${media_type}/${id}`)}
         />
         {!detailsMedia.title ? detailsMedia.name : detailsMedia.title}
         {` (${dateMedia})`}
@@ -277,7 +278,7 @@ function CompletCast() {
                 <div
                   className="flex-row pb-4 grid grid-cols-3 gap-4 items-center cursor-pointer transition ease-in-out md:hover:scale-105 duration-100"
                   onClick={() =>
-                    navegate(
+                    navigate(
                       `/${media_type}/${id}/person/${processInfo.idPerson}`
                     )
                   }
@@ -295,7 +296,7 @@ function CompletCast() {
                   <div
                     className="col-span-2 text-left"
                     onClick={() =>
-                      navegate(
+                      navigate(
                         `/${media_type}/${id}/person/${processInfo.idPerson}`
                       )
                     }

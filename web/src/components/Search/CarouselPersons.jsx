@@ -6,7 +6,18 @@ import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Credits from "../Credits";
 
-const CarouselPersons = ({ title, id, info, media, isUser, hideSearch }) => {
+const CarouselPersons = ({
+  title,
+  id,
+  info,
+  media,
+  isUser,
+  hideSearch,
+  isForum,
+  changeSeenPending,
+  setChangeSeenPending,
+  basicForum
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const getCardsPerPage = () => {
     const screenWidth = window.innerWidth;
@@ -131,6 +142,11 @@ const CarouselPersons = ({ title, id, info, media, isUser, hideSearch }) => {
             repInfo={card}
             media={media}
             idInfo={id}
+            changeSeenPending={changeSeenPending}
+            setChangeSeenPending={setChangeSeenPending}
+            isForum={isForum}
+            basicForum={basicForum}
+            hideSearch={hideSearch}
           />
         ))}
       </div>
@@ -155,8 +171,9 @@ CarouselPersons.defaultProps = {
   isPlaylist: "",
   setPopSureDel: () => {},
   setIdDelete: () => {},
-  isAllCards: false,
+  isForum: false,
   hideSearch: () => {},
+  basicForum: {},
 };
 
 CarouselPersons.propTypes = {
@@ -168,8 +185,7 @@ CarouselPersons.propTypes = {
   changeSeenPending: PropTypes.bool,
   setChangeSeenPending: PropTypes.func,
   isPlaylist: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  isAllCards: PropTypes.bool,
+  isForum: PropTypes.bool,
   hideSearch: PropTypes.func,
+  basicForum: PropTypes.object,
 };

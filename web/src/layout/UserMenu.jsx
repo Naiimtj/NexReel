@@ -10,7 +10,7 @@ import {
 } from "../../services/DB/services-db";
 
 const UserMenu = ({ user, logout, translate }) => {
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const menuButtonRef = useRef(null);
@@ -38,25 +38,25 @@ const UserMenu = ({ user, logout, translate }) => {
     {
       name: translate("Profile"),
       onclick: () => {
-        navegate("/me"), setMenuOpen(!menuOpen);
+        navigate("/me"), setMenuOpen(!menuOpen);
       },
     },
     {
       name: translate("Notifications"),
       onclick: () => {
-        navegate("/notifications"), setMenuOpen(!menuOpen);
+        navigate("/notifications"), setMenuOpen(!menuOpen);
       },
     },
     {
       name: translate("Playlists"),
       onclick: () => {
-        navegate(`/playlists/${user.id}`), setMenuOpen(!menuOpen);
+        navigate(`/playlists/${user.id}`), setMenuOpen(!menuOpen);
       },
     },
     {
       name: translate("Forums"),
       onclick: () => {
-        navegate("/forums"), setMenuOpen(!menuOpen);
+        navigate("/forums"), setMenuOpen(!menuOpen);
       },
     },
     
@@ -88,7 +88,7 @@ const UserMenu = ({ user, logout, translate }) => {
       localStorage.setItem("user", JSON.stringify(user));
     }
   }, [showDropdown, user]);
-
+  document.title = `${t("Profile")}`;
   return (
       <div className="ml-2 flex items-center md:ml-2">
         {/* Profile dropdown */}

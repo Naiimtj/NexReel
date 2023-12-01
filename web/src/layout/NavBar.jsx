@@ -71,12 +71,12 @@ const NavBar = () => {
             </>
           </Link>
         </>
-        {/* // ! SEARCH */}
+        {/* // - SEARCH */}
         <div className="col-start-3" ref={searchRef}>
           <SearchLayout hiden={hiden}/>
         </div>
-        <div className="col-span-2 flex justify-end items-center">
-          <nav className="text-right">
+        {/* // - PAGES, LOGIN/LOGOUT & PROFILE */}
+          <nav className="text-right col-span-2 flex justify-end items-center">
             <Link
               className={`${
                 currentURL === "/" ? "text-purpleNR font-bold" : "text-grayNR"
@@ -124,7 +124,6 @@ const NavBar = () => {
               </Link>
             )}
           </nav>
-        </div>
       </div>
       <div className="z-49" onClick={handleHiden}>
         <Outlet />

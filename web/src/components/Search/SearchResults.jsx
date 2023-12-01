@@ -70,6 +70,9 @@ const SearchResults = ({
                 media={media}
                 hideSearch={hideSearch}
                 isForum={isForum}
+                basicForum={basicForum}
+                changeSeenPending={changeSeenPending}
+                setChangeSeenPending={setChangeSeenPending}
               />
             ) : null}
           </div>

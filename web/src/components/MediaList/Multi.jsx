@@ -104,10 +104,8 @@ export const Multi = ({
       : null || (profile_path && profile_path !== null)
       ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${profile_path}`
       : null;
-  const BgPosterInfo = url || NoImage;
-
   const processInfo = {
-    bgPoster: BgPosterInfo,
+    bgPoster: url || NoImage,
     voteAverage: calculateAverageVote(
       vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0,
       imdbData.imDb > 0 ? Number(imdbData.imDb) : null,
@@ -283,11 +281,34 @@ export const Multi = ({
             )}
             {/* //-POSTER*/}
             <div className="transition ease-in-out md:hover:scale-105 duration-300">
-              <img
-                className=" static aspect-auto w-full cursor-pointer rounded-xl "
-                src={processInfo.bgPoster}
-                alt={processInfo.title}
-              />
+              {url ? (
+                <img
+                  className="static aspect-auto w-full cursor-pointer rounded-xl"
+                  src={processInfo.bgPoster}
+                  alt={processInfo.title}
+                />
+              ) : (
+                <div className="relative flex justify-center items-center">
+                  <img
+                    className="absolute h-24 opacity-10"
+                    src={
+                      processInfo.type === "movie"
+                        ? movie
+                        : processInfo.type === "tv"
+                        ? tv
+                        : processInfo.type === "person"
+                        ? people
+                        : null
+                    }
+                    alt={t("Icon people")}
+                  />
+                  <img
+                    className="static aspect-auto w-full cursor-pointer rounded-xl"
+                    src={processInfo.bgPoster}
+                    alt={t("No photo")}
+                  />
+                </div>
+              )}
             </div>
           </div>
           {/* //.ICONS AND TITLE */}

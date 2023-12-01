@@ -73,7 +73,6 @@ const CarouselCredits = ({
     }
     return indicators;
   };
-
   return (
     <>
       {allCards && allCards.length > 6 ? (

@@ -58,9 +58,11 @@ const Persons = () => {
               films={filmsPerson}
               media={media_type}
               idMedia={idMedia}
-              titleMedia={detailsMedia.title === undefined
-                ? detailsMedia.name
-                : detailsMedia.title}
+              titleMedia={
+                detailsMedia.title === undefined
+                  ? detailsMedia.name
+                  : detailsMedia.title
+              }
             />
           </div>
         </div>

@@ -29,7 +29,7 @@ const TVEpisode = () => {
   const { user } = useAuthContext();
   const userExist = !!user;
   const { idTv, NSeason, idEpisode } = useParams();
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const [season, setSeason] = useState([]);
   const [tvDetails, setTV] = useState([]);
   const [changeSeenPending, setChangeSeenPending] = useState(false);
@@ -57,8 +57,8 @@ const TVEpisode = () => {
     }
   }, [idTv, NSeason, t]);
 
-  //-BUSCAR EL EPISODIO
-  const episodio =
+  //-BUSCAR EL EPISODe
+  const episode =
     season.episodes &&
     season.episodes.filter((unepis) => unepis.id === Number(idEpisode));
 
@@ -124,14 +124,15 @@ const TVEpisode = () => {
       });
     }
   };
+  document.title = `${episode.name}`;
 
   return (
     <div>
-      {episodio &&
-        episodio.map((episodio, index) => {
+      {episode &&
+        episode.map((episode, index) => {
           const url =
-            episodio.still_path !== undefined
-              ? `https://image.tmdb.org/t/p/w500${episodio.still_path}`
+            episode.still_path !== undefined
+              ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
               : null;
           const dateSeason =
             season.air_date &&
@@ -145,22 +146,22 @@ const TVEpisode = () => {
               false
             ).DateTimeConvert();
           //-FILTROS
-          const directores = episodio.crew.filter(
+          const directores = episode.crew.filter(
             (crew) => crew.department === "Directing"
           );
-          const guionistas = episodio.crew.filter(
+          const guionistas = episode.crew.filter(
             (crew) => crew.department === "Writing"
           );
-          //-ID EPISODIO ANTERIOR
+          //-ID EPISODe ANTERIOR
           const EpAnterior = season.episodes.filter(
-            (epi) => epi.episode_number === episodio.episode_number - 1
+            (epi) => epi.episode_number === episode.episode_number - 1
           );
           const EpisAntID = EpAnterior.map((episID) => {
             return episID.id;
           });
-          //-ID EPISODIO SIGUIENTE
+          //-ID EPISODe SIGUIENTE
           const EpSiguiente = season.episodes.filter(
-            (epi) => epi.episode_number === episodio.episode_number + 1
+            (epi) => epi.episode_number === episode.episode_number + 1
           );
           const EpisSigID = EpSiguiente.map((episID) => {
             return episID.id;
@@ -171,9 +172,9 @@ const TVEpisode = () => {
               className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6 mb-20"
               style={{
                 backgroundImage:
-                  episodio.still_path !== undefined
-                    ? episodio.still_path !== null
-                      ? `url(https://image.tmdb.org/t/p/original${episodio.still_path})`
+                  episode.still_path !== undefined
+                    ? episode.still_path !== null
+                      ? `url(https://image.tmdb.org/t/p/original${episode.still_path})`
                       : null
                     : null,
               }}
@@ -183,14 +184,14 @@ const TVEpisode = () => {
                 {/* //.VOLVER A SERIE */}
                 <button
                   className="ml-5 pt-5 hover:text-purpleNR"
-                  onClick={() => navegate(`/tv/${idTv}`)}
+                  onClick={() => navigate(`/tv/${idTv}`)}
                 >
                   <IoIosArrowBack
                     className="inline-block mr-1"
                     size={25}
                     alt="Antes"
                     onClick={() =>
-                      navegate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
+                      navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
                     }
                   />
                   {tvDetails.name}
@@ -198,70 +199,70 @@ const TVEpisode = () => {
                 {/* //.VOLVER A TEMPORADA */}
                 <button
                   className="ml-5 pt-5 hover:text-purpleNR"
-                  onClick={() => navegate(`/tv/${idTv}/${NSeason}`)}
+                  onClick={() => navigate(`/tv/${idTv}/${NSeason}`)}
                 >
                   <IoIosArrowBack
                     className="inline-block mr-1"
                     size={25}
                     alt="Antes"
                     onClick={() =>
-                      navegate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
+                      navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
                     }
                   />
                   Temporada {NSeason}
                 </button>
-                {/* //.EPISODIO ANTERIOR */}
+                {/* //.EPISODe ANTERIOR */}
                 <button
                   className="ml-5 pt-5 text-gray-200  md:hover:text-purpleNR"
                   onClick={() =>
-                    navegate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
+                    navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
                   }
                 >
-                  {season.episodes.length - episodio.episode_number ===
+                  {season.episodes.length - episode.episode_number ===
                   season.episodes.length - 1 ? null : (
                     <IoIosArrowBack
                       className="inline-block mr-1"
                       size={25}
                       alt="Antes"
                       onClick={() =>
-                        navegate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
+                        navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
                       }
                     />
                   )}
-                  {season.episodes.length - episodio.episode_number ===
+                  {season.episodes.length - episode.episode_number ===
                   season.episodes.length - 1
                     ? null
-                    : "Episodio " + (episodio.episode_number - 1)}
+                    : "Episode " + (episode.episode_number - 1)}
                 </button>
                 <div className="inline-block px-2 text-gray-500">
-                  {season.episodes.length === episodio.episode_number ||
-                  season.episodes.length - episodio.episode_number ===
+                  {season.episodes.length === episode.episode_number ||
+                  season.episodes.length - episode.episode_number ===
                     season.episodes.length - 1
                     ? null
                     : "<| |>"}
                 </div>
-                {/* //.EPISODIO SIGUIENTE */}
+                {/* //.EPISODe SIGUIENTE */}
                 <button
                   className="pt-5 text-gray-200  md:hover:text-purpleNR"
                   onClick={() =>
-                    navegate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
+                    navigate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
                   }
                 >
-                  {season.episodes.length === episodio.episode_number
+                  {season.episodes.length === episode.episode_number
                     ? null
-                    : "Episodio " + (episodio.episode_number + 1)}
-                  {season.episodes.length === episodio.episode_number ? null : (
+                    : "Episode " + (episode.episode_number + 1)}
+                  {season.episodes.length === episode.episode_number ? null : (
                     <IoIosArrowForward
                       className="inline-block mr-1"
                       size={25}
                       alt="Despues"
                       onClick={() =>
-                        navegate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
+                        navigate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
                       }
                     />
                   )}
                 </button>
-                {/* // INFORMACIÓN EPISODIO */}
+                {/* // INFORMACIÓN EPISODe */}
                 <div className="static h-full w-full p-2 md:pt-4 md:px-4 mt-6">
                   <div className="rounded-xl grid grid-rows-1 justify-items-center">
                     <img
@@ -325,16 +326,16 @@ const TVEpisode = () => {
                       ) : null}
                     </div>
                     <h1 className="font-semibold text-3xl my-2">
-                      {episodio.name}
+                      {episode.name}
                     </h1>
                   </div>
                   <div className=" px-2 ">
-                    {/* //-NOMBRE Y Nº EPISODIO */}
+                    {/* //-NOMBRE Y Nº EPISODe */}
                     <div className="">
                       <div className="">
                         <p className="text-gray-500">
-                          {season.name} / {"Episodio "}
-                          {episodio.episode_number}
+                          {season.name} / {"Episode "}
+                          {episode.episode_number}
                         </p>
                       </div>
                     </div>
@@ -346,9 +347,9 @@ const TVEpisode = () => {
                         Emitido: {dateSeason}
                       </div>
                       <h1 className="mt-4 ">
-                        {episodio.overview === ""
+                        {episode.overview === ""
                           ? "Sin Información"
-                          : episodio.overview}
+                          : episode.overview}
                       </h1>
                     </div>
                     <div className=""></div>
@@ -379,7 +380,7 @@ const TVEpisode = () => {
                                   <div
                                     className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
                                     onClick={() =>
-                                      navegate(`/person/${guio.id}`)
+                                      navigate(`/person/${guio.id}`)
                                     }
                                     key={index}
                                   >
@@ -420,7 +421,7 @@ const TVEpisode = () => {
                                   <div
                                     className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
                                     onClick={() =>
-                                      navegate(`/person/${guio.id}`)
+                                      navigate(`/person/${guio.id}`)
                                     }
                                     key={index}
                                   >
@@ -437,12 +438,12 @@ const TVEpisode = () => {
                   </div>
                   {/* //-REPARTO PRINCIPAL */}
                   <>
-                    {episodio.guest_stars.length === 0 ? null : (
+                    {episode.guest_stars.length === 0 ? null : (
                       <div className="text-gray-200 rounded-xl mb-10 ">
                         <div className="">
                           <CarouselCredits
                             title={t("MAIN CAST")}
-                            info={episodio.guest_stars}
+                            info={episode.guest_stars}
                             media={"tv"}
                             id={Number(idTv)}
                           />
