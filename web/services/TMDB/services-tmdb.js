@@ -21,7 +21,7 @@ function paramsKeyLang(lang) {
 // < SEARCH
 export async function getSearch(searchValue, media) {
   try {
-    const response = await service.get(`/search/${media}&include_adult=false`, {
+    const response = await service.get(`/search/${media}`, {
       params: {
         query: searchValue,
         api_key: apiKeyTMDB,

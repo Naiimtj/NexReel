@@ -14,6 +14,7 @@ import { IoIosArrowBack, IoIosRemove, IoMdAdd } from "react-icons/io";
 import { getUser, postPlaylistMedia } from "../../../services/DB/services-db";
 import { useAuthContext } from "../../context/auth-context";
 import { getImdbPerson } from "../../../services/IMDB/services-imdb";
+import PageTitle from "../PageTitle";
 
 export const PersonDetails = ({
   info,
@@ -51,7 +52,6 @@ export const PersonDetails = ({
     place_of_birth,
     imdb_id,
   } = info;
-  document.title = `${name}`;
 
   //-SCROLL UP
   useEffect(() => {
@@ -298,6 +298,7 @@ export const PersonDetails = ({
 
   return (
     <div>
+      <PageTitle title={`${name}`} />
       {/* //.BACK TO MOVIE/TV SHOW */}
       {idMedia !== "" ? (
         <Link

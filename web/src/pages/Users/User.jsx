@@ -15,6 +15,8 @@ const User = () => {
       });
     }
   }, [id, changeOtherUser]);
+  console.log("DETAIKS", dataUser);
+
   return (
     <div className="mt-5">
       {!Object.keys(dataUser).length > 0 ? (

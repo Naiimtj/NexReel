@@ -7,6 +7,7 @@ import { deleteForum, getListForum } from "../../../services/DB/services-db";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import { NoImageMore } from "../../assets/image";
 import NewForum from "../../components/Forums/NewForum";
+import PageTitle from "../../components/PageTitle";
 
 const Forums = () => {
   const [t] = useTranslation("translation");
@@ -15,10 +16,9 @@ const Forums = () => {
 
   useEffect(() => {
     getListForum().then((posts) => setPosts(posts));
-}, [change]);
-  document.title = t("Chatting");
+  }, [change]);
   const [createForum, setCreateForum] = useState(false);
-// - DELETE PLAYLIST
+  // - DELETE PLAYLIST
   const [answerDel, setAnswerDel] = useState(false);
   const [idDelete, setIdDelete] = useState(null);
   const [popSureDel, setPopSureDel] = useState(false);
@@ -65,6 +65,7 @@ const Forums = () => {
 
   return (
     <AppContainer>
+      <PageTitle title={`${t("Chatting")}`} />
       <Header />
       {/* // - POP DELETE */}
       {popSureDel ? (

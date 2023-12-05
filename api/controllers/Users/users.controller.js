@@ -289,7 +289,10 @@ module.exports.followingDetail = async (req, res, next) => {
       UserConfirm: true,
     });
     if (!isFollow) {
-      const user = await User.findById({ _id: req.params.userId }, "-email").populate("playlists");
+      const user = await User.findById(
+        { _id: req.params.userId },
+        "-email"
+      ).populate("playlists");
       if (!user) {
         return next(createError(404, "User not found"));
       }
@@ -306,7 +309,12 @@ module.exports.followingDetail = async (req, res, next) => {
     } else {
       const user = await User.findById({ _id: req.params.userId }, "-email")
         .populate("medias")
-        .populate("playlists")
+        .populate({
+          path: "playlists",
+          populate: {
+            path: "followersPlaylist",
+          },
+        })
         .populate("followers")
         .populate("following");
       if (!user) {

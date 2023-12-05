@@ -21,6 +21,7 @@ import {
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Episodes from "../../components/TV/Episodes";
+import PageTitle from "../../components/PageTitle";
 
 const TVSeason = () => {
   const { user } = useAuthContext();
@@ -144,7 +145,6 @@ const TVSeason = () => {
     tvDetails.seasons.filter(
       (seas) => seas.season_number === Number(NSeason) + 1
     );
-    document.title = `${season.name}`;
 
   return (
     <div
@@ -153,6 +153,7 @@ const TVSeason = () => {
         backgroundImage: `url(${url})`,
       }}
     >
+      <PageTitle title={`${season.name}`} />
       <div className="text-gray-200 pt-5 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
         {/* // * BACK TV SHOW */}
         <button
@@ -309,9 +310,9 @@ const TVSeason = () => {
             <div className="flex justify-between items-stretch pb-4">
               <div className="flex text-4xl items-center">
                 <h1 className="font-semibold pr-2">{season.name}</h1>
-                <p className="text-xl">{`(${season.episodes && season.episodes.length} ${t(
-                  "episodes"
-                )})`}</p>
+                <p className="text-xl">{`(${
+                  season.episodes && season.episodes.length
+                } ${t("episodes")})`}</p>
               </div>
               {dateSeason ? <div className="text-xs">{dateSeason}</div> : null}
             </div>

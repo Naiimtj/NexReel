@@ -23,6 +23,7 @@ import {
 } from "react-icons/io5";
 import { useAuthContext } from "../../context/auth-context";
 import { NoImageEpis } from "../../assets/image";
+import PageTitle from "../../components/PageTitle";
 
 const TVEpisode = () => {
   const [t] = useTranslation("translation");
@@ -124,10 +125,10 @@ const TVEpisode = () => {
       });
     }
   };
-  document.title = `${episode.name}`;
 
   return (
     <div>
+      <PageTitle title={`${episode.name}`} />
       {episode &&
         episode.map((episode, index) => {
           const url =

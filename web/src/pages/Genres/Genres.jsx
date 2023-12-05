@@ -9,6 +9,7 @@ import {
   getGenresList,
   getMediaDetails,
 } from "../../../services/TMDB/services-tmdb";
+import PageTitle from "../../components/PageTitle";
 
 function Genres() {
   const [t] = useTranslation("translation");
@@ -188,10 +189,10 @@ function Genres() {
         )
       : null;
   const genreTotal = genreFinal !== null ? genreFinal : genreMovie;
-  document.title = `${processNameGen.genreName}`;
 
   return (
     <div className="w-full h-full px-8 pb-5 mt-6 mb-20 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
+      <PageTitle title={`${processNameGen.genreName}`} />
       {/* //.BACK MOVIE/TV */}
       <Link
         className="ml-5 pt-5 hover:text-[#6676a7]"

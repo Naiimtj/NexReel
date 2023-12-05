@@ -8,6 +8,7 @@ import {
   getFollowersUser,
   patchNotifications,
 } from "../../services/DB/services-db";
+import PageTitle from "../components/PageTitle";
 
 const UserMenu = ({ user, logout, translate }) => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const UserMenu = ({ user, logout, translate }) => {
         navigate("/forums"), setMenuOpen(!menuOpen);
       },
     },
-    
+
     { name: translate("Sign out"), onclick: logout },
   ];
   const [t] = useTranslation("translation");
@@ -88,84 +89,85 @@ const UserMenu = ({ user, logout, translate }) => {
       localStorage.setItem("user", JSON.stringify(user));
     }
   }, [showDropdown, user]);
-  document.title = `${t("Profile")}`;
+  
   return (
-      <div className="ml-2 flex items-center md:ml-2">
-        {/* Profile dropdown */}
-        <Menu as="div" className="relative">
+    <div className="ml-2 flex items-center md:ml-2">
+      <PageTitle title={`${t("Profile")}`} />
+      {/* Profile dropdown */}
+      <Menu as="div" className="relative">
+        <>
           <>
-            <>
-              <Menu.Button
-                className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none hover:scale-105"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                <span className="absolute" />
-                <span className="sr-only">Open user menu</span>
-                <img
-                  className="h-10 w-10 rounded-full object-cover"
-                  src={user.avatarURL}
-                  alt={t("Avatar")}
-                />
-                {notifications &&
-                notifications.length > 0 &&
-                user.notificationsRead ? (
-                  <span className="flex h-2 w-2 absolute top-0 right-0.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400"></span>
-                  </span>
-                ) : null}
-              </Menu.Button>
-            </>
-            <Transition
-              show={menuOpen}
-              as={Fragment}
-              enter="transition ease-out duration-300"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
+            <Menu.Button
+              className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none hover:scale-105"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <Menu.Items
-                ref={menuButtonRef}
-                className="absolute right-0 z-10 mt-1 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              >
-                {userNavigation.map((item) => (
-                  <Menu.Item key={item.name}>
-                    {() =>
-                      item.name !== t("Notifications") ? (
-                        <div
-                          className={
-                            item.name === t("Sign out") ? "border-t " : ""
-                          }
-                        >
-                          <button
-                            onClick={item.onclick}
-                            className="hover:bg-gray-100 px-4 py-2 text-sm text-gray-700 cursor-pointer w-full text-left"
-                          >
-                            {item.name}
-                          </button>
-                        </div>
-                      ) : (
-                        <div>
-                          <UserNotifications
-                            notifications={notifications}
-                            hasUnreadNotifications={user.notificationsRead}
-                            toggleDropdown={toggleDropdown}
-                            showDropdown={showDropdown}
-                            changeNotifications={changeNotifications}
-                            setChangeNotifications={setChangeNotifications}
-                          />
-                        </div>
-                      )
-                    }
-                  </Menu.Item>
-                ))}
-              </Menu.Items>
-            </Transition>
+              <span className="absolute" />
+              <span className="sr-only">Open user menu</span>
+              <img
+                className="h-10 w-10 rounded-full object-cover"
+                src={user.avatarURL}
+                alt={t("Avatar")}
+              />
+              {notifications &&
+              notifications.length > 0 &&
+              user.notificationsRead ? (
+                <span className="flex h-2 w-2 absolute top-0 right-0.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400"></span>
+                </span>
+              ) : null}
+            </Menu.Button>
           </>
-        </Menu>
-      </div>
+          <Transition
+            show={menuOpen}
+            as={Fragment}
+            enter="transition ease-out duration-300"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items
+              ref={menuButtonRef}
+              className="absolute right-0 z-10 mt-1 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            >
+              {userNavigation.map((item) => (
+                <Menu.Item key={item.name}>
+                  {() =>
+                    item.name !== t("Notifications") ? (
+                      <div
+                        className={
+                          item.name === t("Sign out") ? "border-t " : ""
+                        }
+                      >
+                        <button
+                          onClick={item.onclick}
+                          className="hover:bg-gray-100 px-4 py-2 text-sm text-gray-700 cursor-pointer w-full text-left"
+                        >
+                          {item.name}
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <UserNotifications
+                          notifications={notifications}
+                          hasUnreadNotifications={user.notificationsRead}
+                          toggleDropdown={toggleDropdown}
+                          showDropdown={showDropdown}
+                          changeNotifications={changeNotifications}
+                          setChangeNotifications={setChangeNotifications}
+                        />
+                      </div>
+                    )
+                  }
+                </Menu.Item>
+              ))}
+            </Menu.Items>
+          </Transition>
+        </>
+      </Menu>
+    </div>
   );
 };
 

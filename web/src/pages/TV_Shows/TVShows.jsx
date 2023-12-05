@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import Streaming from "../../components/MediaList/Streaming";
 import Top from "../../components/MediaList/Top";
+import PageTitle from "../../components/PageTitle";
 
 const TVShows = () => {
   const [t] = useTranslation("translation");
-  document.title = `${t("TV Shows")}`;
-    return (
+  return (
     <div>
+      <PageTitle title={`${t("TV Shows")}`} />
       <div className="mt-10">
         <Top media={"tv"} />
       </div>

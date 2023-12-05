@@ -16,6 +16,7 @@ import { NoImageMore } from "../../assets/image";
 import PlaylistsList from "../../components/Users/Playlist/PlaylistsList";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import SearchPlaylists from "../../components/Users/Playlist/SearchPlaylists";
+import PageTitle from "../../components/PageTitle";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -33,7 +34,6 @@ const Playlists = () => {
   const isOtherUser = user.id !== userId;
   const [dataUser, setDataUser] = useState({});
   const title = t("Playlists");
-  document.title = `${Object.keys(dataUser).length && title}`;
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [visualDesing, setVisualDesign] = useState(0);
   useEffect(() => {
@@ -152,6 +152,7 @@ const Playlists = () => {
 
   return (
     <div className="w-full h-full text-gray-200">
+      <PageTitle title={`${Object.keys(dataUser).length && title}`} />
       <div className="relative text-gray-200 mb-20 mt-6">
         <div className="text-gray-200">
           {/* // . BACK USER */}

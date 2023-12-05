@@ -30,6 +30,7 @@ import NewPlaylist from "./Playlist/NewPlaylist";
 import { NoImageMore } from "../../assets/image";
 import PopSureDelete from "../PopUp/PopSureDelete";
 import SearchUsers from "./SearchUsers";
+import PageTitle from "../PageTitle";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -94,7 +95,6 @@ const Profile = ({
     //   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-
   const newDate = new DateAndTimeConvert(
     user.createdAt,
     t,
@@ -135,6 +135,8 @@ const Profile = ({
     user.playlistsFollow &&
     user.playlistsFollow.length > 0
   );
+
+  console.log(dataUser);
 
   const playlistsFollowData =
     checkPlaylistsFollow &&
@@ -251,7 +253,8 @@ const Profile = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  document.title = `${Object.keys(user).length && t("Profile") + " " + user.username}`;
+
+  console.log(checkPlaylistsFollow);
 
   return (
     <>
@@ -261,6 +264,11 @@ const Profile = ({
         <div
           className={isFollowing || isFollowing === undefined ? "mb-20" : ""}
         >
+          <PageTitle
+            title={`${
+              Object.keys(user).length && t("Profile") + " " + user.username
+            }`}
+          />
           <div className="text-gray-200 mt-6 h-full w-full">
             {/* // MODAL UPDATE PROFILE */}
             {modalForm ? (
@@ -754,9 +762,8 @@ const Profile = ({
                 ) : null}
               </div>
             </div>
-          ) : 
-            isFollowing ? 
-              <div className="mt-4 border-t border-gray-800">
+          ) : isFollowing && isConfirm ? (
+            <div className="mt-4 border-t border-gray-800">
               {/* // - PLAYLISTS */}
               <div className="mt-4 flex items-center justify-between">
                 <Link
@@ -799,8 +806,8 @@ const Profile = ({
                   </div>
                 ) : null}
               </div>
-            </div> : null
-          }
+            </div>
+          ) : null}
         </div>
       )}
     </>

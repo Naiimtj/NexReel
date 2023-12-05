@@ -7,6 +7,7 @@ import { getUser, login } from "../../../services/DB/services-db";
 import Alert from "../../components/Users/Alert";
 import { useTranslation } from "react-i18next";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+import PageTitle from "../../components/PageTitle";
 
 const Login = () => {
   const [t] = useTranslation("translation");
@@ -42,11 +43,11 @@ const Login = () => {
       })
       .catch(() => setErrorLogin(true));
   }
-  document.title = `${t("Log In")}`;
 
   return (
     <>
       <div className="text-gray-300 font-bold pt-8 h-full w-full p-2 md:p-4">
+        <PageTitle title={`${t("Log In")}`} />
         {modalForm ? <Singup setModalForm={setModalForm} /> : null}
         {!modalForm ? (
           <div className="flex justify-center">

@@ -20,7 +20,15 @@ import Certification from "../../components/MediaList/Certification/Certificatio
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import calculateAverageVote from "../../components/MediaList/calculateAverageVote";
 // img
-import { NoImage, TMDB, IMDB, FILMA, star, movie, tv } from "../../assets/image";
+import {
+  NoImage,
+  TMDB,
+  IMDB,
+  FILMA,
+  star,
+  movie,
+  tv,
+} from "../../assets/image";
 // api
 import {
   getKeyWords,
@@ -46,6 +54,7 @@ import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
 import Seasons from "../../components/TV/Seasons";
+import PageTitle from "../../components/PageTitle";
 
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
@@ -365,7 +374,6 @@ function DetailsMovie({ info, crews, cast, media }) {
   const uniqueProductions = Array.from(new Set(productions.map((a) => a.id)))
     .map((id) => productions.find((a) => a.id === id))
     .slice(0, 5);
-    document.title = `${processInfo.title} (${processInfo.date})`;
 
   const keywordsGenre = modalKeywords ? (
     <div>
@@ -445,11 +453,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     <div className="relative flex justify-center items-center">
       <img
         className="absolute h-24 opacity-10"
-        src={media === "movie"
-        ? movie
-        : media === "tv"
-        ? tv
-        : null}
+        src={media === "movie" ? movie : media === "tv" ? tv : null}
         alt={t("Icon people")}
       />
       <img
@@ -458,10 +462,13 @@ function DetailsMovie({ info, crews, cast, media }) {
         alt={name}
       />
     </div>
-  )
-
+  );
+  const handleDeletePlaylist = () => {
+    setErrorAddPlaylists(t("Is in the playlist"));
+  };
   return (
     <>
+      <PageTitle title={`${processInfo.title} (${processInfo.date})`} />
       <div className="static content-center shadow-md">
         {modal && (
           <Trailers setModal={setModal} trailerVideo={processInfo.trailer} />
@@ -576,19 +583,38 @@ function DetailsMovie({ info, crews, cast, media }) {
                                 dataUser.playlists.length === index + 1
                                   ? "rounded-b-md"
                                   : null;
-
+                              const isInPlaylist =
+                                user.playlists &&
+                                i.medias &&
+                                i.medias.some(
+                                  (media) => Number(media.mediaId) === id
+                                );
                               return (
                                 <div
                                   key={i.id}
                                   className={`hover:bg-gray-50 px-1 ${
-                                    dataUser.playlists.length === 1
+                                    user.playlists &&
+                                    user.playlists.length === 1
                                       ? "rounded-md"
                                       : null
                                   } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                                  onClick={() => handleAddPlaylist(i.id)}
+                                  onClick={(event) => {
+                                    event.stopPropagation(),
+                                      isInPlaylist
+                                        ? handleDeletePlaylist()
+                                        : handleAddPlaylist(i.id);
+                                  }}
                                 >
-                                  <div className="text-black text-left">
-                                    · {i.title}
+                                  <div
+                                    className={
+                                      isInPlaylist
+                                        ? "text-green-700 text-left"
+                                        : "text-black text-left"
+                                    }
+                                  >
+                                    {isInPlaylist
+                                      ? `✓ ${i.title}`
+                                      : `· ${i.title}`}
                                   </div>
                                 </div>
                               );
@@ -628,18 +654,17 @@ function DetailsMovie({ info, crews, cast, media }) {
                 </div>
               ) : null}
               {/* //-WHERE SEE OR BUY */}
-              <div className="text-left mt-5">
-                <h1 className="text-gray-400">{t("WHERE TO SEE IT")}</h1>
+              <div className="text-left mt-2">
                 {processInfo.NoWatch === null ? t("Not Available") : null}
                 {/* // STREAM */}
                 {processInfo.watching ? t("Stream") : null}
-                <div className={processInfo.watching ? "" : ""}>
+                <div>
                   {processInfo.watching && processInfo.watching
-                    ? processInfo.watching.map((watchin, index) => (
+                    ? processInfo.watching.map((watching, index) => (
                         <img
-                          className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchin.logo_path}`}
-                          alt={watchin.provider_name}
+                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
+                          src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
+                          alt={watching.provider_name}
                           key={Math.floor(
                             (1 + index + Math.random()) * 0x10000
                           )}
@@ -649,7 +674,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {processInfo.watchingAds
                     ? processInfo.watchingAds.map((watchin, index) => (
                         <img
-                          className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
+                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
                           src={`https://image.tmdb.org/t/p/original/${watchin.logo_path}`}
                           alt={watchin.provider_name}
                           key={Math.floor(
@@ -667,7 +692,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {processInfo.watchingBuy && processInfo.watchingBuy
                     ? processInfo.watchingBuy.map((watchingBuy, index) => (
                         <img
-                          className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
+                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
                           src={`https://image.tmdb.org/t/p/original/${watchingBuy.logo_path}`}
                           alt={watchingBuy.provider_name}
                           key={Math.floor(
@@ -685,7 +710,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {processInfo.watchingFree && processInfo.watchingFree
                     ? processInfo.watchingFree.map((watchingFree, index) => (
                         <img
-                          className="inline-block h-14 w-auto rounded-2xl px-1 pb-1"
+                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
                           src={`https://image.tmdb.org/t/p/original/${watchingFree.logo_path}`}
                           alt={watchingFree.provider_name}
                           key={Math.floor(
@@ -1186,7 +1211,7 @@ function DetailsMovie({ info, crews, cast, media }) {
           </div>
         </div>
         {/* // - Complete equipment */}
-        <div className="text-purpleNR mt-6 pr-4 text-right grid justify-center md:justify-end transition ease-in-out md:hover:text-gray-400 duration-300">
+        <div className="text-purpleNR pr-4 text-right grid justify-center md:justify-end transition ease-in-out md:hover:text-gray-400 duration-300">
           <Link to={`/${media}/${id}/credits`}>
             {t("Delivery and complete equipment")}
             <BiSolidRightArrow

@@ -227,9 +227,13 @@ export const Multi = ({
   }, [isTimeout, errorAddPlaylists]);
 
   const handleDeletePlaylist = (event) => {
-    event.stopPropagation();
-    setPopSureDel(true);
-    setIdDelete(id);
+    if (event) {
+      event.stopPropagation();
+      setPopSureDel(true);
+      setIdDelete(id);
+    } else {
+      setErrorAddPlaylists(t("Is in the playlist"));
+    }
   };
 
   return (
@@ -407,7 +411,12 @@ export const Multi = ({
                           user.playlists && user.playlists.length === index + 1
                             ? "rounded-b-md"
                             : null;
-
+                        const isInPlaylist =
+                          user.playlists &&
+                          i.medias &&
+                          i.medias.some(
+                            (media) => Number(media.mediaId) === id
+                          );
                         return (
                           <div
                             key={i.id}
@@ -417,11 +426,20 @@ export const Multi = ({
                                 : null
                             } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
                             onClick={(event) => {
-                              event.stopPropagation(), handleAddPlaylist(i.id);
+                              event.stopPropagation(),
+                                isInPlaylist
+                                  ? handleDeletePlaylist()
+                                  : handleAddPlaylist(i.id);
                             }}
                           >
-                            <div className="text-black text-left">
-                              · {i.title}
+                            <div
+                              className={
+                                isInPlaylist
+                                  ? "text-green-700 text-left"
+                                  : "text-black text-left"
+                              }
+                            >
+                              {isInPlaylist ? `✓ ${i.title}` : `· ${i.title}`}
                             </div>
                           </div>
                         );

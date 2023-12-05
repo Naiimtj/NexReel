@@ -33,6 +33,7 @@ import EditForum from "../../components/Forums/EditForum";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import ForumChat from "../../components/Forums/ForumReplay/ForumChat";
 import AddMediaForum from "../../components/Forums/AddMediaForum";
+import PageTitle from "../../components/PageTitle";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -69,9 +70,6 @@ const ForumSingle = () => {
     followers,
     userCreate,
   } = dataForum;
-  document.title = `${
-    Object.keys(dataForum).length && `${t("Forum")}-${title}`
-  }`;
   const TotalFollowsForum = followers && followers.length;
   const TotalLikesFollowForum =
     TotalFollowsForum > 0
@@ -253,6 +251,12 @@ const ForumSingle = () => {
         <Spinner result />
       ) : (
         <div className="w-full h-full text-gray-200">
+          <PageTitle
+            title={`${
+              Object.keys(dataForum).length && `${t("Forum")}-${title}`
+            }`}
+          />
+
           <div className="relative text-gray-200 mb-20 mt-6">
             {/* // . BACK USER & FORUM */}
             <div className="text-gray-200 mb-4">
@@ -277,7 +281,7 @@ const ForumSingle = () => {
                       backgroundImage: `url(${imgForum})`,
                     }}
                   >
-                    <div className="relative bg-local backdrop-blur-md bg-[#20283E]/80 rounded-t-xl h-full pt-10 px-3 border-b border-gray-700">
+                    <div className="relative bg-local backdrop-blur-md bg-[#20283E]/80 rounded-t-xl h-full pt-5 px-3 border-b border-gray-700">
                       {/* // - POP DELETE */}
                       {popSureDel ? (
                         <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">

@@ -9,6 +9,7 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { useTranslation } from "react-i18next";
 import Carousel from "../../utils/Carousel/Carousel";
+import PageTitle from "../../components/PageTitle";
 
 function Keyword() {
   const [t] = useTranslation("translation");
@@ -73,10 +74,10 @@ function Keyword() {
       detallesAPI();
     }
   }, [id, media_type, t]);
-  document.title = `${keywordName.name}`;
 
   return (
     <div className="w-full h-full px-8 pb-5 mt-6 mb-20 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
+      <PageTitle title={`${t('Key Word')} - ${keywordName.name}`} />
       {/* //.BACK TO MOVIE/TV SHOW */}
       <Link
         className="ml-5 pt-5 hover:text-[#6676a7]"

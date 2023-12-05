@@ -8,6 +8,7 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { useTranslation } from "react-i18next";
 import { NoImage } from "../../assets/image";
+import PageTitle from "../../components/PageTitle";
 
 function CompletCast() {
   const [t] = useTranslation("translation");
@@ -212,10 +213,10 @@ function CompletCast() {
       </>
     );
   }
-  document.title = `${t("CAST COMPLETE")}`;
 
   return (
     <div className="w-full h-full pl-8 pb-5 mt-6 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
+      <PageTitle title={`${t("Cast Complete")}`} />
       {/* // .BACK MEDIA */}
       <button
         className="flex items-center ml-5 mb-4 pt-5 hover:text-[#6676a7]"

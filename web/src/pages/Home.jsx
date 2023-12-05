@@ -1,9 +1,10 @@
 import Trending from "../components/MediaList/Trending";
+import PageTitle from "../components/PageTitle";
 
 const Home = () => {
-  document.title = `${"NexReel"}`;
   return (
     <div className="mt-10">
+      <PageTitle title="NexReel" />
       <Trending />
     </div>
   );

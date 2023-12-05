@@ -33,6 +33,7 @@ import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Spinner from "../../utils/Spinner/Spinner";
 import EditPlaylist from "../../components/Users/Playlist/EditPlaylist";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
+import PageTitle from "../../components/PageTitle";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -81,7 +82,6 @@ const PlaylistSingle = () => {
 
   const { title, description, tags, medias, imgPlaylist, followersPlaylist } =
     dataPlaylist;
-  document.title = `${Object.keys(user).length && `Playlist-${title}`}`;
   const TotalFollowsPlaylist = followersPlaylist && followersPlaylist.length;
   const TotalLikesFollowPlaylist =
     TotalFollowsPlaylist > 0
@@ -262,6 +262,7 @@ const PlaylistSingle = () => {
 
   return (
     <>
+      <PageTitle title={`${Object.keys(user).length && `Playlist-${title}`}`} />
       {!followersPlaylist ? (
         <Spinner result />
       ) : (

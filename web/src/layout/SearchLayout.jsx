@@ -78,8 +78,8 @@ const SearchLayout = ({ hiden }) => {
           {/* // MOVIES */}
           {moviesList.results && moviesList.results.length > 0 ? (
             <>
-              <h1>{t("Movies")}</h1>
               <SearchResults
+              title={t("Movies")}
                 listMedias={moviesList}
                 media={"movie"}
                 hideSearch={hideSearch}
@@ -89,9 +89,9 @@ const SearchLayout = ({ hiden }) => {
           {/* // TV SHOWS */}
           {tvList.results && tvList.results.length > 0 ? (
             <>
-              <h1>{t("tv shows")}</h1>
               <SearchResults
-                listMedias={tvList}
+              title={t("tv shows")}
+              listMedias={tvList}
                 media={"tv"}
                 hideSearch={hideSearch}
               />
