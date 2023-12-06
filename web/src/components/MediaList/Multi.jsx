@@ -13,8 +13,6 @@ import {
   deleteMedia,
   getDetailMedia,
   getUser,
-  patchMedia,
-  postMedia,
   postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
@@ -26,6 +24,7 @@ import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import AddForum from "../../utils/Forum/AddForum";
+import SeenPending from "./SeenPending";
 
 export const Multi = ({
   info,
@@ -149,47 +148,32 @@ export const Multi = ({
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(id, { seen: !seen }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: id,
-        media_type: mediaType,
-        runtime: processInfo.runTime,
-        like: false,
-        seen: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      id,
+      mediaType,
+      processInfo.runTime,
+      seen,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
   // - PENDING/NO PENDING
   const handlePending = (event) => {
     event.stopPropagation();
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(id, { pending: !pending }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: id,
-        media_type: mediaType,
-        runtime: processInfo.runtime,
-        pending: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      id,
+      mediaType,
+      processInfo.runTime,
+      pending,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Pending();
   };
 
   const [playlistsList, setPlaylistsList] = useState(false);

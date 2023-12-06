@@ -13,8 +13,6 @@ import { useTranslation } from "react-i18next";
 import {
   deleteMedia,
   getDetailMedia,
-  patchMedia,
-  postMedia,
 } from "../../../services/DB/services-db";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import {
@@ -24,6 +22,7 @@ import {
 import { useAuthContext } from "../../context/auth-context";
 import { NoImageEpis } from "../../assets/image";
 import PageTitle from "../../components/PageTitle";
+import SeenPending from "../../components/MediaList/SeenPending";
 
 const TVEpisode = () => {
   const [t] = useTranslation("translation");
@@ -82,48 +81,33 @@ const TVEpisode = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataMediaUser]);
-  //- VISTO/NO VISTO
+  //- SEEN/NO SEEN
   const handleSeenMedia = () => {
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(idTv, { seen: !seen }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: idTv,
-        media_type: "tv",
-        runtime: tvDetails.episode_run_time,
-        like: false,
-        seen: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      idTv,
+      "tv",
+      tvDetails.episode_run_time,
+      seen,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
   // - PENDING/NO PENDING
   const handlePending = () => {
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(idTv, { pending: !pending }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: idTv,
-        media_type: "tv",
-        runtime: tvDetails.episode_run_time,
-        pending: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      idTv,
+      "tv",
+      tvDetails.episode_run_time,
+      pending,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Pending();
   };
 
   return (

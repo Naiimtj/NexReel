@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import { getDetailUser } from "../../../services/DB/services-db";
 import Profile from "../../components/Users/Profile";
 import Spinner from "../../utils/Spinner/Spinner";
+import { useAuthContext } from "../../context/auth-context";
 
 const User = () => {
   const { id } = useParams();
+  const { user } = useAuthContext();
   const [dataUser, setDataUser] = useState({});
   const [changeOtherUser, setChangeOtherUser] = useState(false);
   useEffect(() => {
@@ -15,7 +17,6 @@ const User = () => {
       });
     }
   }, [id, changeOtherUser]);
-  console.log("DETAIKS", dataUser);
 
   return (
     <div className="mt-5">
@@ -25,6 +26,7 @@ const User = () => {
         <Profile
           dataUser={dataUser}
           isOtherUser
+          currentUser={user}
           changeOtherUser={changeOtherUser}
           setChangeOtherUser={setChangeOtherUser}
         />

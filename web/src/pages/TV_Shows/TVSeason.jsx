@@ -7,12 +7,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
-import {
-  deleteMedia,
-  getDetailMedia,
-  patchMedia,
-  postMedia,
-} from "../../../services/DB/services-db";
+import { deleteMedia, getDetailMedia } from "../../../services/DB/services-db";
 import { NoImage, tv } from "../../assets/image";
 import {
   IoCheckmarkCircleOutline,
@@ -22,6 +17,7 @@ import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Episodes from "../../components/TV/Episodes";
 import PageTitle from "../../components/PageTitle";
+import SeenPending from "../../components/MediaList/SeenPending";
 
 const TVSeason = () => {
   const { user } = useAuthContext();
@@ -80,46 +76,31 @@ const TVSeason = () => {
   }, [dataMediaUser]);
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(idTv, { seen: !seen }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: idTv,
-        media_type: "tv",
-        runtime: tvDetails.episode_run_time,
-        like: false,
-        seen: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      idTv,
+      "tv",
+      tvDetails.episode_run_time,
+      seen,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
   // - PENDING/NO PENDING
   const handlePending = () => {
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(idTv, { pending: !pending }).then(
-        () => setChangeSeenPending(!changeSeenPending),
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: idTv,
-        media_type: "tv",
-        runtime: tvDetails.episode_run_time,
-        pending: true,
-      }).then((data) => {
-        if (data) {
-          setChangeSeenPending(!changeSeenPending),
-            setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      idTv,
+      "tv",
+      tvDetails.episode_run_time,
+      pending,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
 
   const dateSeason =

@@ -51,7 +51,7 @@ const Playlist = ({
   const handleFollow = () => {
     postFollowPlaylist(id).then(() => setChangeDataUser(!changeDataUser));
   };
-  // -UNFOLLOW
+  // -NO FOLLOW
   const handleUnFollow = () => {
     deleteFollowPlaylist(id).then(() => setChangeDataUser(!changeDataUser));
   };
@@ -98,7 +98,7 @@ const Playlist = ({
           <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-1 rounded-xl h-full">
             <Link to={`/playlists/${userId}/${id}`}>
               <div className="relative">
-                {/* //-PORTADA*/}
+                {/* //-POSTER*/}
                 <div className="transition ease-in-out md:hover:scale-105 duration-300">
                   <img
                     className="static object-cover cursor-pointer rounded-lg w-full h-[220px] lg:h-[160px] 2xl:h-[240px]"
@@ -140,7 +140,7 @@ const Playlist = ({
                     />
                   </div>
                 ) : null}
-                {/* //- FOLLOW/UNFOLLOW or NUM FOLLOWERS */}
+                {/* //- FOLLOW/NOFOLLOW or NUM FOLLOWERS */}
                 <div className="flex justify-end">
                   {data && followersPlaylist && isOtherUser
                     ? isFollowing

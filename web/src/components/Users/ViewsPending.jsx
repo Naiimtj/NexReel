@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import { getMediaDetails } from "../../../services/TMDB/services-tmdb";
 import Spinner from "../../utils/Spinner/Spinner";
 import MultiSmall from "../MediaList/MultiSmall";
-import { getDetailMedia, patchMedia } from "../../../services/DB/services-db";
+import { getDetailMedia } from "../../../services/DB/services-db";
+import SeenPending from "../MediaList/SeenPending";
 
 const ViewsPending = ({ data, changeSeenPending, setChangeSeenPending }) => {
   // eslint-disable-next-line no-unused-vars
   const [t, i18next] = useTranslation("translation");
-  const { media_type, mediaId } = data;
+  const { media_type, mediaId, runtime, seen, pending } = data;
   const [dataMedia, setDataMedia] = useState({});
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
@@ -25,15 +26,30 @@ const ViewsPending = ({ data, changeSeenPending, setChangeSeenPending }) => {
 
   const mediaMovie = data.media_type === "movie";
   const mediaTv = data.media_type === "tv";
-  //-VISTO/NO VISTO
+
+  //-SEEN/NO SEEN
   const handleSeenMedia = () => {
-    patchMedia(mediaId, { seen: !dataMediaUser.seen });
-    setChangeSeenPending(!changeSeenPending);
+    new SeenPending(
+      dataMediaUser,
+      mediaId,
+      media_type,
+      runtime,
+      seen,
+      setChangeSeenPending,
+      changeSeenPending
+    ).Seen();
   };
   // -PENDING/NO PENDING
   const handlePending = () => {
-    patchMedia(mediaId, { pending: !dataMediaUser.pending });
-    setChangeSeenPending(!changeSeenPending);
+    new SeenPending(
+      dataMediaUser,
+      mediaId,
+      media_type,
+      runtime,
+      pending,
+      setChangeSeenPending,
+      changeSeenPending
+    ).Pending();
   };
 
   return (
@@ -45,8 +61,8 @@ const ViewsPending = ({ data, changeSeenPending, setChangeSeenPending }) => {
           info={dataMedia}
           mediaMovie={mediaMovie}
           mediaTv={mediaTv}
-          seenMedia={dataMediaUser.seen}
-          pendingMedia={dataMediaUser.pending}
+          seenMedia={seen}
+          pendingMedia={pending}
           handleSeenMedia={handleSeenMedia}
           handlePending={handlePending}
         />

@@ -9,9 +9,8 @@ import {
 } from "react-icons/io5";
 import {
   getDetailMedia,
-  patchMedia,
-  postMedia,
 } from "../../../services/DB/services-db";
+import SeenPending from "../MediaList/SeenPending";
 
 export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
   const [t] = useTranslation("translation");
@@ -56,21 +55,15 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
   const { seen } = dataMediaUser;
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
-    if (Object.keys(dataMediaUser).length) {
-      patchMedia(id, { seen: !seen }).then(() => setPendingSeen(!pendingSeen));
-    } else {
-      postMedia({
-        mediaId: id,
-        media_type: "tv",
-        runtime: runTime,
-        like: false,
-        seen: true,
-      }).then((data) => {
-        if (data) {
-          setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      id,
+      "tv",
+      runTime,
+      seen,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
 
   return (

@@ -307,19 +307,39 @@ module.exports.followingDetail = async (req, res, next) => {
         res.status(200).json({ user, isFollowing: false, isConfirm: false });
       }
     } else {
-      const user = await User.findById({ _id: req.params.userId }, "-email")
-        .populate("medias")
-        .populate({
-          path: "playlists",
-          populate: {
-            path: "followersPlaylist",
-          },
-        })
-        .populate("followers")
-        .populate("following");
+      const user = await User.findById(req.params.userId, "-email")
+      .populate("medias")
+      .populate({
+        path: "playlists",
+        populate: {
+          path: "followersPlaylist",
+        },
+      })
+      .populate("forums")
+      .populate("followers")
+      .populate("following");
       if (!user) {
         return next(createError(404, "User not found"));
       }
+      const userPlaylistsFollow = await PlaylistsFollowers.find({
+        userId: req.params.userId,
+      });
+      const playlistsDetails = [];
+      for (const playlistFollow of userPlaylistsFollow) {
+        try {
+          const playlist = await Playlist.findById(playlistFollow.playlistId)
+            .populate("followersPlaylist")
+            .populate("user", "username");
+          if (!playlist) {
+            playlistsDetails.push({});
+          } else {
+            playlistsDetails.push(playlist);
+          }
+        } catch (error) {
+          return next(error);
+        }
+      }
+      user.playlistsFollow = playlistsDetails;
       res.status(200).json({ user, isFollowing: true, isConfirm: true });
     }
   } catch (error) {

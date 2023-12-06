@@ -42,8 +42,6 @@ import {
   deleteMedia,
   getDetailMedia,
   getUser,
-  patchMedia,
-  postMedia,
   postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import {
@@ -55,6 +53,7 @@ import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
+import SeenPending from "../../components/MediaList/SeenPending";
 
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
@@ -407,40 +406,27 @@ function DetailsMovie({ info, crews, cast, media }) {
   );
   //- SEEN/UNSEEN
   const handleSeenMedia = () => {
-    if (userExist && Object.keys(dataMediaUser).length) {
-      patchMedia(id, { seen: !seen }).then(() => setPendingSeen(!pendingSeen));
-    } else {
-      postMedia({
-        mediaId: id,
-        media_type: media,
-        runtime: processInfo.runTime,
-        like: false,
-        seen: true,
-      }).then((data) => {
-        if (data) {
-          setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      id,
+      media,
+      processInfo.runTime,
+      seen,
+      setPendingSeen,
+      pendingSeen
+    ).Seen();
   };
   // - PENDING/NO PENDING
   const handlePending = () => {
-    if (userExist && Object.keys(dataMediaUser).length) {
-      patchMedia(id, { pending: !pending }).then(() =>
-        setPendingSeen(!pendingSeen)
-      );
-    } else {
-      postMedia({
-        mediaId: id,
-        media_type: media,
-        runtime: processInfo.runTime,
-        pending: true,
-      }).then((data) => {
-        if (data) {
-          setPendingSeen(!pendingSeen);
-        }
-      });
-    }
+    new SeenPending(
+      dataMediaUser,
+      id,
+      media,
+      processInfo.runTime,
+      pending,
+      setPendingSeen,
+      pendingSeen
+    ).Pending();
   };
 
   const poster = poster_path ? (
@@ -672,11 +658,11 @@ function DetailsMovie({ info, crews, cast, media }) {
                       ))
                     : null}
                   {processInfo.watchingAds
-                    ? processInfo.watchingAds.map((watchin, index) => (
+                    ? processInfo.watchingAds.map((watching, index) => (
                         <img
                           className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchin.logo_path}`}
-                          alt={watchin.provider_name}
+                          src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
+                          alt={watching.provider_name}
                           key={Math.floor(
                             (1 + index + Math.random()) * 0x10000
                           )}

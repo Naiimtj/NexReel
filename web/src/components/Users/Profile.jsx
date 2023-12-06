@@ -46,6 +46,7 @@ const Profile = ({
   isOtherUser,
   changeOtherUser,
   setChangeOtherUser,
+  currentUser,
 }) => {
   const [t] = useTranslation("translation");
   const [changeSeenPending, setChangeSeenPending] = useState(false);
@@ -92,7 +93,6 @@ const Profile = ({
     if (user.id) {
       Data();
     }
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const newDate = new DateAndTimeConvert(
@@ -136,8 +136,6 @@ const Profile = ({
     user.playlistsFollow.length > 0
   );
 
-  console.log(dataUser);
-
   const playlistsFollowData =
     checkPlaylistsFollow &&
     DataOrder(checkPlaylistsFollow, user.playlistsFollow);
@@ -147,17 +145,16 @@ const Profile = ({
   const TimeTotalSeenMin =
     UserMedias &&
     UserMedias.filter((i) => i.seen === true || i.vote !== -1)
-      .map(function (objeto) {
-        return objeto.runtime;
+      .map(function (media) {
+        return media.runtime && media.runtime ? media.runtime : 0;
       })
-      .reduce(function (acumulador, valorActual) {
-        return acumulador + valorActual;
+      .reduce(function (accumulator, valorActual) {
+        return accumulator + valorActual;
       }, 0);
   const TimeTotalSeen = new DateAndTimeConvert(
     TimeTotalSeenMin,
     t
   ).TimeConvert();
-
   // Follow
   const handleFollow = () => {
     postFollow(user.id).then(
@@ -253,8 +250,6 @@ const Profile = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
-  console.log(checkPlaylistsFollow);
 
   return (
     <>
@@ -397,7 +392,7 @@ const Profile = ({
                           </button>
                         </div>
                       )}
-                      {/* // -UNFOLLOW / UNFOLLOWING */}
+                      {/* // -NO FOLLOW / NO FOLLOWING */}
                       <div className="flex flex-col gap-4">
                         {/* // . UNFOLLOW */}
                         {isOtherUser && isFollowing && isConfirm ? (
@@ -515,7 +510,7 @@ const Profile = ({
                 <div className="md:border-r-4 md:border-gray-900">
                   <div className="flex justify-between pr-2">
                     <Link to={`/pending/${user.id}`}>
-                      <div className="flex transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide">
+                      <div className="flex transition ease-in-out text-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide">
                         <h1 className="pl-4 text-2xl">{t("PENDINGS")}</h1>
                         <p className="ml-1 text-xs">{`( ${
                           checkMedias && pendingData.length
@@ -734,7 +729,7 @@ const Profile = ({
                         <div className="mt-4">
                           <Playlist
                             data={i}
-                            isOtherUser={true}
+                            isOtherUser={!(i.author === currentUser.id)}
                             userId={i.author}
                             setChangeSeenPending={setChangeSeenPending}
                             changeSeenPending={changeSeenPending}
@@ -821,6 +816,7 @@ Profile.defaultProps = {
   isOtherUser: false,
   setChangeOtherUser: () => {},
   changeOtherUser: false,
+  currentUser: {},
 };
 
 Profile.propTypes = {
@@ -828,4 +824,5 @@ Profile.propTypes = {
   isOtherUser: PropTypes.bool,
   setChangeOtherUser: PropTypes.func,
   changeOtherUser: PropTypes.bool,
+  currentUser: PropTypes.object,
 };
