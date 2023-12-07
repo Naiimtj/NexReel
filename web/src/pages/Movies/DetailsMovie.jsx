@@ -2,12 +2,47 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/auth-context";
+// services
+import {
+  getKeyWords,
+  getMediaDetailsEN,
+  getTrailer,
+  getWatchList,
+} from "../../../services/TMDB/services-tmdb";
+import { getRating } from "../../../services/IMDB/services-imdb";
+import { getPlexMovie } from "../../../services/PLEX/services-plex";
+import {
+  deleteMedia,
+  getDetailMedia,
+  getUser,
+  postPlaylistMedia,
+} from "../../../services/DB/services-db";
+// img
+import {
+  NoImage,
+  TMDB,
+  IMDB,
+  FILMA,
+  star,
+  movie,
+  tv,
+  PLEX,
+} from "../../assets/image";
 import {
   BsFillCaretDownFill,
   BsFillCaretUpFill,
   BsAlarm,
   BsAlarmFill,
 } from "react-icons/bs";
+import {
+  IoCheckmarkCircleOutline,
+  IoCheckmarkCircleSharp,
+} from "react-icons/io5";
+import { IoIosRemove, IoMdAdd } from "react-icons/io";
+import { RiMovie2Line } from "react-icons/ri";
+import { BiSolidRightArrow } from "react-icons/bi";
+// components & utils
 import Trailers from "../../components/MediaList/Trailers";
 import KeyWords from "../../components/MediaList/KeyWords";
 import Collections from "../../components/Movie/Collections";
@@ -19,38 +54,6 @@ import CountryName from "../../components/CountryName";
 import Certification from "../../components/MediaList/Certification/Certification";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import calculateAverageVote from "../../components/MediaList/calculateAverageVote";
-// img
-import {
-  NoImage,
-  TMDB,
-  IMDB,
-  FILMA,
-  star,
-  movie,
-  tv,
-} from "../../assets/image";
-// api
-import {
-  getKeyWords,
-  getMediaDetailsEN,
-  getTrailer,
-  getWatchList,
-} from "../../../services/TMDB/services-tmdb";
-import { getRating } from "../../../services/IMDB/services-imdb";
-import { useAuthContext } from "../../context/auth-context";
-import {
-  deleteMedia,
-  getDetailMedia,
-  getUser,
-  postPlaylistMedia,
-} from "../../../services/DB/services-db";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
-import { IoIosRemove, IoMdAdd } from "react-icons/io";
-import { RiMovie2Line } from "react-icons/ri";
-import { BiSolidRightArrow } from "react-icons/bi";
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPending";
@@ -117,7 +120,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     setLangTrailer(i18next.language);
   }, [i18next]);
 
-  // - SERVICES
+  // ! SERVICES
   const [detailsWatchList, setDetailsWatchList] = useState({});
   const [trailerListData, setTrailerListData] = useState([]);
   const [tmbdEnApi, setTmbdEnApi] = useState({});
@@ -152,17 +155,31 @@ function DetailsMovie({ info, crews, cast, media }) {
       setWordsKey(wordsKey);
     }
   }, [media, wordsKeyData]);
-
   // -API IMDB y Filmafinity
   const [imdbList, setImdbList] = useState({});
   useEffect(() => {
-    if ((langApi, imdb_id)) {
+    if (langApi && imdb_id) {
       getRating(imdb_id, langApi).then((data) => {
         setImdbList(data);
       });
     }
   }, [langApi, imdb_id]);
-
+  // - SERVICES PLEX
+  const [isInPlex, setIsInPlex] = useState(false);
+  useEffect(() => {
+    const OriginalTitle = original_title || original_name;
+    if (
+      (original_title || original_name) &&
+      (imdb_id || id) &&
+      userExist &&
+      user.isPlexFriend
+    ) {
+      getPlexMovie(media, OriginalTitle, imdb_id, id).then((data) => {
+        setIsInPlex(data);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
   // -VER TRAILER
   const [modal, setModal] = useState(false);
   const handleVerTrailer = () => {
@@ -329,15 +346,16 @@ function DetailsMovie({ info, crews, cast, media }) {
           false
         ).TimeConvert()
       : 0;
-
   processInfo.watchingBuy =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.buy
       ? detailsWatchList.ES.buy
       : null;
+
   processInfo.watching =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.flatrate
       ? detailsWatchList.ES.flatrate
       : null;
+  processInfo.streaming = isInPlex || processInfo.watching ? true : null;
   processInfo.watchingFree =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.free
       ? detailsWatchList.ES.free
@@ -348,7 +366,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       : null;
 
   processInfo.NoWatch =
-    processInfo.watching === null &&
+    processInfo.streaming === null &&
     processInfo.watchingFree === null &&
     processInfo.watchingAds === null &&
     processInfo.watchingBuy === null
@@ -643,9 +661,16 @@ function DetailsMovie({ info, crews, cast, media }) {
               <div className="text-left mt-2">
                 {processInfo.NoWatch === null ? t("Not Available") : null}
                 {/* // STREAM */}
-                {processInfo.watching ? t("Stream") : null}
+                {processInfo.streaming ? t("Stream") : null}
                 <div>
-                  {processInfo.watching && processInfo.watching
+                  {isInPlex ? (
+                    <img
+                      className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
+                      src={PLEX}
+                      alt={"Plex Icon"}
+                    />
+                  ) : null}
+                  {processInfo.watching
                     ? processInfo.watching.map((watching, index) => (
                         <img
                           className="inline-block h-10 w-auto rounded-xl px-1 pb-1"

@@ -22,6 +22,7 @@ export { default as ArrowUp } from "./ArrowUp.png";
 export { default as FILMA } from "./FILMA.png";
 export { default as IMDB } from "./IMDB.png";
 export { default as TMDB } from "./TMDB.png";
+export { default as PLEX } from "./PLEX.png";
 // RATING
 export { default as LeftHalfStar } from "./rating/LeftHalfStar.svg";
 export { default as RightHalfStar } from "./rating/RightHalfStar.svg";
