@@ -549,8 +549,6 @@ const PlaylistSingle = () => {
                       <Carousel
                         info={dataMedias}
                         isUser
-                        setChangeSeenPending={setChangeSeenPending}
-                        changeSeenPending={changeSeenPending}
                         isAsc={isAsc}
                         isPlaylist={!isOtherUser ? id : ""}
                         setPopSureDel={setPopSureDelMedia}

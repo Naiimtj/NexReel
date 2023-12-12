@@ -250,7 +250,7 @@ const Profile = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
+  
   return (
     <>
       {!Object.keys(user).length > 0 ? (
@@ -498,8 +498,8 @@ const Profile = ({
                       title={t("All")}
                       info={UserMedias}
                       isUser
-                      setChangeSeenPending={setChangeSeenPending}
-                      changeSeenPending={changeSeenPending}
+                      isSetChange={setChangeSeenPending}
+                      isChange={changeSeenPending}
                     />
                   </div>
                 </div>

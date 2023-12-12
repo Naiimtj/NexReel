@@ -665,7 +665,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                 <div>
                   {isInPlex ? (
                     <img
-                      className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
+                      className="inline-block h-9 justify-self-center mb-1 rounded-xl border border-amber-600"
                       src={PLEX}
                       alt={"Plex Icon"}
                     />
@@ -790,7 +790,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   pendingSeen={pendingSeen}
                 />
               ) : null}
-              {/* //-ORIGINAL NAME AND YEAR */}
+              {/* //-ORIGINAL NAME, YEAR & RATING PLATFORMS */}
               <div className="flex justify-between items-stretch flex-row">
                 <div className="text-xs md:text-base mt-4 basis-9/12 md:basis-10/12">
                   <div className="text-gray-400">
@@ -804,8 +804,9 @@ function DetailsMovie({ info, crews, cast, media }) {
                     </div>
                   </div>
 
-                  {/* //-GENRES */}
+                  {/* // - GENRES & KEYWORDS */}
                   <div className="text-left text-sm mt-4">
+                    {/* // . GENRES */}
                     {processInfo.genre &&
                       processInfo.genre.map((gen, index) => {
                         const idgen = gen.id;
@@ -829,7 +830,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                           </div>
                         );
                       })}
-                    {/* //-KEYWORDS */}
+                    {/* // . KEYWORDS */}
                     {wordsKey && Object.keys(wordsKey).length > 0
                       ? keywordsGenre
                       : null}
@@ -878,7 +879,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   ) : null}
                 </div>
               </div>
-              {/* // -RUNTIME & TRAILER */}
+              {/* // - RUNTIME & TRAILER */}
               <div className="flex items-center mt-4">
                 <div className={processInfo.runTime !== 0 ? "pr-2" : ""}>
                   {/* // . TIME MIN */}

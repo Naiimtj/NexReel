@@ -27,6 +27,7 @@ import Persons from "./pages/Person/Persons";
 import Genres from "./pages/Genres/Genres";
 import Keyword from "./pages/KeyWords/KeyWord";
 import CompletCast from "./pages/Person/CompletCast";
+import BestRated from "./pages/Lists/BestRated";
 
 function App() {
   return (
@@ -65,8 +66,7 @@ function App() {
         <Route path="/tv/:idTv/:NSeason/:idEpisode" element={<TVEpisode />} />
         {/* // < PERSONS */}
         <Route path="/person/:id" element={<Persons />} />
-
-        
+        <Route path="/:media/:id/bestRated" element={<BestRated />} />
         {/* // < USER */}
         <Route
           path="/me"

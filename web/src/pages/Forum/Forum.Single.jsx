@@ -243,7 +243,7 @@ const ForumSingle = () => {
     };
   }, [isTimeout, errorDelete]);
 
-  const basicForum = { id, title, medias: dataMedias };
+  const basicForum = { id, title };
 
   return (
     <>
@@ -545,8 +545,6 @@ const ForumSingle = () => {
                         <Carousel
                           info={dataMedias}
                           isUser
-                          setChangeSeenPending={setChangeSeenPending}
-                          changeSeenPending={changeSeenPending}
                           isAsc={isAsc}
                           isPlaylist={!isOtherUser ? user.id : ""}
                           setPopSureDel={setPopSureDelMedia}

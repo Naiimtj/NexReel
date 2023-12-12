@@ -154,6 +154,7 @@ export async function getFollowersUser() {
     return response;
   } catch (err) {
     console.error("Error profile:", err);
+    localStorage.removeItem("user");
     return {};
   }
 }
@@ -182,7 +183,7 @@ export async function postFollow(id) {
   }
 }
 // ! DELETE
-// delete
+// Delete Follower
 export async function deleteFollower(id) {
   const url = `/users/${id}/follows`;
   try {
@@ -194,7 +195,7 @@ export async function deleteFollower(id) {
   }
 }
 // ! DELETE
-// delete
+// Delete Follow
 export async function UnFollow(id) {
   const url = `/users/${id}/nofollow`;
   try {
@@ -283,7 +284,7 @@ export async function deletePlaylist(id) {
     return {};
   }
 }
-// // MEDIAS
+// ------- MEDIAS PLAYLIST
 // . POST MEDIA
 // New Media
 export async function postPlaylistMedia(id, data) {
@@ -356,6 +357,15 @@ export async function postMedia(data) {
     console.error("Error Post Media:", err);
     return {};
   }
+}
+// - GET
+// All Medias
+export async function getAllMedia() {
+  const response = await service.get("/medias");
+  if (response) {
+    return response;
+  }
+  return {};
 }
 // - GET
 // Detail Medias

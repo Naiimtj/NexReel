@@ -210,8 +210,6 @@ const PendingsViews = () => {
               title={t(title)}
               info={dataMedias}
               isUser
-              setChangeSeenPending={setChangeSeenPending}
-              changeSeenPending={changeSeenPending}
               isAsc={isAsc}
             />
           ) : null}
@@ -225,6 +223,7 @@ const PendingsViews = () => {
                   isUser
                   setChangeSeenPending={setChangeSeenPending}
                   changeSeenPending={changeSeenPending}
+                  mediasUser={dataMedias}
                 />
               ))}
             </div>
@@ -239,6 +238,7 @@ const PendingsViews = () => {
                   isUser
                   setChangeSeenPending={setChangeSeenPending}
                   changeSeenPending={changeSeenPending}
+                  mediasUser={dataMedias}
                 />
               ))}
             </div>

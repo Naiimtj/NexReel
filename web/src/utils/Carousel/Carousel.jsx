@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // icons
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Multi from "../../components/MediaList/Multi";
+import { useAuthContext } from "../../context/auth-context";
+import { getAllMedia, getDetailForum } from "../../../services/DB/services-db";
 
 const Carousel = ({
   title,
   info,
   media,
   isUser,
-  changeSeenPending,
-  setChangeSeenPending,
   isPlaylist,
   setPopSureDel,
   setIdDelete,
@@ -20,7 +20,45 @@ const Carousel = ({
   hideSearch,
   isForum,
   basicForum,
+  isSetChange,
+  isChange,
 }) => {
+  const [changeSeenPending, setChangeSeenPending] = useState(false);
+  const { user } = useAuthContext();
+  const userExist = !!user;
+  const [mediasUser, setMediasUser] = useState([]);
+  useEffect(() => {
+    const Data = async () => {
+      getAllMedia()
+        .then((data) => {
+          setMediasUser(data);
+          isSetChange(!isChange);
+        })
+        .catch((err) => err);
+    };
+    if (userExist) {
+      Data();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userExist, changeSeenPending]);
+  const [dataForum, setDataForum] = useState({});
+  useEffect(() => {
+    const ForumData = async () => {
+      getDetailForum(basicForum.id).then((data) => {
+        setDataForum(data);
+      });
+    };
+    if (isForum) {
+      ForumData();
+      isSetChange(!isChange);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeSeenPending, basicForum.id, isForum]);
+  const ForumData = {
+    id: dataForum.id,
+    title: dataForum.title,
+    medias: dataForum.medias,
+  };
   const mediaMovie = media === "movie";
   const mediaTv = media === "tv";
   const [currentPage, setCurrentPage] = useState(1);
@@ -156,7 +194,8 @@ const Carousel = ({
             setIdDelete={setIdDelete}
             hideSearch={hideSearch}
             isForum={isForum}
-            basicForum={basicForum}
+            basicForum={ForumData}
+            mediasUser={mediasUser}
           />
         ))}
       </div>
@@ -175,8 +214,8 @@ Carousel.defaultProps = {
   info: [],
   media: "",
   isUser: false,
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
+  isChange: false,
+  isSetChange: () => {},
   isPlaylist: "",
   setPopSureDel: () => {},
   setIdDelete: () => {},
@@ -191,8 +230,8 @@ Carousel.propTypes = {
   info: PropTypes.array,
   media: PropTypes.string,
   isUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
+  isChange: PropTypes.bool,
+  isSetChange: PropTypes.func,
   isPlaylist: PropTypes.string,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,

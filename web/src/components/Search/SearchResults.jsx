@@ -51,8 +51,8 @@ const SearchResults = ({
                 hideSearch={hideSearch}
                 isForum={isForum}
                 basicForum={basicForum}
-                changeSeenPending={changeSeenPending}
-                setChangeSeenPending={setChangeSeenPending}
+                isChange={changeSeenPending}
+                isSetChange={setChangeSeenPending}
                 isAllCards
               />
             ) : null}
@@ -71,8 +71,8 @@ const SearchResults = ({
                 hideSearch={hideSearch}
                 isForum={isForum}
                 basicForum={basicForum}
-                changeSeenPending={changeSeenPending}
-                setChangeSeenPending={setChangeSeenPending}
+                isChange={changeSeenPending}
+                isSetChange={setChangeSeenPending}
               />
             ) : null}
           </div>

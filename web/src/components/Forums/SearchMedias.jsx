@@ -5,8 +5,13 @@ import { BsSearch } from "react-icons/bs";
 import { getSearch } from "../../../services/TMDB/services-tmdb";
 import SearchResults from "../Search/SearchResults";
 
-const SearchMedias = ({ basicForum, hidden, setHidden, changeSeenPending,
-  setChangeSeenPending, }) => {
+const SearchMedias = ({
+  basicForum,
+  hidden,
+  setHidden,
+  changeSeenPending,
+  setChangeSeenPending,
+}) => {
   const [t] = useTranslation("translation");
   const [moviesList, setMovies] = useState([]);
   const [tvList, setTvs] = useState([]);
@@ -78,7 +83,7 @@ const SearchMedias = ({ basicForum, hidden, setHidden, changeSeenPending,
               isForum
               basicForum={basicForum}
               changeSeenPending={changeSeenPending}
-                setChangeSeenPending={setChangeSeenPending}
+              setChangeSeenPending={setChangeSeenPending}
             />
           ) : null}
           {/* // MOVIES */}

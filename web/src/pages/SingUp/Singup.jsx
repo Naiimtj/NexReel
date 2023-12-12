@@ -37,8 +37,8 @@ const Signup = ({ setModalForm }) => {
     try {
       const user = await postRegister(data);
       if (user) {
-        const userLoging = await login(data);
-        onLogin(userLoging);
+        const userLogin = await login(data);
+        onLogin(userLogin);
       }
     } catch (error) {
       const { errors } = error.response?.data || {};

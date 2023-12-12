@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BsFillCaretRightFill } from "react-icons/bs";
 import { FaFacebookSquare, FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaSquareXTwitter, FaTiktok } from "react-icons/fa6";
@@ -25,7 +25,6 @@ export const PersonDetails = ({
   titleMedia,
 }) => {
   const [t] = useTranslation("translation");
-  const navigate = useNavigate();
   const { user } = useAuthContext();
   const userExist = !!user;
   const [dataUser, setDataUser] = useState({});
@@ -522,15 +521,14 @@ export const PersonDetails = ({
         {/*//- BEST RATED */}
         <>
           {items && items.length > 0 ? (
-            <div className="flex justify-end">
+            <Link to={`/person/${id}/bestRated`} className="flex justify-end">
               <button
                 className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                onClick={() => navigate(`/person/${id}/bestRated`)}
               >
                 {t("Complete list")}
                 <BsFillCaretRightFill className="align-middle" size={16} />
               </button>
-            </div>
+            </Link>
           ) : null}
           <>
             {items && items.length !== 0 ? (
@@ -544,10 +542,9 @@ export const PersonDetails = ({
         {/*//- MOVIES */}
         {items && items.length > 0 ? (
           <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 rounded-3xl">
-            <div className="flex justify-end">
+            <Link to={`/person/${id}/listMovies`} className="flex justify-end">
               <button
                 className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                onClick={() => navigate(`/person/${id}/listMovies`)}
               >
                 {t("Complete list")}
                 <BsFillCaretRightFill
@@ -555,7 +552,7 @@ export const PersonDetails = ({
                   size={16}
                 />
               </button>
-            </div>
+            </Link>
             <>
               {knownMovie && (
                 <Carousel
@@ -570,11 +567,10 @@ export const PersonDetails = ({
         <>
           {knownTV && knownTV.length === 0 ? null : (
             <div className="pb-1 mt-4 rounded-3xl">
-              <div className="flex justify-end">
+              <Link to={`/person/${id}/listTvShows`} className="flex justify-end">
                 {items && items.length > 0 ? (
                   <button
                     className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                    onClick={() => navigate(`/person/${id}/listTvShow`)}
                   >
                     {t("Complete list")}
                     <BsFillCaretRightFill
@@ -583,7 +579,7 @@ export const PersonDetails = ({
                     />
                   </button>
                 ) : null}
-              </div>
+              </Link>
               <>
                 {knownTV && (
                   <Carousel
@@ -595,7 +591,7 @@ export const PersonDetails = ({
             </div>
           )}
         </>
-        {/* //- OTRAS */}
+        {/* //- OTHERS */}
         <>
           {knownMovieNoDate && knownMovieNoDate.length === 0 ? null : (
             <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 rounded-3xl">

@@ -36,7 +36,9 @@ const ViewsPending = ({ data, changeSeenPending, setChangeSeenPending }) => {
       runtime,
       seen,
       setChangeSeenPending,
-      changeSeenPending
+      changeSeenPending,
+      setChangeSeenPending,
+      changeSeenPending,
     ).Seen();
   };
   // -PENDING/NO PENDING
@@ -47,6 +49,8 @@ const ViewsPending = ({ data, changeSeenPending, setChangeSeenPending }) => {
       media_type,
       runtime,
       pending,
+      setChangeSeenPending,
+      changeSeenPending,
       setChangeSeenPending,
       changeSeenPending
     ).Pending();

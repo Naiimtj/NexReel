@@ -4,7 +4,7 @@ import { NoImage, people } from "../assets/image";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import { useAuthContext } from "../context/auth-context";
 import { useEffect, useState } from "react";
-import { getUser, postPlaylistMedia } from "../../services/DB/services-db";
+import { postPlaylistMedia } from "../../services/DB/services-db";
 import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import AddForum from "../utils/Forum/AddForum";
@@ -35,7 +35,7 @@ export const Credits = ({
     username,
     avatarURL,
   } = repInfo;
-  const urlPerson =
+  const urlPoster =
     profile_path !== undefined
       ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
       : null;
@@ -43,7 +43,7 @@ export const Credits = ({
   const processInfo = {};
   switch (media) {
     case "movie":
-      processInfo.repPoster = profile_path ? urlPerson : NoImage;
+      processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter = character;
       processInfo.repKnownForDepartment = known_for_department;
@@ -51,7 +51,7 @@ export const Credits = ({
       processInfo.runTime = 0;
       break;
     case "tv":
-      processInfo.repPoster = profile_path ? urlPerson : NoImage;
+      processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter =
         roles && roles.length > 0 ? roles[0].character : null;
@@ -60,7 +60,7 @@ export const Credits = ({
       processInfo.runTime = 0;
       break;
     case "person":
-      processInfo.repPoster = profile_path ? urlPerson : NoImage;
+      processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter = known_for_department;
       processInfo.urlNavigation = `/person/${id}`;
@@ -76,14 +76,6 @@ export const Credits = ({
     default:
       break;
   }
-  const [dataUser, setDataUser] = useState({});
-  useEffect(() => {
-    if (userExist) {
-      getUser(id).then((d) => {
-        setDataUser(d);
-      });
-    }
-  }, [changeSeenPending, id, userExist]);
 
   const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
@@ -149,7 +141,7 @@ export const Credits = ({
                   ? "h-14 w-14"
                   : "h-20 w-20"
               }`}
-              src={people}
+              src={processInfo.repPoster ? processInfo.repPoster : people}
               alt={t("Icon people")}
             />
             <img
@@ -234,8 +226,8 @@ export const Credits = ({
                         </div>
                       ) : null}
                       {user &&
-                        dataUser &&
-                        dataUser.playlists.map((i, index) => {
+                        user &&
+                        user.playlists.map((i, index) => {
                           const roundedTopItem =
                             index === 0 ? "rounded-t-md" : null;
                           const roundedBottomItem =

@@ -11,8 +11,6 @@ import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
 import {
   deleteMedia,
-  getDetailMedia,
-  getUser,
   postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
@@ -39,6 +37,7 @@ export const Multi = ({
   hideSearch,
   isForum,
   basicForum,
+  mediasUser,
 }) => {
   const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
@@ -46,16 +45,9 @@ export const Multi = ({
   const userExist = !!user;
   const { media_type } = info;
   const id = isUser ? info.mediaId : info.id;
+
   const mediaType = mediaMovie ? "movie" : mediaTv ? "tv" : media_type;
   const [pendingSeen, setPendingSeen] = useState(false);
-  const [dataUser, setDataUser] = useState({});
-  useEffect(() => {
-    if (userExist) {
-      getUser(id).then((d) => {
-        setDataUser(d);
-      });
-    }
-  }, [changeSeenPending, pendingSeen, id, userExist]);
   // - ALL INFO MEDIA
   const [dataMedia, setDataMedia] = useState({});
   useEffect(() => {
@@ -64,8 +56,7 @@ export const Multi = ({
         setDataMedia(d);
       });
     }
-  }, [i18next.language, id, changeSeenPending, pendingSeen, mediaType]);
-
+  }, [id, mediaType, i18next.language]);
   const {
     poster_path,
     vote_average,
@@ -130,12 +121,20 @@ export const Multi = ({
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
-      getDetailMedia(id).then((d) => {
-        setDataMediaUser(d);
-      });
+      const isInMediaUser =
+        mediasUser &&
+        mediasUser.find(
+          (f) => Number(f.mediaId) === Number(id) && mediaType === f.media_type
+        );
+      if (isInMediaUser) {
+        setDataMediaUser(isInMediaUser);
+      } else {
+        setDataMediaUser({});
+      }
     }
-  }, [changeSeenPending, pendingSeen, id, userExist]);
+  }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
   const { like, seen, pending, vote } = dataMediaUser;
+
   useEffect(() => {
     if (userExist && !like && !seen && !pending && vote === -1) {
       deleteMedia(id).then(() => {
@@ -387,8 +386,7 @@ export const Multi = ({
                       </div>
                     ) : null}
                     {user &&
-                      dataUser &&
-                      dataUser.playlists.map((i, index) => {
+                      user.playlists.map((i, index) => {
                         const roundedTopItem =
                           index === 0 ? "rounded-t-md" : null;
                         const roundedBottomItem =
@@ -516,6 +514,8 @@ Multi.defaultProps = {
   hideSearch: () => {},
   basicForum: {},
   isForum: false,
+  dataUser: {},
+  mediasUser: [],
 };
 
 Multi.propTypes = {
@@ -531,4 +531,6 @@ Multi.propTypes = {
   hideSearch: PropTypes.func,
   basicForum: PropTypes.object,
   isForum: PropTypes.bool,
+  dataUser: PropTypes.object,
+  mediasUser: PropTypes.array,
 };

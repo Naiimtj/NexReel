@@ -17,7 +17,7 @@ const SearchUsers = ({ hiden }) => {
       });
     }
   }, [searchValue, searching]);
-  const onchangeinput = (e) => {
+  const onChangeInput = (e) => {
     setSearchValue(e.target.value);
     setSearching(true);
   };
@@ -45,7 +45,7 @@ const SearchUsers = ({ hiden }) => {
               className="placeholder:italic placeholder:text-slate-400 block bg-transparent w-full border border-transparent  pl-9 pr-3 shadow-sm focus:outline-none sm:text-sm text-grayNR"
               placeholder={t("username")}
               value={searchValue}
-              onChange={onchangeinput}
+              onChange={onChangeInput}
               type="text"
             />
           </div>
