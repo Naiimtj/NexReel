@@ -17,9 +17,12 @@ const {
   playlists,
   messages,
   forums,
+  plex
 } = require("../controllers");
 const Playlist = require("../models/Playlist/playlist.model");
 const Forum = require("../models/Forum/forum.model");
+
+router.get("/plex", auth.isAuthenticated, plex.list);
 
 // < USER
 router.post("/login", users.login);

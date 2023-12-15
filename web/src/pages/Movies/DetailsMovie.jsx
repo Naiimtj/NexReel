@@ -11,10 +11,10 @@ import {
   getWatchList,
 } from "../../../services/TMDB/services-tmdb";
 import { getRating } from "../../../services/IMDB/services-imdb";
-import { getPlexMovie } from "../../../services/PLEX/services-plex";
 import {
   deleteMedia,
   getDetailMedia,
+  getPlexAllData,
   getUser,
   postPlaylistMedia,
 } from "../../../services/DB/services-db";
@@ -168,18 +168,18 @@ function DetailsMovie({ info, crews, cast, media }) {
   const [isInPlex, setIsInPlex] = useState(false);
   useEffect(() => {
     const OriginalTitle = original_title || original_name;
-    if (
-      (original_title || original_name) &&
-      (imdb_id || id) &&
-      userExist &&
-      user.isPlexFriend
-    ) {
-      getPlexMovie(media, OriginalTitle, imdb_id, id).then((data) => {
-        setIsInPlex(data);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+    const yearMedia =
+    release_date || first_air_date
+      ? new Date(release_date || first_air_date).getFullYear()
+      : null;
+      if (OriginalTitle && userExist && user.isPlexFriend) {
+        getPlexAllData().then((data) => {
+        const isInPlex = data && data[media].filter((i) => (i.originalTitle === OriginalTitle || i.title === OriginalTitle) && i.year === yearMedia)
+          setIsInPlex(isInPlex.length > 0)
+        });
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [media, original_name, original_title, user, userExist]);
   // -VER TRAILER
   const [modal, setModal] = useState(false);
   const handleVerTrailer = () => {

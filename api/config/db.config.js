@@ -6,7 +6,7 @@ const mongodbUri =
 mongoose
   .connect(mongodbUri)
   .then(() =>
-    console.info(`Successfully connected to the database ${mongodbUri}`)
+    console.info(`Successfully connected to the database ${mongodbUri} ✅`)
   )
   .catch((error) =>
     console.error(`An error trying to connect to the database ${mongodbUri}`)

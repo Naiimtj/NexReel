@@ -7,6 +7,7 @@ const logger = require("morgan");
 
 require("./config/db.config");
 const session = require("./config/session.config");
+const {scheduleTasks} = require('./config/scheduleTasks.config');
 
 const app = express();
 
@@ -51,6 +52,8 @@ app.use((error, req, res, next) => {
   };
   res.status(error.status).json(data);
 });
+
+scheduleTasks();
 
 const port = process.env.PORT || 5000;
 app.listen(port, () =>

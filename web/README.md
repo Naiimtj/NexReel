@@ -8,8 +8,6 @@ red socila
 unir personas para quedar ver algo
 invitaciones para ver pelicula
 
-minimo 2 crods
-
 Eventos privados y publicos.
 añadir a calendario
 

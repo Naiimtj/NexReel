@@ -54,6 +54,20 @@ export async function postRegister(data) {
   const response = await service.post("/register", formData);
   return response;
 }
+
+// < PLEX
+// - GET LIST ALL DATA
+// List of all data of plex
+export async function getPlexAllData() {
+  try {
+    const response = await service.get("/plex");
+    return response[0];
+  } catch (err) {
+    console.error("Error all plex data:", err);
+    return {};
+  }
+}
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // < USER
 //.SEARCH USER
@@ -80,9 +94,8 @@ export async function getUser() {
 // - GET
 // Info User
 export async function getInfoUser(id) {
-  const url = `/users/${id}`;
   try {
-    const response = await service.get(url);
+    const response = await service.get(`/users/${id}`);
     return response;
   } catch (err) {
     console.error("Error profile:", err);
@@ -92,9 +105,8 @@ export async function getInfoUser(id) {
 // - GET
 // All Users
 export async function getUsers() {
-  const url = "/users";
   try {
-    const response = await service.get(url);
+    const response = await service.get("/users");
     return response;
   } catch (err) {
     console.error("Error all users:", err);
@@ -370,8 +382,7 @@ export async function getAllMedia() {
 // - GET
 // Detail Medias
 export async function getDetailMedia(id) {
-  const url = `/medias/${id}`;
-  const response = await service.get(url);
+  const response = await service.get(`/medias/${id}`);
   if (response) {
     return response;
   }

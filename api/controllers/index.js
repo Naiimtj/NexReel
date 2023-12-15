@@ -5,4 +5,5 @@ module.exports = {
   playlists: require("./Playlists/playlists.controller"),
   messages: require("./Messages/messages.controller"),
   forums: require("./Forums/forums.controller"),
+  plex: require("./Plex/plex.controller"),
 };

@@ -1,5 +1,7 @@
 const createError = require("http-errors");
 const Message = require("../../models/Message/message.model");
+const Forum = require("../../models/Forum/forum.model");
+const User = require("../../models/User/user.model");
 
 module.exports.create = ({ mode }) => {
   return async (req, res, next) => {
@@ -9,10 +11,27 @@ module.exports.create = ({ mode }) => {
       case "forum":
         criterial.sender = req.user.id;
         criterial.forum = req.params.forumId;
+        try {
+          const findForum = await Forum.findById(req.params.forumId);
+          if (findForum) {
+            await User.findByIdAndUpdate(findForum.author, {
+              notificationsRead: true,
+            });
+          }
+        } catch (error) {
+          next(error);
+        }
         break;
       case "user":
         criterial.sender = req.user.id;
         criterial.receiver = req.params.userId;
+        try {
+          await User.findByIdAndUpdate(req.params.userId, {
+            notificationsRead: true,
+          });
+        } catch (error) {
+          next(error);
+        }
         break;
       default:
         next(createError(404, "Invalid mode specified"));

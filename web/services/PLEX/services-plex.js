@@ -11,25 +11,25 @@ service.interceptors.request.use(
   (err) => Promise.reject(err.response.data)
 );
 
-function paramsKey() {
-  return {
-    "X-Plex-Token": apiKeyPLEX,
-  };
-}
-
-function mediaID(media) {
-  switch (media) {
-    case "movie":
-      return 18;
-    case "tv":
-      return 10; // 11 Anime, 12 Animación Infantil y 15 Documentales
-    default:
-      break;
+  function paramsKey() {
+    return {
+      "X-Plex-Token": apiKeyPLEX,
+    };
   }
-  return {
-    "X-Plex-Token": apiKeyPLEX,
-  };
-}
+
+  function mediaID(media) {
+    switch (media) {
+      case "movie":
+        return 18;
+      case "tv":
+        return 10; // 11 Anime, 12 Animación Infantil y 15 Documentales
+      default:
+        break;
+    }
+    return {
+      "X-Plex-Token": apiKeyPLEX,
+    };
+  }
 
 // < SEARCH
 // export async function getSearch(searchValue, media) {
@@ -48,9 +48,9 @@ function mediaID(media) {
 // }
 
 // . GET ALL MOVIES
-export async function getPlexAllMovies(media) {
+export async function getPlexAllMovies() {
   try {
-    const response = await service.get(`sections/${mediaID(media)}/all`, {
+    const response = await service.get("/plex", {
       params: paramsKey(),
     });
     return response.data.MediaContainer.Metadata;
