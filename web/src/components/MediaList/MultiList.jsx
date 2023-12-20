@@ -11,7 +11,6 @@ import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
 import {
   deleteMedia,
-  getDetailMedia,
   postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
@@ -34,6 +33,7 @@ export const MultiList = ({
   isPlaylist,
   setPopSureDel,
   setIdDelete,
+  mediasUser
 }) => {
   const [t, i18next] = useTranslation("translation");
   const navigate = useNavigate();
@@ -115,13 +115,20 @@ export const MultiList = ({
   }
   // ! USER COMPACTION
   const [dataMediaUser, setDataMediaUser] = useState({});
-  useEffect(() => {
-    if (userExist) {
-      getDetailMedia(id).then((d) => {
-        setDataMediaUser(d);
-      });
-    }
-  }, [changeSeenPending, pendingSeen, id, userExist]);
+    useEffect(() => {
+      if (userExist) {
+        const isInMediaUser =
+          mediasUser &&
+          mediasUser.find(
+            (f) => Number(f.mediaId) === Number(id) && mediaType === f.media_type
+          );
+        if (isInMediaUser) {
+          setDataMediaUser(isInMediaUser);
+        } else {
+          setDataMediaUser({});
+        }
+      }
+    }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
   const { like, seen, pending, vote } = dataMediaUser;
   useEffect(() => {
     if (userExist && !like && !seen && !pending && vote === -1) {
@@ -383,7 +390,7 @@ export const MultiList = ({
                   alt={t("Add to one list")}
                 />
               )}
-              {t("List")}
+              {t("Playlists")}
             </button>
           </div>
           {/* //-SEEN/UNSEEN */}
@@ -456,6 +463,7 @@ MultiList.defaultProps = {
   isPlaylist: "",
   setPopSureDel: () => {},
   setIdDelete: () => {},
+  mediasUser: [],
 };
 
 MultiList.propTypes = {
@@ -468,4 +476,5 @@ MultiList.propTypes = {
   isPlaylist: PropTypes.string,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
+  mediasUser: PropTypes.array,
 };

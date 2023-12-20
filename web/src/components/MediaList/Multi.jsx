@@ -11,7 +11,6 @@ import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
 import {
   deleteMedia,
-  postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import {
@@ -20,9 +19,9 @@ import {
 } from "react-icons/io5";
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
-import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import AddForum from "../../utils/Forum/AddForum";
 import SeenPending from "./SeenPending";
+import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
 
 export const Multi = ({
   info,
@@ -45,7 +44,6 @@ export const Multi = ({
   const userExist = !!user;
   const { media_type } = info;
   const id = isUser ? info.mediaId : info.id;
-
   const mediaType = mediaMovie ? "movie" : mediaTv ? "tv" : media_type;
   const [pendingSeen, setPendingSeen] = useState(false);
   // - ALL INFO MEDIA
@@ -174,23 +172,7 @@ export const Multi = ({
       pendingSeen
     ).Pending();
   };
-
-  const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
-  const handleAddPlaylist = async (playlistId) => {
-    try {
-      await postPlaylistMedia(playlistId, {
-        mediaId: `${id}`,
-        media_type: processInfo.type,
-        runtime: processInfo.runTime,
-      }).then(() => setPlaylistsList(false));
-    } catch (error) {
-      if (error) {
-        const { message } = error.response?.data || {};
-        setErrorAddPlaylists(message);
-      }
-    }
-  };
 
   const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
@@ -353,83 +335,14 @@ export const Multi = ({
         {userExist ? (
           <div className="mb-1 grid grid-cols-5 gap-2 bottom-0 absolute w-full pr-4">
             {/* //-ADD BUTTON PLAYLIST */}
-            {!isForum ? (
-              <div className="relative text-base align-middle col-span-3 ">
-                <button
-                  className={`cursor-pointer text-left font-semibold px:center ${
-                    !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-                  } transition ease-in-out md:hover:scale-105 duration-300`}
-                  onClick={(event) => {
-                    event.stopPropagation(), setPlaylistsList(!playlistsList);
-                  }}
-                >
-                  {!playlistsList ? (
-                    <IoMdAdd
-                      className="inline-block"
-                      size={20}
-                      alt={t("Add to one list")}
-                    />
-                  ) : (
-                    <IoIosRemove
-                      className="inline-block"
-                      size={20}
-                      alt={t("Add to one list")}
-                    />
-                  )}
-                  {t("Playlists")}
-                </button>
-                {playlistsList ? (
-                  <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
-                    {errorAddPlaylists ? (
-                      <div className="text-white bg-gray-50/20 px-1 font-bold">
-                        {t(errorAddPlaylists)}
-                      </div>
-                    ) : null}
-                    {user &&
-                      user.playlists.map((i, index) => {
-                        const roundedTopItem =
-                          index === 0 ? "rounded-t-md" : null;
-                        const roundedBottomItem =
-                          user.playlists && user.playlists.length === index + 1
-                            ? "rounded-b-md"
-                            : null;
-                        const isInPlaylist =
-                          user.playlists &&
-                          i.medias &&
-                          i.medias.some(
-                            (media) => Number(media.mediaId) === id
-                          );
-                        return (
-                          <div
-                            key={i.id}
-                            className={`hover:bg-gray-50 px-1 ${
-                              user.playlists && user.playlists.length === 1
-                                ? "rounded-md"
-                                : null
-                            } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                            onClick={(event) => {
-                              event.stopPropagation(),
-                                isInPlaylist
-                                  ? handleDeletePlaylist()
-                                  : handleAddPlaylist(i.id);
-                            }}
-                          >
-                            <div
-                              className={
-                                isInPlaylist
-                                  ? "text-green-700 text-left"
-                                  : "text-black text-left"
-                              }
-                            >
-                              {isInPlaylist ? `✓ ${i.title}` : `· ${i.title}`}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
+              {!isForum ? (
+                <ShowPlaylistMenu
+                  userId={user.id}
+                  id={Number(id)}
+                  type={processInfo.type}
+                  runTime={processInfo.runTime}
+                />
+              ) : null}
             {isForum ? (
               <AddForum
                 id={Number(id)}

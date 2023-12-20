@@ -32,7 +32,7 @@ class SeenPending {
         seen: !this.seenOrPending,
       }).then(
         () => this.setChangeSeenPending(!this.changeSeenPending),
-        this.setPendingSeen(!this.pendingSeen)
+        this.setPendingSeen && this.setPendingSeen(!this.pendingSeen)
       );
     } else {
       postMedia({
@@ -44,7 +44,7 @@ class SeenPending {
       }).then((data) => {
         if (data) {
           this.setChangeSeenPending(!this.changeSeenPending),
-            this.setPendingSeen(!this.pendingSeen);
+          this.setPendingSeen && this.setPendingSeen(!this.pendingSeen);
         }
       });
     }

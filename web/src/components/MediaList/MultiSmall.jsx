@@ -2,20 +2,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { NoImage, movie, people, tv } from "../../assets/image";
-import { BsAlarm, BsAlarmFill } from "react-icons/bs";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
 
 export const MultiSmall = ({
   info,
   mediaMovie,
   mediaTv,
-  seenMedia,
-  pendingMedia,
-  handleSeenMedia,
-  handlePending,
 }) => {
   const [t] = useTranslation("translation");
   const {
@@ -31,9 +22,10 @@ export const MultiSmall = ({
   } = info;
   // Poster
   const url =
-    (poster_path && poster_path !== undefined) ||
-    (profile_path && profile_path !== null)
+    poster_path && poster_path !== undefined
       ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+      : null || (profile_path && profile_path !== null)
+      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${profile_path}`
       : null;
   const BgPosterInfo = url || NoImage;
 
@@ -68,7 +60,7 @@ export const MultiSmall = ({
         >
           <div className="relative">
             {/* //-POSTER*/}
-            <div className="transition ease-in-out md:hover:scale-105 duration-300 pb-3">
+            <div className="transition ease-in-out md:hover:scale-105 duration-300 py-1.5">
               {url ? (
                 <img
                   className="static aspect-auto cursor-pointer rounded-lg"
@@ -139,59 +131,6 @@ export const MultiSmall = ({
               <p className="line-clamp-3">{processInfo.title}</p>
             </div>
           </Link>
-
-          <div className="grid grid-cols-2 justify-between items-center justify-items-center">
-            {/* //-SEEN/UNSEEN */}
-            <div className="">
-              {media_type !== "person" ? (
-                seenMedia !== true ? (
-                  <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                    <IoCheckmarkCircleOutline
-                      className="inline-block"
-                      size={20}
-                      color="#FFCA28"
-                      alt={t("Seen")}
-                      onClick={handleSeenMedia}
-                    />
-                  </button>
-                ) : (
-                  <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                    <IoCheckmarkCircleSharp
-                      className="inline-block"
-                      size={20}
-                      color="#FFCA28"
-                      alt={t("Unseen")}
-                      onClick={handleSeenMedia}
-                    />
-                  </button>
-                )
-              ) : null}
-            </div>
-            {/* //-PENDING/NO PENDING */}
-            <div className="">
-              {pendingMedia !== true ? (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <BsAlarm
-                    className="inline-block"
-                    size={17}
-                    color="#FFCA28"
-                    alt={t("Pending")}
-                    onClick={handlePending}
-                  />
-                </button>
-              ) : (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <BsAlarmFill
-                    className="inline-block"
-                    size={17}
-                    color="#FFCA28"
-                    alt={t("No Pending")}
-                    onClick={handlePending}
-                  />
-                </button>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -204,18 +143,10 @@ MultiSmall.defaultProps = {
   info: {},
   mediaMovie: false,
   mediaTv: false,
-  seenMedia: false,
-  pendingMedia: false,
-  handleSeenMedia: () => {},
-  handlePending: () => {},
 };
 
 MultiSmall.propTypes = {
   info: PropTypes.object,
   mediaMovie: PropTypes.bool,
   mediaTv: PropTypes.bool,
-  seenMedia: PropTypes.bool,
-  pendingMedia: PropTypes.bool,
-  handleSeenMedia: PropTypes.func,
-  handlePending: PropTypes.func,
 };

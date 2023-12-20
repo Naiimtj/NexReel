@@ -116,10 +116,11 @@ export const Credits = ({
     setPopSureDel(true);
     setIdDelete(id);
   };
+  
   return (
     <div className="slide flex flex-col justify-start content-center items-center">
       <div>
-        {profile_path ? (
+        {profile_path || avatarURL ? (
           <img
             className={`cursor-pointer rounded-full object-cover ${
               media === "person" || media === "user" ? "h-28 w-28" : "h-40 w-40"
@@ -141,7 +142,7 @@ export const Credits = ({
                   ? "h-14 w-14"
                   : "h-20 w-20"
               }`}
-              src={processInfo.repPoster ? processInfo.repPoster : people}
+              src={people}
               alt={t("Icon people")}
             />
             <img

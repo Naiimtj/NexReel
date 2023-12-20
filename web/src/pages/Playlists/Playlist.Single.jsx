@@ -7,6 +7,7 @@ import {
   deleteFollowPlaylist,
   deletePlaylist,
   deletePlaylistMedia,
+  getAllMedia,
   getDetailPlaylist,
   getDetailUser,
   getUser,
@@ -52,7 +53,7 @@ const PlaylistSingle = () => {
   const [dataPlaylist, setDataPlaylist] = useState({});
   const [dataUser, setDataUser] = useState({});
   const [changeSeenPending, setChangeSeenPending] = useState(false);
-  const [visualDesing, setVisualDesign] = useState(0);
+  const [visualDesign, setVisualDesign] = useState(0);
   useEffect(() => {
     const playlistData = async () => {
       getDetailPlaylist(id).then((data) => {
@@ -103,7 +104,7 @@ const PlaylistSingle = () => {
   let isCarousel;
   let isSquare;
   let isList;
-  switch (visualDesing) {
+  switch (visualDesign) {
     case 0:
       isCarousel = true;
       isSquare = null;
@@ -130,7 +131,7 @@ const PlaylistSingle = () => {
   const handleFollow = () => {
     postFollowPlaylist(id).then(() => setChangeSeenPending(!changeSeenPending));
   };
-  // -UNFOLLOW
+  // -NO FOLLOW
   const handleUnFollow = () => {
     deleteFollowPlaylist(id).then(() =>
       setChangeSeenPending(!changeSeenPending)
@@ -146,6 +147,7 @@ const PlaylistSingle = () => {
           alt={t("Follow Playlist")}
           onClick={handleFollow}
         />
+        {t('Follow')}
       </button>
     ) : (
       <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR hover:text-gray-600">
@@ -155,8 +157,24 @@ const PlaylistSingle = () => {
           alt={t("UnFollow Playlist")}
           onClick={handleUnFollow}
         />
+        {t('No Follow')}
       </button>
     );
+
+    const [mediasUser, setMediasUser] = useState([]);
+  useEffect(() => {
+    const Data = async () => {
+      getAllMedia()
+        .then((data) => {
+          setMediasUser(data);
+        })
+        .catch((err) => err);
+    };
+    if (user) {
+      Data();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, changeSeenPending]);
 
   // -LIKE
   const handleLike = () => {
@@ -173,11 +191,11 @@ const PlaylistSingle = () => {
   const TimeTotalSeenMin =
     dataMedias &&
     dataMedias
-      .map(function (objeto) {
-        return objeto.runtime;
+      .map(function (object) {
+        return object.runtime;
       })
-      .reduce(function (acumulador, valorActual) {
-        return acumulador + valorActual;
+      .reduce(function (accumulator, valorActual) {
+        return accumulator + valorActual;
       }, 0);
   const TimeTotalSeen = new DateAndTimeConvert(
     TimeTotalSeenMin,
@@ -200,7 +218,7 @@ const PlaylistSingle = () => {
   };
 
   useEffect(() => {
-    const deletPlaylist = async () => {
+    const canPlaylist = async () => {
       try {
         await deletePlaylist(idDelete).then(() => {
           window.location.href = `/playlists/${dataUser.id}`;
@@ -216,7 +234,7 @@ const PlaylistSingle = () => {
       }
     };
     if (answerDel) {
-      deletPlaylist();
+      canPlaylist();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerDel]);
@@ -312,7 +330,7 @@ const PlaylistSingle = () => {
                       </div>
                     ) : null}
                     {/* // - TOP */}
-                    <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center underline underline-offset-4 mb-1">
+                    <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center mb-1">
                       {t(title)}
                     </h1>
                     {/* // . TAGS */}
@@ -320,7 +338,7 @@ const PlaylistSingle = () => {
                       {tags && tags.join(", ")}
                     </div>
                     <div className="grid grid-cols-6 border-b border-gray-700 mb-2 pb-2">
-                      {/* //-PORTADA*/}
+                      {/* //-POSTER*/}
                       <div className="col-start-1 col-span-2 flex justify-center">
                         <img
                           className="static object-cover rounded-lg w-[600px] h-full"
@@ -430,7 +448,7 @@ const PlaylistSingle = () => {
                               )}
                             </>
                           ) : null}
-                          {/* // FOLLOW & UNFOLLOW or NUM FOLLOWERS / EDIT PLAYLIST */}
+                          {/* // FOLLOW & NO FOLLOW or NUM FOLLOWERS / EDIT PLAYLIST */}
                           <div className="mr-4">
                             {isOtherUser ? (
                               dataPlaylist && followersPlaylist ? (
@@ -460,7 +478,7 @@ const PlaylistSingle = () => {
                         />
                       </div>
                     ) : null}
-                    {/* // . ORDER & VISUALITATION */}
+                    {/* // . ORDER & VISUALIZATION */}
                     <div className="grid grid-cols-3">
                       {/* // Asc/Desc */}
                       <div className="flex items-center justify-start">
@@ -555,7 +573,7 @@ const PlaylistSingle = () => {
                         setIdDelete={setIdDelete}
                       />
                     ) : null}
-                    {/* // - SQUAR */}
+                    {/* // - SQUAD */}
                     {checkMedias && dataMedias.length > 0 && isSquare ? (
                       <div className="my-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-2">
                         {dataMedias.map((card, index) => (
@@ -568,6 +586,7 @@ const PlaylistSingle = () => {
                             isPlaylist={!isOtherUser ? id : ""}
                             setPopSureDel={setPopSureDelMedia}
                             setIdDelete={setIdDelete}
+                            mediasUser={mediasUser}
                           />
                         ))}
                       </div>
@@ -585,6 +604,7 @@ const PlaylistSingle = () => {
                             isPlaylist={!isOtherUser ? id : ""}
                             setPopSureDel={setPopSureDelMedia}
                             setIdDelete={setIdDelete}
+                            mediasUser={mediasUser}
                           />
                         ))}
                       </div>

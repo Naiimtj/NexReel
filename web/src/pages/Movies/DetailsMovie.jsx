@@ -446,7 +446,6 @@ function DetailsMovie({ info, crews, cast, media }) {
       pendingSeen
     ).Pending();
   };
-
   const poster = poster_path ? (
     <img
       className="rounded-xl w-48 sm:w-auto justify-self-center"

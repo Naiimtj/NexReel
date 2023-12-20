@@ -1,7 +1,7 @@
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getDetailUser, getUser } from "../../../../services/DB/services-db";
+import { getAllMedia, getDetailUser, getUser } from "../../../../services/DB/services-db";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "../../../context/auth-context";
 import { HiSortAscending, HiSortDescending } from "react-icons/hi";
@@ -28,7 +28,7 @@ const PendingsViews = () => {
   const isOtherUser = user.id !== id;
   const [dataUser, setDataUser] = useState({});
   const [changeSeenPending, setChangeSeenPending] = useState(false);
-  const [visualDesing, setVisualDesign] = useState(0);
+  const [visualDesign, setVisualDesign] = useState(0);
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -49,6 +49,20 @@ const PendingsViews = () => {
       userData();
     }
   }, [changeSeenPending, id, isOtherUser]);
+  const [mediasUser, setMediasUser] = useState([]);
+  useEffect(() => {
+    const Data = async () => {
+      getAllMedia()
+        .then((data) => {
+          setMediasUser(data);
+        })
+        .catch((err) => err);
+    };
+    if (user) {
+      Data();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, changeSeenPending]);
   const checkMedias = !!(
     dataUser &&
     dataUser.medias &&
@@ -77,7 +91,7 @@ const PendingsViews = () => {
   let isCarousel;
   let isSquare;
   let isList;
-  switch (visualDesing) {
+  switch (visualDesign) {
     case 0:
       isCarousel = true;
       isSquare = null;
@@ -213,17 +227,17 @@ const PendingsViews = () => {
               isAsc={isAsc}
             />
           ) : null}
-          {/* // - SQUAR */}
+          {/* // - SQUARE */}
           {checkMedias && dataMedias.length > 0 && isSquare ? (
             <div className="my-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2">
               {dataMedias.map((card, index) => (
                 <Multi
-                  key={`${index + card.id}`}
+                  key={`Square${index + card.id}`}
                   info={card}
                   isUser
                   setChangeSeenPending={setChangeSeenPending}
                   changeSeenPending={changeSeenPending}
-                  mediasUser={dataMedias}
+                  mediasUser={mediasUser}
                 />
               ))}
             </div>
@@ -233,12 +247,12 @@ const PendingsViews = () => {
             <div className="flex flex-col gap-1">
               {dataMedias.map((card, index) => (
                 <MultiList
-                  key={`${index + card.id}${card.original_title}`}
+                  key={`List${index + card.id}`}
                   info={card}
                   isUser
                   setChangeSeenPending={setChangeSeenPending}
                   changeSeenPending={changeSeenPending}
-                  mediasUser={dataMedias}
+                  mediasUser={mediasUser}
                 />
               ))}
             </div>
