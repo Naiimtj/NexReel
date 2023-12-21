@@ -16,7 +16,6 @@ import {
   getDetailMedia,
   getPlexAllData,
   getUser,
-  postPlaylistMedia,
 } from "../../../services/DB/services-db";
 // img
 import {
@@ -39,7 +38,6 @@ import {
   IoCheckmarkCircleOutline,
   IoCheckmarkCircleSharp,
 } from "react-icons/io5";
-import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
 // components & utils
@@ -57,6 +55,7 @@ import calculateAverageVote from "../../components/MediaList/calculateAverageVot
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPending";
+import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
 
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
@@ -205,24 +204,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataMediaUser]);
-  const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
-  const handleAddPlaylist = async (playlistId) => {
-    if (userExist) {
-      try {
-        await postPlaylistMedia(playlistId, {
-          mediaId: `${id}`,
-          media_type: media,
-          runtime: processInfo.runTime,
-        });
-      } catch (error) {
-        if (error) {
-          const { message } = error.response?.data || {};
-          setErrorAddPlaylists(message);
-        }
-      }
-    }
-  };
 
   const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
@@ -466,9 +448,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       />
     </div>
   );
-  const handleDeletePlaylist = () => {
-    setErrorAddPlaylists(t("Is in the playlist"));
-  };
+
   return (
     <>
       <PageTitle title={`${processInfo.title} (${processInfo.date})`} />
@@ -517,7 +497,7 @@ function DetailsMovie({ info, crews, cast, media }) {
               )}
               {poster}
               {userExist ? (
-                <div className="grid grid-cols-4 gap-4 text-center mt-5 justify-center justify-items-center">
+                <div className="grid grid-cols-5 gap-4 text-center mt-5 justify-center justify-items-center">
                   {/* //-SEEN/UNSEEN */}
                   {userExist ? (
                     <div className="text-right align-middle">
@@ -548,83 +528,12 @@ function DetailsMovie({ info, crews, cast, media }) {
                   ) : null}
                   {/* //-ADD PLAYLIST */}
                   {userExist ? (
-                    <div className="col-span-2  cursor-pointer text-left text-base font-semibold px:center text-[#7B6EF6] transition duration-300 ">
-                      <button
-                        className={`cursor-pointer text-left font-semibold px:center ${
-                          !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-                        } transition ease-in-out md:hover:scale-105 duration-300`}
-                        onClick={() => setPlaylistsList(!playlistsList)}
-                      >
-                        {!playlistsList ? (
-                          <IoMdAdd
-                            className="inline-block"
-                            size={20}
-                            alt={t("Add to one list")}
-                          />
-                        ) : (
-                          <IoIosRemove
-                            className="inline-block"
-                            size={20}
-                            alt={t("Add to one list")}
-                          />
-                        )}
-                        {t("Playlists")}
-                      </button>
-                      {playlistsList ? (
-                        <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
-                          {errorAddPlaylists ? (
-                            <div className="text-white bg-gray-50/20 px-1 font-bold">
-                              {t(errorAddPlaylists)}
-                            </div>
-                          ) : null}
-                          {user &&
-                            dataUser &&
-                            dataUser.playlists.map((i, index) => {
-                              const roundedTopItem =
-                                index === 0 ? "rounded-t-md" : null;
-                              const roundedBottomItem =
-                                dataUser.playlists.length === index + 1
-                                  ? "rounded-b-md"
-                                  : null;
-                              const isInPlaylist =
-                                user.playlists &&
-                                i.medias &&
-                                i.medias.some(
-                                  (media) => Number(media.mediaId) === id
-                                );
-                              return (
-                                <div
-                                  key={i.id}
-                                  className={`hover:bg-gray-50 px-1 ${
-                                    user.playlists &&
-                                    user.playlists.length === 1
-                                      ? "rounded-md"
-                                      : null
-                                  } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                                  onClick={(event) => {
-                                    event.stopPropagation(),
-                                      isInPlaylist
-                                        ? handleDeletePlaylist()
-                                        : handleAddPlaylist(i.id);
-                                  }}
-                                >
-                                  <div
-                                    className={
-                                      isInPlaylist
-                                        ? "text-green-700 text-left"
-                                        : "text-black text-left"
-                                    }
-                                  >
-                                    {isInPlaylist
-                                      ? `✓ ${i.title}`
-                                      : `· ${i.title}`}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                        </div>
-                      ) : null}
-                    </div>
+                    <ShowPlaylistMenu
+                    userId={user.id}
+                    id={Number(id)}
+                    type={media}
+                    runTime={processInfo.runTime}
+                  />
                   ) : null}
                   {/* //-PENDING/NO PENDING */}
                   {userExist ? (
@@ -1262,23 +1171,23 @@ function DetailsMovie({ info, crews, cast, media }) {
               />
             )
           )}
-        </div>
-        {/* //-SIMILAR */}
-        <div className="text-lg pt-4">
+        </div>        
+        {/* //-RECOMMENDATIONS */}
+        <div className="text-lg pt-4 pb-6 mb-20">
           {!modal && info.id === id ? (
-            <Similar
-              title={media === "movie" ? t("Similar") : t("Recommendations")}
+            <Recommendations
+              title={media === "movie" ? t("Recommendations") : t("Similar")}
               id={id}
               media={media}
               lang={langApi}
             />
           ) : null}
         </div>
-        {/* //-RECOMMENDATIONS */}
-        <div className="text-lg pt-4 pb-6 mb-20">
+        {/* //-SIMILAR */}
+        <div className="text-lg pt-4">
           {!modal && info.id === id ? (
-            <Recommendations
-              title={media === "movie" ? t("Recommendations") : t("Similar")}
+            <Similar
+              title={media === "movie" ? t("Similar") : t("Recommendations")}
               id={id}
               media={media}
               lang={langApi}

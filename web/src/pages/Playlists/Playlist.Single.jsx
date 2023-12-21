@@ -322,7 +322,7 @@ const PlaylistSingle = () => {
                   <div className="relative">
                     {/* // - POP DELETE */}
                     {popSureDel ? (
-                      <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
+                      <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle ">
                         <PopSureDelete
                           setPopSureDel={setPopSureDel}
                           setAnswerDel={setAnswerDel}

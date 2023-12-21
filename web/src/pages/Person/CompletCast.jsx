@@ -7,20 +7,20 @@ import {
   getMediaDetails,
 } from "../../../services/TMDB/services-tmdb";
 import { useTranslation } from "react-i18next";
-import { NoImage } from "../../assets/image";
+import { NoImage, people } from "../../assets/image";
 import PageTitle from "../../components/PageTitle";
 
 function CompletCast() {
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
   const { id, media_type } = useParams();
-  const [repartoList, setRepartoList] = useState([]);
+  const [castingList, setCastingList] = useState([]);
   const [crewsList, setCrewsList] = useState([]);
   // -SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-  // -DETAILS MOVIE/TVSHOW
+  // -DETAILS MOVIE/TV SHOW
   const [detailsMedia, setDetailsMedia] = useState([]);
   useEffect(() => {
     const dataMedia = async () => {
@@ -40,7 +40,7 @@ function CompletCast() {
         media_type === "movie" ? "credits" : "aggregate_credits";
       const result = await getCredits(media_type, id, textCredits, t("es-ES"));
       if (Object.keys(result).length > 0) {
-        setRepartoList(result.cast);
+        setCastingList(result.cast);
         setCrewsList(result.crew);
       }
     };
@@ -49,29 +49,29 @@ function CompletCast() {
     }
   }, [id, media_type, t]);
 
-  const directores = crewsList.filter(
-    (filequ) => filequ.department === "Directing"
+  const directors = crewsList.filter(
+    (item) => item.department === "Directing"
   );
   const scriptwriters = crewsList.filter(
-    (filequ) => filequ.department === "Writing"
+    (item) => item.department === "Writing"
   );
-  const arte = crewsList.filter((filequ) => filequ.department === "Art");
-  const costumMakeUp = crewsList.filter(
-    (filequ) => filequ.department === "Costume & Make-Up"
+  const arte = crewsList.filter((item) => item.department === "Art");
+  const costumeMakeUp = crewsList.filter(
+    (item) => item.department === "Costume & Make-Up"
   );
-  const produccion = crewsList.filter(
-    (filequ) => filequ.department === "Production"
+  const production = crewsList.filter(
+    (item) => item.department === "Production"
   );
-  const crew = crewsList.filter((filequ) => filequ.department === "Crew");
-  const sound = crewsList.filter((filequ) => filequ.department === "Sound");
+  const crew = crewsList.filter((item) => item.department === "Crew");
+  const sound = crewsList.filter((item) => item.department === "Sound");
   const lighting = crewsList.filter(
-    (filequ) => filequ.department === "Lighting"
+    (item) => item.department === "Lighting"
   );
-  const editing = crewsList.filter((filequ) => filequ.department === "Editing");
-  const camera = crewsList.filter((filequ) => filequ.department === "Camera");
-  const actors = crewsList.filter((filequ) => filequ.department === "Actors");
+  const editing = crewsList.filter((item) => item.department === "Editing");
+  const camera = crewsList.filter((item) => item.department === "Camera");
+  const actors = crewsList.filter((item) => item.department === "Actors");
   const visualEffect = crewsList.filter(
-    (filequ) => filequ.department === "Visual Effects"
+    (item) => item.department === "Visual Effects"
   );
   // -ALL TEAM
   // .CAST
@@ -94,10 +94,10 @@ function CompletCast() {
   const handleProduction = () => {
     setModalProduction(!modalProduction);
   };
-  // .ARTE
-  const [modalArte, setModalArte] = useState(false);
-  const handleArte = () => {
-    setModalArte(!modalArte);
+  // .ART
+  const [modalArt, setModalArt] = useState(false);
+  const handleArt = () => {
+    setModalArt(!modalArt);
   };
   // .CREW
   const [modalCrew, setModalCrew] = useState(false);
@@ -179,15 +179,26 @@ function CompletCast() {
                     key={Number(team.id + index)}
                   >
                     <>
+                    {team.profile_path ? (
                       <img
-                        className="static rounded-lg object-cover h-24 w-24 "
-                        src={
-                          team.profile_path !== null
-                            ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${team.profile_path}`
-                            : NoImage
-                        }
+                        className="static rounded-lg object-cover h-24 w-24"
+                        src={`https://www.themoviedb.org/t/p/w600_and_h900_bestv2${team.profile_path}`}
                         alt={team.name}
                       />
+                    ) : (
+                      <div className="relative flex justify-center items-center">
+                        <img
+                          className="absolute h-14 w-20 opacity-10"
+                          src={people}
+                          alt={t("Icon people")}
+                        />
+                        <img
+                          className="static rounded-lg object-cover h-24 w-24"
+                          src={NoImage}
+                          alt={team.name}
+                        />
+                      </div>
+                    )}
                     </>
                     <div className="col-span-2 text-left ">
                       <h2 className="font-semibold text-base">{team.name}</h2>
@@ -239,35 +250,35 @@ function CompletCast() {
             onClick={handleCast}
           >
             <h1 className="text-xl mb-4">
-              {repartoList.length !== 0 ? t("CAST COMPLETE") : null}
+              {castingList.length !== 0 ? t("CAST COMPLETE") : null}
             </h1>
             <BiCaretUp className="ml-2" size={18} />
           </button>
           <div className="text-gray-200 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 ">
             {/* // .CAST */}
-            {repartoList.map((rep, index) => {
+            {castingList.map((rep, index) => {
               const urlPerson =
                 rep.profile_path &&
                 `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${rep.profile_path}`;
               const processInfo = {};
               switch (media_type) {
                 case "movie":
-                  processInfo.foto =
+                  processInfo.photo =
                     rep.profile_path !== null ? urlPerson : NoImage;
-                  processInfo.nombre = rep.name;
-                  processInfo.personaje = rep.character;
-                  processInfo.trabajo = rep.known_for_department;
+                  processInfo.name = rep.name;
+                  processInfo.character = rep.character;
+                  processInfo.work = rep.known_for_department;
                   processInfo.idPerson = rep.id;
                   break;
                 case "tv":
-                  processInfo.foto =
+                  processInfo.photo =
                     rep.profile_path !== null ? urlPerson : NoImage;
-                  processInfo.nombre = rep.name;
-                  processInfo.personaje =
+                  processInfo.name = rep.name;
+                  processInfo.character =
                     rep.roles && rep.roles.length > 0
                       ? rep.roles[0].character
                       : null;
-                  processInfo.trabajo = rep.known_for_department;
+                  processInfo.work = rep.known_for_department;
                   processInfo.idPerson = rep.id;
                   break;
 
@@ -288,11 +299,26 @@ function CompletCast() {
                   key={Number(processInfo.idPerson / index + 2)}
                 >
                   <div>
-                    <img
-                      className="static rounded-lg object-cover h-24 w-24"
-                      src={processInfo.foto}
-                      alt={processInfo.nombre}
-                    />
+                    {urlPerson ? (
+                      <img
+                        className="rounded-xl object-cover h-24"
+                        src={processInfo.photo}
+                        alt={processInfo.name}
+                      />
+                    ) : (
+                      <div className="relative flex justify-center items-center">
+                        <img
+                          className="absolute h-14 w-20 opacity-10"
+                          src={people}
+                          alt={t("Icon people")}
+                        />
+                        <img
+                          className="rounded-xl object-cover h-24"
+                          src={processInfo.photo}
+                          alt={processInfo.name}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div
                     className="col-span-2 text-left"
@@ -305,10 +331,10 @@ function CompletCast() {
                     tabIndex={index}
                   >
                     <h2 className="font-semibold text-base">
-                      {processInfo.nombre}
+                      {processInfo.name}
                     </h2>
                     <p className="text-sm text-gray-400">
-                      {processInfo.personaje}
+                      {processInfo.character}
                     </p>
                   </div>
                 </div>
@@ -316,14 +342,14 @@ function CompletCast() {
             })}
           </div>
         </>
-      ) : repartoList.length !== 0 ? (
+      ) : castingList.length !== 0 ? (
         <>
           <button
             className="flex items-center pt-2 cursor-pointer text-left transition ease-in-out text-gray-200 md:hover:text-purpleNR duration-100"
             onClick={handleCast}
           >
             <h1 className="text-xl">
-              {repartoList.length !== 0 ? t("CAST COMPLETE") : null}
+              {castingList.length !== 0 ? t("CAST COMPLETE") : null}
             </h1>
             <BiCaretDown className="ml-2" size={18} />
           </button>
@@ -332,14 +358,14 @@ function CompletCast() {
 
       <div className="text-gray-200 ">
         {/* // ! TEAM */}
-        {/* // - DEPARTAMENTS  */}
+        {/* // - DEPARTMENTS  */}
         <div className="text-gray-200 pr-4">
           {/* // .DIRECTING */}
           <div className="mb-2">
             {cardCredits(
               modalDirecting,
               handleDirecting,
-              directores,
+              directors,
               t("DIRECTING")
             )}
           </div>
@@ -357,13 +383,13 @@ function CompletCast() {
             {cardCredits(
               modalProduction,
               handleProduction,
-              produccion,
+              production,
               t("PRODUCTION")
             )}
           </div>
           {/* // .ART */}
           <div className="mb-2">
-            {cardCredits(modalArte, handleArte, arte, t("ART"))}
+            {cardCredits(modalArt, handleArt, arte, t("ART"))}
           </div>
           {/* // .CREW */}
           <div className="mb-2">
@@ -391,7 +417,7 @@ function CompletCast() {
             {cardCredits(
               modalCostume,
               handleCostume,
-              costumMakeUp,
+              costumeMakeUp,
               t("COSTUME & MAKE-UP")
             )}
           </div>

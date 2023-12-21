@@ -11,7 +11,6 @@ import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
 import {
   deleteMedia,
-  postPlaylistMedia,
 } from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import {
@@ -20,8 +19,8 @@ import {
 } from "react-icons/io5";
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
-import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import SeenPending from "./SeenPending";
+import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
 
 export const MultiList = ({
   info,
@@ -33,7 +32,7 @@ export const MultiList = ({
   isPlaylist,
   setPopSureDel,
   setIdDelete,
-  mediasUser
+  mediasUser,
 }) => {
   const [t, i18next] = useTranslation("translation");
   const navigate = useNavigate();
@@ -115,20 +114,20 @@ export const MultiList = ({
   }
   // ! USER COMPACTION
   const [dataMediaUser, setDataMediaUser] = useState({});
-    useEffect(() => {
-      if (userExist) {
-        const isInMediaUser =
-          mediasUser &&
-          mediasUser.find(
-            (f) => Number(f.mediaId) === Number(id) && mediaType === f.media_type
-          );
-        if (isInMediaUser) {
-          setDataMediaUser(isInMediaUser);
-        } else {
-          setDataMediaUser({});
-        }
+  useEffect(() => {
+    if (userExist) {
+      const isInMediaUser =
+        mediasUser &&
+        mediasUser.find(
+          (f) => Number(f.mediaId) === Number(id) && mediaType === f.media_type
+        );
+      if (isInMediaUser) {
+        setDataMediaUser(isInMediaUser);
+      } else {
+        setDataMediaUser({});
       }
-    }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
+    }
+  }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
   const { like, seen, pending, vote } = dataMediaUser;
   useEffect(() => {
     if (userExist && !like && !seen && !pending && vote === -1) {
@@ -168,24 +167,9 @@ export const MultiList = ({
     ).Pending();
   };
   // ADD MEDIA TO PLAYLIST
-  const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
+
   const [isTimeout, setIsTimeout] = useState(true);
-  const handleAddPlaylist = async (playlistId) => {
-    try {
-      await postPlaylistMedia(playlistId, {
-        mediaId: id,
-        media_type: processInfo.type,
-        runtime: processInfo.runTime,
-      });
-    } catch (error) {
-      if (error) {
-        const { message } = error.response?.data || {};
-        setErrorAddPlaylists(message);
-        setIsTimeout(true);
-      }
-    }
-  };
   useEffect(() => {
     let timerId;
 
@@ -334,65 +318,18 @@ export const MultiList = ({
             </div>
           </div>
         </div>
-        {playlistsList ? (
-          <div className="grid grid-cols-6">
-            <div className="col-start-5 flex flex-col text-base bg-grayNR/60 rounded-md mb-5">
-              {errorAddPlaylists ? (
-                <div className="text-white bg-gray-50/20 px-1 font-bold">
-                  {t(errorAddPlaylists)}
-                </div>
-              ) : null}
-              {user &&
-                user.playlists.map((i, index) => {
-                  const roundedTopItem = index === 0 ? "rounded-t-md" : null;
-                  const roundedBottomItem =
-                    user.playlists.length === index + 1 ? "rounded-b-md" : null;
-
-                  return (
-                    <div
-                      key={i.id}
-                      className={`hover:bg-gray-50 px-1 ${
-                        user.playlists.length === 1 ? "rounded-md" : null
-                      } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                      onClick={() => handleAddPlaylist(i.id)}
-                    >
-                      <div className="text-black text-left">· {i.title}</div>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-        ) : null}
       </div>
 
       {/* //.BUTTON AND SEEN/UNSEEN */}
-
       {userExist ? (
-        <div className="absolute bottom-0 mb-1 flex justify-end gap-6 w-full pr-4">
+        <div className="absolute bottom-0 mb-1 flex justify-end gap-6 w-full pr-4 z-40">
           {/* //-ADD BUTTON */}
-          <div className="relative text-base align-middle col-span-3 ">
-            <button
-              className={`cursor-pointer text-left font-semibold px:center ${
-                !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-              } transition ease-in-out md:hover:scale-105 duration-300`}
-              onClick={() => setPlaylistsList(!playlistsList)}
-            >
-              {!playlistsList ? (
-                <IoMdAdd
-                  className="inline-block"
-                  size={20}
-                  alt={t("Add to one list")}
-                />
-              ) : (
-                <IoIosRemove
-                  className="inline-block"
-                  size={20}
-                  alt={t("Add to one list")}
-                />
-              )}
-              {t("Playlists")}
-            </button>
-          </div>
+          <ShowPlaylistMenu
+            userId={user.id}
+            id={Number(id)}
+            type={processInfo.type}
+            runTime={processInfo.runTime}
+          />
           {/* //-SEEN/UNSEEN */}
           <div className="text-right align-middle">
             {mediaType !== "person" ? (

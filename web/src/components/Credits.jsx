@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { NoImage, people } from "../assets/image";
-import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import { useAuthContext } from "../context/auth-context";
 import { useEffect, useState } from "react";
-import { postPlaylistMedia } from "../../services/DB/services-db";
 import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import AddForum from "../utils/Forum/AddForum";
+import ShowPlaylistMenu from "../utils/Playlists/showPlaylistMenu";
 
 export const Credits = ({
   repInfo,
@@ -77,22 +76,7 @@ export const Credits = ({
       break;
   }
 
-  const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
-  const handleAddPlaylist = async (playlistId) => {
-    try {
-      await postPlaylistMedia(playlistId, {
-        mediaId: `${id}`,
-        media_type: "person",
-        runtime: processInfo.runTime,
-      }).then(() => setPlaylistsList(false));
-    } catch (error) {
-      if (error) {
-        const { message } = error.response?.data || {};
-        setErrorAddPlaylists(message);
-      }
-    }
-  };
 
   const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
@@ -195,82 +179,13 @@ export const Credits = ({
             <div className="mb-1 w-full pr-4">
               {/* //-ADD BUTTON PLAYLIST */}
               {!isForum ? (
-                <div className="relative text-base align-middle col-span-3 ">
-                  <button
-                    className={`cursor-pointer text-left font-semibold px:center ${
-                      !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-                    } transition ease-in-out md:hover:scale-105 duration-300`}
-                    onClick={(event) => {
-                      event.stopPropagation(), setPlaylistsList(!playlistsList);
-                    }}
-                  >
-                    {!playlistsList ? (
-                      <IoMdAdd
-                        className="inline-block"
-                        size={20}
-                        alt={t("Add to one list")}
-                      />
-                    ) : (
-                      <IoIosRemove
-                        className="inline-block"
-                        size={20}
-                        alt={t("Add to one list")}
-                      />
-                    )}
-                    {t("Playlists")}
-                  </button>
-                  {playlistsList ? (
-                    <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
-                      {errorAddPlaylists ? (
-                        <div className="text-red-700 bg-gray-50/20 px-1 font-bold text-center">
-                          {t(errorAddPlaylists)}
-                        </div>
-                      ) : null}
-                      {user &&
-                        user &&
-                        user.playlists.map((i, index) => {
-                          const roundedTopItem =
-                            index === 0 ? "rounded-t-md" : null;
-                          const roundedBottomItem =
-                            user.playlists &&
-                            user.playlists.length === index + 1
-                              ? "rounded-b-md"
-                              : null;
-                          const isInPlaylist =
-                            user.playlists &&
-                            i.medias &&
-                            i.medias.some(
-                              (media) => Number(media.mediaId) === id
-                            );
-                          console.log(isInPlaylist);
-                          return (
-                            <div
-                              key={i.id}
-                              className={`hover:bg-gray-50 px-1 ${
-                                user.playlists && user.playlists.length === 1
-                                  ? "rounded-md"
-                                  : null
-                              } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                              onClick={(event) => {
-                                event.stopPropagation(),
-                                  handleAddPlaylist(i.id);
-                              }}
-                            >
-                              <div
-                                className={`${
-                                  isInPlaylist
-                                    ? "line-through text-gray-900"
-                                    : "text-black"
-                                } text-left`}
-                              >
-                                · {i.title}
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                  ) : null}
-                </div>
+                <ShowPlaylistMenu
+                userId={user.id}
+                id={Number(id)}
+                type={"person"}
+                runTime={processInfo.runTime}
+              />
+                
               ) : null}
               {isForum ? (
                 <AddForum

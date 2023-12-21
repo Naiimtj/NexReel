@@ -57,7 +57,7 @@ const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
   }, [isTimeout, errorAddPlaylists]);
 
   return (
-    <div className="relative text-base align-middle col-span-3 ">
+    <div className="relative text-base align-middle col-span-3">
       <button
         className={`cursor-pointer text-left font-semibold px:center ${
           !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"

@@ -10,11 +10,11 @@ import Carousel from "../../utils/Carousel/Carousel";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import { NoImage, people } from "../../assets/image";
 import { getExternalId } from "../../../services/TMDB/services-tmdb";
-import { IoIosArrowBack, IoIosRemove, IoMdAdd } from "react-icons/io";
-import { getUser, postPlaylistMedia } from "../../../services/DB/services-db";
+import { IoIosArrowBack } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
 import { getImdbPerson } from "../../../services/IMDB/services-imdb";
 import PageTitle from "../PageTitle";
+import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
 
 export const PersonDetails = ({
   info,
@@ -27,19 +27,6 @@ export const PersonDetails = ({
   const [t] = useTranslation("translation");
   const { user } = useAuthContext();
   const userExist = !!user;
-  const [dataUser, setDataUser] = useState({});
-  useEffect(() => {
-    const Data = async () => {
-      getUser()
-        .then((data) => {
-          setDataUser(data);
-        })
-        .catch((err) => err);
-    };
-    if (userExist) {
-      Data();
-    }
-  }, [userExist]);
   const {
     id,
     name,
@@ -261,23 +248,7 @@ export const PersonDetails = ({
   const items = knowFilterVote && knowFilterVote.slice(0, size);
 
   // - PLAYLIST
-  const [playlistsList, setPlaylistsList] = useState(false);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
-  const handleAddPlaylist = async (playlistId) => {
-    try {
-      await postPlaylistMedia(playlistId, {
-        mediaId: `${id}`,
-        media_type: "person",
-        runtime: 0,
-      });
-    } catch (error) {
-      if (error) {
-        const { message } = error.response?.data || {};
-        setErrorAddPlaylists(message);
-      }
-    }
-  };
-
   const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
     let timerId;
@@ -313,7 +284,7 @@ export const PersonDetails = ({
         {/* //-PHOTO Y ADD PLAYLIST */}
         <div className="md:row-span-1 rounded-xl justify-center">
           <div className="flex justify-around">
-            {profile_path ? (
+            {urlPerson ? (
               <img
                 className="rounded-xl object-cover h-96"
                 src={photo}
@@ -336,66 +307,12 @@ export const PersonDetails = ({
           </div>
           {/* //-ADD PLAYLIST */}
           {userExist ? (
-            <div className="grid grid-cols-4 gap-4 text-center mt-5 justify-center justify-items-center">
-              <div className="col-span-2  cursor-pointer text-left text-base font-semibold px:center text-[#7B6EF6] transition duration-300 ">
-                <button
-                  className={`cursor-pointer text-left font-semibold px:center ${
-                    !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
-                  } transition ease-in-out md:hover:scale-105 duration-300`}
-                  onClick={() => setPlaylistsList(!playlistsList)}
-                >
-                  {!playlistsList ? (
-                    <IoMdAdd
-                      className="inline-block"
-                      size={20}
-                      alt={t("Add to one list")}
-                    />
-                  ) : (
-                    <IoIosRemove
-                      className="inline-block"
-                      size={20}
-                      alt={t("Add to one list")}
-                    />
-                  )}
-                  {t("Playlists")}
-                </button>
-                {playlistsList ? (
-                  <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
-                    {errorAddPlaylists ? (
-                      <div className="text-white bg-gray-50/20 px-1 font-bold">
-                        {t(errorAddPlaylists)}
-                      </div>
-                    ) : null}
-                    {user &&
-                      dataUser &&
-                      dataUser.playlists.map((i, index) => {
-                        const roundedTopItem =
-                          index === 0 ? "rounded-t-md" : null;
-                        const roundedBottomItem =
-                          dataUser.playlists.length === index + 1
-                            ? "rounded-b-md"
-                            : null;
-
-                        return (
-                          <div
-                            key={i.id}
-                            className={`hover:bg-gray-50 px-1 ${
-                              dataUser.playlists.length === 1
-                                ? "rounded-md"
-                                : null
-                            } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                            onClick={() => handleAddPlaylist(i.id)}
-                          >
-                            <div className="text-black text-left">
-                              · {i.title}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ) : null}
-              </div>
-            </div>
+            <ShowPlaylistMenu
+            userId={user.id}
+            id={Number(id)}
+            type={"person"}
+            runTime={0}
+          />            
           ) : null}
         </div>
         <div className="md:col-span-2">
