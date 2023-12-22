@@ -238,7 +238,12 @@ export async function postPlaylist(data) {
   const formData = new FormData();
   formData.append("title", data.title);
   formData.append("description", data.description);
-  formData.append("tags", data.tags);
+  for (const tag of data.tags) {
+    const trimmedTag = tag.trim();
+    if (trimmedTag) {
+      formData.append("tags[]", trimmedTag);
+    }
+  }
 
   if (data.imgPlaylist) {
     formData.append("imgPlaylist", data.imgPlaylist[0]);
@@ -276,7 +281,12 @@ export async function patchPlaylist(id, data) {
   const formData = new FormData();
   formData.append("title", data.title);
   formData.append("description", data.description);
-  formData.append("tags", data.tags);
+  for (const tag of data.tags) {
+    const trimmedTag = tag.trim();
+    if (trimmedTag) {
+      formData.append("tags[]", trimmedTag);
+    }
+  }
 
   if (typeof data.imgPlaylist === "object") {
     formData.append("imgPlaylist", data.imgPlaylist[0]);
@@ -419,7 +429,12 @@ export async function deleteMedia(id) {
 export async function postForum(data) {
   const formData = new FormData();
   formData.append("title", data.title);
-  formData.append("tags", data.tags);
+  for (const tag of data.tags) {
+    const trimmedTag = tag.trim();
+    if (trimmedTag) {
+      formData.append("tags[]", trimmedTag);
+    }
+  }
   formData.append("shortDescription", data.shortDescription);
   formData.append("description", data.description);
   if (data.imgForum) {
@@ -441,9 +456,8 @@ export async function getDetailForum(id) {
 // - GET
 // List Forum
 export async function getListForum() {
-  const url = `/forums`;
   try {
-    const response = await service.get(url);
+    const response = await service.get("/forums");
     return response;
   } catch (err) {
     console.error("Error profile:", err);
@@ -453,21 +467,29 @@ export async function getListForum() {
 // * PATCH
 // Update Forums
 export async function patchForum(id, data) {
-  const url = `/forums/${id}`;
-  try {
-    const response = await service.patch(url, data);
-    return response;
-  } catch (err) {
-    console.error("Error update Forum user:", err);
-    return {};
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("shortDescription", data.shortDescription);
+  formData.append("description", data.description);
+  for (const tag of data.tags) {
+    const trimmedTag = tag.trim();
+    if (trimmedTag) {
+      formData.append("tags[]", trimmedTag);
+    }
   }
+  formData.append("author", data.author);
+
+  if (typeof data.imgForum === "object") {
+    formData.append("imgForum", data.imgForum[0]);
+  }
+  const response = await service.patch(`/forums/${id}`, formData);
+  return response;
 }
 // ! DELETE
 // Delete Forum
 export async function deleteForum(id) {
-  const url = `/forums/${id}`;
   try {
-    const response = await service.delete(url);
+    const response = await service.delete(`/forums/${id}`);
     return response;
   } catch (err) {
     console.error("Error Delete Forum:", err);

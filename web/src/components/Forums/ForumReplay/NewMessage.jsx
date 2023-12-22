@@ -47,9 +47,6 @@ const NewMessage = ({ forumId, change, setChange, setCreateMessage }) => {
         <div className="flex justify-center">
           <div className="w-full text-gray-800 rounded-lg md:mt-0 sm:max-w-full xl:p-0">
             <div className="space-y-4 md:space-y-6 text-gray-800">
-              <h1 className="text-xl font-bold leading-tight tracking-tigh md:text-2xl">
-                {t("Edit Message")}
-              </h1>
               <form
                 className="space-y-4 md:space-y-6"
                 onSubmit={handleSubmit(onSubmit)}
@@ -71,7 +68,7 @@ const NewMessage = ({ forumId, change, setChange, setCreateMessage }) => {
                   <textarea
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-800 sm:text-sm rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5"
-                    placeholder={t("Message")}
+                    placeholder={t("New Message")}
                     {...register("textMessage", {
                       required: t("Message is required"),
                       minLength: {

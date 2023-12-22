@@ -18,8 +18,6 @@ import { HiSortAscending, HiSortDescending, HiUserGroup } from "react-icons/hi";
 import { IoIosArrowBack } from "react-icons/io";
 import {
   BiHeart,
-  BiMessageSquareAdd,
-  BiMessageSquareX,
   BiSolidHeart,
 } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
@@ -123,24 +121,19 @@ const ForumSingle = () => {
   };
   const isFollowing =
     isUserFollowForum && !isUserFollowForum.length > 0 ? (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR hover:text-gray-600">
-        <BiMessageSquareAdd
-          className="inline-block"
-          size={30}
-          color="#FFCA28"
-          alt={t("Follow Forum")}
-          onClick={handleFollow}
-        />
-      </button>
+      <button
+      className="cursor-pointer transition duration-300 border px-1 rounded-md hover:border-purpleNR hover:text-purpleNR "
+      onClick={handleFollow}
+    >
+      {t("Follow")}
+    </button>
     ) : (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR hover:text-gray-600">
-        <BiMessageSquareX
-          className="inline-block"
-          size={25}
-          alt={t("UnFollow Forum")}
-          onClick={handleUnFollow}
-        />
-      </button>
+      <button
+      className="cursor-pointer transition duration-300 text-purpleNR border px-1 rounded-md border-purpleNR hover:border-white hover:text-white"
+      onClick={handleUnFollow}
+    >
+      {t("No Follow")}
+    </button>
     );
   // -LIKE
   const handleLike = () => {
@@ -244,7 +237,6 @@ const ForumSingle = () => {
   }, [isTimeout, errorDelete]);
 
   const basicForum = { id, title };
-
   return (
     <>
       {!followers ? (
@@ -256,7 +248,6 @@ const ForumSingle = () => {
               Object.keys(dataForum).length && `${t("Forum")}-${title}`
             }`}
           />
-
           <div className="relative text-gray-200 mb-20 mt-6">
             {/* // . BACK USER & FORUM */}
             <div className="text-gray-200 mb-4">
@@ -292,10 +283,10 @@ const ForumSingle = () => {
                         </div>
                       ) : null}
                       {/* // ! TOP */}
-                      <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center underline underline-offset-4 ">
+                      <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center">
                         {t(title)}
                       </h1>
-                      <p className="font-extralight text-center italic text-sm mt-1 mb-4">{`"${shortDescription}"`}</p>
+                      { shortDescription && <p className="font-extralight text-center italic text-sm mt-1 mb-4">{`"${shortDescription}"`}</p>}
                       <div className="grid grid-cols-6 mb-2 pb-2">
                         {/* //-POSTER*/}
                         <div className="col-span-2 flex justify-center">
@@ -307,11 +298,13 @@ const ForumSingle = () => {
                         </div>
                         {/* // - INFO Forum */}
                         <div className="col-span-4 ml-10 grid grid-cols-4">
-                          <div className="col-span-3">
-                            <p className="text-gray-400 text-xs">
-                              {dataForum && tags && tags.join(", ")}
-                            </p>
-                          </div>
+                          {dataForum && tags && tags[0] !== "" ? (
+                            <div className="col-span-3">
+                              <p className="text-gray-400 text-xs">
+                                {tags.join(", ")}
+                              </p>
+                            </div>
+                          ) : null}
                           <div className="flex justify-end gap-2">
                             <p className="text-gray-400">{`${t(
                               "Create by"
@@ -335,7 +328,7 @@ const ForumSingle = () => {
                             )}:`}</div>
                             <p className="font-normal">{description}</p>
                           </div>
-                          <div className="col-span-2 grid grid-cols-2">
+                          <div className="col-span-4 grid grid-cols-2">
                             <div className="flex gap-2">
                               <p className="text-gray-400">{`${t(
                                 "Quantity"
@@ -415,7 +408,7 @@ const ForumSingle = () => {
                               </>
                             ) : null}
                             {/* // FOLLOW & NOFOLLOW or NUM FOLLOWERS / EDIT Forum */}
-                            <div className="mr-4">
+                            <div className="mr-4 mt-1">
                               {isOtherUser ? (
                                 dataForum && followers ? (
                                   isFollowing

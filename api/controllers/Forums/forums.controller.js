@@ -60,22 +60,35 @@ module.exports.update = async (req, res, next) => {
     }
     const { title, shortDescription, description, tags, author, imgForum } =
       body;
-    const forum = await req.forum.populate("followers");
-    if (!forum) {
-      next(createError(404, "Forum not found"));
+    let forum = req.forum;
+    if (forum) {
+      forum.title = title || forum.title;
+      forum.shortDescription = shortDescription || forum.shortDescription;
+      forum.description = description || forum.description;
+      forum.tags = tags || forum.tags;
+      forum.author = author || forum.author;
+      forum.imgForum = imgForum || forum.imgForum;
+      forum = await forum.save();
+      res.status(200).json(forum);
+    } else {
+      next(createError(403, "This Forum was not created by you"));
     }
-    const updateForum = await Forum.findByIdAndUpdate(
-      forum.id,
-      { title, shortDescription, description, tags, author, imgForum },
-      {
-        runValidators: true,
-        new: true,
-      }
-    );
-    if (!updateForum) {
-      next(createError(404, "Forum can't update"));
-    }
-    res.json(updateForum);
+    // const forum = await req.forum.populate("followers");
+    // if (!forum) {
+    //   next(createError(404, "Forum not found"));
+    // }
+    // const updateForum = await Forum.findByIdAndUpdate(
+    //   forum.id,
+    //   { title, shortDescription, description, tags, author, imgForum },
+    //   {
+    //     runValidators: true,
+    //     new: true,
+    //   }
+    // );
+    // if (!updateForum) {
+    //   next(createError(404, "Forum can't update"));
+    // }
+    // res.json(updateForum);
   } catch (error) {
     next(error);
   }

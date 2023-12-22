@@ -27,8 +27,8 @@ const EditForum = ({
       title: dataForum.title,
       shortDescription: dataForum.shortDescription,
       description: dataForum.description,
-      tags: dataForum.tags && dataForum.tags.map((tag) => tag),
-      medias: dataForum.medias,
+      tags: dataForum.tags,
+      author: dataForum.author,
     },
   });
   const [imgForum, setImgForum] = useState({});
@@ -38,7 +38,6 @@ const EditForum = ({
     if (imgForum.length) {
       data.imgForum = imgForum;
     }
-
     try {
       const newForm = await patchForum(dataForum.id, data);
       if (newForm) {
@@ -50,7 +49,6 @@ const EditForum = ({
       setErrorRegister(error);
     }
   };
-
   return (
     <div className="absolute w-full h-full ">
       <div className="relative backdrop-blur-3xl bg-white/10 rounded-3xl grid sm:grid-cols-1 md:grid-cols-3 gap-1">
@@ -217,7 +215,7 @@ const EditForum = ({
                     errors={errors}
                     dirtyFields={dirtyFields}
                     transl={t}
-                    defaultTags={dataForum.tags && dataForum.tags.map((tag) => tag)}
+                    defaultTags={dataForum.tags}
                   />
                   {/* DESCRIPTION */}
                   <div className="relative">

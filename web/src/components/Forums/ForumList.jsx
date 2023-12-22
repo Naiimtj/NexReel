@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   deleteFollowForum,
@@ -8,7 +8,6 @@ import {
   postFollowForum,
 } from "../../../services/DB/services-db";
 import { useAuthContext } from "../../context/auth-context";
-import { BiMessageSquareAdd, BiMessageSquareX } from "react-icons/bi";
 import { HiUserGroup } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
 
@@ -20,7 +19,6 @@ export const ForumList = ({
   setChange,
 }) => {
   const [t] = useTranslation("translation");
-  const navegate = useNavigate();
   const { user } = useAuthContext();
   const userExist = !!user;
   const { shortDescription, author, followers, imgForum, tags, title, id } =
@@ -40,14 +38,13 @@ export const ForumList = ({
     if (author) {
       ForumFollow();
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [author, change]);
   // -FOLLOW
   const handleFollow = () => {
     postFollowForum(id).then(() => setChange(!change));
   };
-  // -UNFOLLOW
+  // -NO FOLLOW
   const handleUnFollow = () => {
     deleteFollowForum(id).then(() => setChange(!change));
   };
@@ -55,23 +52,18 @@ export const ForumList = ({
     followers && followers.filter((f) => f.userId === user.id).length > 0;
 
   const isFollowing = !userFollowing ? (
-    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-      <BiMessageSquareAdd
-        className="inline-block"
-        size={25}
-        color="#FFCA28"
-        alt={t("Follow Playlist")}
-        onClick={handleFollow}
-      />
+    <button
+      className="cursor-pointer transition duration-300 border px-1 rounded-md hover:border-purpleNR hover:text-purpleNR "
+      onClick={handleFollow}
+    >
+      {t("Follow")}
     </button>
   ) : (
-    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR">
-      <BiMessageSquareX
-        className="inline-block"
-        size={25}
-        alt={t("UnFollow Playlist")}
-        onClick={handleUnFollow}
-      />
+    <button
+      className="cursor-pointer transition duration-300 text-purpleNR border px-1 rounded-md border-purpleNR hover:border-white hover:text-white"
+      onClick={handleUnFollow}
+    >
+      {t("No Follow")}
     </button>
   );
   const forumCreate =
@@ -113,7 +105,7 @@ export const ForumList = ({
             <div className="flex font-semibold text-sm md:text-base cursor-pointer">
               <h1 className="text-xl line-clamp-3">{title}</h1>
             </div>
-            {/* // - shortDescription */}
+            {/* // - Short Description */}
             <div className="pl-4">
               <p className="font-light">{shortDescription}</p>
             </div>
@@ -122,25 +114,19 @@ export const ForumList = ({
             </div>
           </div>
         </div>
-        <div className="absolute top-0 mt-2 flex gap-2 justify-end items-center w-full pr-4">
-          <p className="text-sm text-gray-400">{`${t("Created by")}:`}</p>
-          <button
-            onClick={() =>
-              navegate(`${isOtherUser ? `/users/${author}` : "/me"}`)
-            }
-            className="capitalize text-purpleNR hover:text-gray-200 transition duration-300"
-          >
-            {forumCreate}
-          </button>
-        </div>
-        {/* <div className="absolute top-0 mt-2 flex justify-end items-center w-full pr-4 ">
-          <p className="text-sm text-gray-400">{`${t("Created by")}:`}</p>
-          <p className="capitalize ml-1">{forumCreate}</p>
-        </div> */}
       </Link>
-      {/* // - BUTTON AND FOLLOW/UNFOLLOW */}
+      <div className="absolute top-0 right-0 mt-2 flex gap-2 justify-end items-center pr-4">
+        <p className="text-sm text-gray-400">{`${t("Created by")}:`}</p>
+        <Link
+          to={`${isOtherUser ? `/users/${author}` : "/me"}`}
+          className="capitalize text-purpleNR hover:text-gray-200 transition duration-300"
+        >
+          {forumCreate}
+        </Link>
+      </div>
+      {/* // - BUTTON AND FOLLOW/NO FOLLOW */}
       {userExist ? (
-        <div className="absolute bottom-0 mb-1 flex justify-end items-center gap-6 w-full pr-4">
+        <div className="absolute bottom-0 right-0 mb-1 flex justify-end items-center gap-6 pr-4">
           {/* // ! Delete Button */}
           {isForum !== "" ? (
             <div
@@ -154,7 +140,7 @@ export const ForumList = ({
               />
             </div>
           ) : null}
-          {/* // . FOLLOW/UNFOLLOW or NUM FOLLOWERS */}
+          {/* // . FOLLOW/NO FOLLOW or NUM FOLLOWERS */}
           <div className="flex justify-end">
             {info && followers && isOtherUser ? isFollowing : null}
             {info && followers && !isOtherUser ? (

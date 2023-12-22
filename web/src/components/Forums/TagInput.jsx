@@ -13,13 +13,13 @@ function TagInput({
 }) {
   const [tags, setTags] = useState(defaultTags || []);
   const [inputValue, setInputValue] = useState("");
-
+ 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleInputKeyDown = (e) => {
-    if (e.key === "Enter" && inputValue.trim() !== "") {
+    if (e.key === "Enter") {
       const newTag = `#${inputValue.trim()}`;
       setTags([...tags, newTag]);
       setInputValue("");

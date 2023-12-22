@@ -178,7 +178,7 @@ export const Credits = ({
           {userExist ? (
             <div className="mb-1 w-full pr-4">
               {/* //-ADD BUTTON PLAYLIST */}
-              {!isForum ? (
+              {!isForum && media !== "user" ? (
                 <ShowPlaylistMenu
                 userId={user.id}
                 id={Number(id)}

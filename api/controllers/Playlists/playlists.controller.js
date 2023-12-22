@@ -64,8 +64,9 @@ module.exports.search = async (req, res, next) => {
     if (!playlistFind) {
       return next(createError(404, "Playlist not found"));
     }
+
     const playlists = playlistFind.filter(
-      (playlist) => playlist.author !== req.user.id
+      (playlist) => playlist.author.toString() !== req.user.id.toString()
     );
     if (!playlists) {
       return next(createError(404, "Playlist not found"));
