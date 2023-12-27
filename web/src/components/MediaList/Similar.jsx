@@ -5,13 +5,18 @@ import { useEffect, useState } from "react";
 
 const Similar = ({ title, id, media, lang }) => {
   const [similarList, setSimilarList] = useState([]);
+  const [isChange, isSetChange] = useState(false);
   useEffect(() => {
-    if ((lang, media)) {
-      getSimilar(media, id, lang).then((data) => {
-        setSimilarList(data);
-      });
-    }
+    getSimilar(media, id, lang).then((data) => {
+      setSimilarList(data);
+    });
   }, [lang, id, media]);
+  useEffect(() => {
+    if (!isChange) {
+      isSetChange(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
   return (
     <div className="text-gray-200">
       <div className="text-gray-200 px-4 md:px-6">
@@ -20,6 +25,8 @@ const Similar = ({ title, id, media, lang }) => {
             title={similarList && similarList.length !== 0 ? title : null}
             info={similarList.results}
             media={media}
+            isSetChange={isSetChange}
+            isChange={isChange}
           />
         )}
       </div>

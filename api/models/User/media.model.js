@@ -28,6 +28,14 @@ const mediaSchema = new Schema(
     vote: {
       type: Number,
       default: -1,
+      get: (v) => {
+        // Getter function to convert database value to double format if necessary
+        return parseFloat(v);
+      },
+      set: (v) => {
+        // Setter function to convert the value to Number before saving it in the database.
+        return parseFloat(v);
+      },
     },
   },
   {

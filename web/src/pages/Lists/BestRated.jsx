@@ -185,7 +185,7 @@ const BestRated = () => {
             {persona.name}
           </button>
         </div>
-        <h1 className="text-gray-200 pl-4 text-2xl text-center underline underline-offset-4">
+        <h1 className="text-gray-200 pl-4 text-2xl text-center">
           {knowMovie || knowTv ? t("BEST RATED") : null}
         </h1>
         {/* //-MULTIPLE TABS */}
@@ -200,7 +200,7 @@ const BestRated = () => {
                     : "border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300"
                 }`}
               >
-                <img
+                <img 
                   className="w-4 h-4 text-purpleNR"
                   color="#9C92F8"
                   src={movie}

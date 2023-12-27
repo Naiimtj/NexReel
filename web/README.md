@@ -45,6 +45,7 @@ Cuando se acepta un usuario en navbar, como hacer para refrescar la pagina del p
 
 striming en modo lista en peliculas
 
+Alias para nombrar a usuarios en comentarios
 
 ## PERMITIR UNIR PLAYLISTS A UN FORO
 ## CUANDO CLIQUES EN VISTO UNA SERIE SE PONGA TODOS LOS EPISODEOS Y TEMPORADAS EN VISTO

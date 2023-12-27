@@ -32,15 +32,30 @@ const Carousel = ({
       getAllMedia()
         .then((data) => {
           setMediasUser(data);
+          setChangeSeenPending(!changeSeenPending)
+          isSetChange(!isChange)
+        })
+        .catch((err) => err);
+    };
+    if (userExist && changeSeenPending) {
+      Data();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeSeenPending]);
+  useEffect(() => {
+    const Data = async () => {
+      getAllMedia()
+        .then((data) => {
+          setMediasUser(data);
           isSetChange(!isChange);
         })
         .catch((err) => err);
     };
-    if (userExist) {
+    if (userExist && isChange || userExist && !mediasUser.length) {
       Data();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userExist, changeSeenPending]);
+  }, [userExist, changeSeenPending, isChange]);
   const [dataForum, setDataForum] = useState({});
   useEffect(() => {
     const ForumData = async () => {

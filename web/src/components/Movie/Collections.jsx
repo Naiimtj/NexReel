@@ -3,6 +3,12 @@ import Carousel from "../../utils/Carousel/Carousel";
 import { getCollections } from "../../../services/TMDB/services-tmdb";
 import { useEffect, useState } from "react";
 
+function compareDates(a, b) {
+  const dateA = new Date(a.release_date);
+  const dateB = new Date(b.release_date);
+  return dateA - dateB;
+}
+
 function Collections({ idCollection, media }) {
   const [collectionList, setCollectionList] = useState({});
 
@@ -15,7 +21,7 @@ function Collections({ idCollection, media }) {
   }, [idCollection]);
   // -ORDER BY DATE
   // .Filter Repeats
-  const collectionfilms =
+  const collectionFilms =
     collectionList &&
     Object.keys(collectionList).length > 0 &&
     collectionList.parts &&
@@ -23,14 +29,13 @@ function Collections({ idCollection, media }) {
       collectionList.parts.find((a) => a.id === id)
     );
 
-  const finalCollectionFims =
-    collectionfilms &&
-    collectionfilms.sort(
-      (a, b) =>
-        new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
+  const finalCollectionFilms =
+    collectionFilms &&
+    collectionFilms.sort(
+      compareDates
     );
-  const collection = finalCollectionFims
-    ? finalCollectionFims.filter((fechpeli) => fechpeli.release_date !== "")
+  const collection = finalCollectionFilms
+    ? finalCollectionFilms.filter((dateFilm) => dateFilm.release_date !== "")
     : null;
 
   return (

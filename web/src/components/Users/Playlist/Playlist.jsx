@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Spinner from "../../../utils/Spinner/Spinner";
 import { Link } from "react-router-dom";
-import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import {
   deleteFollowPlaylist,
@@ -11,6 +10,7 @@ import {
 } from "../../../../services/DB/services-db";
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import ButtonIsFollowing from "../../../utils/ButtonIsFollowing";
 
 const Playlist = ({
   data,
@@ -55,28 +55,6 @@ const Playlist = ({
   const handleUnFollow = () => {
     deleteFollowPlaylist(id).then(() => setChangeDataUser(!changeDataUser));
   };
-
-  const isFollowing =
-    playlistFollow === "" ? (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-        <MdOutlinePlaylistAdd
-          className="inline-block"
-          size={25}
-          color="#FFCA28"
-          alt={t("Follow Playlist")}
-          onClick={handleFollow}
-        />
-      </button>
-    ) : (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR">
-        <MdOutlinePlaylistRemove
-          className="inline-block"
-          size={25}
-          alt={t("UnFollow Playlist")}
-          onClick={handleUnFollow}
-        />
-      </button>
-    );
 
   const handleDeletePlaylist = (event) => {
     event.stopPropagation();
@@ -142,9 +120,15 @@ const Playlist = ({
                 ) : null}
                 {/* //- FOLLOW/NOFOLLOW or NUM FOLLOWERS */}
                 <div className="flex justify-end">
-                  {data && followersPlaylist && isOtherUser
-                    ? isFollowing
-                    : null}
+                  {data && followersPlaylist && isOtherUser ? (
+                    <div className="pb-1">
+                      <ButtonIsFollowing
+                        isFollowing={playlistFollow === ""}
+                        handleFollow={handleFollow}
+                        handleUnFollow={handleUnFollow}
+                      />
+                    </div>
+                  ) : null}
                   {data && followersPlaylist && !isOtherUser ? (
                     <div className="flex justify-end gap-1">
                       <HiUserGroup size={20} alt={t("Followers")} />

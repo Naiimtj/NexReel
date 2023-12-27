@@ -16,12 +16,7 @@ import {
 } from "../../../services/DB/services-db";
 // icons
 import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
-import {
-  MdModeEditOutline,
-  MdOutlinePlaylistAdd,
-  MdOutlinePlaylistRemove,
-  MdViewCarousel,
-} from "react-icons/md";
+import { MdModeEditOutline, MdViewCarousel } from "react-icons/md";
 import { HiSortAscending, HiSortDescending, HiUserGroup } from "react-icons/hi";
 import { IoIosArrowBack } from "react-icons/io";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
@@ -35,6 +30,7 @@ import Spinner from "../../utils/Spinner/Spinner";
 import EditPlaylist from "../../components/Users/Playlist/EditPlaylist";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import PageTitle from "../../components/PageTitle";
+import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -137,31 +133,7 @@ const PlaylistSingle = () => {
       setChangeSeenPending(!changeSeenPending)
     );
   };
-  const isFollowing =
-    isUserFollowPlaylist && !isUserFollowPlaylist.length > 0 ? (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR hover:text-gray-600">
-        <MdOutlinePlaylistAdd
-          className="inline-block"
-          size={30}
-          color="#FFCA28"
-          alt={t("Follow Playlist")}
-          onClick={handleFollow}
-        />
-        {t('Follow')}
-      </button>
-    ) : (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR hover:text-gray-600">
-        <MdOutlinePlaylistRemove
-          className="inline-block"
-          size={25}
-          alt={t("UnFollow Playlist")}
-          onClick={handleUnFollow}
-        />
-        {t('No Follow')}
-      </button>
-    );
-
-    const [mediasUser, setMediasUser] = useState([]);
+  const [mediasUser, setMediasUser] = useState([]);
   useEffect(() => {
     const Data = async () => {
       getAllMedia()
@@ -452,7 +424,16 @@ const PlaylistSingle = () => {
                           <div className="mr-4">
                             {isOtherUser ? (
                               dataPlaylist && followersPlaylist ? (
-                                isFollowing
+                                <div className="mt-1">
+                                  <ButtonIsFollowing
+                                    isFollowing={
+                                      isUserFollowPlaylist &&
+                                      !isUserFollowPlaylist.length > 0
+                                    }
+                                    handleFollow={handleFollow}
+                                    handleUnFollow={handleUnFollow}
+                                  />
+                                </div>
                               ) : null
                             ) : (
                               <MdModeEditOutline

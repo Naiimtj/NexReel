@@ -92,7 +92,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     id,
   } = info;
   const navigate = useNavigate();
-  const [dataUser, setDataUser] = useState({});
+  const [dataUser, setDataUser] = useState({});  
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -101,10 +101,10 @@ function DetailsMovie({ info, crews, cast, media }) {
         })
         .catch((err) => err);
     };
-    if (userExist && id) {
+    if (userExist && !Object.keys(dataUser).length) {
       Data();
     }
-  }, [userExist, id]);
+  }, [userExist, dataUser]);
 
   // SCROLL UP
   useEffect(() => {
@@ -1160,6 +1160,7 @@ function DetailsMovie({ info, crews, cast, media }) {
             <Collections
               idCollection={processInfo.collection.id}
               media={media}
+              pendingSeen={pendingSeen}
             />
           ) : (
             seasons && (

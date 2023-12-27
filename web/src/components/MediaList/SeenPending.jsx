@@ -13,7 +13,7 @@ class SeenPending {
     pendingSeen
   ) {
     this.dataMedia = dataMediaUser; // number
-    this.id = id; // number
+    this.id = id.toString(); // number
     this.mediaType = mediaType; // t of useTranslation !Important for translation
     this.runTime = runTime; // bool
     this.seenOrPending = seenOrPending; // bool
@@ -30,6 +30,7 @@ class SeenPending {
         media_type: this.mediaType,
         runtime: this.runTime,
         seen: !this.seenOrPending,
+        vote: this.dataMedia.vote,
       }).then(
         () => this.setChangeSeenPending(!this.changeSeenPending),
         this.setPendingSeen && this.setPendingSeen(!this.pendingSeen)
@@ -57,6 +58,7 @@ class SeenPending {
         media_type: this.mediaType,
         runtime: this.runTime,
         pending: !this.seenOrPending,
+        vote: this.dataMedia.vote,
       }).then(
         () => this.setChangeSeenPending(!this.changeSeenPending),
         this.setPendingSeen && this.setPendingSeen(!this.pendingSeen)

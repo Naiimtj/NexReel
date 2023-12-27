@@ -28,35 +28,48 @@ const Rating = ({
   const [hover, setHover] = useState(null);
   const [modalRating, setModalRating] = useState(false);
   const [hover0, setHover0] = useState(null);
+
+  // Reset Rating when media changes
+  useEffect(() => {
+    setRating(null);
+  }, [mediaId]);
+
+  // Update Rating when there's a new vote
   useEffect(() => {
     setRating(vote >= 0 ? vote : null);
   }, [vote]);
+
   useEffect(() => {
-    if (
-      Object.keys(dataMediaUser).length &&
-      rating !== null &&
-      rating !== vote
-    ) {
-      patchMedia(mediaId, { seen: true, vote: rating }).then(
-        () => setPendingSeen(!pendingSeen),
-        setHover0(null)
-      );
-    } else if (rating !== null && !vote) {
-      postMedia({
-        mediaId,
-        media_type,
-        runtime,
-        like: false,
-        pending: false,
-        seen: true,
-        vote: rating,
-      }).then((data) => {
-        if (data) {
+    // Function to update media vote on change
+    const updateMediaVote = () => {
+      if (
+        Object.keys(dataMediaUser).length &&
+        rating !== null &&
+        rating !== vote
+      ) {
+        patchMedia(mediaId, { seen: true, vote: rating }).then(() => {
           setPendingSeen(!pendingSeen);
           setHover0(null);
-        }
-      });
-    }
+        });
+      } else if (rating !== null && !vote) {
+        postMedia({
+          mediaId,
+          media_type,
+          runtime,
+          like: false,
+          pending: false,
+          seen: true,
+          vote: rating,
+        }).then((data) => {
+          if (data) {
+            setPendingSeen(!pendingSeen);
+            setHover0(null);
+          }
+        });
+      }
+    };
+
+    updateMediaVote();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rating, vote]);
 
@@ -69,11 +82,11 @@ const Rating = ({
   };
 
   const handleRating0 = () => {
-    patchMedia(mediaId, { vote: -1 }).then(
-      () => setPendingSeen(!pendingSeen),
-      setRating(null),
-      setHover0(null)
-    );
+    patchMedia(mediaId, { vote: -1 }).then(() => {
+      setPendingSeen(!pendingSeen);
+      setRating(null);
+      setHover0(null);
+    });
   };
 
   const handleStarHover = (value) => {
@@ -85,7 +98,6 @@ const Rating = ({
     for (let i = 0; i < count; i++) {
       const ratingValue = i / 2 + 0.5;
       const isHovered = ratingValue <= (hover || rating);
-
       const starComponent =
         ratingValue === Math.trunc(ratingValue + 0.4) ? (
           <img
@@ -119,6 +131,7 @@ const Rating = ({
     }
     return stars;
   };
+
   const finalRating = rating < 0 ? null : rating;
 
   return (
@@ -201,6 +214,7 @@ const Rating = ({
 };
 
 export default Rating;
+
 Rating.defaultProps = {
   dataMediaUser: {},
   setPendingSeen: () => {},
@@ -209,6 +223,7 @@ Rating.defaultProps = {
   media_type: "",
   runtime: 0,
 };
+
 Rating.propTypes = {
   dataMediaUser: PropTypes.object,
   setPendingSeen: PropTypes.func,

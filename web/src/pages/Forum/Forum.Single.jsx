@@ -16,10 +16,7 @@ import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
 import { MdModeEditOutline, MdViewCarousel } from "react-icons/md";
 import { HiSortAscending, HiSortDescending, HiUserGroup } from "react-icons/hi";
 import { IoIosArrowBack } from "react-icons/io";
-import {
-  BiHeart,
-  BiSolidHeart,
-} from "react-icons/bi";
+import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 // components
 import Multi from "../../components/MediaList/Multi";
@@ -32,6 +29,7 @@ import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import ForumChat from "../../components/Forums/ForumReplay/ForumChat";
 import AddMediaForum from "../../components/Forums/AddMediaForum";
 import PageTitle from "../../components/PageTitle";
+import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -119,22 +117,6 @@ const ForumSingle = () => {
   const handleUnFollow = () => {
     deleteFollowForum(id).then(() => setChangeSeenPending(!changeSeenPending));
   };
-  const isFollowing =
-    isUserFollowForum && !isUserFollowForum.length > 0 ? (
-      <button
-      className="cursor-pointer transition duration-300 border px-1 rounded-md hover:border-purpleNR hover:text-purpleNR "
-      onClick={handleFollow}
-    >
-      {t("Follow")}
-    </button>
-    ) : (
-      <button
-      className="cursor-pointer transition duration-300 text-purpleNR border px-1 rounded-md border-purpleNR hover:border-white hover:text-white"
-      onClick={handleUnFollow}
-    >
-      {t("No Follow")}
-    </button>
-    );
   // -LIKE
   const handleLike = () => {
     patchFollowForum(id, { like: true }).then(() =>
@@ -286,7 +268,9 @@ const ForumSingle = () => {
                       <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center">
                         {t(title)}
                       </h1>
-                      { shortDescription && <p className="font-extralight text-center italic text-sm mt-1 mb-4">{`"${shortDescription}"`}</p>}
+                      {shortDescription && (
+                        <p className="font-extralight text-center italic text-sm mt-1 mb-4">{`"${shortDescription}"`}</p>
+                      )}
                       <div className="grid grid-cols-6 mb-2 pb-2">
                         {/* //-POSTER*/}
                         <div className="col-span-2 flex justify-center">
@@ -364,6 +348,20 @@ const ForumSingle = () => {
                               </div>
                             ) : null}
                             <div className="text-center flex items-center gap-2">
+                              {isOtherUser ? (
+                                dataForum && followers ? (
+                                  <div className="mt-1">
+                                    <ButtonIsFollowing
+                                      isFollowing={
+                                        isUserFollowForum &&
+                                        !isUserFollowForum.length > 0
+                                      }
+                                      handleFollow={handleFollow}
+                                      handleUnFollow={handleUnFollow}
+                                    />
+                                  </div>
+                                ) : null
+                              ) : null}
                               <HiUserGroup size={20} alt={t("Followers")} />
                               <p>{TotalFollowsForum}</p>
                             </div>
@@ -409,11 +407,7 @@ const ForumSingle = () => {
                             ) : null}
                             {/* // FOLLOW & NOFOLLOW or NUM FOLLOWERS / EDIT Forum */}
                             <div className="mr-4 mt-1">
-                              {isOtherUser ? (
-                                dataForum && followers ? (
-                                  isFollowing
-                                ) : null
-                              ) : (
+                              {isOtherUser ? null : (
                                 <MdModeEditOutline
                                   size={20}
                                   alt={t("Edit Forum Icon")}

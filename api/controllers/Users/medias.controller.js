@@ -6,17 +6,17 @@ module.exports.create = async (req, res, next) => {
     const { mediaId, media_type, runtime, like, seen, pending, vote } =
       req.body;
     // If like is true seen is true
-    let seenData = false
-    if(like) {
-      seenData=true
-    } else if(seen) {
-      seenData=true
+    let seenData = false;
+    if (like) {
+      seenData = true;
+    } else if (seen) {
+      seenData = true;
     } else {
-      seenData=false
+      seenData = false;
     }
     // If you vote you seen
-    if(vote >= 0) {
-      seenData=true
+    if (vote >= 0) {
+      seenData = true;
     }
     const userId = req.user.id;
 
@@ -63,7 +63,6 @@ module.exports.update = async (req, res, next) => {
   try {
     const { like, seen, pending, vote } = req.body;
     const media = await req.media;
-
     if (!media) {
       next(createError(404, "Media not found"));
     }

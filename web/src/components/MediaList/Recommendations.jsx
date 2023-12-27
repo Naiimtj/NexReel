@@ -4,24 +4,35 @@ import { getRecommendations } from "../../../services/TMDB/services-tmdb";
 import { useEffect, useState } from "react";
 
 const Recommendations = ({ title, id, media, lang }) => {
-  const [recomendadosList, setRecomendadosList] = useState({});
+  const [recommendationsList, setRecommendationsList] = useState({});
+  const [isChange, isSetChange] = useState(false);
   useEffect(() => {
-    if ((lang, media)) {
-      getRecommendations(media, id, lang).then((data) => {
-        setRecomendadosList(data);
-      });
-    }
+    getRecommendations(media, id, lang).then((data) => {
+      setRecommendationsList(data);
+    });
   }, [lang, id, media]);
+  useEffect(() => {
+    if (!isChange) {
+      isSetChange(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  
   return (
     <div className="text-gray-200">
       <div className="text-gray-200 px-4 md:px-6">
-        {recomendadosList.results && recomendadosList.results.length !== 0 ? (
+        {recommendationsList.results &&
+        recommendationsList.results.length !== 0 ? (
           <Carousel
             title={
-              recomendadosList && recomendadosList.length !== 0 ? title : null
+              recommendationsList && recommendationsList.length !== 0
+                ? title
+                : null
             }
-            info={recomendadosList.results}
+            info={recommendationsList.results}
             media={media}
+            isSetChange={isSetChange}
+            isChange={isChange}
           />
         ) : null}
       </div>

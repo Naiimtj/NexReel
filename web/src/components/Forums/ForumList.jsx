@@ -10,6 +10,7 @@ import {
 import { useAuthContext } from "../../context/auth-context";
 import { HiUserGroup } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
+import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
 
 export const ForumList = ({
   info,
@@ -51,21 +52,6 @@ export const ForumList = ({
   const userFollowing =
     followers && followers.filter((f) => f.userId === user.id).length > 0;
 
-  const isFollowing = !userFollowing ? (
-    <button
-      className="cursor-pointer transition duration-300 border px-1 rounded-md hover:border-purpleNR hover:text-purpleNR "
-      onClick={handleFollow}
-    >
-      {t("Follow")}
-    </button>
-  ) : (
-    <button
-      className="cursor-pointer transition duration-300 text-purpleNR border px-1 rounded-md border-purpleNR hover:border-white hover:text-white"
-      onClick={handleUnFollow}
-    >
-      {t("No Follow")}
-    </button>
-  );
   const forumCreate =
     ForumFollow &&
     ForumFollow.userCreate &&
@@ -142,7 +128,15 @@ export const ForumList = ({
           ) : null}
           {/* // . FOLLOW/NO FOLLOW or NUM FOLLOWERS */}
           <div className="flex justify-end">
-            {info && followers && isOtherUser ? isFollowing : null}
+            {info && followers && isOtherUser ? (
+              <div className="mb-1">
+                <ButtonIsFollowing
+                  isFollowing={!userFollowing}
+                  handleFollow={handleFollow}
+                  handleUnFollow={handleUnFollow}
+                />
+              </div>
+            ) : null}
             {info && followers && !isOtherUser ? (
               <div className="flex justify-end gap-1">
                 <HiUserGroup size={20} alt={t("Followers")} />
