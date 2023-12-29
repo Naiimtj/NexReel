@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Multi from "../../components/MediaList/Multi";
 import { IoIosArrowBack } from "react-icons/io";
-// import { Tab } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import {
   getMediaDetails,
   getPersonDetails,
 } from "../../../services/TMDB/services-tmdb";
-import { movie, tv } from "../../assets/image";
+import { movie, movie_purple, tv, tv_purple } from "../../assets/image";
 import Spinner from "../../utils/Spinner/Spinner";
 import { useAuthContext } from "../../context/auth-context";
 import { getAllMedia, getUser } from "../../../services/DB/services-db";
+import SplitArrayGroups from "../../utils/SplitArrayGroups";
+import ArrayPaginator from "../../utils/ArrayPaginator";
 
 const BestRated = () => {
   const [t] = useTranslation("translation");
@@ -20,6 +21,7 @@ const BestRated = () => {
   const { media, id } = useParams();
   const { user } = useAuthContext();
   const userExist = !!user;
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [dataUser, setDataUser] = useState({});
   const [mediasUser, setMediasUser] = useState([]);
@@ -84,21 +86,7 @@ const BestRated = () => {
   const knowFilterRated =
     knowByRated && knowByRated.filter((nota) => nota.vote_average < 10);
 
-  knowFilterRated &&
-    knowFilterRated.sort(function (a, b) {
-      if (a.vote_average < b.vote_average) {
-        return 1;
-      }
-      if (a.vote_average > b.vote_average) {
-        return -1;
-      }
-
-      // a must be equal to b
-      return 0;
-    });
-
-  //-SPEARED BY TYPE (movie or tv)
-
+  // - SPEARED BY TYPE AND SORT BY AVERAGE (movie or tv)
   const knowMovie =
     knowFilterRated &&
     knowFilterRated.filter((film) => film.media_type === "movie");
@@ -114,21 +102,6 @@ const BestRated = () => {
       // a must be equal to b
       return 0;
     });
-  // knowMovie &&
-  //   knowMovie.sort(function (a, b) {
-  //     if (
-  //       new Date(a.release_date).getTime() < new Date(b.release_date).getTime()
-  //     ) {
-  //       return 1;
-  //     }
-  //     if (
-  //       new Date(a.release_date).getTime() > new Date(b.release_date).getTime()
-  //     ) {
-  //       return -1;
-  //     }
-  //     return 0;
-  //   });
-
   const knowTv =
     knowFilterRated &&
     knowFilterRated.filter((tvShow) => tvShow.media_type === "tv");
@@ -144,27 +117,30 @@ const BestRated = () => {
       // a must be equal to b
       return 0;
     });
-  // knowTv &&
-  //   knowTv.sort(function (a, b) {
-  //     if (
-  //       new Date(a.first_air_date).getTime() <
-  //       new Date(b.first_air_date).getTime()
-  //     ) {
-  //       return 1;
-  //     }
-  //     if (
-  //       new Date(a.first_air_date).getTime() >
-  //       new Date(b.first_air_date).getTime()
-  //     ) {
-  //       return -1;
-  //     }
-  //     //must be equal to b
-  //     return 0;
-  //   });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loading =
     (knowMovie && Object.keys(knowMovie).length > 0) ||
     (knowTv && Object.keys(knowTv).length > 0);
+
+  const getCardsPerPage = () => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 640) return 20;
+    if (screenWidth < 768) return 21;
+    if (screenWidth < 1024) return 28;
+    if (screenWidth < 1280) return 30;
+    if (screenWidth < 1534) return 36;
+    if (screenWidth > 1534) return 40;
+    return 36;
+  };
+
+  const GroupsKnowMovie =
+    knowMovie &&
+    knowMovie.length &&
+    SplitArrayGroups(knowMovie, getCardsPerPage());
+  const GroupsKnowTv =
+    knowTv &&
+    knowTv.length &&
+    SplitArrayGroups(knowTv, getCardsPerPage());
 
   return (
     <div className="w-full h-full text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
@@ -185,7 +161,7 @@ const BestRated = () => {
             {persona.name}
           </button>
         </div>
-        <h1 className="text-gray-200 pl-4 text-2xl text-center">
+        <h1 className="text-gray-200 text-3xl text-center">
           {knowMovie || knowTv ? t("BEST RATED") : null}
         </h1>
         {/* //-MULTIPLE TABS */}
@@ -193,31 +169,36 @@ const BestRated = () => {
           <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-400">
             <li className="me-2">
               <div
-                onClick={() => setSelectedIndex(0)}
-                className={`cursor-pointer flex gap-2 items-center justify-center p-4 border-b-2 ${
+                onClick={() => {setSelectedIndex(0), setCurrentPageIndex(0)}}
+                className={`cursor-pointer flex gap-2 justify-center p-4 border-b-2 ${
                   selectedIndex === 0
                     ? "text-purpleNR fill-purpleNR border-purpleNR"
                     : "border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300"
                 }`}
               >
-                <img 
-                  className="w-4 h-4 text-purpleNR"
-                  color="#9C92F8"
-                  src={movie}
-                />
+                {selectedIndex === 0 ? (
+                  <img className="w-4 h-4" src={movie_purple} />
+                ) : (
+                  <img className="w-4 h-4" src={movie} />
+                )}
                 {t("Movies")}
               </div>
             </li>
             <li className="me-2">
               <div
-                onClick={() => setSelectedIndex(1)}
-                className={`cursor-pointer flex gap-2 items-center justify-center p-4 border-b-2 ${
+                onClick={() => {setSelectedIndex(1), setCurrentPageIndex(0)}}
+                className={`cursor-pointer flex gap-2 justify-center p-4 border-b-2 ${
                   selectedIndex === 1
                     ? "text-purpleNR border-purpleNR"
                     : "border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300"
                 }`}
               >
-                <img className="w-4 h-4" src={tv} />
+                {selectedIndex === 1 ? (
+                  <img className="w-4 h-4" src={tv_purple} />
+                ) : (
+                  <img className="w-4 h-4" src={tv} />
+                )}
+
                 {t("TV Shows")}
                 {t(" & Shows")}
               </div>
@@ -228,106 +209,80 @@ const BestRated = () => {
             !loading ? (
               <Spinner result />
             ) : (
-              <div className="my-10 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                {knowMovie &&
-                  knowMovie.map((media, key) => {
-                    return (
-                      <Multi
-                        key={`MovieBestRated${key}`}
-                        info={media}
-                        addButton={true}
-                        media_movie={true}
-                        dataUser={dataUser}
-                        mediasUser={mediasUser}
-                        changeSeenPending={changeSeenPending}
-                        setChangeSeenPending={setChangeSeenPending}
-                      />
-                    );
-                  })}
-              </div>
+              <>
+                <ArrayPaginator
+                  array={GroupsKnowMovie}
+                  totalResult={knowMovie.length}
+                  groupSize={getCardsPerPage()}
+                  currentPageIndex={currentPageIndex}
+                  setCurrentPageIndex={setCurrentPageIndex}
+                />
+                <div className="mb-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
+                  {GroupsKnowMovie &&
+                    GroupsKnowMovie.length > 0 &&
+                    GroupsKnowMovie[currentPageIndex].map((media, key) => {
+                      return (
+                        <Multi
+                          key={`MovieBestRated${key}`}
+                          info={media}
+                          addButton={true}
+                          media_movie={true}
+                          dataUser={dataUser}
+                          mediasUser={mediasUser}
+                          changeSeenPending={changeSeenPending}
+                          setChangeSeenPending={setChangeSeenPending}
+                        />
+                      );
+                    })}
+                </div>
+                <ArrayPaginator
+                  array={GroupsKnowMovie}
+                  totalResult={knowMovie.length}
+                  groupSize={getCardsPerPage()}
+                  currentPageIndex={currentPageIndex}
+                  setCurrentPageIndex={setCurrentPageIndex}
+                />
+              </>
             )
           ) : null}
           {/* TV SHOWS & SHOWS */}
           {selectedIndex === 1 ? (
-            <div className="my-10 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {knowTv &&
-                knowTv.map((media, key) => {
-                  return (
-                    <Multi
-                      key={`TvBestRated${key}`}
-                      info={media}
+              <>
+                <ArrayPaginator
+                  array={GroupsKnowTv}
+                  totalResult={knowTv.length}
+                  groupSize={getCardsPerPage()}
+                  currentPageIndex={currentPageIndex}
+                  setCurrentPageIndex={setCurrentPageIndex}
+                />
+                <div className="mb-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
+                  {knowTv &&
+                    GroupsKnowTv.length > 0 &&
+                    GroupsKnowTv[currentPageIndex].map((media, key) => {
+                      return (
+                        <Multi
+                          key={`TvBestRated${key}`}
+                          info={media}
                       addButton={true}
                       media_tv={true}
                       dataUser={dataUser}
                       mediasUser={mediasUser}
                       changeSeenPending={changeSeenPending}
                       setChangeSeenPending={setChangeSeenPending}
-                    />
-                  );
-                })}
-            </div>
+                        />
+                      );
+                    })}
+                </div>
+                <ArrayPaginator
+                  array={GroupsKnowTv}
+                  totalResult={knowTv.length}
+                  groupSize={getCardsPerPage()}
+                  currentPageIndex={currentPageIndex}
+                  setCurrentPageIndex={setCurrentPageIndex}
+                />
+              </>
           ) : null}
         </div>
-        {/* <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-          <Tab.List className="text-center mb-4">
-            <Tab
-              className={`hover:text-[#6676a7] px-1 mr-4 ${
-                selectedIndex === 0
-                  ? `text-[#6676a7] border-b-2 border-[#6676a7]`
-                  : ``
-              }`}
-            >
-              {t("Movies")}
-            </Tab>
-            <Tab
-              className={`hover:text-[#6676a7] px-1 mr-4 ${
-                selectedIndex === 1
-                  ? `text-[#6676a7] border-b-2 border-[#6676a7]`
-                  : ``
-              }`}
-            >
-              {t("Tv Shows")}
-            </Tab>
-          </Tab.List>
-          <Tab.Panels>
-            <Tab.Panel>
-              <h1 className="text-gray-200 pl-4 text-2xl ">
-                {knowMovie ? t("MOVIES BEST RATED") : null}
-              </h1>
-              <div className="my-10 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                {knowMovie &&
-                  knowMovie.map((media, key) => {
-                    return (
-                      <Multi
-                        key={`MovieBestRated${key}`}
-                        info={media}
-                        addButton={true}
-                        media_movie={true}
-                      />
-                    );
-                  })}
-              </div>
-            </Tab.Panel>
-            <Tab.Panel>
-              <h1 className="text-gray-200 pl-4 text-2xl ">
-                {knowTv ? "TV SHOWS BEST RATED" : null}
-              </h1>
-              <div className="my-10 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                {knowTv &&
-                  knowTv.map((media, key) => {
-                    return (
-                      <Multi
-                        key={`TvBestRated${key}`}
-                        info={media}
-                        addButton={true}
-                        media_tv={true}
-                      />
-                    );
-                  })}
-              </div>
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group> */}
       </div>
     </div>
   );

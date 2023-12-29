@@ -1,12 +1,15 @@
 export { default as add } from "./cardsMedia/add.svg";
-export { default as movie } from "./cardsMedia/movie.svg";
+export { default as movie } from "./cardsMedia/movie.png";
+export { default as movie_purple } from "./cardsMedia/movie_purple.png";
 export { default as NoImage } from "./cardsMedia/NoImage.svg";
 export { default as NoImageMore } from "./cardsMedia/NoImageMore.svg";
 export { default as NoImageEpis } from "./NoImageEpis.jpg";
-export { default as people } from "./cardsMedia/people.svg";
+export { default as people } from "./cardsMedia/people.png";
+export { default as peoplePurple } from "./cardsMedia/people_purple.png";
 export { default as seen } from "./cardsMedia/seen.svg";
 export { default as star } from "./cardsMedia/star.svg";
-export { default as tv } from "./cardsMedia/tv.svg";
+export { default as tv_purple } from "./cardsMedia/tv_purple.png";
+export { default as tv } from "./cardsMedia/tv.png";
 export { default as unseen } from "./cardsMedia/unseen.svg";
 export { default as TrailerIcon } from "./cardsMedia/trailer.png";
 //FLAGS

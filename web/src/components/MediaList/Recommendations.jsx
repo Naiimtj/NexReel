@@ -17,12 +17,12 @@ const Recommendations = ({ title, id, media, lang }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  
+
   return (
-    <div className="text-gray-200">
-      <div className="text-gray-200 px-4 md:px-6">
-        {recommendationsList.results &&
-        recommendationsList.results.length !== 0 ? (
+    <>
+      {recommendationsList.results &&
+      recommendationsList.results.length !== 0 ? (
+        <div className="text-gray-200 text-lg pt-4 px-4 md:px-6">
           <Carousel
             title={
               recommendationsList && recommendationsList.length !== 0
@@ -34,9 +34,9 @@ const Recommendations = ({ title, id, media, lang }) => {
             isSetChange={isSetChange}
             isChange={isChange}
           />
-        ) : null}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </>
   );
 };
 

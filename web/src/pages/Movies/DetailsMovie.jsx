@@ -92,7 +92,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     id,
   } = info;
   const navigate = useNavigate();
-  const [dataUser, setDataUser] = useState({});  
+  const [dataUser, setDataUser] = useState({});
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -168,16 +168,23 @@ function DetailsMovie({ info, crews, cast, media }) {
   useEffect(() => {
     const OriginalTitle = original_title || original_name;
     const yearMedia =
-    release_date || first_air_date
-      ? new Date(release_date || first_air_date).getFullYear()
-      : null;
-      if (OriginalTitle && userExist && user.isPlexFriend) {
-        getPlexAllData().then((data) => {
-        const isInPlex = data && data[media].filter((i) => (i.originalTitle === OriginalTitle || i.title === OriginalTitle) && i.year === yearMedia)
-          setIsInPlex(isInPlex.length > 0)
-        });
-      }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      release_date || first_air_date
+        ? new Date(release_date || first_air_date).getFullYear()
+        : null;
+    if (OriginalTitle && userExist && user.isPlexFriend) {
+      getPlexAllData().then((data) => {
+        const isInPlex =
+          data &&
+          data[media].filter(
+            (i) =>
+              (i.originalTitle === OriginalTitle ||
+                i.title === OriginalTitle) &&
+              i.year === yearMedia
+          );
+        setIsInPlex(isInPlex.length > 0);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [media, original_name, original_title, user, userExist]);
   // -VER TRAILER
   const [modal, setModal] = useState(false);
@@ -529,11 +536,11 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {/* //-ADD PLAYLIST */}
                   {userExist ? (
                     <ShowPlaylistMenu
-                    userId={user.id}
-                    id={Number(id)}
-                    type={media}
-                    runTime={processInfo.runTime}
-                  />
+                      userId={user.id}
+                      id={Number(id)}
+                      type={media}
+                      runTime={processInfo.runTime}
+                    />
                   ) : null}
                   {/* //-PENDING/NO PENDING */}
                   {userExist ? (
@@ -1172,9 +1179,9 @@ function DetailsMovie({ info, crews, cast, media }) {
               />
             )
           )}
-        </div>        
-        {/* //-RECOMMENDATIONS */}
-        <div className="text-lg pt-4 pb-6 mb-20">
+        </div>
+        <div className="pb-6">
+          {/* //-RECOMMENDATIONS */}
           {!modal && info.id === id ? (
             <Recommendations
               title={media === "movie" ? t("Recommendations") : t("Similar")}
@@ -1183,9 +1190,7 @@ function DetailsMovie({ info, crews, cast, media }) {
               lang={langApi}
             />
           ) : null}
-        </div>
-        {/* //-SIMILAR */}
-        <div className="text-lg pt-4">
+          {/* //-SIMILAR */}
           {!modal && info.id === id ? (
             <Similar
               title={media === "movie" ? t("Similar") : t("Recommendations")}

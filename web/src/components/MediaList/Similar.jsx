@@ -18,9 +18,9 @@ const Similar = ({ title, id, media, lang }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   return (
-    <div className="text-gray-200">
-      <div className="text-gray-200 px-4 md:px-6">
-        {similarList.results && (
+    <>
+      {similarList.results && (
+        <div className="text-gray-200 px-4 md:px-6 text-lg pt-4">
           <Carousel
             title={similarList && similarList.length !== 0 ? title : null}
             info={similarList.results}
@@ -28,9 +28,9 @@ const Similar = ({ title, id, media, lang }) => {
             isSetChange={isSetChange}
             isChange={isChange}
           />
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
