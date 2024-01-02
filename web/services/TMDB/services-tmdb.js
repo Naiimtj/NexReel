@@ -241,7 +241,7 @@ export async function getPersonDetails(media, id, lang = "es-ES") {
 }
 // < GENRES
 // . Discover
-export async function getDiscoverGenres(media, withGenres, lang = "es-ES") {
+export async function getDiscoverGenres(media, withGenres, lang = "es-ES", page = 1) {
   try {
     const response = await service.get(`/discover/${media}`, {
       params: {
@@ -250,7 +250,7 @@ export async function getDiscoverGenres(media, withGenres, lang = "es-ES") {
         sort_by: "popularity.desc",
         include_adult: "false",
         include_video: "false",
-        page: "1",
+        page: page,
         with_genres: withGenres,
       },
     });

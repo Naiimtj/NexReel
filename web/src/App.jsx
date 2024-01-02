@@ -28,6 +28,8 @@ import Genres from "./pages/Genres/Genres";
 import Keyword from "./pages/KeyWords/KeyWord";
 import CompletCast from "./pages/Person/CompletCast";
 import BestRated from "./pages/Lists/BestRated";
+import ListMedias from "./pages/Lists/ListMedias";
+import ListMediasGenres from "./pages/Lists/ListMediasGenres";
 
 function App() {
   return (
@@ -56,7 +58,9 @@ function App() {
         <Route path="/:media_type/:id" element={<DetailsMedia />} />
         <Route path="/:media_type/:idMedia/person/:id" element={<Persons />} />
         <Route path="/:media_type/:id/credits" element={<CompletCast />} />
-        <Route path="/:media_type/:id/genre/:idgen" element={<Genres />} />
+        <Route path="/:media_type/:id/genre/:idGenre" element={<Genres />} />
+        <Route path="/:media/:id/genre/:idGenre/listMovies" element={<ListMediasGenres />} />
+        <Route path="/:media/:id/genre/:idGenre/listTvShows" element={<ListMediasGenres />} />
         <Route
           path="/:media_type/:id/keyword/:idkeyword"
           element={<Keyword />}
@@ -67,6 +71,8 @@ function App() {
         {/* // < PERSONS */}
         <Route path="/person/:id" element={<Persons />} />
         <Route path="/:media/:id/bestRated" element={<BestRated />} />
+        <Route path="/:media/:id/listMovies" element={<ListMedias />} />
+        <Route path="/:media/:id/listTvShows" element={<ListMedias />} />
         {/* // < USER */}
         <Route
           path="/me"

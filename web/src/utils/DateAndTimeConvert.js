@@ -67,10 +67,10 @@ class DateAndTimeConvert {
   DateTimeConvertLocale() {
     let dateTime = this.date;
     const MonthLonger = this.monthLonger ? this.monthLonger : this.noMonth
-    const MounthData = this.noMonth && !this.monthLonger ? undefined : MonthLonger
+    const MonthData = this.noMonth && !this.monthLonger ? undefined : MonthLonger
     return new Date(dateTime).toLocaleString(this.lang('en-EN'), {
       day: 'numeric',
-      month: !MounthData ? undefined : 'short',
+      month: !MonthData ? undefined : 'short',
       year: this.noYear ? undefined : 'numeric',
       hour: this.noTime ? undefined : 'numeric',
       minute: this.noTime ? undefined : 'numeric',

@@ -13,7 +13,7 @@ import PageTitle from "../../components/PageTitle";
 
 function Genres() {
   const [t] = useTranslation("translation");
-  const { id, media_type, idgen } = useParams();
+  const { id, media_type, idGenre } = useParams();
   // -SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,9 +21,9 @@ function Genres() {
   // -GENRES TV
   const processInfo = {
     genreTV1: "Genre Movie",
-    genreTV2: "Genero si es la misma",
+    genreTV2: "Genre if is the same",
   };
-  switch (idgen) {
+  switch (idGenre) {
     case "10759":
       processInfo.genreTV1 = "28";
       processInfo.genreTV2 = "12";
@@ -41,16 +41,16 @@ function Genres() {
       processInfo.genreTV2 = null;
       break;
     default:
-      processInfo.genreTV1 = idgen;
+      processInfo.genreTV1 = idGenre;
       processInfo.genreTV2 = null;
       break;
   }
   // -GENRES MOVIE
   const processInfo2 = {
-    genreMOVIE1: "Obtener el Genero Series",
-    genreMOVIE2: "Genre si es la misma",
+    genreMOVIE1: "Genre TV",
+    genreMOVIE2: "Genre if is the same",
   };
-  switch (idgen) {
+  switch (idGenre) {
     case "28":
       processInfo2.genreMOVIE1 = "10759";
       processInfo2.genreMOVIE2 = null;
@@ -76,12 +76,12 @@ function Genres() {
       processInfo2.genreMOVIE2 = null;
       break;
     default:
-      processInfo2.genreMOVIE1 = idgen;
+      processInfo2.genreMOVIE1 = idGenre;
       processInfo2.genreMOVIE2 = null;
       break;
   }
   const [genreMovie, setGenreMovie] = useState([]);
-  const [genreSerie, setGenreSerie] = useState([]);
+  const [genreTv, setGenreTv] = useState([]);
   // -MOVIES & TV SHOWS
   useEffect(() => {
     const detailsMovie = async () => {
@@ -118,72 +118,54 @@ function Genres() {
           t("es-ES")
         );
         if (resultGenre2.total_results > 0) {
-          setGenreSerie(resultGenre1.results.concat(resultGenre2.results));
+          setGenreTv(resultGenre1.results.concat(resultGenre2.results));
         } else {
-          setGenreSerie(resultGenre1.results);
+          setGenreTv(resultGenre1.results);
         }
       } else {
-        setGenreSerie(resultGenre1.results);
+        setGenreTv(resultGenre1.results);
       }
     };
-    if (idgen) {
+    if (idGenre) {
       detailsMovie();
       detailsTv();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idgen, t]);
-  // -DETALLE PELICULA/SERIE
+  }, [idGenre, t]);
+  // -DETAILS MOVIES / TV SHOWS
   const [detailsMedia, setDetailsMedia] = useState({});
   useEffect(() => {
-    const detallesAPI = async () => {
+    const detailsAPI = async () => {
       const result = await getMediaDetails(media_type, id, t("es-ES"));
       if (Object.keys(result).length > 0) {
         setDetailsMedia(result);
       }
     };
     if (id && media_type) {
-      detallesAPI();
+      detailsAPI();
     }
   }, [id, media_type, t]);
-  // -NOMBRE GENERO
+  // -NAME GENRE
   const [genreNameList, setGenreNameList] = useState([]);
   useEffect(() => {
-    const detallesAPI = async () => {
+    const detailsAPI = async () => {
       const result = await getGenresList(media_type, t("es-ES"));
       if (result) {
         setGenreNameList(result);
       }
     };
     if (media_type) {
-      detallesAPI();
+      detailsAPI();
     }
   }, [media_type, t]);
-  // -BUSCAR NOMBRE GENERO
+  // -FILTER NAME GENRE
   const genreName =
     genreNameList.genres &&
-    genreNameList.genres.filter((gene) => gene && gene.id === Number(idgen));
-  const nombreGenero = genreName && genreName[0].name;
-  // -GENRES NOMBRE
-  const processNameGen = {
-    genreName: "Genero Movie",
-  };
-  switch (nombreGenero) {
-    case "Action & Adventure":
-      processNameGen.genreName = "Acción & Aventura";
-      break;
-    case "Sci-Fi & Fantasy":
-      processNameGen.genreName = "Ciencia ficción & Fantasía";
-      break;
-    case "Soap":
-      processNameGen.genreName = "Telenovela";
-      break;
-    default:
-      processNameGen.genreName = nombreGenero;
-      break;
-  }
-  // -FILTROS
+    genreNameList.genres.filter((gene) => gene && gene.id === Number(idGenre));
+  const nameGenre = genreName && genreName[0].name;
+  // -FILTERS
   const genreFinal =
-    genreMovie && genreMovie.lenght > 0
+    genreMovie && genreMovie.length > 0
       ? Array.from(new Set(genreMovie.map((a) => a.id))).map((id) =>
           genreMovie.find((a) => a.id === id)
         )
@@ -192,7 +174,7 @@ function Genres() {
 
   return (
     <div className="w-full h-full px-8 pb-5 mt-6 mb-20 text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
-      <PageTitle title={`${processNameGen.genreName}`} />
+      <PageTitle title={t(nameGenre)} />
       {/* //.BACK MOVIE/TV */}
       <Link
         className="ml-5 pt-5 hover:text-[#6676a7]"
@@ -212,7 +194,7 @@ function Genres() {
       <div className="h-full w-full p-2 md:p-4 ">
         <h2 className="inline-block pr-2">{t("Genre")}: </h2>
         <p className="inline-block capitalize font-semibold text-lg">
-          {processNameGen.genreName}
+          {t(nameGenre)}
         </p>
       </div>
       {/* // -MOVIES */}
@@ -222,7 +204,7 @@ function Genres() {
             {genreTotal && genreTotal.length > 0 ? (
               <Link
                 className="flex items-center text-base text-purpleNR text-right hover:text-gray-200 mx-4 transition duration-300"
-                to={`/${media_type}/${id}/genre/movie/${idgen}/list`}
+                to={`/${media_type}/${id}/genre/${idGenre}/listMovies`}
               >
                 {t("Complete list")}
                 <BsFillCaretRightFill className="align-middle" size={16} />
@@ -237,20 +219,20 @@ function Genres() {
         </>
       ) : null}
       {/* // - TV SHOWS */}
-      {genreSerie && genreSerie.length > 0 ? (
+      {genreTv && genreTv.length > 0 ? (
         <>
           <div
             className={
-              genreSerie && genreSerie.length > 0
+              genreTv && genreTv.length > 0
                 ? "pb-1 mt-4 rounded-3xl"
                 : "pb-1 rounded-3xl"
             }
           >
             <div className="flex justify-end">
-              {genreSerie && genreSerie.length > 0 ? (
+              {genreTv && genreTv.length > 0 ? (
                 <Link
                   className="flex items-center text-base text-purpleNR text-right hover:text-gray-200 mx-4 transition duration-300"
-                  to={`/${media_type}/${id}/genre/tv/${idgen}/list`}
+                  to={`/${media_type}/${id}/genre/${idGenre}/listTvShows`}
                 >
                   {t("Complete list")}
                   <BsFillCaretRightFill className="align-middle" size={16} />
@@ -258,10 +240,10 @@ function Genres() {
               ) : null}
             </div>
             <div>
-              {genreSerie && genreSerie.length > 0 && (
+              {genreTv && genreTv.length > 0 && (
                 <Carousel
                   title={t("TV SHOWS")}
-                  info={genreSerie}
+                  info={genreTv}
                   media={"tv"}
                 />
               )}

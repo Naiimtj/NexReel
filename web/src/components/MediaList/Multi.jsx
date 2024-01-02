@@ -269,7 +269,7 @@ export const Multi = ({
                         ? people
                         : null
                     }
-                    alt={t("Icon people")}
+                    alt={t("Icon")}
                   />
                   <img
                     className="static aspect-auto w-full cursor-pointer rounded-xl"

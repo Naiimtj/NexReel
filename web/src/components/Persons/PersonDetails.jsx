@@ -45,6 +45,7 @@ export const PersonDetails = ({
   }, [id]);
   const [imdbPerson, setImdbPerson] = useState([]);
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     const imdbAPI = async () => {
       const result = await getImdbPerson(imdb_id, t("es-ES"));
       if (result) {
@@ -52,7 +53,7 @@ export const PersonDetails = ({
       }
     };
     if (imdb_id) {
-      imdbAPI();
+      // imdbAPI();
     }
   }, [imdb_id, t]);
   // - EXTERNAL ID (SOCIAL)
@@ -265,7 +266,6 @@ export const PersonDetails = ({
       }
     };
   }, [isTimeout, errorAddPlaylists]);
-
   return (
     <div>
       <PageTitle title={`${name}`} />
@@ -308,11 +308,11 @@ export const PersonDetails = ({
           {/* //-ADD PLAYLIST */}
           {userExist ? (
             <ShowPlaylistMenu
-            userId={user.id}
-            id={Number(id)}
-            type={"person"}
-            runTime={0}
-          />            
+              userId={user.id}
+              id={Number(id)}
+              type={"person"}
+              runTime={0}
+            />
           ) : null}
         </div>
         <div className="md:col-span-2">
@@ -439,9 +439,7 @@ export const PersonDetails = ({
         <>
           {items && items.length > 0 ? (
             <Link to={`/person/${id}/bestRated`} className="flex justify-end">
-              <button
-                className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-              >
+              <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
                 {t("Complete list")}
                 <BsFillCaretRightFill className="align-middle" size={16} />
               </button>
@@ -458,11 +456,9 @@ export const PersonDetails = ({
         </>
         {/*//- MOVIES */}
         {items && items.length > 0 ? (
-          <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 rounded-3xl">
+          <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 mt-4 rounded-3xl">
             <Link to={`/person/${id}/listMovies`} className="flex justify-end">
-              <button
-                className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-              >
+              <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
                 {t("Complete list")}
                 <BsFillCaretRightFill
                   className="inline-block align-middle"
@@ -474,7 +470,7 @@ export const PersonDetails = ({
               {knownMovie && (
                 <Carousel
                   title={t("MOVIES")}
-                  info={JSON.parse(JSON.stringify(knownMovie))}
+                  info={JSON.parse(JSON.stringify(knownMovie.slice(0, 20)))}
                 />
               )}
             </>
@@ -484,11 +480,12 @@ export const PersonDetails = ({
         <>
           {knownTV && knownTV.length === 0 ? null : (
             <div className="pb-1 mt-4 rounded-3xl">
-              <Link to={`/person/${id}/listTvShows`} className="flex justify-end">
+              <Link
+                to={`/person/${id}/listTvShows`}
+                className="flex justify-end"
+              >
                 {items && items.length > 0 ? (
-                  <button
-                    className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300"
-                  >
+                  <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
                     {t("Complete list")}
                     <BsFillCaretRightFill
                       className="inline-block align-middle"
@@ -501,7 +498,7 @@ export const PersonDetails = ({
                 {knownTV && (
                   <Carousel
                     title={t("TV SHOWS")}
-                    info={JSON.parse(JSON.stringify(knownTV))}
+                    info={JSON.parse(JSON.stringify(knownTV.slice(0, 20)))}
                   />
                 )}
               </>
@@ -511,7 +508,7 @@ export const PersonDetails = ({
         {/* //- OTHERS */}
         <>
           {knownMovieNoDate && knownMovieNoDate.length === 0 ? null : (
-            <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 rounded-3xl">
+            <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 mt-4 rounded-3xl">
               <div>
                 {knownMovieNoDate && (
                   <Carousel
