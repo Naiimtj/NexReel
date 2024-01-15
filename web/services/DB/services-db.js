@@ -264,6 +264,18 @@ export async function getListPlaylist() {
   }
 }
 // - GET
+// List Playlist for current user
+export async function getUserListPlaylist() {
+  const url = `/playlists/me`;
+  try {
+    const response = await service.get(url);
+    return response;
+  } catch (err) {
+    console.error("Error playlist:", err);
+    return {};
+  }
+}
+// - GET
 // Detail Playlist
 export async function getDetailPlaylist(id) {
   const url = `/playlists/${id}`;

@@ -21,7 +21,7 @@ import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import AddForum from "../../utils/Forum/AddForum";
 import SeenPending from "./SeenPending";
-import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
+import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 export const Multi = ({
   info,
@@ -37,6 +37,7 @@ export const Multi = ({
   isForum,
   basicForum,
   mediasUser,
+  playlistUser
 }) => {
   const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
@@ -341,6 +342,9 @@ export const Multi = ({
                   id={Number(id)}
                   type={processInfo.type}
                   runTime={processInfo.runTime}
+                  playlistUser={playlistUser}
+                  setChangeSeenPending={setChangeSeenPending}
+                  changeSeenPending={changeSeenPending}
                 />
               ) : null}
             {isForum ? (
@@ -429,6 +433,7 @@ Multi.defaultProps = {
   isForum: false,
   dataUser: {},
   mediasUser: [],
+  playlistUser: [],
 };
 
 Multi.propTypes = {
@@ -446,4 +451,5 @@ Multi.propTypes = {
   isForum: PropTypes.bool,
   dataUser: PropTypes.object,
   mediasUser: PropTypes.array,
+  playlistUser: PropTypes.array,
 };

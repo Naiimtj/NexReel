@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { getUser, postPlaylistMedia } from "../../../services/DB/services-db";
+import { postPlaylistMedia } from "../../../services/DB/services-db";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
 
-const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
+const ShowPlaylistMenu = ({
+  userId,
+  id,
+  type,
+  runTime,
+  playlistUser,
+  changeSeenPending,
+  setChangeSeenPending,
+}) => {
   const [t] = useTranslation("translation");
   const [playlistsChange, setPlaylistsChange] = useState(false);
-  const [playlistsList, setPlaylistsList] = useState(false);
-  const [dataUser, setDataUser] = useState({});
+  const [openPlaylistsList, setOpenPlaylistsList] = useState(false);
+  const [dataUser, setDataUser] = useState([]);
   useEffect(() => {
     const Data = async () => {
-      getUser()
-        .then((data) => {
-          setDataUser(data);
-        })
-        .catch((err) => err);
+      setDataUser(playlistUser);
     };
     Data();
-  }, [playlistsChange, id, userId]);
+  }, [playlistsChange, changeSeenPending, id, userId, playlistUser]);
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
   const handleAddPlaylist = async (playlistId) => {
@@ -28,8 +32,9 @@ const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
         media_type: type,
         runtime: runTime,
       }).then(
-        () => setPlaylistsChange(!playlistsChange),
-        setPlaylistsList(false)
+        (data) => {if(data) {setPlaylistsChange(!playlistsChange),
+        setOpenPlaylistsList(false),
+        setChangeSeenPending(!changeSeenPending)}}
       );
     } catch (error) {
       if (error) {
@@ -60,13 +65,13 @@ const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
     <div className="relative text-base align-middle col-span-3">
       <button
         className={`cursor-pointer text-left font-semibold px:center ${
-          !playlistsList ? "text-[#7B6EF6]" : "text-gray-600"
+          !openPlaylistsList ? "text-[#7B6EF6]" : "text-gray-600"
         } transition ease-in-out md:hover:scale-105 duration-300`}
         onClick={(event) => {
-          event.stopPropagation(), setPlaylistsList(!playlistsList);
+          event.stopPropagation(), setOpenPlaylistsList(!openPlaylistsList);
         }}
       >
-        {!playlistsList ? (
+        {!openPlaylistsList ? (
           <IoMdAdd
             className="inline-block"
             size={20}
@@ -81,7 +86,7 @@ const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
         )}
         {t("Playlists")}
       </button>
-      {playlistsList ? (
+      {openPlaylistsList ? (
         <div className="absolute flex flex-col text-base bg-grayNR/60 rounded-md md:w-[200px] w-[150px]">
           {errorAddPlaylists ? (
             <div className="text-white bg-gray-50/20 px-1 font-bold">
@@ -89,23 +94,22 @@ const ShowPlaylistMenu = ({ userId, id, type, runTime }) => {
             </div>
           ) : null}
           {dataUser &&
-            dataUser.playlists.map((i, index) => {
+            dataUser.map((i, index) => {
               const roundedTopItem = index === 0 ? "rounded-t-md" : null;
               const roundedBottomItem =
-                dataUser.playlists && dataUser.playlists.length === index + 1
+                dataUser && dataUser.length === index + 1
                   ? "rounded-b-md"
                   : null;
               const isInPlaylist =
                 i &&
                 i.medias &&
                 i.medias.some((media) => Number(media.mediaId) === id);
+              console.log(i);
               return (
                 <div
                   key={i.id}
                   className={`hover:bg-gray-50 px-1 ${
-                    dataUser.playlists && dataUser.playlists.length === 1
-                      ? "rounded-md"
-                      : null
+                    dataUser && dataUser.length === 1 ? "rounded-md" : null
                   } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
                   onClick={(event) => {
                     event.stopPropagation(),
@@ -134,9 +138,12 @@ export default ShowPlaylistMenu;
 
 ShowPlaylistMenu.defaultProps = {
   userId: "",
-  id: Number,
+  id: 0,
   type: "",
   runTime: 0,
+  playlistUser: [],
+  changeSeenPending: false,
+  setChangeSeenPending: () => {}
 };
 
 ShowPlaylistMenu.propTypes = {
@@ -144,4 +151,7 @@ ShowPlaylistMenu.propTypes = {
   id: PropTypes.number,
   type: PropTypes.string,
   runTime: PropTypes.number,
+  playlistUser: PropTypes.array,
+  changeSeenPending: PropTypes.bool,
+  setChangeSeenPending: PropTypes.func,
 };

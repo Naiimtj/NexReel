@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // icons
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Credits from "../../components/Credits";
+import { getUserListPlaylist } from "../../../services/DB/services-db";
 
 const CarouselCredits = ({
   title,
@@ -12,11 +13,11 @@ const CarouselCredits = ({
   info,
   media,
   isUser,
-  // changeSeenPending,
-  // setChangeSeenPending,
-  // isPlaylist,
-  // setPopSureDel,
-  // setIdDelete,
+  changeSeenPending,
+  setChangeSeenPending,
+  isPlaylist,
+  setPopSureDel,
+  setIdDelete,
   isAllCards,
 }) => {
   // const mediaMovie = media === "movie";
@@ -40,6 +41,21 @@ const CarouselCredits = ({
       setCurrentPage(currentPage - 1);
     }
   };
+  const [playlistUser, setPlaylistUser] = useState([]);
+  const [isChange, setIsChange] = useState(false);
+  useEffect(() => {     
+    const DataPlaylist = async () => {
+      getUserListPlaylist().then((data) => {
+      setPlaylistUser(data);
+      })
+      .catch((err) => err);
+  };
+    if (isUser) {
+      DataPlaylist()
+      setChangeSeenPending(!changeSeenPending)
+    }
+  }, [isUser, isChange]);
+  
   // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
   const allCards =
     !isAllCards && !isUser && info.length > 6 && cardsPerPage % 2 === 0
@@ -140,20 +156,22 @@ const CarouselCredits = ({
       {/* // - CARDS */}
       <div className="my-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 text-gray-200 rounded-xl justify-items-center items-start">
         {visibleCards.map((card, index) => (
+          
           <Credits
             key={`carrousel2${index}${media}`}
             repInfo={card}
             media={media}
             idInfo={id}
+            playlistUser={playlistUser}
             // info={card}
             // mediaMovie={mediaMovie}
             // mediaTv={mediaTv}
             // isUser={isUser}
-            // setChangeSeenPending={setChangeSeenPending}
-            // changeSeenPending={changeSeenPending}
-            // isPlaylist={isPlaylist}
-            // setPopSureDel={setPopSureDel}
-            // setIdDelete={setIdDelete}
+            setChangeSeenPending={setIsChange}
+            changeSeenPending={isChange}
+            isPlaylist={isPlaylist}
+            setPopSureDel={setPopSureDel}
+            setIdDelete={setIdDelete}
           />
         ))}
       </div>
@@ -175,10 +193,11 @@ CarouselCredits.defaultProps = {
   isUser: false,
   changeSeenPending: false,
   setChangeSeenPending: () => {},
-  isPlaylist: "",
+  isPlaylist: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
   isAllCards: false,
+  playlistUser: []
 };
 
 CarouselCredits.propTypes = {
@@ -189,8 +208,9 @@ CarouselCredits.propTypes = {
   isUser: PropTypes.bool,
   changeSeenPending: PropTypes.bool,
   setChangeSeenPending: PropTypes.func,
-  isPlaylist: PropTypes.string,
+  isPlaylist: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
   isAllCards: PropTypes.bool,
+  playlistUser: PropTypes.array,
 };

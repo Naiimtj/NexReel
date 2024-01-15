@@ -53,6 +53,7 @@ router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.i
 // < PLAYLIST
 router.post("/playlists", auth.isAuthenticated, upload.single("imgPlaylist"), playlists.create);
 router.get("/playlists", auth.isAuthenticated, playlists.list);
+router.get("/playlists/me", auth.isAuthenticated, playlists.listUser);
 router.get("/playlists/search", auth.isAuthenticated, playlists.search);
 router.get("/playlists/:id", auth.isAuthenticated, authPlaylist.exists, playlists.detail);
 router.patch("/playlists/:id", auth.isAuthenticated, authPlaylist.exists, authPlaylist.isOwnerOrAdmin, upload.single("imgPlaylist"), playlists.update);

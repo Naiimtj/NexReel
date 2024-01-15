@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import AddForum from "../utils/Forum/AddForum";
-import ShowPlaylistMenu from "../utils/Playlists/showPlaylistMenu";
+import ShowPlaylistMenu from "../utils/Playlists/ShowPlaylistMenu";
+import { getMediaDetails } from "../../services/TMDB/services-tmdb";
 
 export const Credits = ({
   repInfo,
@@ -19,11 +20,13 @@ export const Credits = ({
   setPopSureDel,
   setIdDelete,
   basicForum,
+  playlistUser,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const userExist = !!user;
+
   const {
     profile_path,
     name,
@@ -34,14 +37,28 @@ export const Credits = ({
     username,
     avatarURL,
   } = repInfo;
+  // - ALL INFO MEDIA
+    const [dataMedia, setDataMedia] = useState({});
+    useEffect(() => {
+      if (i18next.language && !id && repInfo.mediaId) {
+        getMediaDetails("person", repInfo.mediaId, i18next.language).then((d) => {
+          setDataMedia(d);
+        });
+      }
+    }, [id, i18next.language]);
   const urlPoster =
     profile_path !== undefined
       ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
-      : null;
+      : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${dataMedia.profile_path}`;
+      const urlPosterPerson =
+      id !== undefined
+        ? NoImage
+        : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${dataMedia.profile_path}`;
 
   const processInfo = {};
   switch (media) {
     case "movie":
+      processInfo.repId = id;
       processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter = character;
@@ -50,6 +67,7 @@ export const Credits = ({
       processInfo.runTime = 0;
       break;
     case "tv":
+      processInfo.repId = id;
       processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter =
@@ -59,13 +77,15 @@ export const Credits = ({
       processInfo.runTime = 0;
       break;
     case "person":
-      processInfo.repPoster = profile_path ? urlPoster : NoImage;
-      processInfo.repName = name;
-      processInfo.repCharacter = known_for_department;
-      processInfo.urlNavigation = `/person/${id}`;
+      processInfo.repId = id ? id : dataMedia.id;
+      processInfo.repPoster = profile_path ? urlPoster : urlPosterPerson;
+      processInfo.repName = name ? name : dataMedia.name;
+      processInfo.repCharacter = known_for_department ? known_for_department : dataMedia.known_for_department;
+      processInfo.urlNavigation = id ? `/person/${id}`:`/person/${dataMedia.id}`;
       processInfo.runTime = 0;
       break;
     case "user":
+      processInfo.repId = id;
       processInfo.repPoster = avatarURL !== null ? avatarURL : NoImage;
       processInfo.repName = username;
       processInfo.repCharacter = "User";
@@ -98,9 +118,9 @@ export const Credits = ({
   const handleDeletePlaylist = (event) => {
     event.stopPropagation();
     setPopSureDel(true);
-    setIdDelete(id);
+    setIdDelete(`${processInfo.repId}`);
   };
-  
+
   return (
     <div className="slide flex flex-col justify-start content-center items-center">
       <div>
@@ -180,16 +200,18 @@ export const Credits = ({
               {/* //-ADD BUTTON PLAYLIST */}
               {!isForum && media !== "user" ? (
                 <ShowPlaylistMenu
-                userId={user.id}
-                id={Number(id)}
-                type={"person"}
-                runTime={processInfo.runTime}
-              />
-                
+                  userId={user.id}
+                  id={Number(processInfo.repId)}
+                  type={"person"}
+                  runTime={processInfo.runTime}
+                  playlistUser={playlistUser}
+                  changeSeenPending={changeSeenPending}
+                  setChangeSeenPending={setChangeSeenPending}
+                />
               ) : null}
               {isForum ? (
                 <AddForum
-                  id={Number(id)}
+                  id={Number(processInfo.repId)}
                   runTime={processInfo.runTime}
                   type={media}
                   basicForum={basicForum}
@@ -218,6 +240,7 @@ Credits.defaultProps = {
   isPlaylist: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
+  playlistUser: [],
 };
 
 Credits.propTypes = {
@@ -231,4 +254,5 @@ Credits.propTypes = {
   isPlaylist: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
+  playlistUser: PropTypes.array,
 };

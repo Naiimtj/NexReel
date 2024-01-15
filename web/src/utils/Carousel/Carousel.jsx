@@ -6,7 +6,11 @@ import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Multi from "../../components/MediaList/Multi";
 import { useAuthContext } from "../../context/auth-context";
-import { getAllMedia, getDetailForum } from "../../../services/DB/services-db";
+import {
+  getAllMedia,
+  getDetailForum,
+  getUserListPlaylist,
+} from "../../../services/DB/services-db";
 
 const Carousel = ({
   title,
@@ -23,39 +27,38 @@ const Carousel = ({
   isSetChange,
   isChange,
 }) => {
-  const [changeSeenPending, setChangeSeenPending] = useState(false);
+  const [changeSeenPending, setChangeSeenPending] = useState(true);
   const { user } = useAuthContext();
   const userExist = !!user;
   const [mediasUser, setMediasUser] = useState([]);
+  const [playlistUser, setPlaylistUser] = useState([]);
   useEffect(() => {
     const Data = async () => {
       getAllMedia()
         .then((data) => {
           setMediasUser(data);
-          setChangeSeenPending(!changeSeenPending)
-          isSetChange(!isChange)
-        })
-        .catch((err) => err);
-    };
-    if (userExist && changeSeenPending) {
-      Data();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changeSeenPending]);
-  useEffect(() => {
-    const Data = async () => {
-      getAllMedia()
-        .then((data) => {
-          setMediasUser(data);
+          setChangeSeenPending(!changeSeenPending);
           isSetChange(!isChange);
         })
         .catch((err) => err);
-    };
-    if (userExist && isChange || userExist && !mediasUser.length) {
+      };
+    if ((userExist && isChange) || (userExist && !mediasUser.length)) {
       Data();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userExist, changeSeenPending, isChange]);
+
+  useEffect(() => {     
+    const DataPlaylist = async () => {
+      getUserListPlaylist().then((data) => {
+      setPlaylistUser(data);
+      })
+      .catch((err) => err);
+  };
+    if (userExist) {
+      DataPlaylist()
+    }
+  }, [userExist, changeSeenPending]);
   const [dataForum, setDataForum] = useState({});
   useEffect(() => {
     const ForumData = async () => {
@@ -211,6 +214,7 @@ const Carousel = ({
             isForum={isForum}
             basicForum={ForumData}
             mediasUser={mediasUser}
+            playlistUser={playlistUser}
           />
         ))}
       </div>

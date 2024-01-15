@@ -16,6 +16,7 @@ import {
   getDetailMedia,
   getPlexAllData,
   getUser,
+  getUserListPlaylist,
 } from "../../../services/DB/services-db";
 // img
 import {
@@ -55,7 +56,7 @@ import calculateAverageVote from "../../components/MediaList/calculateAverageVot
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPending";
-import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
+import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
@@ -229,6 +230,21 @@ function DetailsMovie({ info, crews, cast, media }) {
       }
     };
   }, [isTimeout, errorAddPlaylists]);
+
+  const [changeSeenPending, setChangeSeenPending] = useState(true);
+  const [playlistUser, setPlaylistUser] = useState([]);
+  useEffect(() => {
+    const DataPlaylist = async () => {
+      getUserListPlaylist()
+        .then((data) => {
+          setPlaylistUser(data);
+        })
+        .catch((err) => err);
+    };
+    if (userExist) {
+      DataPlaylist();
+    }
+  }, [userExist, changeSeenPending]);
 
   // -MAIN CAST
   const size = 20;
@@ -1157,6 +1173,9 @@ function DetailsMovie({ info, crews, cast, media }) {
                 media={media}
                 id={id}
                 nameFilm={processInfo.title}
+                changeSeenPending={changeSeenPending}
+                setChangeSeenPending={setChangeSeenPending}
+                playlistUser={playlistUser}
               />
             </div>
           </div>

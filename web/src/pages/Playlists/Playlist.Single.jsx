@@ -31,6 +31,7 @@ import EditPlaylist from "../../components/Users/Playlist/EditPlaylist";
 import PopSureDelete from "../../components/PopUp/PopSureDelete";
 import PageTitle from "../../components/PageTitle";
 import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
+import CarouselCredits from "../../utils/Carousel/CarouselCredits";
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -95,8 +96,15 @@ const PlaylistSingle = () => {
       : null;
   const checkMedias = !!(dataPlaylist && medias && medias.length > 0);
   const [isAsc, setIsAsc] = useState(false);
-  const dataMedias = checkMedias ? DataOrder(checkMedias, medias, isAsc) : null;
-
+  const dataMediasAll = checkMedias
+    ? DataOrder(checkMedias, medias, isAsc)
+    : null;
+  const dataMedias = checkMedias
+    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type !== "person")
+    : null;
+  const dataMediasPersons = checkMedias
+    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type === "person")
+    : null;
   let isCarousel;
   let isSquare;
   let isList;
@@ -210,7 +218,6 @@ const PlaylistSingle = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerDel]);
-
   useEffect(() => {
     const deleteMedia = async () => {
       try {
@@ -219,10 +226,12 @@ const PlaylistSingle = () => {
         });
         setChangeSeenPending(!changeSeenPending);
         setAnswerDelMedia(!answerDelMedia);
+        setIdDelete(null);
       } catch (error) {
         if (error) {
           const { message } = error.response?.data || {};
           setErrorDelete(message);
+          setIdDelete(null);
         }
       }
     };
@@ -348,6 +357,14 @@ const PlaylistSingle = () => {
                         <div className="col-span-2">
                           <div className="flex gap-2 mb-4">
                             <p className="text-gray-400">{`${t(
+                              "Quantity Persons"
+                            )}:`}</p>
+                            <div className="inline-block capitalize">
+                              {dataMediasPersons && dataMediasPersons.length}
+                            </div>
+                          </div>
+                          <div className="flex gap-2 mb-4">
+                            <p className="text-gray-400">{`${t(
                               "Quantity"
                             )}:`}</p>
                             <div className="inline-block capitalize">
@@ -458,6 +475,18 @@ const PlaylistSingle = () => {
                           setAnswerDel={setAnswerDelMedia}
                         />
                       </div>
+                    ) : null}
+                    {/* // - CAROUSEL */}
+                    {checkMedias && dataMediasPersons.length > 0 ? (
+                      <CarouselCredits
+                        title={"Persons"}
+                        info={dataMediasPersons}
+                        media={"person"}
+                        isUser
+                        isPlaylist={true}
+                        setPopSureDel={setPopSureDelMedia}
+                        setIdDelete={setIdDelete}
+                      />
                     ) : null}
                     {/* // . ORDER & VISUALIZATION */}
                     <div className="grid grid-cols-3">

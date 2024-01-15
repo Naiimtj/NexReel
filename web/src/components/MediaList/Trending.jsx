@@ -8,11 +8,11 @@ import Carousel from "../../utils/Carousel/Carousel";
 const Trending = () => {
   const [t, i18next] = useTranslation("translation");
   const [loading, setLoading] = useState(true);
-  const [dataTrending, setdataTrending] = useState([]);
+  const [dataTrending, setDataTrending] = useState([]);
   useEffect(() => {
     if (i18next.language) {
       getTrending(i18next.language).then((data) => {
-        setdataTrending(data.results);
+        setDataTrending(data.results);
         setLoading(false);
       });
     }

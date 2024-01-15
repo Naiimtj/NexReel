@@ -50,6 +50,18 @@ module.exports.list = async (req, res, next) => {
   }
 };
 
+module.exports.listUser = async (req, res, next) => {
+  try {
+    const playlist = await Playlist.find({author:req.user.id});
+    if (!playlist) {
+      next(createError(404, "Playlist not found"));
+    }
+    res.status(201).json(playlist);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports.search = async (req, res, next) => {
   try {
     const { title } = req.query;
