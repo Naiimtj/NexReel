@@ -31,11 +31,13 @@ const ShowPlaylistMenu = ({
         mediaId: `${id}`,
         media_type: type,
         runtime: runTime,
-      }).then(
-        (data) => {if(data) {setPlaylistsChange(!playlistsChange),
-        setOpenPlaylistsList(false),
-        setChangeSeenPending(!changeSeenPending)}}
-      );
+      }).then((data) => {
+        if (data) {
+          setPlaylistsChange(!playlistsChange),
+            setOpenPlaylistsList(false),
+            setChangeSeenPending(!changeSeenPending);
+        }
+      });
     } catch (error) {
       if (error) {
         const { message } = error.response?.data || {};
@@ -104,7 +106,6 @@ const ShowPlaylistMenu = ({
                 i &&
                 i.medias &&
                 i.medias.some((media) => Number(media.mediaId) === id);
-              console.log(i);
               return (
                 <div
                   key={i.id}
@@ -143,7 +144,7 @@ ShowPlaylistMenu.defaultProps = {
   runTime: 0,
   playlistUser: [],
   changeSeenPending: false,
-  setChangeSeenPending: () => {}
+  setChangeSeenPending: () => {},
 };
 
 ShowPlaylistMenu.propTypes = {

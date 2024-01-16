@@ -1172,6 +1172,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                 info={items}
                 media={media}
                 id={id}
+                isUser={userExist}
                 nameFilm={processInfo.title}
                 changeSeenPending={changeSeenPending}
                 setChangeSeenPending={setChangeSeenPending}

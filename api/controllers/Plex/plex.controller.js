@@ -45,7 +45,7 @@ module.exports.create = async (req, res, next) => {
     if (!plexDataExist.length) {
       await createPlexData();
     } else {
-    await updatePlexData(plexDataExist[0].id)
+      await updatePlexData(plexDataExist[0].id);
     }
   } catch (error) {
     console.error("Error executing create:", error);
@@ -95,7 +95,6 @@ async function createPlexData() {
         originalTitle: show.originalTitle || "",
         title: show.title,
       }));
-  
 
       if (filteredMoviesResult.length > 0 && filteredTvShowsResult.length > 0) {
         const createdPlexData = await PlexData.create({
@@ -114,11 +113,11 @@ async function createPlexData() {
       }
     } else {
       console.error("Some Plex section data is missing or invalid");
-      throw new Error("Some Plex section data is missing or invalid")
+      throw new Error("Some Plex section data is missing or invalid");
     }
   } catch (err) {
-    console.error("Error creating Plex data:", err);
-      throw err;
+    console.error("Error creating Plex data");
+    // throw err;
   }
 }
 
@@ -174,7 +173,7 @@ async function updatePlexData(idPlexData, res, next) {
         if (updatePlexData) {
           return updatePlexData;
         } else {
-          throw new Error("Plex Data not updated");;
+          throw new Error("Plex Data not updated");
         }
       } else {
         console.error("Can't get Plex Movie or TV data");
@@ -186,7 +185,7 @@ async function updatePlexData(idPlexData, res, next) {
     }
   } catch (err) {
     console.error("Error creating Plex data:", err);
-      throw err;
+    throw err;
   }
 }
 

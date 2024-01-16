@@ -38,22 +38,21 @@ export const Credits = ({
     avatarURL,
   } = repInfo;
   // - ALL INFO MEDIA
-    const [dataMedia, setDataMedia] = useState({});
-    useEffect(() => {
-      if (i18next.language && !id && repInfo.mediaId) {
-        getMediaDetails("person", repInfo.mediaId, i18next.language).then((d) => {
-          setDataMedia(d);
-        });
-      }
-    }, [id, i18next.language]);
-  const urlPoster =
-    profile_path !== undefined
-      ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
-      : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${dataMedia.profile_path}`;
-      const urlPosterPerson =
-      id !== undefined
-        ? NoImage
-        : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${dataMedia.profile_path}`;
+  const [dataMedia, setDataMedia] = useState({});
+  useEffect(() => {
+    if (i18next.language && !id && repInfo.mediaId) {
+      getMediaDetails("person", repInfo.mediaId, i18next.language).then((d) => {
+        setDataMedia(d);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, i18next.language]);
+  const urlPoster = profile_path
+    ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
+    : null;
+  const urlPosterPerson = !dataMedia.profile_path
+    ? NoImage
+    : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${dataMedia.profile_path}`;
 
   const processInfo = {};
   switch (media) {
@@ -80,8 +79,12 @@ export const Credits = ({
       processInfo.repId = id ? id : dataMedia.id;
       processInfo.repPoster = profile_path ? urlPoster : urlPosterPerson;
       processInfo.repName = name ? name : dataMedia.name;
-      processInfo.repCharacter = known_for_department ? known_for_department : dataMedia.known_for_department;
-      processInfo.urlNavigation = id ? `/person/${id}`:`/person/${dataMedia.id}`;
+      processInfo.repCharacter = known_for_department
+        ? known_for_department
+        : dataMedia.known_for_department;
+      processInfo.urlNavigation = id
+        ? `/person/${id}`
+        : `/person/${dataMedia.id}`;
       processInfo.runTime = 0;
       break;
     case "user":
@@ -120,7 +123,6 @@ export const Credits = ({
     setPopSureDel(true);
     setIdDelete(`${processInfo.repId}`);
   };
-
   return (
     <div className="slide flex flex-col justify-start content-center items-center">
       <div>

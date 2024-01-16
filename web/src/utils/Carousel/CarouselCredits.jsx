@@ -54,6 +54,7 @@ const CarouselCredits = ({
       DataPlaylist()
       setChangeSeenPending(!changeSeenPending)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUser, isChange]);
   
   // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
@@ -89,6 +90,7 @@ const CarouselCredits = ({
     }
     return indicators;
   };
+
   return (
     <>
       {allCards && allCards.length > 6 ? (
@@ -155,8 +157,7 @@ const CarouselCredits = ({
       )}
       {/* // - CARDS */}
       <div className="my-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 text-gray-200 rounded-xl justify-items-center items-start">
-        {visibleCards.map((card, index) => (
-          
+        {visibleCards.map((card, index) => (          
           <Credits
             key={`carrousel2${index}${media}`}
             repInfo={card}
