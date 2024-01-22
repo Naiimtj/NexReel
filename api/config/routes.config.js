@@ -23,6 +23,7 @@ const Playlist = require("../models/Playlist/playlist.model");
 const Forum = require("../models/Forum/forum.model");
 
 router.get("/plex", auth.isAuthenticated, plex.list);
+router.post("/plex", auth.isAuthenticated, plex.create);
 
 // < USER
 router.post("/login", users.login);

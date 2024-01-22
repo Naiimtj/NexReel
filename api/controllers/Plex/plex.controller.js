@@ -45,7 +45,7 @@ module.exports.create = async (req, res, next) => {
     if (!plexDataExist.length) {
       await createPlexData();
     } else {
-      await updatePlexData(plexDataExist[0].id);
+      await updatePlexData(plexDataExist[0].id).then((data) => res.status(200).json(data)).catch((error) => next(error));
     }
   } catch (error) {
     console.error("Error executing create:", error);
@@ -122,7 +122,7 @@ async function createPlexData() {
 }
 
 async function updatePlexData(idPlexData, res, next) {
-  try {
+    try {
     const sections = ["movie", "tv", "anime", "animation", "documental"];
     const responses = await Promise.all(
       sections.map((section) =>
@@ -150,7 +150,7 @@ async function updatePlexData(idPlexData, res, next) {
       const tvShowsResults = combinedResults.filter(
         (item) => item.type === "show"
       );
-      const filteredMoviesResult = moviesResult.map((movie) => ({
+        const filteredMoviesResult = moviesResult.map((movie) => ({
         ratingKey: movie.ratingKey,
         type: movie.type,
         year: movie.year,

@@ -70,7 +70,7 @@ export const Credits = ({
       processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
       processInfo.repCharacter =
-        roles && roles.length > 0 ? roles[0].character : null;
+        roles && roles.length > 0 ? roles[0].character : character;
       processInfo.repKnownForDepartment = known_for_department;
       processInfo.urlNavigation = `/${media}/${idInfo}/person/${id}`;
       processInfo.runTime = 0;

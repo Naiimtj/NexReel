@@ -168,19 +168,27 @@ function DetailsMovie({ info, crews, cast, media }) {
   const [isInPlex, setIsInPlex] = useState(false);
   useEffect(() => {
     const OriginalTitle = original_title || original_name;
+    const TitleTMDB = title || name;
     const yearMedia =
       release_date || first_air_date
         ? new Date(release_date || first_air_date).getFullYear()
         : null;
     if (OriginalTitle && userExist && user.isPlexFriend) {
+      const removeSpaces = (str) => str.replace(/\s/g, "");
       getPlexAllData().then((data) => {
         const isInPlex =
           data &&
           data[media].filter(
             (i) =>
-              (i.originalTitle === OriginalTitle ||
-                i.title === OriginalTitle) &&
-              i.year === yearMedia
+              (removeSpaces(i.originalTitle.toLowerCase()) === // TMDB ORIGINAL TITLE
+                removeSpaces(OriginalTitle.toLowerCase()) ||
+                removeSpaces(i.title.toLowerCase()) ===
+                  removeSpaces(OriginalTitle.toLowerCase()) ||
+                removeSpaces(i.originalTitle.toLowerCase()) === // TMDB TITLE
+                  removeSpaces(TitleTMDB.toLowerCase()) ||
+                removeSpaces(i.title.toLowerCase()) ===
+                  removeSpaces(TitleTMDB.toLowerCase())) &&
+              Number(i.year) === Number(yearMedia)
           );
         setIsInPlex(isInPlex.length > 0);
       });
@@ -555,7 +563,11 @@ function DetailsMovie({ info, crews, cast, media }) {
                       userId={user.id}
                       id={Number(id)}
                       type={media}
-                      runTime={processInfo.runTime}
+                      runTime={
+                        media === "tv"
+                          ? processInfo.runTime[0]
+                          : processInfo.runTime
+                      }
                     />
                   ) : null}
                   {/* //-PENDING/NO PENDING */}

@@ -59,7 +59,7 @@ const CarouselCredits = ({
   
   // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
   const allCards =
-    !isAllCards && !isUser && info.length > 6 && cardsPerPage % 2 === 0
+    !isAllCards && !isUser && info.length > cardsPerPage && cardsPerPage % 2 === 0
       ? info.slice(0, -2)
       : info;
   const totalPages = Math.ceil(allCards.length / cardsPerPage);
@@ -93,7 +93,7 @@ const CarouselCredits = ({
 
   return (
     <>
-      {allCards && allCards.length > 6 ? (
+      {allCards && allCards.length > cardsPerPage ? (
         <div className="flex justify-between items-center">
           {/* // - TITLE */}
           <div className="flex text-gray-200">
@@ -177,7 +177,7 @@ const CarouselCredits = ({
         ))}
       </div>
       {/* // - PAGES */}
-      {allCards && allCards.length > 6 ? (
+      {allCards && allCards.length > cardsPerPage ? (
         <div className="flex justify-center">{renderPageIndicator()}</div>
       ) : null}
     </>
