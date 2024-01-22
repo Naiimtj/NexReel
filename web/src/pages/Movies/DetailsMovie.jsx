@@ -12,7 +12,6 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { getRating } from "../../../services/IMDB/services-imdb";
 import {
-  deleteMedia,
   getDetailMedia,
   getPlexAllData,
   getUser,
@@ -201,7 +200,6 @@ function DetailsMovie({ info, crews, cast, media }) {
     setModal(true);
   };
   const [pendingSeen, setPendingSeen] = useState(false);
-
   // ! USER COMPARATOR
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
@@ -211,15 +209,8 @@ function DetailsMovie({ info, crews, cast, media }) {
       });
     }
   }, [pendingSeen, id, userExist]);
-  const { like, seen, pending, vote } = dataMediaUser;
-  useEffect(() => {
-    if (userExist && !like && !seen && !pending && vote === -1) {
-      deleteMedia(id).then(() => {
-        setPendingSeen(!pendingSeen);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataMediaUser]);
+  const { seen, pending } = dataMediaUser;
+
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
   const [isTimeout, setIsTimeout] = useState(true);
@@ -1199,7 +1190,8 @@ function DetailsMovie({ info, crews, cast, media }) {
             <Collections
               idCollection={processInfo.collection.id}
               media={media}
-              pendingSeen={pendingSeen}
+              pendingSeenMedia={pendingSeen}
+              setPendingSeenMedia={setPendingSeen}
             />
           ) : (
             seasons && (
@@ -1220,6 +1212,8 @@ function DetailsMovie({ info, crews, cast, media }) {
               id={id}
               media={media}
               lang={langApi}
+              pendingSeenMedia={pendingSeen}
+              setPendingSeenMedia={setPendingSeen}
             />
           ) : null}
           {/* //-SIMILAR */}
@@ -1229,6 +1223,8 @@ function DetailsMovie({ info, crews, cast, media }) {
               id={id}
               media={media}
               lang={langApi}
+              pendingSeenMedia={pendingSeen}
+              setPendingSeenMedia={setPendingSeen}
             />
           ) : null}
         </div>

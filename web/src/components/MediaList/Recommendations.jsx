@@ -3,20 +3,26 @@ import Carousel from "../../utils/Carousel/Carousel";
 import { getRecommendations } from "../../../services/TMDB/services-tmdb";
 import { useEffect, useState } from "react";
 
-const Recommendations = ({ title, id, media, lang }) => {
+const Recommendations = ({
+  title,
+  id,
+  media,
+  lang,
+  pendingSeenMedia,
+  setPendingSeenMedia,
+}) => {
   const [recommendationsList, setRecommendationsList] = useState({});
   const [isChange, isSetChange] = useState(false);
   useEffect(() => {
     getRecommendations(media, id, lang).then((data) => {
       setRecommendationsList(data);
+      isSetChange(false)
     });
-  }, [lang, id, media]);
-  useEffect(() => {
-    if (!isChange) {
-      isSetChange(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, id, pendingSeenMedia]);
+  // useEffect(() => {
+  //     isSetChange(true);
+  // }, [pendingSeenMedia]);
 
   return (
     <>
@@ -33,6 +39,8 @@ const Recommendations = ({ title, id, media, lang }) => {
             media={media}
             isSetChange={isSetChange}
             isChange={isChange}
+            setPendingSeenMedia={setPendingSeenMedia}
+            pendingSeenMedia={pendingSeenMedia}
           />
         </div>
       ) : null}
@@ -47,6 +55,8 @@ Recommendations.defaultProps = {
   title: "",
   media: "",
   lang: "es-ES",
+  setPendingSeenMedia: () => {},
+  pendingSeenMedia: false,
 };
 
 Recommendations.propTypes = {
@@ -54,4 +64,6 @@ Recommendations.propTypes = {
   title: PropTypes.string,
   media: PropTypes.string,
   lang: PropTypes.string,
+  setPendingSeenMedia: PropTypes.func,
+  pendingSeenMedia: PropTypes.bool,
 };

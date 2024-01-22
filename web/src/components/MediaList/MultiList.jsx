@@ -9,9 +9,6 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
-import {
-  deleteMedia,
-} from "../../../services/DB/services-db";
 import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import {
   IoCheckmarkCircleOutline,
@@ -20,7 +17,7 @@ import {
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import SeenPending from "./SeenPending";
-import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
+import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 export const MultiList = ({
   info,
@@ -128,16 +125,8 @@ export const MultiList = ({
       }
     }
   }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
-  const { like, seen, pending, vote } = dataMediaUser;
-  useEffect(() => {
-    if (userExist && !like && !seen && !pending && vote === -1) {
-      deleteMedia(id).then(() => {
-        setChangeSeenPending(!changeSeenPending);
-        setPendingSeen(!pendingSeen);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataMediaUser]);
+  const { seen, pending, vote } = dataMediaUser;
+
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
     new SeenPending(

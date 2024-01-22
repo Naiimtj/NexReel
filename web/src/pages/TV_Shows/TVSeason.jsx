@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
-import { deleteMedia, getDetailMedia } from "../../../services/DB/services-db";
+import { getDetailMedia } from "../../../services/DB/services-db";
 import { NoImage, tv } from "../../assets/image";
 import {
   IoCheckmarkCircleOutline,
@@ -64,16 +64,8 @@ const TVSeason = () => {
       });
     }
   }, [changeSeenPending, pendingSeen, idTv, userExist]);
-  const { like, seen, pending, vote } = dataMediaUser;
-  useEffect(() => {
-    if (userExist && !like && !seen && !pending && vote === -1) {
-      deleteMedia(idTv).then(() => {
-        setChangeSeenPending(!changeSeenPending);
-        setPendingSeen(!pendingSeen);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataMediaUser]);
+  const { seen, pending } = dataMediaUser;
+
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
     new SeenPending(

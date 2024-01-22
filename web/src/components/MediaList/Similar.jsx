@@ -3,20 +3,31 @@ import Carousel from "../../utils/Carousel/Carousel";
 import { getSimilar } from "../../../services/TMDB/services-tmdb";
 import { useEffect, useState } from "react";
 
-const Similar = ({ title, id, media, lang }) => {
+const Similar = ({
+  title,
+  id,
+  media,
+  lang,
+  pendingSeenMedia,
+  setPendingSeenMedia,
+}) => {
   const [similarList, setSimilarList] = useState([]);
   const [isChange, isSetChange] = useState(false);
   useEffect(() => {
     getSimilar(media, id, lang).then((data) => {
       setSimilarList(data);
     });
+    isSetChange(false);
   }, [lang, id, media]);
   useEffect(() => {
     if (!isChange) {
       isSetChange(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/exhaustive-deps
   }, [id]);
+  // useEffect(() => {
+  //   isSetChange(true)
+  // }, [pendingSeenMedia]);
   return (
     <>
       {similarList.results && (
@@ -27,6 +38,8 @@ const Similar = ({ title, id, media, lang }) => {
             media={media}
             isSetChange={isSetChange}
             isChange={isChange}
+            setPendingSeenMedia={setPendingSeenMedia}
+            pendingSeenMedia={pendingSeenMedia}
           />
         </div>
       )}
@@ -41,6 +54,8 @@ Similar.defaultProps = {
   title: "",
   media: "",
   lang: "es-ES",
+  setPendingSeenMedia: () => {},
+  pendingSeenMedia: false,
 };
 
 Similar.propTypes = {
@@ -48,4 +63,6 @@ Similar.propTypes = {
   title: PropTypes.string,
   media: PropTypes.string,
   lang: PropTypes.string,
+  setPendingSeenMedia: PropTypes.func,
+  pendingSeenMedia: PropTypes.bool,
 };

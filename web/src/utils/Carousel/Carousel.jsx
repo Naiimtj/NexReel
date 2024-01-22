@@ -26,40 +26,50 @@ const Carousel = ({
   basicForum,
   isSetChange,
   isChange,
+  setPendingSeenMedia,
+  pendingSeenMedia,
 }) => {
   const [changeSeenPending, setChangeSeenPending] = useState(true);
   const { user } = useAuthContext();
   const userExist = !!user;
   const [mediasUser, setMediasUser] = useState([]);
-  const [playlistUser, setPlaylistUser] = useState([]);
   useEffect(() => {
     const Data = async () => {
       getAllMedia()
         .then((data) => {
           setMediasUser(data);
           setChangeSeenPending(!changeSeenPending);
-          isSetChange(!isChange);
+          isSetChange(false);
         })
         .catch((err) => err);
-      };
+    };
+    const Data2 = async () => {
+      setPendingSeenMedia(!pendingSeenMedia);
+    };
     if ((userExist && isChange) || (userExist && !mediasUser.length)) {
       Data();
     }
+    if (userExist && isChange) {
+      Data2();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userExist, changeSeenPending, isChange]);
-
-  useEffect(() => {     
+  // - PLAYLIST
+  const [playlistUser, setPlaylistUser] = useState([]);
+  useEffect(() => {
     const DataPlaylist = async () => {
-      getUserListPlaylist().then((data) => {
-      setPlaylistUser(data);
-      })
-      .catch((err) => err);
-  };
+      getUserListPlaylist()
+        .then((data) => {
+          setPlaylistUser(data);
+        })
+        .catch((err) => err);
+    };
     if (userExist) {
-      DataPlaylist()
+      DataPlaylist();
     }
   }, [userExist, changeSeenPending]);
   const [dataForum, setDataForum] = useState({});
+  // - FORUM
   useEffect(() => {
     const ForumData = async () => {
       getDetailForum(basicForum.id).then((data) => {
@@ -100,7 +110,10 @@ const Carousel = ({
   };
   // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
   const allCards =
-    !isAllCards && !isUser && info.length > cardsPerPage && cardsPerPage % 2 === 0
+    !isAllCards &&
+    !isUser &&
+    info.length > cardsPerPage &&
+    cardsPerPage % 2 === 0
       ? info.slice(0, -2)
       : info;
   const totalPages = Math.ceil(allCards.length / cardsPerPage);
@@ -205,8 +218,8 @@ const Carousel = ({
             mediaMovie={mediaMovie}
             mediaTv={mediaTv}
             isUser={isUser}
-            setChangeSeenPending={setChangeSeenPending}
-            changeSeenPending={changeSeenPending}
+            setChangeSeenPending={isSetChange}
+            changeSeenPending={isChange}
             isPlaylist={isPlaylist}
             setPopSureDel={setPopSureDel}
             setIdDelete={setIdDelete}
@@ -242,6 +255,8 @@ Carousel.defaultProps = {
   hideSearch: () => {},
   basicForum: {},
   isForum: false,
+  setPendingSeenMedia: () => {},
+  pendingSeenMedia: false,
 };
 
 Carousel.propTypes = {
@@ -258,4 +273,6 @@ Carousel.propTypes = {
   hideSearch: PropTypes.func,
   basicForum: PropTypes.object,
   isForum: PropTypes.bool,
+  setPendingSeenMedia: PropTypes.func,
+  pendingSeenMedia: PropTypes.bool,
 };

@@ -9,6 +9,7 @@ const Trending = () => {
   const [t, i18next] = useTranslation("translation");
   const [loading, setLoading] = useState(true);
   const [dataTrending, setDataTrending] = useState([]);
+  const [isChange, isSetChange] = useState(true);
   useEffect(() => {
     if (i18next.language) {
       getTrending(i18next.language).then((data) => {
@@ -20,7 +21,8 @@ const Trending = () => {
   return (
     <div className="mb-20">
       {!loading && dataTrending.length > 0 ? (
-        <Carousel title={t("Trending")} info={dataTrending} />
+        <Carousel title={t("Trending")} info={dataTrending}               isChange={isChange}
+        isSetChange={isSetChange} />
       ) : null}
     </div>
   );

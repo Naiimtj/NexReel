@@ -1,3 +1,6 @@
+## PROBLEMAS
+Cuando estas en una pelicula y das check en vista en recomendados no se sincroniza con colecciones
+
 # IDEAS
 
 Pagina de Peliculas y Series, (posibilidad de añadir videojuegos)
@@ -49,3 +52,4 @@ Alias para nombrar a usuarios en comentarios
 
 ## PERMITIR UNIR PLAYLISTS A UN FORO
 ## CUANDO CLIQUES EN VISTO UNA SERIE SE PONGA TODOS LOS EPISODEOS Y TEMPORADAS EN VISTO
+

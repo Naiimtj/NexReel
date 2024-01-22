@@ -71,9 +71,15 @@ module.exports.update = async (req, res, next) => {
       seen,
       pending,
       vote,
-    });
+    }, { new: true });
     if (updateMedia) {
-      res.status(200).json(updateMedia);
+      if (!updateMedia.like && !updateMedia.seen && !updateMedia.pending && updateMedia.vote === -1) {
+        await module.exports.delete(req, res, next);
+        return;
+      } else {
+        res.status(200).json(updateMedia);
+      }
+
     }
   } catch (error) {
     next(error);

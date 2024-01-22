@@ -9,16 +9,24 @@ function compareDates(a, b) {
   return dateA - dateB;
 }
 
-function Collections({ idCollection, media }) {
+function Collections({ idCollection, media, pendingSeenMedia,
+  setPendingSeenMedia }) {
   const [collectionList, setCollectionList] = useState({});
+  const [isChange, isSetChange] = useState(false);
 
   useEffect(() => {
     if (idCollection) {
       getCollections(idCollection).then((data) => {
         setCollectionList(data);
-      });
+        isSetChange(false)
+    });
     }
-  }, [idCollection]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idCollection, pendingSeenMedia]);
+
+  useEffect(() => {
+      isSetChange(true)
+  }, [pendingSeenMedia]);
   // -ORDER BY DATE
   // .Filter Repeats
   const collectionFilms =
@@ -47,6 +55,10 @@ function Collections({ idCollection, media }) {
               title={`${collectionList.name} (${collection.length})`}
               info={collection}
               media={media}
+              isChange={isChange}
+              isSetChange={isSetChange}
+              setPendingSeenMedia={setPendingSeenMedia}
+              pendingSeenMedia={pendingSeenMedia}
               isAllCards
             />
           </div>
@@ -61,9 +73,13 @@ export default Collections;
 Collections.defaultProps = {
   idCollection: 0,
   media: "",
+  setPendingSeenMedia: () => {},
+  pendingSeenMedia: false,
 };
 
 Collections.propTypes = {
   idCollection: PropTypes.number,
-  media: PropTypes.string,
+  media: PropTypes.string,  
+  setPendingSeenMedia: PropTypes.func,
+  pendingSeenMedia: PropTypes.bool,
 };
