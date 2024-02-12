@@ -14,7 +14,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
 import { getImdbPerson } from "../../../services/IMDB/services-imdb";
 import PageTitle from "../PageTitle";
-import ShowPlaylistMenu from "../../utils/Playlists/showPlaylistMenu";
+import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 export const PersonDetails = ({
   info,
