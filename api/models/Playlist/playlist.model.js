@@ -13,7 +13,7 @@ const playlistSchema = new Schema(
       required: "Title Playlist is required",
       trim: true,
       minLength: [3, "Title needs at least 3 chars"],
-      maxLength: [20, "Your title can not be longer than 20 characters"],
+      maxLength: [40, "Your title can not be longer than 40 characters"],
     },
     description: {
       type: String,

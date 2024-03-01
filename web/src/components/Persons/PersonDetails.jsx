@@ -10,7 +10,7 @@ import Carousel from "../../utils/Carousel/Carousel";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import { NoImage, people } from "../../assets/image";
 import { getExternalId } from "../../../services/TMDB/services-tmdb";
-import { IoIosArrowBack, IoIosRemove, IoMdAdd } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
 import { getImdbPerson } from "../../../services/IMDB/services-imdb";
 import PageTitle from "../PageTitle";
@@ -311,7 +311,6 @@ export const PersonDetails = ({
               userId={user.id}
               id={Number(id)}
               type={"person"}
-              playlistUser={user.playlists}
               runTime={0}
               onReload={onReload}
               />            
@@ -458,7 +457,7 @@ export const PersonDetails = ({
           </>
         </>
         {/*//- MOVIES */}
-        {/* {items && items.length > 0 ? (
+        {items && items.length > 0 ? (
           <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 mt-4 rounded-3xl">
             <Link to={`/person/${id}/listMovies`} className="flex justify-end">
               <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
@@ -478,9 +477,9 @@ export const PersonDetails = ({
               )}
             </>
           </div>
-        ) : null} */}
+        ) : null}
         {/*//- SERIES */}
-        {/* <>
+        <>
           {knownTV && knownTV.length === 0 ? null : (
             <div className="pb-1 mt-4 rounded-3xl">
               <Link
@@ -507,9 +506,9 @@ export const PersonDetails = ({
               </>
             </div>
           )}
-        </> */}
+        </>
         {/* //- OTHERS */}
-        {/* <>
+        <>
           {knownMovieNoDate && knownMovieNoDate.length === 0 ? null : (
             <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 mt-4 rounded-3xl">
               <div>
@@ -536,7 +535,7 @@ export const PersonDetails = ({
               </div>
             </div>
           )}
-        </>*/}
+        </>
       </div>
     </div>
   );

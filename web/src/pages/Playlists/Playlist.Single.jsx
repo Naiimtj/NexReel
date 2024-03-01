@@ -482,7 +482,7 @@ const PlaylistSingle = () => {
                         title={"Persons"}
                         info={dataMediasPersons}
                         media={"person"}
-                        isUser
+                        isUser={true}
                         isPlaylist={true}
                         setPopSureDel={setPopSureDelMedia}
                         setIdDelete={setIdDelete}

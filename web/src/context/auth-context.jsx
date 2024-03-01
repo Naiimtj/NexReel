@@ -17,7 +17,6 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-
   function onReload() {
     getUser().then((infoUser) => {
       if (infoUser) {

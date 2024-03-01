@@ -34,7 +34,6 @@ export const Multi = ({
   isForum,
   basicForum,
   mediasUser,
-  playlistUser
 }) => {
   const [t, i18next] = useTranslation("translation");
   const { user, onReload } = useAuthContext();
@@ -332,7 +331,6 @@ export const Multi = ({
                   id={Number(id)}
                   type={processInfo.type}
                   runTime={processInfo.runTime}
-                  playlistUser={playlistUser}
                   setChangeSeenPending={setChangeSeenPending}
                   changeSeenPending={changeSeenPending}
                 />

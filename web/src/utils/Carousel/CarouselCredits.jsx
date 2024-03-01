@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 // icons
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { GoDotFill, GoDot } from "react-icons/go";
 // components
 import Credits from "../../components/Credits";
-import { getUserListPlaylist } from "../../../services/DB/services-db";
 
 const CarouselCredits = ({
   title,
@@ -13,8 +12,6 @@ const CarouselCredits = ({
   info,
   media,
   isUser,
-  changeSeenPending,
-  setChangeSeenPending,
   isPlaylist,
   setPopSureDel,
   setIdDelete,
@@ -22,6 +19,7 @@ const CarouselCredits = ({
 }) => {
   // const mediaMovie = media === "movie";
   // const mediaTv = media === "tv";
+  
   const [currentPage, setCurrentPage] = useState(1);
   const getCardsPerPage = () => {
     const screenWidth = window.innerWidth;
@@ -41,21 +39,7 @@ const CarouselCredits = ({
       setCurrentPage(currentPage - 1);
     }
   };
-  const [playlistUser, setPlaylistUser] = useState([]);
   const [isChange, setIsChange] = useState(false);
-  useEffect(() => {     
-    const DataPlaylist = async () => {
-      getUserListPlaylist().then((data) => {
-      setPlaylistUser(data);
-      })
-      .catch((err) => err);
-  };
-    if (isUser) {
-      DataPlaylist()
-      setChangeSeenPending(!changeSeenPending)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUser, isChange]);
   
   // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
   const allCards =
@@ -163,7 +147,6 @@ const CarouselCredits = ({
             repInfo={card}
             media={media}
             idInfo={id}
-            playlistUser={playlistUser}
             // info={card}
             // mediaMovie={mediaMovie}
             // mediaTv={mediaTv}
@@ -192,8 +175,6 @@ CarouselCredits.defaultProps = {
   info: [],
   media: "",
   isUser: false,
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
   isPlaylist: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
@@ -207,8 +188,6 @@ CarouselCredits.propTypes = {
   info: PropTypes.array,
   media: PropTypes.string,
   isUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
   isPlaylist: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,

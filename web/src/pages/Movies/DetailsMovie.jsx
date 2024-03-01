@@ -15,7 +15,6 @@ import {
   getDetailMedia,
   getPlexAllData,
   getUser,
-  getUserListPlaylist,
 } from "../../../services/DB/services-db";
 // img
 import {
@@ -231,19 +230,6 @@ function DetailsMovie({ info, crews, cast, media }) {
   }, [isTimeout, errorAddPlaylists]);
 
   const [changeSeenPending, setChangeSeenPending] = useState(true);
-  const [playlistUser, setPlaylistUser] = useState([]);
-  useEffect(() => {
-    const DataPlaylist = async () => {
-      getUserListPlaylist()
-        .then((data) => {
-          setPlaylistUser(data);
-        })
-        .catch((err) => err);
-    };
-    if (userExist) {
-      DataPlaylist();
-    }
-  }, [userExist, changeSeenPending]);
 
   // -MAIN CAST
   const size = 20;
@@ -1179,7 +1165,6 @@ function DetailsMovie({ info, crews, cast, media }) {
                 nameFilm={processInfo.title}
                 changeSeenPending={changeSeenPending}
                 setChangeSeenPending={setChangeSeenPending}
-                playlistUser={playlistUser}
               />
             </div>
           </div>

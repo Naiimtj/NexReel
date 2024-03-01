@@ -20,7 +20,6 @@ export const Credits = ({
   setPopSureDel,
   setIdDelete,
   basicForum,
-  playlistUser,
 }) => {
   const [t, i18next] = useTranslation("translation");
   const { user } = useAuthContext();
@@ -39,6 +38,7 @@ export const Credits = ({
   } = repInfo;
   // - ALL INFO MEDIA
   const [dataMedia, setDataMedia] = useState({});
+
   useEffect(() => {
     if (i18next.language && !id && repInfo.mediaId) {
       getMediaDetails("person", repInfo.mediaId, i18next.language).then((d) => {
@@ -46,7 +46,7 @@ export const Credits = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, i18next.language]);
+  }, [i18next.language, repInfo]);
   const urlPoster = profile_path
     ? `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${profile_path}`
     : null;
@@ -98,7 +98,6 @@ export const Credits = ({
     default:
       break;
   }
-
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
   const [isTimeout, setIsTimeout] = useState(true);
@@ -206,7 +205,6 @@ export const Credits = ({
                   id={Number(processInfo.repId)}
                   type={"person"}
                   runTime={processInfo.runTime}
-                  playlistUser={playlistUser}
                   changeSeenPending={changeSeenPending}
                   setChangeSeenPending={setChangeSeenPending}
                 />
@@ -242,7 +240,6 @@ Credits.defaultProps = {
   isPlaylist: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
-  playlistUser: [],
 };
 
 Credits.propTypes = {
@@ -256,5 +253,4 @@ Credits.propTypes = {
   isPlaylist: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
-  playlistUser: PropTypes.array,
 };

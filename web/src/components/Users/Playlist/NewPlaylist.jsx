@@ -161,9 +161,9 @@ const NewPlaylist = ({
                           message: t("Title must be at least 3 characters"),
                         },
                         maxLength: {
-                          value: 20,
+                          value: 40,
                           message: t(
-                            "Title must not be longer than 20 characters"
+                            "Title must not be longer than 40 characters"
                           ),
                         },
                       })}

@@ -9,7 +9,6 @@ import { useAuthContext } from "../../context/auth-context";
 import {
   getAllMedia,
   getDetailForum,
-  getUserListPlaylist,
 } from "../../../services/DB/services-db";
 
 const Carousel = ({
@@ -18,7 +17,6 @@ const Carousel = ({
   media,
   isUser,
   isPlaylist,
-  playlistCurrentUser,
   setPopSureDel,
   setIdDelete,
   isAllCards,
@@ -55,23 +53,6 @@ const Carousel = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userExist, changeSeenPending, isChange]);
-  // - PLAYLIST
-  const [playlistUser, setPlaylistUser] = useState([]);
-  useEffect(() => {
-    const DataPlaylist = async () => {
-      getUserListPlaylist()
-        .then((data) => {
-          setPlaylistUser(data);
-        })
-        .catch((err) => err);
-    };
-    if (userExist && !playlistCurrentUser) {
-      DataPlaylist();
-    } else if(playlistCurrentUser){
-      console.log("playlistCurrentUser");
-      setPlaylistUser(playlistCurrentUser)
-    }
-  }, [userExist, changeSeenPending, playlistCurrentUser]);
   const [dataForum, setDataForum] = useState({});
   // - FORUM
   useEffect(() => {
@@ -231,7 +212,6 @@ const Carousel = ({
             isForum={isForum}
             basicForum={ForumData}
             mediasUser={mediasUser}
-            playlistUser={playlistUser}
           />
         ))}
       </div>

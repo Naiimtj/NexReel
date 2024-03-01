@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { postPlaylistMedia } from "../../../services/DB/services-db";
+import {
+  postPlaylistMedia,
+  getUserListPlaylist,
+} from "../../../services/DB/services-db";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
 
 const ShowPlaylistMenu = ({
@@ -9,7 +12,6 @@ const ShowPlaylistMenu = ({
   id,
   type,
   runTime,
-  playlistUser,
   onReload,
   changeSeenPending,
   setChangeSeenPending,
@@ -17,6 +19,21 @@ const ShowPlaylistMenu = ({
   const [t] = useTranslation("translation");
   const [playlistsChange, setPlaylistsChange] = useState(false);
   const [openPlaylistsList, setOpenPlaylistsList] = useState(false);
+
+  const [playlistUser, setPlaylistUser] = useState([]);
+  useEffect(() => {
+    const DataPlaylist = async () => {
+      getUserListPlaylist()
+        .then((data) => {
+          setPlaylistUser(data);
+        })
+        .catch((err) => err);
+    };
+    if (userId && openPlaylistsList) {
+      DataPlaylist();
+    }
+  }, [userId, changeSeenPending, openPlaylistsList]);
+
   const [dataUser, setDataUser] = useState([]);
 
   useEffect(() => {
@@ -26,7 +43,14 @@ const ShowPlaylistMenu = ({
     if (openPlaylistsList) {
       Data();
     }
-  }, [playlistsChange, changeSeenPending, id, userId, playlistUser, openPlaylistsList]);
+  }, [
+    playlistsChange,
+    changeSeenPending,
+    id,
+    userId,
+    playlistUser,
+    openPlaylistsList,
+  ]);
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
   const handleAddPlaylist = async (playlistId) => {
@@ -40,7 +64,7 @@ const ShowPlaylistMenu = ({
           setPlaylistsChange(!playlistsChange),
             setOpenPlaylistsList(false),
             setChangeSeenPending(!changeSeenPending);
-          onReload()
+          onReload();
         }
       });
     } catch (error) {
@@ -147,7 +171,7 @@ ShowPlaylistMenu.defaultProps = {
   id: 0,
   type: "",
   runTime: 0,
-  playlistUser: [],
+  onReload: () => {},
   changeSeenPending: false,
   setChangeSeenPending: () => {},
 };
@@ -157,7 +181,7 @@ ShowPlaylistMenu.propTypes = {
   id: PropTypes.number,
   type: PropTypes.string,
   runTime: PropTypes.number,
-  playlistUser: PropTypes.array,
+  onReload: PropTypes.func,
   changeSeenPending: PropTypes.bool,
   setChangeSeenPending: PropTypes.func,
 };
