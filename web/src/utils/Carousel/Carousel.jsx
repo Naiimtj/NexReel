@@ -18,6 +18,7 @@ const Carousel = ({
   media,
   isUser,
   isPlaylist,
+  playlistCurrentUser,
   setPopSureDel,
   setIdDelete,
   isAllCards,
@@ -64,10 +65,13 @@ const Carousel = ({
         })
         .catch((err) => err);
     };
-    if (userExist) {
+    if (userExist && !playlistCurrentUser) {
       DataPlaylist();
+    } else if(playlistCurrentUser){
+      console.log("playlistCurrentUser");
+      setPlaylistUser(playlistCurrentUser)
     }
-  }, [userExist, changeSeenPending]);
+  }, [userExist, changeSeenPending, playlistCurrentUser]);
   const [dataForum, setDataForum] = useState({});
   // - FORUM
   useEffect(() => {

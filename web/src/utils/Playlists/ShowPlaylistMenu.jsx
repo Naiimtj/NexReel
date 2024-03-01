@@ -10,6 +10,7 @@ const ShowPlaylistMenu = ({
   type,
   runTime,
   playlistUser,
+  onReload,
   changeSeenPending,
   setChangeSeenPending,
 }) => {
@@ -17,12 +18,15 @@ const ShowPlaylistMenu = ({
   const [playlistsChange, setPlaylistsChange] = useState(false);
   const [openPlaylistsList, setOpenPlaylistsList] = useState(false);
   const [dataUser, setDataUser] = useState([]);
+
   useEffect(() => {
     const Data = async () => {
       setDataUser(playlistUser);
     };
-    Data();
-  }, [playlistsChange, changeSeenPending, id, userId, playlistUser]);
+    if (openPlaylistsList) {
+      Data();
+    }
+  }, [playlistsChange, changeSeenPending, id, userId, playlistUser, openPlaylistsList]);
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
   const handleAddPlaylist = async (playlistId) => {
@@ -36,6 +40,7 @@ const ShowPlaylistMenu = ({
           setPlaylistsChange(!playlistsChange),
             setOpenPlaylistsList(false),
             setChangeSeenPending(!changeSeenPending);
+          onReload()
         }
       });
     } catch (error) {

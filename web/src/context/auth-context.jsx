@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
+import { getUser } from "../../services/DB/services-db";
 
 const AuthContext = createContext();
 
@@ -16,11 +17,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const [reLoad, setReLoad] = useState(false);
 
   function onReload() {
-    console.log("RELOAD");
-    setReLoad(!reLoad);
+    getUser().then((infoUser) => {
+      if (infoUser) {
+        localStorage.setItem("user", JSON.stringify(infoUser));
+      }
+    });
   }
 
   const value = {
@@ -28,7 +31,6 @@ export function AuthProvider({ children }) {
     onLogin,
     onLogout,
     onReload,
-    reLoad,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

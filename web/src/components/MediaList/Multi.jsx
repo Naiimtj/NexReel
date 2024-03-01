@@ -37,7 +37,7 @@ export const Multi = ({
   playlistUser
 }) => {
   const [t, i18next] = useTranslation("translation");
-  const { user } = useAuthContext();
+  const { user, onReload } = useAuthContext();
   const navigate = useNavigate();
   const userExist = !!user;
   const { media_type } = info;
