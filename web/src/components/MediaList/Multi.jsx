@@ -17,8 +17,8 @@ import {
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import AddForum from "../../utils/Forum/AddForum";
-import SeenPending from "./SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
+import SeenPending from "./SeenPending";
 
 export const Multi = ({
   info,
@@ -127,41 +127,47 @@ export const Multi = ({
         setDataMediaUser({});
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeSeenPending, pendingSeen, id, userExist, mediasUser]);
 
   const { seen, pending, vote } = dataMediaUser;
-
+  const runTime = processInfo.runTime;
+  
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
-    new SeenPending(
+    SeenPending(
       dataMediaUser,
       id,
       mediaType,
-      processInfo.runTime,
+      runTime,
       seen,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Seen();
+      pendingSeen,
+      "seen",
+      onReload
+    );
   };
   // - PENDING/NO PENDING
   const handlePending = (event) => {
     event.stopPropagation();
-    new SeenPending(
+    SeenPending(
       dataMediaUser,
       id,
       mediaType,
-      processInfo.runTime,
+      runTime,
       pending,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Pending();
+      pendingSeen,
+      "pending",
+      onReload
+    );
   };
+
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
   const [isTimeout, setIsTimeout] = useState(true);
@@ -325,16 +331,16 @@ export const Multi = ({
         {userExist ? (
           <div className="mb-1 grid grid-cols-5 gap-2 bottom-0 absolute w-full pr-4">
             {/* //-ADD BUTTON PLAYLIST */}
-              {!isForum ? (
-                <ShowPlaylistMenu
-                  userId={user.id}
-                  id={Number(id)}
-                  type={processInfo.type}
-                  runTime={processInfo.runTime}
-                  setChangeSeenPending={setChangeSeenPending}
-                  changeSeenPending={changeSeenPending}
-                />
-              ) : null}
+            {!isForum ? (
+              <ShowPlaylistMenu
+                userId={user.id}
+                id={Number(id)}
+                type={processInfo.type}
+                runTime={processInfo.runTime}
+                setChangeSeenPending={setChangeSeenPending}
+                changeSeenPending={changeSeenPending}
+              />
+            ) : null}
             {isForum ? (
               <AddForum
                 id={Number(id)}

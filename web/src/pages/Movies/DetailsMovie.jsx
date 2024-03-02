@@ -58,7 +58,7 @@ import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
-  const { user } = useAuthContext();
+  const { user, onReload } = useAuthContext();
   const userExist = !!user;
   const {
     // .Movie
@@ -203,8 +203,12 @@ function DetailsMovie({ info, crews, cast, media }) {
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
-      getDetailMedia(id).then((d) => {
-        setDataMediaUser(d);
+      getDetailMedia(id).then((isInMediaUser) => {
+      if (isInMediaUser) {
+        setDataMediaUser(isInMediaUser);
+      } else {
+        setDataMediaUser({});
+      }
       });
     }
   }, [pendingSeen, id, userExist]);
@@ -412,30 +416,42 @@ function DetailsMovie({ info, crews, cast, media }) {
       </button>
     </div>
   );
-  //- SEEN/UNSEEN
-  const handleSeenMedia = () => {
-    new SeenPending(
+  const runTime = processInfo.runTime;
+  //- SEEN/NO SEEN
+  const handleSeenMedia = (event) => {
+    event.stopPropagation();
+    SeenPending(
       dataMediaUser,
       id,
       media,
-      processInfo.runTime,
+      runTime,
       seen,
+      setChangeSeenPending,
+      changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Seen();
+      pendingSeen,
+      "seen",
+      onReload
+    );
   };
   // - PENDING/NO PENDING
-  const handlePending = () => {
-    new SeenPending(
+  const handlePending = (event) => {
+    event.stopPropagation();
+    SeenPending(
       dataMediaUser,
       id,
       media,
-      processInfo.runTime,
+      runTime,
       pending,
+      setChangeSeenPending,
+      changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Pending();
+      pendingSeen,
+      "pending",
+      onReload
+    );
   };
+
   const poster = poster_path ? (
     <img
       className="rounded-xl w-48 sm:w-auto justify-self-center"

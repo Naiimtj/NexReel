@@ -36,9 +36,11 @@ export async function getSearch(searchValue, media) {
 
 // . Discover
 export async function getDiscover(media, id, lang = "es-ES") {
-  const url = `/discover/${media}?api_key=${apiKeyTMDB}&language=${lang}&region=ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_providers=ES&watch_region=ES&with_watch_monetization_types=flatrate`;
+  const url = `/discover/${media}?include_adult=false&include_video=false&language=${lang}&region=ES&&page=2`;
   try {
-    const response = await service.get(url);
+    const response = await service.get(url, {
+      params: paramsKeyLang(lang),
+    });
     return response.data;
   } catch (err) {
     console.error("Error Discover TMDB:", err);

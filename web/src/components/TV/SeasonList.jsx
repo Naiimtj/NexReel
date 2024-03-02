@@ -11,9 +11,11 @@ import {
   getDetailMedia,
 } from "../../../services/DB/services-db";
 import SeenPending from "../MediaList/SeenPending";
+import { useAuthContext } from "../../context/auth-context";
 
 export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
   const [t] = useTranslation("translation");
+  const { onReload } = useAuthContext();
   const navigate = useNavigate();
   const {
     //.TV
@@ -53,17 +55,21 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
     }
   }, [pendingSeen, id, dataUser]);
   const { seen } = dataMediaUser;
+
   //- SEEN/NO SEEN
-  const handleSeenMedia = () => {
-    new SeenPending(
+  const handleSeenMedia = (event) => {
+    event.stopPropagation();
+    SeenPending(
       dataMediaUser,
       id,
       "tv",
       runTime,
       seen,
       setPendingSeen,
-      pendingSeen
-    ).Seen();
+      pendingSeen,
+      "seen",
+      onReload
+    );
   };
 
   return (

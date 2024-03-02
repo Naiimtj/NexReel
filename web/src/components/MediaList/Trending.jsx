@@ -21,8 +21,12 @@ const Trending = () => {
   return (
     <div className="mb-20">
       {!loading && dataTrending.length > 0 ? (
-        <Carousel title={t("Trending")} info={dataTrending}               isChange={isChange}
-        isSetChange={isSetChange} />
+        <Carousel
+          title={t("Trending")}
+          info={dataTrending}
+          isChange={isChange}
+          isSetChange={isSetChange}
+        />
       ) : null}
     </div>
   );

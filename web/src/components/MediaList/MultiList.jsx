@@ -33,7 +33,7 @@ export const MultiList = ({
 }) => {
   const [t, i18next] = useTranslation("translation");
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { user, onReload } = useAuthContext();
   const userExist = !!user;
   const { media_type } = info;
   const id = isUser ? info.mediaId : info.id;
@@ -127,33 +127,41 @@ export const MultiList = ({
   }, [changeSeenPending, pendingSeen, id, userExist, mediasUser, mediaType]);
   const { seen, pending, vote } = dataMediaUser;
 
+  const runTime = processInfo.runTime;
+
   //- SEEN/NO SEEN
-  const handleSeenMedia = () => {
-    new SeenPending(
+  const handleSeenMedia = (event) => {
+    event.stopPropagation();
+    SeenPending(
       dataMediaUser,
       id,
       mediaType,
-      processInfo.runTime,
+      runTime,
       seen,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Seen();
+      pendingSeen,
+      "seen",
+      onReload
+    );
   };
   // - PENDING/NO PENDING
-  const handlePending = () => {
-    new SeenPending(
+  const handlePending = (event) => {
+    event.stopPropagation();
+    SeenPending(
       dataMediaUser,
       id,
       mediaType,
-      processInfo.runTime,
+      runTime,
       pending,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Pending();
+      pendingSeen,
+      "pending",
+      onReload
+    );
   };
   // ADD MEDIA TO PLAYLIST
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);

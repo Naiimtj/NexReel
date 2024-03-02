@@ -11,6 +11,7 @@ const Streaming = ({ media }) => {
   const [t, i18next] = useTranslation("translation");
   const [loading, setLoading] = useState(true);
   const [PopularList, setPopularList] = useState([]);
+  const [isChange, isSetChange] = useState(true);
   useEffect(() => {
     if ((i18next.language, media)) {
       getDiscover(media, i18next.language).then((data) => {
@@ -28,6 +29,8 @@ const Streaming = ({ media }) => {
           title={t("Discover")}
           info={PopularList}
           media={media}
+          isChange={isChange}
+          isSetChange={isSetChange}
         />
       )}
     </div>
