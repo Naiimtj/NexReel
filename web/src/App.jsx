@@ -7,15 +7,12 @@ import Movies from "./pages/Movies/Movies";
 import TVShows from "./pages/TV_Shows/TVShows";
 import DetailsMedia from "./pages/Details.Media";
 import Login from "./pages/Login/Login";
-import {
-  Authenticated,
-  Unauthenticated,
-} from "../src/components/Users/authenticated";
-import Signup from "./pages/SingUp/Singup";
+import { Authenticated, Unauthenticated, } from "../src/components/Users/authenticated";
+import SignUp from "./pages/SingUp/Singup";
 import Profile from "./components/Users/Profile";
 import User from "./pages/Users/User";
 import Users from "./pages/Users/Users";
-import PendingsViews from "./pages/Users/PendingsViews/PendingsViews";
+import PendingViews from "./pages/Users/PendingsViews/PendingsViews";
 import Playlists from "./pages/Playlists/Playlists";
 import PlaylistSingle from "./pages/Playlists/Playlist.Single";
 import Forums from "./pages/Forum/Forums";
@@ -26,7 +23,7 @@ import TVEpisode from "./pages/TV_Shows/TVEpisode";
 import Persons from "./pages/Person/Persons";
 import Genres from "./pages/Genres/Genres";
 import Keyword from "./pages/KeyWords/KeyWord";
-import CompletCast from "./pages/Person/CompletCast";
+import CompleteCast from "./pages/Person/CompletCast";
 import BestRated from "./pages/Lists/BestRated";
 import ListMedias from "./pages/Lists/ListMedias";
 import ListMediasGenres from "./pages/Lists/ListMediasGenres";
@@ -49,7 +46,7 @@ function App() {
           path="/signup"
           element={
             <Unauthenticated>
-              <Signup />
+              <SignUp />
             </Unauthenticated>
           }
         />
@@ -57,10 +54,16 @@ function App() {
         <Route path="/tv" element={<TVShows />} />
         <Route path="/:media_type/:id" element={<DetailsMedia />} />
         <Route path="/:media_type/:idMedia/person/:id" element={<Persons />} />
-        <Route path="/:media_type/:id/credits" element={<CompletCast />} />
+        <Route path="/:media_type/:id/credits" element={<CompleteCast />} />
         <Route path="/:media_type/:id/genre/:idGenre" element={<Genres />} />
-        <Route path="/:media/:id/genre/:idGenre/listMovies" element={<ListMediasGenres />} />
-        <Route path="/:media/:id/genre/:idGenre/listTvShows" element={<ListMediasGenres />} />
+        <Route
+          path="/:media/:id/genre/:idGenre/listMovies"
+          element={<ListMediasGenres />}
+        />
+        <Route
+          path="/:media/:id/genre/:idGenre/listTvShows"
+          element={<ListMediasGenres />}
+        />
         <Route
           path="/:media_type/:id/keyword/:idkeyword"
           element={<Keyword />}
@@ -102,7 +105,7 @@ function App() {
           path="/pending/:id"
           element={
             <Authenticated>
-              <PendingsViews />
+              <PendingViews />
             </Authenticated>
           }
         />
@@ -110,7 +113,7 @@ function App() {
           path="/view/:id"
           element={
             <Authenticated>
-              <PendingsViews />
+              <PendingViews />
             </Authenticated>
           }
         />
