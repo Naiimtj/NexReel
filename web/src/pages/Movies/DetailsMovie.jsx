@@ -56,6 +56,20 @@ import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
+function compareStrings(str1, str2) {
+  // Function to remove diacritics
+  function removeDiacritics(text) {
+      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+  }
+  
+  // Remove diacritics and convert to lowercase for comparison
+  const str1Normalized = removeDiacritics(str1).toLowerCase();
+  const str2Normalized = removeDiacritics(str2).toLowerCase();
+  
+  // Compare the normalized strings
+  return str1Normalized === str2Normalized;
+}
+
 function DetailsMovie({ info, crews, cast, media }) {
   const [t, i18next] = useTranslation("translation");
   const { user, onReload } = useAuthContext();
@@ -178,15 +192,19 @@ function DetailsMovie({ info, crews, cast, media }) {
           data &&
           data[media].filter(
             (i) =>
-              (removeSpaces(i.originalTitle.toLowerCase()) === // TMDB ORIGINAL TITLE
+              removeSpaces(i.originalTitle.toLowerCase()) === // TMDB ORIGINAL TITLE
                 removeSpaces(OriginalTitle.toLowerCase()) ||
-                removeSpaces(i.title.toLowerCase()) ===
-                  removeSpaces(OriginalTitle.toLowerCase()) ||
-                removeSpaces(i.originalTitle.toLowerCase()) === // TMDB TITLE
-                  removeSpaces(TitleTMDB.toLowerCase()) ||
-                removeSpaces(i.title.toLowerCase()) ===
-                  removeSpaces(TitleTMDB.toLowerCase())) &&
-              Number(i.year) === Number(yearMedia)
+              removeSpaces(i.title.toLowerCase()) ===
+                removeSpaces(OriginalTitle.toLowerCase()) ||
+              removeSpaces(i.originalTitle.toLowerCase()) === // TMDB TITLE
+                removeSpaces(TitleTMDB.toLowerCase()) ||
+              removeSpaces(i.title.toLowerCase()) ===
+                removeSpaces(TitleTMDB.toLowerCase()) ||
+              compareStrings(i.originalTitle, OriginalTitle) || // COMPARING remove diacritics
+              compareStrings(i.title, OriginalTitle) ||
+              compareStrings(i.originalTitle, TitleTMDB) ||
+              (compareStrings(i.title, TitleTMDB) &&
+                Number(i.year) === Number(yearMedia))
           );
         setIsInPlex(isInPlex.length > 0);
       });
@@ -204,11 +222,11 @@ function DetailsMovie({ info, crews, cast, media }) {
   useEffect(() => {
     if (userExist) {
       getDetailMedia(id).then((isInMediaUser) => {
-      if (isInMediaUser) {
-        setDataMediaUser(isInMediaUser);
-      } else {
-        setDataMediaUser({});
-      }
+        if (isInMediaUser) {
+          setDataMediaUser(isInMediaUser);
+        } else {
+          setDataMediaUser({});
+        }
       });
     }
   }, [pendingSeen, id, userExist]);
@@ -745,7 +763,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                     {/* // . GENRES */}
                     {processInfo.genre &&
                       processInfo.genre.map((gen, index) => {
-                        const idgen = gen.id;
+                        const idGen = gen.id;
                         return (
                           <div
                             className="inline-block pr-1"
@@ -754,7 +772,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                             )}
                           >
                             <Link
-                              to={`/${media}/${id}/genre/${idgen}`}
+                              to={`/${media}/${id}/genre/${idGen}`}
                               className="inline-block capitalize cursor-pointer text-gray-200 hover:text-gray-400"
                             >
                               {gen.name}
@@ -901,14 +919,14 @@ function DetailsMovie({ info, crews, cast, media }) {
                     </div>
                     <div className="inline-block">
                       {processInfo.countries &&
-                        processInfo.countries.map((estu, index) => (
+                        processInfo.countries.map((county, index) => (
                           <div
                             className="inline-block pr-1"
                             key={Math.floor(
                               (1 + index + Math.random()) * 0x10000
                             )}
                           >
-                            <CountryName info={estu.iso_3166_1} />
+                            <CountryName info={county.iso_3166_1} />
                             {processInfo.countries &&
                             index !== processInfo.countries.length - 1
                               ? ", "
@@ -1036,14 +1054,14 @@ function DetailsMovie({ info, crews, cast, media }) {
                           {`${t("PRODUCER")}:`}
                         </div>
                         <div className="inline-block">
-                          {processInfo.productCompany.map((estu, index) => (
+                          {processInfo.productCompany.map((producer, index) => (
                             <div
                               className="inline-block pr-1"
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000
                               )}
                             >
-                              {estu.name}
+                              {producer.name}
                               {processInfo.productCompany &&
                               index !== processInfo.productCompany.length - 1
                                 ? ", "
@@ -1063,7 +1081,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                     </div>
                     <div className="inline-block text-gray-400">
                       {uniqueWriters &&
-                        uniqueWriters.map((guio, index) => (
+                        uniqueWriters.map((writer, index) => (
                           <button
                             className={`inline-block ${
                               uniqueWriters &&
@@ -1071,12 +1089,12 @@ function DetailsMovie({ info, crews, cast, media }) {
                                 ? "pr-1"
                                 : ""
                             } cursor-pointer text-gray-200 hover:text-gray-400`}
-                            onClick={() => navigate(`/person/${guio.id}`)}
+                            onClick={() => navigate(`/person/${writer.id}`)}
                             key={Math.floor(
                               (1 + index + Math.random()) * 0x10000
                             )}
                           >
-                            {guio.name}
+                            {writer.name}
                             {uniqueWriters && index !== uniqueWriters.length - 1
                               ? ", "
                               : ""}
@@ -1112,7 +1130,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                     <div className="inline-block pr-1 text-gray-400">
                       {[
                         uniqueProductions &&
-                          uniqueProductions.map((caract, index) => (
+                          uniqueProductions.map((production, index) => (
                             <button
                               className={`inline-block ${
                                 uniqueProductions &&
@@ -1120,12 +1138,12 @@ function DetailsMovie({ info, crews, cast, media }) {
                                   ? "pr-1"
                                   : ""
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() => navigate(`/person/${caract.id}`)}
+                              onClick={() => navigate(`/person/${production.id}`)}
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000
                               )}
                             >
-                              {caract.name}
+                              {production.name}
                               {uniqueProductions &&
                               index !== uniqueProductions.length - 1
                                 ? ", "
