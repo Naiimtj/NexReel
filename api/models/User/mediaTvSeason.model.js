@@ -11,7 +11,9 @@ const mediaTvSeasonSchema = new Schema(
     mediaId: { type: String, required: true },
     media_type: { type: String, required: true },
     season: { type: String, required: true },
-    seasonComplete: {
+    number_seasons: { type: Number, required: true },
+    number_of_episodes: { type: Number, required: true },
+    seenComplete: {
       type: Boolean,
       default: false,
     },

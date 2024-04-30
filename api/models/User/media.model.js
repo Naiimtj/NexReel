@@ -26,9 +26,8 @@ const mediaSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    number_seasons: {
-      type: Number,
-    },
+    number_seasons: { type: Number },
+    number_of_episodes: { type: Number },
     runtime: {
       type: Number,
     },
@@ -48,7 +47,6 @@ const mediaSchema = new Schema(
   {
     timestamps: true,
     toJSON: {
-      virtuals: true,
       transform: (doc, ret) => {
         ret.id = doc._id;
         delete ret._id;
@@ -58,12 +56,6 @@ const mediaSchema = new Schema(
     },
   }
 );
-
-mediaSchema.virtual("mediasTvEpisode", {
-  ref: "MediaTvEpisode",
-  localField: "userId",
-  foreignField: "userId",
-});
 
 const Media = mongoose.model("Media", mediaSchema);
 module.exports = Media;

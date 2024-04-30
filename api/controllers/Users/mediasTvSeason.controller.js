@@ -1,33 +1,29 @@
 const createError = require("http-errors");
 const MediaTvSeason = require("../../models/User/mediaTvSeason.model");
+const Media = require("../../models/User/media.model");
+const mediasController = require("./medias.controller");
 
 module.exports.create = async (req, res, next) => {
   try {
     const {
-      mediaId,
       media_type,
       season,
-      seasonComplete,
+      number_seasons,
+      number_of_episodes,
       runtime,
       like,
       seen,
+      pending,
       vote,
     } = req.body;
-    // If seen is true seasonComplete is true
+    // If seen is true seenComplete is true
     let seenData = false;
     let pendingData = false;
-    if (seen) {
-      seenData = true;
-      pendingData = false;
-    } else if (seasonComplete) {
-      pendingData = false;
+
+    // Determine the values of seenData and pendingData based on the input conditions
+    if (seen && !pending) {
       seenData = true;
     } else {
-      seenData = false;
-      pendingData = true;
-    }
-    // If seen is true seasonComplete is true
-    if (pending) {
       pendingData = true;
     }
 
@@ -37,26 +33,41 @@ module.exports.create = async (req, res, next) => {
     }
     const userId = req.user.id;
 
-    const media = await MediaTvSeason.findOne({ mediaId, userId, season });
+    const seasonExists = await MediaTvSeason.findOne({
+      mediaId: req.params.mediaId,
+      userId,
+      season,
+    });
 
-    if (media) {
-      next(createError(404, "Media Tv Season is exist"));
+    if (seasonExists) {
+      return next(createError(404, "Season already exists"));
     } else {
-      const addMedia = await MediaTvSeason.create({
+      await MediaTvSeason.create({
         userId,
-        mediaId,
+        mediaId: req.params.mediaId,
         media_type,
         season,
-        seenComplete: seenData,
+        number_seasons,
+        number_of_episodes,
+        seenComplete: false,
         runtime,
         like,
         seen: seenData,
         pending: pendingData,
-        following,
         vote,
       });
-
-      res.status(201).json(addMedia);
+      req.body = {
+        mediaId: req.params.mediaId,
+        media_type,
+        number_seasons,
+        number_of_episodes,
+        runtime,
+        like: false,
+        seen: false,
+        pending: true,
+        vote,
+      };
+      await mediasController.create(req, res, next);
     }
   } catch (error) {
     next(error);
@@ -116,7 +127,12 @@ module.exports.update = async (req, res, next) => {
       { new: true }
     );
     if (updateMedia) {
-      if (!updateMedia.like && !updateMedia.seen && !updateMedia.following && updateMedia.vote === -1) {
+      if (
+        !updateMedia.like &&
+        !updateMedia.seen &&
+        !updateMedia.following &&
+        updateMedia.vote === -1
+      ) {
         await module.exports.delete(req, res, next);
         return;
       } else {

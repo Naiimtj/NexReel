@@ -10,7 +10,10 @@ const mediaTvEpisodeSchema = new Schema(
     },
     mediaId: { type: String, required: true },
     media_type: { type: String, required: true },
-    season: { type: String, required: true },
+    season: { type: Number, required: true },
+    episode: { type: Number, required: true },
+    number_seasons: { type: Number, required: true },
+    number_of_episodes: { type: Number, required: true },
     idEpisode: { type: String, required: true },
     like: {
       type: Boolean,

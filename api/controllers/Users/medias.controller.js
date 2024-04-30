@@ -1,6 +1,5 @@
 const createError = require("http-errors");
 const Media = require("../../models/User/media.model");
-const MediaTvFollowers = require("../../models/User/followerMediaTv.model");
 const MediaTvSeason = require("../../models/User/mediaTvSeason.model");
 
 module.exports.create = async (req, res, next) => {
@@ -15,6 +14,7 @@ module.exports.create = async (req, res, next) => {
       pending,
       vote,
       number_seasons,
+      number_of_episodes,
     } = req.body;
 
     const userId = req.user.id;
@@ -30,11 +30,13 @@ module.exports.create = async (req, res, next) => {
     } else {
       pendingData = true;
     }
+    // If you vote you seen
+    if (vote >= 0) {
+      seenData = true;
+    }
 
-    // Check if media already exists
     const mediaExists = await Media.findOne({ mediaId, userId });
     if (mediaExists) {
-      // Return error if media already exists
       return next(createError(404, "Media already exists"));
     }
 
@@ -55,6 +57,7 @@ module.exports.create = async (req, res, next) => {
       mediaData = {
         ...mediaData,
         number_seasons: number_seasons,
+        number_of_episodes: number_of_episodes,
       };
     }
     // Create new media
@@ -81,7 +84,9 @@ module.exports.create = async (req, res, next) => {
             mediaId,
             media_type,
             season: seasonNumber,
-            seasonComplete: seenData,
+            number_seasons,
+            number_of_episodes,
+            seenComplete: seenData,
             runtime,
             like,
             seen: seenData,
@@ -99,7 +104,6 @@ module.exports.create = async (req, res, next) => {
     // Send success response with the added media
     res.status(201).json(addMedia);
   } catch (error) {
-    // Forward error to error handling middleware
     next(error);
   }
 };
@@ -168,7 +172,7 @@ module.exports.update = async (req, res, next) => {
     });
 
     // If media is TV and seen or pending, create or update TV seasons
-    if ((seenData || pendingData) && media.media_type === "tv") {
+    if (media.media_type === "tv") {
       const seasonPromises = [];
 
       // Create or Update TV seasons based on the number of seasons provided
@@ -187,7 +191,9 @@ module.exports.update = async (req, res, next) => {
           mediaId: media.mediaId,
           media_type: media.media_type,
           season: seasonNumber,
-          seasonComplete: seenData,
+          number_seasons: media.number_seasons,
+          number_of_episodes: media.number_of_episodes,
+          seenComplete: seenData,
           runtime: media.runtime,
           like: like || media.like,
           seen: seenData,
@@ -255,69 +261,3 @@ module.exports.delete = async (req, res, next) => {
   }
 };
 
-// - FOLLOWER
-
-module.exports.following = async (req, res, next) => {
-  try {
-    const mediaTv = await req.params;
-    const findMedia = await MediaTvFollowers.findOne({
-      userId: req.user.id,
-      mediaId: mediaTv.id,
-    });
-
-    if (findMedia) {
-      return next(createError(404, "You are already following this Tv Show"));
-    }
-    const addMediaTv = await MediaTvFollowers.create({
-      userId: req.user.id,
-      mediaId: mediaTv.id,
-    });
-    // const { media_type, runtime, like, seen, pending, vote } =
-    //   req.body;
-    if (addMediaTv) {
-      await module.exports.create(req, res, next);
-      return;
-    } else {
-      res.status(200).json(updateMedia);
-    }
-
-    res.status(201).json(addMediaTv);
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.followingMediaTv = async (req, res, next) => {
-  try {
-    const MediasTvUser = await MediaTvFollowers.findOne({
-      userId: req.user.id,
-      mediaId: req.params.id,
-    });
-    // If user dont following this Tv Shows, return empty
-    if (!MediasTvUser) {
-      return res.status(204).send();
-    }
-    res.status(200).json(MediasTvUser);
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.unFollowing = async (req, res, next) => {
-  try {
-    const mediaTv = await req.params;
-
-    const deletePlaylist = await MediaTvFollowers.findOneAndDelete({
-      userId: req.user.id,
-      mediaId: mediaTv.id,
-    });
-
-    if (!deletePlaylist) {
-      return next(createError(404, "Tv Show not found"));
-    }
-
-    res.status(204).json({ result: true });
-  } catch (error) {
-    next(error);
-  }
-};
