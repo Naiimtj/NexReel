@@ -11,7 +11,6 @@ module.exports.create = async (req, res, next) => {
       runtime,
       like,
       seen,
-      following,
       vote,
     } = req.body;
     // If seen is true seasonComplete is true

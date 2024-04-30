@@ -59,15 +59,9 @@ const mediaSchema = new Schema(
   }
 );
 
-mediaSchema.virtual("mediasTvSeason", {
-  ref: "MediaTvSeason",
-  localField: "_id",
-  foreignField: "userId",
-});
-
 mediaSchema.virtual("mediasTvEpisode", {
   ref: "MediaTvEpisode",
-  localField: "_id",
+  localField: "userId",
   foreignField: "userId",
 });
 

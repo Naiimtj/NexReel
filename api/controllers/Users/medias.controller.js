@@ -110,11 +110,21 @@ module.exports.detail = async (req, res, next) => {
       mediaId: req.params.id,
       userId: req.user.id,
     });
+
     if (!media) {
       res.status(204).json({ result: false });
-    } else {
-      res.status(200).json(media);
+      return;
     }
+
+    let populatedMedia = media.toObject(); // Convert in object
+    if (media.media_type === "tv") {
+      populatedMedia.seasons = await MediaTvSeason.find({
+        mediaId: req.params.id,
+        userId: req.user.id,
+      });
+    }
+
+    res.status(200).json(populatedMedia);
   } catch (error) {
     next(error);
   }
@@ -175,10 +185,10 @@ module.exports.update = async (req, res, next) => {
         const seasonData = {
           userId,
           mediaId: media.mediaId,
-          media_type: media.mediaId,
+          media_type: media.media_type,
           season: seasonNumber,
           seasonComplete: seenData,
-          runtime: media.mediaId,
+          runtime: media.runtime,
           like: like || media.like,
           seen: seenData,
           pending: pendingData,
