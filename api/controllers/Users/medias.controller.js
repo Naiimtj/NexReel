@@ -127,68 +127,84 @@ module.exports.update = async (req, res, next) => {
     if (!media) {
       next(createError(404, "Media not found"));
     }
-    const mediaId = media.id;
-    const updateMedia = await Media.findByIdAndUpdate(
-      mediaId,
-      {
-        like,
-        seen,
-        pending,
-        vote,
-      },
-      { new: true }
-    );
-    if (updateMedia) {
-      if (
-        !updateMedia.like &&
-        !updateMedia.seen &&
-        !updateMedia.pending &&
-        updateMedia.vote === -1
-      ) {
-        const updateMediaTv = await MediaTvSeason.findOneAndDelete(
-          mediaId,
-          {
-            like,
-            seen,
-            pending,
-            vote,
-          },
-          { new: true }
-        );
-        if ((seenData || pendingData) && media_type === "tv") {
-          const seasonPromises = [];
+    const Id = media.id;
+    const userId = req.user.id;
 
-          // Create TV seasons based on the number of seasons provided
-          for (
-            let seasonNumber = 1;
-            seasonNumber <= number_seasons;
-            seasonNumber++
-          ) {
-            const seasonData = {
-              userId,
-              mediaId,
-              media_type,
-              season: seasonNumber,
-              seasonComplete: seenData,
-              runtime,
-              like,
-              seen: seenData,
-              pending: pendingData,
-              vote,
-            };
-            seasonPromises.push(MediaTvSeason.delete(seasonData));
-          }
+    let seenData = false;
+    let pendingData = false;
 
-          // Wait for all TV seasons to be created
-          await Promise.all(seasonPromises);
-        }
-        await module.exports.delete(req, res, next);
-
-        return;
-      } else {
-        res.status(200).json(updateMedia);
-      }
+    // Determine the values of seenData and pendingData based on the input conditions
+    if (!seen && !pending) {
+      seenData = media.seen;
+      pendingData = media.pending;
+    } else if (seen && !pending) {
+      seenData = true;
+    } else if (vote >= 0) {
+      seenData = true;
+    } else {
+      pendingData = true;
     }
+    // Prepare data
+    let mediaData = {
+      seenComplete: seenData,
+      like: like || media.like,
+      seen: seenData,
+      pending: pendingData,
+      vote: vote || media.vote,
+    };
+    // Update new media
+    const updateMedia = await Media.findByIdAndUpdate(Id, mediaData, {
+      new: true,
+    });
+
+    // If media is TV and seen or pending, create or update TV seasons
+    if ((seenData || pendingData) && media.media_type === "tv") {
+      const seasonPromises = [];
+
+      // Create or Update TV seasons based on the number of seasons provided
+      for (
+        let seasonNumber = 1;
+        seasonNumber <= media.number_seasons;
+        seasonNumber++
+      ) {
+        const mediaTvSeasonExists = await MediaTvSeason.findOne({
+          mediaId: media.mediaId,
+          userId,
+          season: seasonNumber,
+        });
+        const seasonData = {
+          userId,
+          mediaId: media.mediaId,
+          media_type: media.mediaId,
+          season: seasonNumber,
+          seasonComplete: seenData,
+          runtime: media.mediaId,
+          like: like || media.like,
+          seen: seenData,
+          pending: pendingData,
+          vote: vote || media.vote,
+        };
+        if (!mediaTvSeasonExists) {
+          seasonPromises.push(MediaTvSeason.create(seasonData));
+        } else {
+          seasonPromises.push(
+            MediaTvSeason.findByIdAndUpdate(
+              mediaTvSeasonExists.id,
+              seasonData,
+              {
+                new: true,
+              }
+            )
+          );
+        }
+      }
+
+      // Wait for all TV seasons to be created or update
+      await Promise.all(seasonPromises);
+    }
+
+    // Send success response with the added media
+    res.status(201).json(updateMedia);
   } catch (error) {
     next(error);
   }
@@ -214,21 +230,20 @@ module.exports.delete = async (req, res, next) => {
     }
     const userId = req.user.id;
     const mediaId = media.mediaId;
-      const deletedMedia = await Media.findOneAndDelete({ mediaId, userId });
-      if (media.media_type === "tv") {
-        // Delete all TV seasons associated with the TV media
-        await MediaTvSeason.deleteMany({ mediaId });
-      }
+    const deletedMedia = await Media.findOneAndDelete({ mediaId, userId });
+    if (media.media_type === "tv") {
+      // Delete all TV seasons associated with the TV media
+      await MediaTvSeason.deleteMany({ mediaId });
+    }
 
-      if (!deletedMedia) {
-        return next(createError(404, "Media not found"));
-      }
-      res.status(204).json({ message: "Media deleted successfully" });
+    if (!deletedMedia) {
+      return next(createError(404, "Media not found"));
+    }
+    res.status(204).json({ message: "Media deleted successfully" });
   } catch (error) {
     next(error);
   }
 };
-
 
 // - FOLLOWER
 
