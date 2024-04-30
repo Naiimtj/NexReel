@@ -92,45 +92,42 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    const { seenComplete, following, like, seen, pending, vote } = req.body;
-    console.log(seenComplete);
+    const { runtime, like, seen, pending, vote } = req.body;
     const media = await req.media;
     // If seen is true seenComplete is true
     let seenData = false;
-    if (seen) {
-      seenData = true;
-    } else if (seenComplete) {
+    let pendingData = false;
+
+    // Determine the values of seenData and pendingData based on the input conditions
+    if (seen && !pending) {
       seenData = true;
     } else {
-      seenData = false;
+      pendingData = true;
     }
-    // If seen is true seenComplete is true
-    let pendingData = pending;
-    if (seen) {
-      pendingData = false;
-    } else if (seenComplete) {
-      pendingData = false;
+
+    // If you vote you seen
+    if (vote >= 0) {
+      seenData = true;
     }
     if (!media) {
-      next(createError(404, "Media Tv Season not found"));
+      next(createError(404, "Season not found"));
     }
     const updateMedia = await MediaTvSeason.findOneAndUpdate(
       { mediaId: media.mediaId, season: media.season },
       {
+        runtime,
         like,
         seen: seenData,
-        seenComplete: seenData,
         pending: pendingData,
-        following,
         vote: vote || -1,
       },
       { new: true }
     );
+    console.log(updateMedia);
     if (updateMedia) {
       if (
-        !updateMedia.like &&
+        !updateMedia.pending &&
         !updateMedia.seen &&
-        !updateMedia.following &&
         updateMedia.vote === -1
       ) {
         await module.exports.delete(req, res, next);

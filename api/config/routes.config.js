@@ -58,10 +58,10 @@ router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.i
 
 // - MEDIA TV SEASON
 router.post("/mediasTvSeason/:mediaId", auth.isAuthenticated, mediaTvSeason.create);
-router.get("/mediasTvSeason/:id", auth.isAuthenticated, mediaTvSeason.detail);
+router.get("/mediasTvSeason/:mediaId", auth.isAuthenticated, mediaTvSeason.detail);
 router.get("/mediasTvSeason", auth.isAuthenticated, mediaTvSeason.list);
-router.patch("/mediasTvSeason/:id/:season", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.update);
-router.delete("/mediasTvSeason/:id", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.delete);
+router.patch("/mediasTvSeason/:mediaId/:season", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.update);
+router.delete("/mediasTvSeason/:mediaId", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.delete);
 
 // - MEDIA TV EPISODE
 router.post("/mediasTvEpisode", auth.isAuthenticated, mediaTvEpisode.create);

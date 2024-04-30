@@ -3,7 +3,7 @@ const { ADMIN_ROLE } = require("../constants");
 const MediaTvSeason = require("../models/User/mediaTvSeason.model");
 
 module.exports.exists = async (req, res, next) => {
-  const media = await MediaTvSeason.findOne({mediaId: req.params.id, userId: req.user.id});
+  const media = await MediaTvSeason.findOne({mediaId: req.params.mediaId, userId: req.user.id});
   if (media) {
     req.media = media;
     next();
