@@ -39,7 +39,7 @@ module.exports.create = async (req, res, next) => {
     }
 
     // Prepare data for creating media
-    const mediaData = {
+    let mediaData = {
       userId,
       mediaId,
       media_type,
@@ -50,7 +50,13 @@ module.exports.create = async (req, res, next) => {
       pending: pendingData,
       vote,
     };
-
+    // If media_type is "tv", add season_number to mediaData
+    if (media_type === "tv") {
+      mediaData = {
+        ...mediaData,
+        number_seasons: number_seasons,
+      };
+    }
     // Create new media
     const addMedia = await Media.create(mediaData);
 
@@ -59,20 +65,31 @@ module.exports.create = async (req, res, next) => {
       const seasonPromises = [];
 
       // Create TV seasons based on the number of seasons provided
-      for (let seasonNumber = 1; seasonNumber <= number_seasons; seasonNumber++) {
-        const seasonData = {
-          userId,
+      for (
+        let seasonNumber = 1;
+        seasonNumber <= number_seasons;
+        seasonNumber++
+      ) {
+        const mediaTvSeasonExists = await MediaTvSeason.findOne({
           mediaId,
-          media_type,
+          userId,
           season: seasonNumber,
-          seasonComplete: seenData,
-          runtime,
-          like,
-          seen: seenData,
-          pending: pendingData,
-          vote,
-        };
-        seasonPromises.push(MediaTvSeason.create(seasonData));
+        });
+        if (!mediaTvSeasonExists) {
+          const seasonData = {
+            userId,
+            mediaId,
+            media_type,
+            season: seasonNumber,
+            seasonComplete: seenData,
+            runtime,
+            like,
+            seen: seenData,
+            pending: pendingData,
+            vote,
+          };
+          seasonPromises.push(MediaTvSeason.create(seasonData));
+        }
       }
 
       // Wait for all TV seasons to be created
@@ -110,7 +127,7 @@ module.exports.update = async (req, res, next) => {
     if (!media) {
       next(createError(404, "Media not found"));
     }
-    const mediaId = media.id
+    const mediaId = media.id;
     const updateMedia = await Media.findByIdAndUpdate(
       mediaId,
       {
@@ -140,9 +157,13 @@ module.exports.update = async (req, res, next) => {
         );
         if ((seenData || pendingData) && media_type === "tv") {
           const seasonPromises = [];
-    
+
           // Create TV seasons based on the number of seasons provided
-          for (let seasonNumber = 1; seasonNumber <= number_seasons; seasonNumber++) {
+          for (
+            let seasonNumber = 1;
+            seasonNumber <= number_seasons;
+            seasonNumber++
+          ) {
             const seasonData = {
               userId,
               mediaId,
@@ -157,7 +178,7 @@ module.exports.update = async (req, res, next) => {
             };
             seasonPromises.push(MediaTvSeason.delete(seasonData));
           }
-    
+
           // Wait for all TV seasons to be created
           await Promise.all(seasonPromises);
         }
@@ -188,17 +209,21 @@ module.exports.list = async (req, res, next) => {
 module.exports.delete = async (req, res, next) => {
   try {
     const media = await req.media;
-
     if (!media) {
       return next(createError(404, "Media not found"));
     }
-    const deletedMedia = await Media.findByIdAndDelete(media.id);
+    const userId = req.user.id;
+    const mediaId = media.mediaId;
+      const deletedMedia = await Media.findOneAndDelete({ mediaId, userId });
+      if (media.media_type === "tv") {
+        // Delete all TV seasons associated with the TV media
+        await MediaTvSeason.deleteMany({ mediaId });
+      }
 
-    if (!deletedMedia) {
-      return next(createError(404, "Media not found"));
-    }
-
-    res.status(204).json({ result: true });
+      if (!deletedMedia) {
+        return next(createError(404, "Media not found"));
+      }
+      res.status(204).json({ message: "Media deleted successfully" });
   } catch (error) {
     next(error);
   }
