@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import SeasonList from "./SeasonList";
+import SeasonSingle from "./SeasonSingle";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
@@ -36,10 +36,10 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
         </div>
       ) : null}
       <>
+        {/* // - SEASONS */}
         {info && info.length > 0 ? (
           info.length > cardsPerPage ? (
             <>
-              {/* // - SEASONS */}
               {info &&
                 (!modalMoreSeasons ? (
                   <>
@@ -47,7 +47,7 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
                       {items &&
                         items.map((season, key) => {
                           return (
-                            <SeasonList
+                            <SeasonSingle
                               season={season}
                               key={key}
                               idTvShow={idTvShow}
@@ -72,7 +72,7 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
                       {info &&
                         info.map((season, key) => {
                           return (
-                            <SeasonList
+                            <SeasonSingle
                               season={season}
                               key={key}
                               idTvShow={idTvShow}
@@ -98,7 +98,7 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
               {info &&
                 info.map((season, key) => {
                   return (
-                    <SeasonList
+                    <SeasonSingle
                       season={season}
                       key={key}
                       idTvShow={idTvShow}

@@ -104,6 +104,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     // .Default
     id,
   } = info;
+  console.log(info);
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
   useEffect(() => {

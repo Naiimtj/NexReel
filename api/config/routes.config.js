@@ -5,6 +5,8 @@ const upload = require("../config/multer.config");
 const {
   auth,
   authMedia,
+  authMediaTvSeason,
+  authMediaTvEpisode,
   authPlaylist,
   authMessage,
   authForum,
@@ -14,6 +16,8 @@ const {
   users,
   medias,
   media,
+  mediaTvSeason,
+  mediaTvEpisode,
   playlists,
   messages,
   forums,
@@ -44,12 +48,30 @@ router.get("/users/:userId/follow", auth.isAuthenticated, users.followingDetail)
 router.delete("/users/:userId/follows", auth.isAuthenticated, users.unFollowing);
 router.delete("/users/:userId/nofollow", auth.isAuthenticated, users.unFollow);
 
+// < MEDIA
 // - MEDIA
 router.post("/medias", auth.isAuthenticated, medias.create);
 router.get("/medias/:id", auth.isAuthenticated, medias.detail);
 router.get("/medias", auth.isAuthenticated, medias.list);
 router.patch("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.update);
 router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.delete);
+// Followers Playlist
+router.post("/medias/:id/follow", auth.isAuthenticated, medias.following);
+router.get("/medias/:id/follow", auth.isAuthenticated, medias.followingMediaTv);
+router.delete("/medias/:id/follow", auth.isAuthenticated, medias.unFollowing);
+
+// - MEDIA TV SEASON
+router.post("/mediasTvSeason", auth.isAuthenticated, mediaTvSeason.create);
+router.get("/mediasTvSeason/:id", auth.isAuthenticated, mediaTvSeason.detail);
+router.get("/mediasTvSeason", auth.isAuthenticated, mediaTvSeason.list);
+router.patch("/mediasTvSeason/:id/:season", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.update);
+router.delete("/mediasTvSeason/:id", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.delete);
+// - MEDIA TV EPISODE
+router.post("/mediasTvEpisode", auth.isAuthenticated, mediaTvEpisode.create);
+router.get("/mediasTvEpisode/:id", auth.isAuthenticated, mediaTvEpisode.detail);
+router.get("/mediasTvEpisode", auth.isAuthenticated, mediaTvEpisode.list);
+router.patch("/mediasTvEpisode/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.update);
+router.delete("/mediasTvEpisode/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.delete);
 
 // < PLAYLIST
 router.post("/playlists", auth.isAuthenticated, upload.single("imgPlaylist"), playlists.create);

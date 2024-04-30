@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const mediaSchema = new Schema(
+const mediaTvEpisodeSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -10,24 +10,19 @@ const mediaSchema = new Schema(
     },
     mediaId: { type: String, required: true },
     media_type: { type: String, required: true },
+    season: { type: String, required: true },
+    idEpisode: { type: String, required: true },
     like: {
       type: Boolean,
-      default: false,
+      default: null,
     },
     seen: {
       type: Boolean,
-      default: false,
+      default: null,
     },
     pending: {
       type: Boolean,
-      default: false,
-    },
-    seenComplete: {
-      type: Boolean,
-      default: false,
-    },
-    number_seasons: {
-      type: Number,
+      default: null,
     },
     runtime: {
       type: Number,
@@ -48,7 +43,6 @@ const mediaSchema = new Schema(
   {
     timestamps: true,
     toJSON: {
-      virtuals: true,
       transform: (doc, ret) => {
         ret.id = doc._id;
         delete ret._id;
@@ -59,17 +53,5 @@ const mediaSchema = new Schema(
   }
 );
 
-mediaSchema.virtual("mediasTvSeason", {
-  ref: "MediaTvSeason",
-  localField: "_id",
-  foreignField: "userId",
-});
-
-mediaSchema.virtual("mediasTvEpisode", {
-  ref: "MediaTvEpisode",
-  localField: "_id",
-  foreignField: "userId",
-});
-
-const Media = mongoose.model("Media", mediaSchema);
-module.exports = Media;
+const MediaTvEpisode = mongoose.model("MediaTvEpisode", mediaTvEpisodeSchema);
+module.exports = MediaTvEpisode;
