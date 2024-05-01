@@ -31,8 +31,10 @@ module.exports.create = async (req, res, next) => {
       pendingData = true;
     }
     // If you vote you seen
-    if (vote >= 0) {
+    if (vote >= 0 && seen) {
       seenData = true;
+    } else if(vote >= 0){
+      pendingData = true;
     }
 
     const mediaExists = await Media.findOne({ mediaId, userId });
@@ -146,18 +148,22 @@ module.exports.update = async (req, res, next) => {
 
     let seenData = false;
     let pendingData = false;
-
+    console.log(seen, pending);
     // Determine the values of seenData and pendingData based on the input conditions
-    if (!seen && !pending) {
+    if (seen === undefined && pending === undefined) {
       seenData = media.seen;
       pendingData = media.pending;
-    } else if (seen && !pending) {
+    } else if (seen) {
       seenData = true;
-    } else if (vote >= 0) {
-      seenData = true;
-    } else {
+    } else if(pending){
       pendingData = true;
     }
+
+    // If have vote is seen
+    if (vote >= 0) {
+      seenData = true;
+    }
+
     // Prepare data
     let mediaData = {
       seenComplete: seenData,
@@ -166,57 +172,62 @@ module.exports.update = async (req, res, next) => {
       pending: pendingData,
       vote: vote || media.vote,
     };
+    if (!seenData && !pendingData) {
+      await module.exports.delete(req, res, next);
+      return;
+    }
     // Update new media
     const updateMedia = await Media.findByIdAndUpdate(Id, mediaData, {
       new: true,
     });
+    if (updateMedia) {
+      // If media is TV and seen or pending, create or update TV seasons
+      if (media.media_type === "tv") {
+        const seasonPromises = [];
 
-    // If media is TV and seen or pending, create or update TV seasons
-    if (media.media_type === "tv") {
-      const seasonPromises = [];
-
-      // Create or Update TV seasons based on the number of seasons provided
-      for (
-        let seasonNumber = 1;
-        seasonNumber <= media.number_seasons;
-        seasonNumber++
-      ) {
-        const mediaTvSeasonExists = await MediaTvSeason.findOne({
-          mediaId: media.mediaId,
-          userId,
-          season: seasonNumber,
-        });
-        const seasonData = {
-          userId,
-          mediaId: media.mediaId,
-          media_type: media.media_type,
-          season: seasonNumber,
-          number_seasons: media.number_seasons,
-          number_of_episodes: media.number_of_episodes,
-          seenComplete: seenData,
-          runtime: media.runtime,
-          like: like || media.like,
-          seen: seenData,
-          pending: pendingData,
-          vote: vote || media.vote,
-        };
-        if (!mediaTvSeasonExists) {
-          seasonPromises.push(MediaTvSeason.create(seasonData));
-        } else {
-          seasonPromises.push(
-            MediaTvSeason.findByIdAndUpdate(
-              mediaTvSeasonExists.id,
-              seasonData,
-              {
-                new: true,
-              }
-            )
-          );
+        // Create or Update TV seasons based on the number of seasons provided
+        for (
+          let seasonNumber = 1;
+          seasonNumber <= media.number_seasons;
+          seasonNumber++
+        ) {
+          const mediaTvSeasonExists = await MediaTvSeason.findOne({
+            mediaId: media.mediaId,
+            userId,
+            season: seasonNumber,
+          });
+          const seasonData = {
+            userId,
+            mediaId: media.mediaId,
+            media_type: media.media_type,
+            season: seasonNumber,
+            number_seasons: media.number_seasons,
+            number_of_episodes: media.number_of_episodes,
+            seenComplete: seenData,
+            runtime: media.runtime,
+            like: like || media.like,
+            seen: seenData,
+            pending: pendingData,
+            vote: vote || media.vote,
+          };
+          if (!mediaTvSeasonExists) {
+            seasonPromises.push(MediaTvSeason.create(seasonData));
+          } else {
+            seasonPromises.push(
+              MediaTvSeason.findByIdAndUpdate(
+                mediaTvSeasonExists.id,
+                seasonData,
+                {
+                  new: true,
+                }
+              )
+            );
+          }
         }
-      }
 
-      // Wait for all TV seasons to be created or update
-      await Promise.all(seasonPromises);
+        // Wait for all TV seasons to be created or update
+        await Promise.all(seasonPromises);
+      }
     }
 
     // Send success response with the added media
@@ -260,4 +271,3 @@ module.exports.delete = async (req, res, next) => {
     next(error);
   }
 };
-

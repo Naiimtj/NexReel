@@ -47,6 +47,7 @@ const Rating = ({
         rating !== null &&
         rating !== vote
       ) {
+        // PREGUNTAR SI LA VISTO ENTERA?
         patchMedia(mediaId, { seen: true, vote: rating }).then(() => {
           setPendingSeen(!pendingSeen);
           setHover0(null);
