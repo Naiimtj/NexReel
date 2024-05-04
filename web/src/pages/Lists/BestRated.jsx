@@ -211,7 +211,7 @@ const BestRated = () => {
             ) : (
               <>
                 <ArrayPaginator
-                  array={GroupsKnowMovie}
+                  data={GroupsKnowMovie}
                   totalResult={knowMovie.length}
                   groupSize={getCardsPerPage()}
                   currentPageIndex={currentPageIndex}
@@ -236,7 +236,7 @@ const BestRated = () => {
                     })}
                 </div>
                 <ArrayPaginator
-                  array={GroupsKnowMovie}
+                  data={GroupsKnowMovie}
                   totalResult={knowMovie.length}
                   groupSize={getCardsPerPage()}
                   currentPageIndex={currentPageIndex}
@@ -249,7 +249,7 @@ const BestRated = () => {
           {selectedIndex === 1 ? (
               <>
                 <ArrayPaginator
-                  array={GroupsKnowTv}
+                  data={GroupsKnowTv}
                   totalResult={knowTv.length}
                   groupSize={getCardsPerPage()}
                   currentPageIndex={currentPageIndex}
@@ -274,7 +274,7 @@ const BestRated = () => {
                     })}
                 </div>
                 <ArrayPaginator
-                  array={GroupsKnowTv}
+                  data={GroupsKnowTv}
                   totalResult={knowTv.length}
                   groupSize={getCardsPerPage()}
                   currentPageIndex={currentPageIndex}

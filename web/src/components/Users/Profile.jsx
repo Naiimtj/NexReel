@@ -35,9 +35,9 @@ import PageTitle from "../PageTitle";
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
     ? check &&
-      data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      data.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt))
     : check &&
-      data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
   return DataPendingOrder;
 }
 

@@ -93,23 +93,23 @@ userSchema.virtual("medias", {
   foreignField: "userId",
 });
 
-userSchema.virtual("mediasTvSeason", {
-  ref: "MediaTvSeason",
-  localField: "_id",
-  foreignField: "userId",
-});
+// userSchema.virtual("mediasTvSeason", {
+//   ref: "MediaTvSeason",
+//   localField: "_id",
+//   foreignField: "userId",
+// });
 
-userSchema.virtual("mediasTvEpisode", {
-  ref: "MediaTvEpisode",
-  localField: "_id",
-  foreignField: "userId",
-});
+// userSchema.virtual("mediasTvEpisode", {
+//   ref: "MediaTvEpisode",
+//   localField: "_id",
+//   foreignField: "userId",
+// });
 
-userSchema.virtual("followMediaTv", {
-  ref: "MediaTvFollowers",
-  localField: "_id",
-  foreignField: "userId",
-});
+// userSchema.virtual("followMediaTv", {
+//   ref: "MediaTvFollowers",
+//   localField: "_id",
+//   foreignField: "userId",
+// });
 
 userSchema.virtual("forums", {
   ref: "Forum",

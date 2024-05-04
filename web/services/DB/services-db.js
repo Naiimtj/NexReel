@@ -434,6 +434,48 @@ export async function deleteMedia(id) {
     return {};
   }
 }
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// < SEASONS
+// . POST
+// Add Media
+export async function postSeason(mediaId, data) {
+  try {
+    const response = await service.post(`/seasons/${mediaId}`, data);
+    return response;
+  } catch (err) {
+    console.error("Error Post Season:", err);
+    return {};
+  }
+}
+// - GET
+// All Medias
+export async function getAllSeasons(mediaId) {
+  const response = await service.get(`/seasons/${mediaId}`);
+  if (response) {
+    return response;
+  }
+  return {};
+}
+// - GET
+// Detail Medias
+export async function getDetailSeason(mediaId, season) {
+  const response = await service.get(`/seasons/${mediaId}/${season}`);
+  if (response) {
+    return response;
+  }
+  return {};
+}
+// * PATCH
+// Update Medias
+export async function patchSeason(mediaId, season, data) {
+  try {
+    const response = await service.patch(`/seasons/${mediaId}/${season}`, data);
+    return response;
+  } catch (err) {
+    console.error("Error update media user:", err);
+    return {};
+  }
+}
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // < FORUMS
 // . POST

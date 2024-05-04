@@ -85,7 +85,6 @@ module.exports.detail = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id)
       .populate("medias")
-      .populate("followMediaTv")
       .populate({
         path: "playlists",
         populate: {

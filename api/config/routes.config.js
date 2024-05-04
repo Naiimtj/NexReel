@@ -57,18 +57,17 @@ router.patch("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.is
 router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.delete);
 
 // - MEDIA TV SEASON
-router.post("/mediasTvSeason/:mediaId", auth.isAuthenticated, mediaTvSeason.create);
-router.get("/mediasTvSeason/:mediaId", auth.isAuthenticated, mediaTvSeason.detail);
-router.get("/mediasTvSeason", auth.isAuthenticated, mediaTvSeason.list);
-router.patch("/mediasTvSeason/:mediaId/:season", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.update);
-router.delete("/mediasTvSeason/:mediaId", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.delete);
+router.post("/seasons/:mediaId", auth.isAuthenticated, mediaTvSeason.create);
+router.get("/seasons/:mediaId/:season", auth.isAuthenticated, mediaTvSeason.detail);
+router.get("/seasons/:mediaId", auth.isAuthenticated, mediaTvSeason.list);
+router.patch("/seasons/:mediaId/:season", auth.isAuthenticated, authMediaTvSeason.exists, authMediaTvSeason.isOwnerOrAdmin, mediaTvSeason.update);
 
 // - MEDIA TV EPISODE
-router.post("/mediasTvEpisode", auth.isAuthenticated, mediaTvEpisode.create);
-router.get("/mediasTvEpisode/:id", auth.isAuthenticated, mediaTvEpisode.detail);
-router.get("/mediasTvEpisode", auth.isAuthenticated, mediaTvEpisode.list);
-router.patch("/mediasTvEpisode/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.update);
-router.delete("/mediasTvEpisode/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.delete);
+router.post("/episodes/:mediaId/:season", auth.isAuthenticated, mediaTvEpisode.create);
+router.get("/episodes/:id", auth.isAuthenticated, mediaTvEpisode.detail);
+router.get("/episodes", auth.isAuthenticated, mediaTvEpisode.list);
+router.patch("/episodes/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.update);
+router.delete("/episodes/:id", auth.isAuthenticated, authMediaTvEpisode.exists, authMediaTvEpisode.isOwnerOrAdmin, mediaTvEpisode.delete);
 
 // < PLAYLIST
 router.post("/playlists", auth.isAuthenticated, upload.single("imgPlaylist"), playlists.create);

@@ -143,12 +143,12 @@ module.exports.update = async (req, res, next) => {
     if (!media) {
       next(createError(404, "Media not found"));
     }
-    const Id = media.id;
+    const mediaId = media.mediaId;
     const userId = req.user.id;
 
     let seenData = false;
     let pendingData = false;
-    console.log(seen, pending);
+
     // Determine the values of seenData and pendingData based on the input conditions
     if (seen === undefined && pending === undefined) {
       seenData = media.seen;
@@ -177,7 +177,7 @@ module.exports.update = async (req, res, next) => {
       return;
     }
     // Update new media
-    const updateMedia = await Media.findByIdAndUpdate(Id, mediaData, {
+    const updateMedia = await Media.findOneAndUpdate({mediaId, userId}, mediaData, {
       new: true,
     });
     if (updateMedia) {

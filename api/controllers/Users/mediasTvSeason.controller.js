@@ -81,8 +81,9 @@ module.exports.create = async (req, res, next) => {
 module.exports.detail = async (req, res, next) => {
   try {
     const media = await MediaTvSeason.findOne({
-      mediaId: req.params.id,
+      mediaId: req.params.mediaId,
       userId: req.user.id,
+      season: req.params.season
     });
     if (!media) {
       res.status(204).json({ result: false });
@@ -96,28 +97,22 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    const { runtime, like, seen, pending, vote } = req.body;
+    const { runtime, like, seen, vote } = req.body;
     const media = await req.media;
     // If seen is true seenComplete is true
     let seenData = false;
     let pendingData = false;
 
     // Determine the values of seenData and pendingData based on the input conditions
-    if (!seen && !pending) {
+    if (seen === undefined) {
       seenData = media.seen;
-      pendingData = media.pending;
-    } else if (seen && !pending) {
+      pendingData = !media.seen;
+    } else if (seen || vote >= 0) {
       seenData = true;
     } else {
       pendingData = true;
     }
-
-    // If you vote you seen
-    if (vote >= 0) {
-      seenData = true;
-    }
     let mediaData = {
-      seenComplete: seenData,
       like: like || media.like,
       seen: seenData,
       pending: pendingData,
@@ -128,23 +123,32 @@ module.exports.update = async (req, res, next) => {
       next(createError(404, "Season not found"));
     }
     const updateMedia = await MediaTvSeason.findOneAndUpdate(
-          { mediaId: media.mediaId, season: media.season },
-          mediaData,
-          { new: true }
-        );
-    console.log(updateMedia);
+      {
+        userId: req.user.id,
+        mediaId: media.mediaId,
+        season: req.params.season,
+      },
+      mediaData,
+      { new: true }
+    );
     if (updateMedia) {
-      if (
-        !updateMedia.pending &&
-        !updateMedia.seen &&
-        updateMedia.vote === -1
-      ) {
-        await module.exports.delete(req, res, next);
-        return;
+      const allSeasons = await MediaTvSeason.find({
+        userId: req.user.id,
+        mediaId: updateMedia.mediaId,
+      });
+      const allSeasonsSeen =
+        allSeasons.filter((season) => season.seen === true).length ===
+        updateMedia.number_seasons;
+      if (allSeasonsSeen) {
+        let mediaData = {
+          seen: true,
+        };
+        req.body = mediaData;
+        await mediasController.update(req, res, next);
       } else {
         res.status(200).json(updateMedia);
       }
-      }
+    }
   } catch (error) {
     next(error);
   }
@@ -162,21 +166,4 @@ module.exports.list = async (req, res, next) => {
   }
 };
 
-module.exports.delete = async (req, res, next) => {
-  try {
-    const media = await req.media;
 
-    if (!media) {
-      return next(createError(404, "Media Tv Season not found"));
-    }
-    const deletedMedia = await MediaTvSeason.findByIdAndDelete(media.id);
-
-    if (!deletedMedia) {
-      return next(createError(404, "Media Tv Season not found"));
-    }
-
-    res.status(204).json({ result: true });
-  } catch (error) {
-    next(error);
-  }
-};
