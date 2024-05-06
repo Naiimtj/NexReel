@@ -7,11 +7,19 @@ import {
   IoCheckmarkCircleOutline,
   IoCheckmarkCircleSharp,
 } from "react-icons/io5";
-import { getDetailMedia } from "../../../services/DB/services-db";
-import SeenPending from "../MediaList/SeenPending";
+import { getDetailSeasons } from "../../../services/DB/services-db";
 import { useAuthContext } from "../../context/auth-context";
+import SeenPendingSeason from "../MediaList/SeenPendingSeason";
 
-export const SeasonSingle = ({ season, idTvShow, dataUser, runTime }) => {
+export const SeasonSingle = ({
+  season,
+  idTvShow,
+  runTime,
+  setChangeSeenPending,
+  changeSeenPending,
+  numberEpisodes,
+  numberSeasons,
+}) => {
   const [t] = useTranslation("translation");
   const { onReload } = useAuthContext();
   const navigate = useNavigate();
@@ -45,27 +53,31 @@ export const SeasonSingle = ({ season, idTvShow, dataUser, runTime }) => {
   const [pendingSeen, setPendingSeen] = useState(false);
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
-    if (Object.keys(dataUser).length) {
-      getDetailMedia(dataUser.id).then((d) => {
-        setDataMediaUser(d);
-      });
-    }
-  }, [pendingSeen, id, dataUser]);
-  const { seen } = dataMediaUser;
+    getDetailSeasons(idTvShow, NumberSeason).then((d) => {
+      setDataMediaUser(d);
+    });
+    
+  }, [pendingSeen, changeSeenPending, onReload, idTvShow, NumberSeason]);
 
+  const { seen } = dataMediaUser;
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
-    SeenPending(
+    SeenPendingSeason(
       dataMediaUser,
-      id,
+      idTvShow,
       "tv",
       runTime,
       seen,
+      setChangeSeenPending,
+      changeSeenPending,
       setPendingSeen,
       pendingSeen,
       "seen",
-      onReload
+      onReload,
+      NumberSeason,
+      numberEpisodes,
+      numberSeasons
     );
   };
 
@@ -170,6 +182,10 @@ SeasonSingle.defaultProps = {
   idTvShow: 0,
   dataUser: {},
   runTime: 0,
+  setChangeSeenPending: () => {},
+  changeSeenPending: false,
+  numberEpisodes: 0,
+  numberSeasons: 0,
 };
 
 SeasonSingle.propTypes = {
@@ -177,4 +193,8 @@ SeasonSingle.propTypes = {
   idTvShow: PropTypes.number,
   dataUser: PropTypes.object,
   runTime: PropTypes.number,
+  setChangeSeenPending: PropTypes.func,
+  changeSeenPending: PropTypes.bool,
+  numberEpisodes: PropTypes.number,
+  numberSeasons: PropTypes.number,
 };

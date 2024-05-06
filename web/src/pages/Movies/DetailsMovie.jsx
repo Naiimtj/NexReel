@@ -59,13 +59,13 @@ import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 function compareStrings(str1, str2) {
   // Function to remove diacritics
   function removeDiacritics(text) {
-      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
-  
+
   // Remove diacritics and convert to lowercase for comparison
   const str1Normalized = removeDiacritics(str1).toLowerCase();
   const str2Normalized = removeDiacritics(str2).toLowerCase();
-  
+
   // Compare the normalized strings
   return str1Normalized === str2Normalized;
 }
@@ -106,6 +106,7 @@ function DetailsMovie({ info, crews, cast, media }) {
   } = info;
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
+  const [changeSeenPending, setChangeSeenPending] = useState(true);
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -229,7 +230,7 @@ function DetailsMovie({ info, crews, cast, media }) {
         }
       });
     }
-  }, [pendingSeen, id, userExist]);
+  }, [pendingSeen,changeSeenPending, id, userExist]);
   const { seen, pending } = dataMediaUser;
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
@@ -250,8 +251,6 @@ function DetailsMovie({ info, crews, cast, media }) {
       }
     };
   }, [isTimeout, errorAddPlaylists]);
-
-  const [changeSeenPending, setChangeSeenPending] = useState(true);
 
   // -MAIN CAST
   const size = 20;
@@ -449,7 +448,9 @@ function DetailsMovie({ info, crews, cast, media }) {
       setPendingSeen,
       pendingSeen,
       "seen",
-      onReload
+      onReload,
+      number_of_episodes,
+      number_of_seasons
     );
   };
   // - PENDING/NO PENDING
@@ -466,7 +467,9 @@ function DetailsMovie({ info, crews, cast, media }) {
       setPendingSeen,
       pendingSeen,
       "pending",
-      onReload
+      onReload,
+      number_of_episodes,
+      number_of_seasons
     );
   };
 
@@ -1138,7 +1141,9 @@ function DetailsMovie({ info, crews, cast, media }) {
                                   ? "pr-1"
                                   : ""
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() => navigate(`/person/${production.id}`)}
+                              onClick={() =>
+                                navigate(`/person/${production.id}`)
+                              }
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000
                               )}
@@ -1219,6 +1224,10 @@ function DetailsMovie({ info, crews, cast, media }) {
                 idTvShow={id}
                 dataUser={dataUser}
                 runTime={processInfo.runTime[0]}
+                setChangeSeenPending={setChangeSeenPending}
+                changeSeenPending={changeSeenPending}
+                numberEpisodes={number_of_episodes}
+                numberSeasons={number_of_seasons}
               />
             )
           )}

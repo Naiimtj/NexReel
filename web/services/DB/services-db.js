@@ -438,7 +438,7 @@ export async function deleteMedia(id) {
 // < SEASONS
 // . POST
 // Add Media
-export async function postSeason(mediaId, data) {
+export async function postSeasons(mediaId, data) {
   try {
     const response = await service.post(`/seasons/${mediaId}`, data);
     return response;
@@ -458,7 +458,7 @@ export async function getAllSeasons(mediaId) {
 }
 // - GET
 // Detail Medias
-export async function getDetailSeason(mediaId, season) {
+export async function getDetailSeasons(mediaId, season) {
   const response = await service.get(`/seasons/${mediaId}/${season}`);
   if (response) {
     return response;
@@ -467,7 +467,7 @@ export async function getDetailSeason(mediaId, season) {
 }
 // * PATCH
 // Update Medias
-export async function patchSeason(mediaId, season, data) {
+export async function patchSeasons(mediaId, season, data) {
   try {
     const response = await service.patch(`/seasons/${mediaId}/${season}`, data);
     return response;

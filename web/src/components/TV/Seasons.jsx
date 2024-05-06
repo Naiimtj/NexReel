@@ -4,7 +4,16 @@ import { useTranslation } from "react-i18next";
 import SeasonSingle from "./SeasonSingle";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
-export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
+export const Seasons = ({
+  info,
+  idTvShow,
+  dataUser,
+  runTime,
+  setChangeSeenPending,
+  changeSeenPending,
+  numberEpisodes,
+  numberSeasons,
+}) => {
   const [t] = useTranslation("translation");
   // - SEASONS
   const [modalMoreSeasons, setModalMoreSeasons] = useState(false);
@@ -51,8 +60,11 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
                               season={season}
                               key={key}
                               idTvShow={idTvShow}
-                              dataUser={dataUser}
                               runTime={runTime}
+                              setChangeSeenPending={setChangeSeenPending}
+                              changeSeenPending={changeSeenPending}
+                              numberEpisodes={numberEpisodes}
+                              numberSeasons={numberSeasons}
                             />
                           );
                         })}
@@ -78,6 +90,10 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
                               idTvShow={idTvShow}
                               dataUser={dataUser}
                               runTime={runTime}
+                              setChangeSeenPending={setChangeSeenPending}
+                              changeSeenPending={changeSeenPending}
+                              numberEpisodes={numberEpisodes}
+                              numberSeasons={numberSeasons}
                             />
                           );
                         })}
@@ -104,6 +120,10 @@ export const Seasons = ({ info, idTvShow, dataUser, runTime }) => {
                       idTvShow={idTvShow}
                       dataUser={dataUser}
                       runTime={runTime}
+                      setChangeSeenPending={setChangeSeenPending}
+                      changeSeenPending={changeSeenPending}
+                      numberEpisodes={numberEpisodes}
+                      numberSeasons={numberSeasons}
                     />
                   );
                 })}
@@ -122,6 +142,10 @@ Seasons.defaultProps = {
   idTvShow: 0,
   dataUser: {},
   runTime: 0,
+  setChangeSeenPending: () => {},
+  changeSeenPending: false,
+  numberEpisodes: 0,
+  numberSeasons: 0,
 };
 
 Seasons.propTypes = {
@@ -129,4 +153,8 @@ Seasons.propTypes = {
   idTvShow: PropTypes.number,
   dataUser: PropTypes.object,
   runTime: PropTypes.number,
+  setChangeSeenPending: PropTypes.func,
+  changeSeenPending: PropTypes.bool,
+  numberEpisodes: PropTypes.number,
+  numberSeasons: PropTypes.number,
 };

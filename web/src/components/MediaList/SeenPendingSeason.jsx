@@ -1,6 +1,6 @@
-import { patchMedia, postMedia } from "../../../services/DB/services-db";
+import { patchSeasons, postSeasons } from "../../../services/DB/services-db";
 
-function SeenPending(
+function SeenPendingSeason(
   dataMediaUser,
   id,
   mediaType,
@@ -12,25 +12,19 @@ function SeenPending(
   pendingSeen,
   updateType, // 'seen' or 'pending'
   onReload,
+  NumberSeason,
   numberEpisodes,
   numberSeasons
 ) {
-  const updateData =
-    mediaType === "tv"
-      ? {
-          mediaId: id.toString(),
-          media_type: mediaType,
-          runtime: runTime,
-          vote: dataMediaUser.vote,
-          number_seasons: numberSeasons,
-          number_of_episodes: numberEpisodes,
-        }
-      : {
-          mediaId: id.toString(),
-          media_type: mediaType,
-          runtime: runTime,
-          vote: dataMediaUser.vote,
-        };
+  const updateData = {
+    mediaId: id.toString(),
+    media_type: mediaType,
+    season: NumberSeason,
+    runtime: runTime,
+    vote: dataMediaUser.vote,
+    number_seasons: numberSeasons,
+    number_of_episodes: numberEpisodes,
+  };
 
   if (updateType === "seen") {
     updateData.seen = !seenOrPending;
@@ -39,14 +33,14 @@ function SeenPending(
   }
 
   Object.keys(dataMediaUser).length
-    ? patchMedia(id, updateData).then(() => {
+    ? patchSeasons(id, NumberSeason, updateData).then(() => {
         if (setPendingSeen) {
           setPendingSeen(!pendingSeen);
         }
         onReload();
         setChangeSeenPending(!changeSeenPending);
       })
-    : postMedia(updateData).then(() => {
+    : postSeasons(id,updateData).then(() => {
         if (setPendingSeen) {
           setPendingSeen(!pendingSeen);
         }
@@ -55,4 +49,4 @@ function SeenPending(
       });
 }
 
-export default SeenPending;
+export default SeenPendingSeason;
