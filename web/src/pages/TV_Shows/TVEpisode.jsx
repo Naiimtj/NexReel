@@ -6,6 +6,7 @@ import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import CarouselCredits from "../../utils/Carousel/CarouselCredits";
 import {
+  getEpisodeDetails,
   getMediaDetails,
   getSeasonDetails,
 } from "../../../services/TMDB/services-tmdb";
@@ -31,14 +32,16 @@ const TVEpisode = () => {
   const { idTv, NSeason, idEpisode } = useParams();
   const navigate = useNavigate();
   const [season, setSeason] = useState([]);
-  const [tvDetails, setTV] = useState([]);
+  const [episode, setEpisode] = useState([]);
+  const [tvDetails, setTvDetails] = useState([]);
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [pendingSeen, setPendingSeen] = useState(false);
+  console.log(idTv, NSeason, idEpisode);
   useEffect(() => {
     const DataTV = async () => {
       getMediaDetails("tv", idTv, t("es-ES"))
         .then((data) => {
-          setTV(data);
+          setTvDetails(data);
         })
         .catch((err) => err);
     };
@@ -52,17 +55,27 @@ const TVEpisode = () => {
         })
         .catch((err) => err);
     };
-    if (NSeason) {
+    if (idTv && NSeason) {
       DataSeason();
     }
-  }, [idTv, NSeason, t]);
+    const DataEpisode = async () => {
+      getEpisodeDetails(idTv, NSeason,idEpisode, t("es-ES"))
+        .then((data) => {
+          setEpisode(data);
+        })
+        .catch((err) => err);
+    };
+    if (idTv && NSeason && idEpisode) {
+      DataEpisode();
+    }
+  }, [idTv, NSeason,idEpisode, t]);
+console.log(episode);
+  //-SEARCH EPISODE
+  // const episode =
+  //   season.episodes &&
+  //   season.episodes.filter((episode) => episode.id === Number(idEpisode));
 
-  //-BUSCAR EL EPISODe
-  const episode =
-    season.episodes &&
-    season.episodes.filter((unepis) => unepis.id === Number(idEpisode));
-
-  // ! USER COMPARATION
+  // ! USER COMPACTION
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
@@ -109,50 +122,46 @@ const TVEpisode = () => {
       pendingSeen
     ).Pending();
   };
-
+  const url =
+  episode.still_path !== undefined
+    ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
+    : null;
+const dateSeason =
+  season.air_date &&
+  new DateAndTimeConvert(
+    season.air_date,
+    t,
+    false,
+    false,
+    false,
+    true,
+    false
+  ).DateTimeConvert();
+//-FILTROS
+const directores = episode && episode.crew && episode.crew.filter(
+  (crew) => crew.department === "Directing"
+);
+const guionistas = episode && episode.crew && episode.crew.filter(
+  (crew) => crew.department === "Writing"
+);
+console.log(season);
+//-ID EPISODe ANTERIOR
+const EpAnterior = episode && season && season.episodes && season.episodes.filter(
+  (epi) => epi.episode_number === episode.episode_number - 1
+);
+const EpisAntID = EpAnterior && EpAnterior.map((episID) => {
+  return episID.id;
+});
+//-ID EPISODe SIGUIENTE
+const EpSiguiente = episode && season && season.episodes && season.episodes.filter(
+  (epi) => epi.episode_number === episode.episode_number + 1
+);
+const EpisSigID = EpSiguiente && EpSiguiente.map((episID) => {
+  return episID.id;
+});
   return (
     <div>
       <PageTitle title={`${episode.name}`} />
-      {episode &&
-        episode.map((episode, index) => {
-          const url =
-            episode.still_path !== undefined
-              ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
-              : null;
-          const dateSeason =
-            season.air_date &&
-            new DateAndTimeConvert(
-              season.air_date,
-              t,
-              false,
-              false,
-              false,
-              true,
-              false
-            ).DateTimeConvert();
-          //-FILTROS
-          const directores = episode.crew.filter(
-            (crew) => crew.department === "Directing"
-          );
-          const guionistas = episode.crew.filter(
-            (crew) => crew.department === "Writing"
-          );
-          //-ID EPISODe ANTERIOR
-          const EpAnterior = season.episodes.filter(
-            (epi) => epi.episode_number === episode.episode_number - 1
-          );
-          const EpisAntID = EpAnterior.map((episID) => {
-            return episID.id;
-          });
-          //-ID EPISODe SIGUIENTE
-          const EpSiguiente = season.episodes.filter(
-            (epi) => epi.episode_number === episode.episode_number + 1
-          );
-          const EpisSigID = EpSiguiente.map((episID) => {
-            return episID.id;
-          });
-
-          return (
             <div
               className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6 mb-20"
               style={{
@@ -163,7 +172,6 @@ const TVEpisode = () => {
                       : null
                     : null,
               }}
-              key={index}
             >
               <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
                 {/* //.VOLVER A SERIE */}
@@ -203,8 +211,8 @@ const TVEpisode = () => {
                     navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
                   }
                 >
-                  {season.episodes.length - episode.episode_number ===
-                  season.episodes.length - 1 ? null : (
+                  {season.episodes && season.episodes.length - episode.episode_number ===
+                  season.episodes && season.episodes.length - 1 ? null : (
                     <IoIosArrowBack
                       className="inline-block mr-1"
                       size={25}
@@ -214,15 +222,15 @@ const TVEpisode = () => {
                       }
                     />
                   )}
-                  {season.episodes.length - episode.episode_number ===
-                  season.episodes.length - 1
+                  {season.episodes && season.episodes.length - episode.episode_number ===
+                  season.episodes && season.episodes.length - 1
                     ? null
                     : "Episode " + (episode.episode_number - 1)}
                 </button>
                 <div className="inline-block px-2 text-gray-500">
-                  {season.episodes.length === episode.episode_number ||
-                  season.episodes.length - episode.episode_number ===
-                    season.episodes.length - 1
+                  {season.episodes && season.episodes.length === episode.episode_number ||
+                  season.episodes && season.episodes.length - episode.episode_number ===
+                    season.episodes && season.episodes.length - 1
                     ? null
                     : "<| |>"}
                 </div>
@@ -233,10 +241,10 @@ const TVEpisode = () => {
                     navigate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
                   }
                 >
-                  {season.episodes.length === episode.episode_number
+                  {season.episodes && season.episodes.length === episode.episode_number
                     ? null
                     : "Episode " + (episode.episode_number + 1)}
-                  {season.episodes.length === episode.episode_number ? null : (
+                  {season.episodes && season.episodes.length === episode.episode_number ? null : (
                     <IoIosArrowForward
                       className="inline-block mr-1"
                       size={25}
@@ -341,13 +349,13 @@ const TVEpisode = () => {
                   </div>
                   {/* //-DIRIGIDO POR */}
                   <div className="">
-                    {directores.length === 0 ? null : (
+                    {directores && directores.length === 0 ? null : (
                       <div className="pl-10 flex flex-row text-sm mb-4">
                         <div className="inline-block text-gray-400">
-                          {directores.length === 0
+                          {directores && directores.length === 0
                             ? null
-                            : directores.length === 1
-                            ? directores.map((guio, index) => {
+                            : directores && directores.length === 1
+                            ? directores && directores.map((guio, index) => {
                                 return (
                                   <div key={index}>
                                     {guio.name && "DIRIGIDO POR: "}
@@ -358,9 +366,9 @@ const TVEpisode = () => {
                         </div>
 
                         <div className="inline-block text-gray-400 pl-1">
-                          {directores.length === 0
+                          {directores && directores.length === 0
                             ? null
-                            : directores.map((guio, index) => {
+                            : directores && directores.map((guio, index) => {
                                 return (
                                   <div
                                     className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
@@ -382,13 +390,13 @@ const TVEpisode = () => {
                   </div>
                   {/* //-ESCRITO POR */}
                   <div className="">
-                    {guionistas.length === 0 ? null : (
+                    {guionistas && guionistas.length === 0 ? null : (
                       <div className="pl-10 flex flex-row text-sm mb-4">
                         <div className="inline-block text-gray-400">
-                          {guionistas.length === 0
+                          {guionistas && guionistas.length === 0
                             ? null
-                            : guionistas.length === 1
-                            ? guionistas.map((guio, index) => {
+                            : guionistas && guionistas.length === 1
+                            ? guionistas && guionistas.map((guio, index) => {
                                 return (
                                   <div key={index}>
                                     {guio.name && "ESCRITO POR: "}
@@ -399,9 +407,9 @@ const TVEpisode = () => {
                         </div>
 
                         <div className="inline-block text-gray-400 pl-1">
-                          {guionistas.length === 0
+                          {guionistas && guionistas.length === 0
                             ? null
-                            : guionistas.map((guio, index) => {
+                            : guionistas && guionistas.map((guio, index) => {
                                 return (
                                   <div
                                     className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
@@ -423,7 +431,7 @@ const TVEpisode = () => {
                   </div>
                   {/* //-REPARTO PRINCIPAL */}
                   <>
-                    {episode.guest_stars.length === 0 ? null : (
+                    {episode && episode.guest_stars && episode.guest_stars.length === 0 ? null : (
                       <div className="text-gray-200 rounded-xl mb-10 ">
                         <div className="">
                           <CarouselCredits
@@ -439,8 +447,6 @@ const TVEpisode = () => {
                 </div>
               </div>
             </div>
-          );
-        })}
     </div>
   );
 };

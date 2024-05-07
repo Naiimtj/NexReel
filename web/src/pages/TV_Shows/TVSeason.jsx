@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
-import { getDetailMedia } from "../../../services/DB/services-db";
+import { getDetailSeasons } from "../../../services/DB/services-db";
 import { NoImage, tv } from "../../assets/image";
 import {
   IoCheckmarkCircleOutline,
@@ -17,10 +17,10 @@ import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Episodes from "../../components/TV/Episodes";
 import PageTitle from "../../components/PageTitle";
-import SeenPending from "../../components/MediaList/SeenPending";
+import SeenPendingSeason from "../../components/MediaList/SeenPendingSeason";
 
 const TVSeason = () => {
-  const { user } = useAuthContext();
+  const { user, onReload } = useAuthContext();
   const userExist = !!user;
   const [t] = useTranslation("translation");
   const { idTv, NSeason } = useParams();
@@ -59,39 +59,35 @@ const TVSeason = () => {
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
-      getDetailMedia(idTv).then((d) => {
+      getDetailSeasons(idTv, NSeason).then((d) => {
         setDataMediaUser(d);
       });
     }
-  }, [changeSeenPending, pendingSeen, idTv, userExist]);
-  const { seen, pending } = dataMediaUser;
-
+  }, [changeSeenPending, pendingSeen, idTv, userExist, NSeason]);
+  const { seen, pending, runtime, number_seasons, number_of_episodes } =
+    dataMediaUser;
+  const runTimeSeason =
+    season && season.episodes && season.episodes.length * runtime;
+  const TotalTime =
+    runTimeSeason > 0
+      ? new DateAndTimeConvert(runTimeSeason, t, false).TimeConvert()
+      : 0;
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
-    new SeenPending(
+    new SeenPendingSeason(
       dataMediaUser,
       idTv,
       "tv",
-      tvDetails.episode_run_time,
+      runTimeSeason || 0,
       seen,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
-      pendingSeen
-    ).Seen();
-  };
-  // - PENDING/NO PENDING
-  const handlePending = () => {
-    new SeenPending(
-      dataMediaUser,
-      idTv,
-      "tv",
-      tvDetails.episode_run_time,
-      pending,
-      setChangeSeenPending,
-      changeSeenPending,
-      setPendingSeen,
-      pendingSeen
+      pendingSeen,
+      onReload,
+      number_seasons,
+      number_of_episodes,
+      NSeason
     ).Seen();
   };
 
@@ -224,7 +220,7 @@ const TVSeason = () => {
                 />
               </div>
             )}
-            {/* // . BUTTON SEEN/UNSEEN & PENDING/UNPENDING */}
+            {/* // . BUTTON SEEN/UNSEEN & NO BUTTON PENDING/UNPENDING */}
             {userExist ? (
               <div className="mb-1 grid grid-cols-3 gap-2 top-0 w-full pr-4">
                 {/* //-SEEN/UNSEEN */}
@@ -254,25 +250,21 @@ const TVSeason = () => {
                 {/* //-PENDING/NO PENDING */}
                 <div className="col-start-3 text-center align-middle">
                   {pending !== true ? (
-                    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                      <BsAlarm
-                        className="inline-block"
-                        size={17}
-                        color="#FFCA28"
-                        alt={t("Pending")}
-                        onClick={handlePending}
-                      />
-                    </button>
+                    <BsAlarm
+                      className="inline-block"
+                      size={17}
+                      color="#FFCA28"
+                      alt={t("Pending")}
+                      onClick={handleSeenMedia}
+                    />
                   ) : (
-                    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                      <BsAlarmFill
-                        className="inline-block"
-                        size={17}
-                        color="#FFCA28"
-                        alt={t("No Pending")}
-                        onClick={handlePending}
-                      />
-                    </button>
+                    <BsAlarmFill
+                      className="inline-block"
+                      size={17}
+                      color="#FFCA28"
+                      alt={t("No Pending")}
+                      onClick={handleSeenMedia}
+                    />
                   )}
                 </div>
               </div>
@@ -286,6 +278,7 @@ const TVSeason = () => {
                 <p className="text-xl">{`(${
                   season.episodes && season.episodes.length
                 } ${t("episodes")})`}</p>
+                <p className="text-xs ml-1">{TotalTime}</p>
               </div>
               {dateSeason ? <div className="text-xs">{dateSeason}</div> : null}
             </div>

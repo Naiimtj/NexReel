@@ -7,6 +7,7 @@ import { useAuthContext } from "../../context/auth-context";
 import {
   getKeyWords,
   getMediaDetailsEN,
+  getSeasonDetails,
   getTrailer,
   getWatchList,
 } from "../../../services/TMDB/services-tmdb";
@@ -107,6 +108,19 @@ function DetailsMovie({ info, crews, cast, media }) {
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
   const [changeSeenPending, setChangeSeenPending] = useState(true);
+  const [runtimeSeason, setSeason] = useState({});
+  useEffect(() => {
+    const DataSeason = async () => {
+      getSeasonDetails(id, 1)
+        .then((data) => {
+          setSeason({0: data.episodes[1].runtime});
+        })
+        .catch((err) => err);
+    };
+    if (id && media === "tv") {
+      DataSeason();
+    }
+  }, [id, media])
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -291,12 +305,12 @@ function DetailsMovie({ info, crews, cast, media }) {
       ? runtime
       : episode_run_time && episode_run_time.length > 0
       ? episode_run_time
-      : 0;
+      : runtimeSeason[0] || 0;
   processInfo.TimeHM =
     runtime > 0 && !episode_run_time
       ? new DateAndTimeConvert(processInfo.runTime, t, false).TimeConvert()
-      : episode_run_time && episode_run_time[0]
-      ? `${episode_run_time[0]} min.`
+      : processInfo.runTime && processInfo.runTime
+      ? `${processInfo.runTime} min.`
       : null;
   processInfo.numSeason = number_of_seasons;
   processInfo.numEpis = number_of_episodes;
@@ -350,9 +364,9 @@ function DetailsMovie({ info, crews, cast, media }) {
       true
     ).DateTimeConvert();
   processInfo.TotalTime =
-    number_of_episodes * episode_run_time > 0
+    number_of_episodes * number_of_episodes > 0
       ? new DateAndTimeConvert(
-          number_of_episodes * episode_run_time,
+        processInfo.runTime * number_of_episodes,
           t,
           false
         ).TimeConvert()
@@ -433,7 +447,6 @@ function DetailsMovie({ info, crews, cast, media }) {
       </button>
     </div>
   );
-  const runTime = processInfo.runTime;
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
@@ -441,7 +454,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       dataMediaUser,
       id,
       media,
-      runTime,
+      processInfo.runTime,
       seen,
       setChangeSeenPending,
       changeSeenPending,
@@ -460,7 +473,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       dataMediaUser,
       id,
       media,
-      runTime,
+      processInfo.runTime,
       pending,
       setChangeSeenPending,
       changeSeenPending,

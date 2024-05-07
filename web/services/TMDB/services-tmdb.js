@@ -228,6 +228,18 @@ export async function getSeasonDetails(id, season, lang = "es-ES") {
     return {};
   }
 }
+// . Episode
+export async function getEpisodeDetails(id, season, episode, lang = "es-ES") {
+  try {
+    const response = await service.get(`/tv/${id}/season/${season}/episode/${episode}`, {
+      params: paramsKeyLang(lang),
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Error Episode Details TMDB:", err);
+    return {};
+  }
+}
 // < PERSON
 // . Detail Person
 export async function getPersonDetails(media, id, lang = "es-ES") {

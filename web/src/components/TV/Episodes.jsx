@@ -13,14 +13,14 @@ import {
 const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
-  const { name, air_date, episode_number, id } = info;
+  const { name, runtime, air_date, episode_number, id } = info;
+  const TotalTime =
+    runtime > 0 ? new DateAndTimeConvert(runtime, t, false).TimeConvert() : 0;
   //-SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  const NumberSeason = numSeason;
-  const NumberEpisode = episode_number;
   const dateComplete =
     air_date &&
     new DateAndTimeConvert(
@@ -32,42 +32,37 @@ const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
       true,
       false
     ).DateTimeConvert();
-  const idEpi = id;
-  const idEpis = idEpi;
 
   return (
     <div className="grid grid-cols-6 justify-items-stretch hover:bg-white/10 rounded-xl py-2">
       <div
-        className="cursor-pointer grid grid-cols-5 col-span-5 grid-flow-col content-center"
+        className="cursor-pointer grid grid-cols-8 col-span-5 grid-flow-col content-center"
         onClick={() =>
-          info && navigate(`/tv/${idTvShow}/${NumberSeason}/${idEpis}`)
+          info && navigate(`/tv/${idTvShow}/${numSeason}/${episode_number}`)
         }
       >
         {/* //-NUMBER EPISODE */}
-        <div className="auto-cols-min">
-          <h1 className="text-md text-center text-[#7B6EF6]">
-            {NumberEpisode}
-          </h1>
-        </div>
+        <h1 className="text-md text-center text-[#7B6EF6]">{episode_number}</h1>
         {/* //-NAME Y DATE */}
-        <div className="px-2 col-span-3 grid content-center">
+        <div className="px-2 col-span-5 content-center">
           {/* //-NAME */}
-          <div className="items-stretch inline-block">
-            <div className="">
-              <h1 className="font-semibold text-sm pr-10">{name} </h1>
-            </div>
+          <div className="flex justify-start">
+            <h1 className="font-semibold text-sm">{name}</h1>
           </div>
         </div>
-        <div className="px-2 grid content-center">
+        <div className="col-span-2 flex justify-end items-center gap-1 text-xs text-right px-2 content-center">
           {/* //-DATE */}
-          <div className="text-xs text-right">{dateComplete}</div>
+
+          <div className="">
+            <p className="text-[10px] text-gray-400">({TotalTime})</p>
+            {dateComplete}
+          </div>
         </div>
       </div>
       {/* //.BUTTON AND SEEN/UNSEEN */}
       {userExist ? (
-        <div className="grid grid-cols-2 gap-4 justify-items-center justify-between">
+        <div className="flex justify-center gap-8 items-center">
           {/* //-SEEN/UNSEEN */}
-          <div className="text-right flex items-center">
             {seen !== true ? (
               <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
                 <IoCheckmarkCircleOutline
@@ -89,9 +84,7 @@ const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
                 />
               </button>
             )}
-          </div>
           {/* //-PENDING/NO PENDING */}
-          <div className="text-right align-middle">
             {pending !== true ? (
               <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
                 <BsAlarm
@@ -113,7 +106,6 @@ const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
                 />
               </button>
             )}
-          </div>
         </div>
       ) : null}
     </div>
