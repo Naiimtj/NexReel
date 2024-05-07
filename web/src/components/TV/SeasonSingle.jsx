@@ -9,16 +9,19 @@ import {
 } from "react-icons/io5";
 import { getDetailSeasons } from "../../../services/DB/services-db";
 import { useAuthContext } from "../../context/auth-context";
-import SeenPendingSeason from "../MediaList/SeenPendingSeason";
+import SeenPendingSeason from "../MediaList/SeenPendingMedia/SeenPendingSeason";
 
 export const SeasonSingle = ({
   season,
   idTvShow,
+  mediaIsPending,
+  mediaIsSeen,
   runTime,
   setChangeSeenPending,
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
+  runTimeSeason,
 }) => {
   const [t] = useTranslation("translation");
   const { onReload } = useAuthContext();
@@ -47,19 +50,30 @@ export const SeasonSingle = ({
       : new Date(air_date).getFullYear();
   const numEpis = episode_count;
   const idInfo = id;
-
-  const NumberSeason = season_number;
   const idSeason = idInfo;
-  const [pendingSeen, setPendingSeen] = useState(false);
-  const [dataMediaUser, setDataMediaUser] = useState({});
-  useEffect(() => {
-    getDetailSeasons(idTvShow, NumberSeason).then((d) => {
-      setDataMediaUser(d);
-    });
-    
-  }, [pendingSeen, changeSeenPending, onReload, idTvShow, NumberSeason]);
 
-  const { seen } = dataMediaUser;
+  const [pendingSeen, setPendingSeen] = useState(false);
+  const [dataMediaUser, setDataMediaUser] = useState([]);
+  useEffect(() => {
+    if (mediaIsPending) {
+      getDetailSeasons(idTvShow, season_number).then((d) => {
+        setDataMediaUser(d);
+      });
+    }
+  }, [
+    mediaIsPending,
+    pendingSeen,
+    changeSeenPending,
+    onReload,
+    idTvShow,
+    season_number,
+  ]);
+
+  const seasonSeen =
+    (mediaIsPending && dataMediaUser && dataMediaUser.seen) ||
+    (!mediaIsPending && mediaIsSeen);
+  // console.log(seasonSeen);
+  // console.log(dataMediaUser);
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
@@ -68,16 +82,17 @@ export const SeasonSingle = ({
       idTvShow,
       "tv",
       runTime,
-      seen,
+      seasonSeen,
       setChangeSeenPending,
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
       "seen",
       onReload,
-      NumberSeason,
+      season_number,
       numberEpisodes,
-      numberSeasons
+      numberSeasons,
+      runTimeSeason
     );
   };
 
@@ -93,7 +108,7 @@ export const SeasonSingle = ({
                 src={poster}
                 alt={name}
                 onClick={() =>
-                  season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+                  season && navigate(`/tv/${idTvShow}/${season_number}`)
                 }
               />
             ) : (
@@ -108,7 +123,7 @@ export const SeasonSingle = ({
                   src={poster}
                   alt={name}
                   onClick={() =>
-                    season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+                    season && navigate(`/tv/${idTvShow}/${season_number}`)
                   }
                 />
               </div>
@@ -121,7 +136,7 @@ export const SeasonSingle = ({
             <h2
               className="cursor-pointer font-semibold text-base"
               onClick={() =>
-                season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+                season && navigate(`/tv/${idTvShow}/${season_number}`)
               }
             >
               {name}
@@ -136,7 +151,7 @@ export const SeasonSingle = ({
               className="cursor-pointer"
               onClick={() =>
                 season &&
-                navigate(`/tv/${idTvShow}/${NumberSeason}/${idSeason}`)
+                navigate(`/tv/${idTvShow}/${season_number}/${idSeason}`)
               }
             >
               {`${t("Episodes")}: ${numEpis}`}
@@ -145,7 +160,7 @@ export const SeasonSingle = ({
             {/* //-SEEN/UNSEEN */}
             <div className="inline-block">
               <div className="text-right align-middle">
-                {seen !== true ? (
+                {seasonSeen !== true ? (
                   <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
                     <IoCheckmarkCircleOutline
                       className="inline-block"
@@ -180,21 +195,25 @@ export default SeasonSingle;
 SeasonSingle.defaultProps = {
   season: {},
   idTvShow: 0,
-  dataUser: {},
+  mediaIsPending: false,
+  mediaIsSeen: false,
   runTime: 0,
   setChangeSeenPending: () => {},
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
+  runTimeSeason: [],
 };
 
 SeasonSingle.propTypes = {
   season: PropTypes.object,
   idTvShow: PropTypes.number,
-  dataUser: PropTypes.object,
+  mediaIsPending: PropTypes.bool,
+  mediaIsSeen: PropTypes.bool,
   runTime: PropTypes.number,
   setChangeSeenPending: PropTypes.func,
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
+  runTimeSeason: PropTypes.array,
 };

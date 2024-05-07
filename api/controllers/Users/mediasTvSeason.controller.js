@@ -15,6 +15,7 @@ module.exports.create = async (req, res, next) => {
       seen,
       pending,
       vote,
+      runtime_seasons,
     } = req.body;
 
     const userId = req.user.id;
@@ -55,6 +56,7 @@ module.exports.create = async (req, res, next) => {
       seen: seenData,
       pending: pendingData,
       vote,
+      runtime_seasons,
     };
 
     if (seasonExists) {
@@ -71,7 +73,8 @@ module.exports.create = async (req, res, next) => {
       mediaData.pending = true;
 
       req.body = mediaData;
-      await mediasController.create(req, res, next);
+      req.params.id = req.params.mediaId;
+      await mediasController.update(req, res, next, updateSeason=true);
     }
   } catch (error) {
     next(error);
@@ -83,7 +86,7 @@ module.exports.detail = async (req, res, next) => {
     const media = await MediaTvSeason.findOne({
       mediaId: req.params.mediaId,
       userId: req.user.id,
-      season: req.params.season
+      season: req.params.season,
     });
     if (!media) {
       res.status(204).json({ result: false });
@@ -97,7 +100,7 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    const { runtime, like, seen, vote } = req.body;
+    const { runtime, like, seen, vote, runtime_seasons } = req.body;
     const media = await req.media;
     // If seen is true seenComplete is true
     let seenData = false;
@@ -118,6 +121,7 @@ module.exports.update = async (req, res, next) => {
       pending: pendingData,
       runtime: runtime || media.runtime,
       vote: vote || media.vote,
+      runtime_seasons
     };
     if (!media) {
       next(createError(404, "Season not found"));
@@ -165,5 +169,3 @@ module.exports.list = async (req, res, next) => {
     next(error);
   }
 };
-
-

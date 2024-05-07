@@ -1,4 +1,4 @@
-import { patchMedia, postMedia } from "../../../services/DB/services-db";
+import { patchMedia, postMedia } from "../../../../services/DB/services-db";
 
 function SeenPending(
   dataMediaUser,
@@ -13,7 +13,9 @@ function SeenPending(
   updateType, // 'seen' or 'pending'
   onReload,
   numberEpisodes,
-  numberSeasons
+  numberSeasons,
+  runTimeSeasons,
+  totalRunTime
 ) {
   const updateData =
     mediaType === "tv"
@@ -24,6 +26,7 @@ function SeenPending(
           vote: dataMediaUser.vote,
           number_seasons: numberSeasons,
           number_of_episodes: numberEpisodes,
+          runtime_seasons: runTimeSeasons,
         }
       : {
           mediaId: id.toString(),
@@ -34,8 +37,10 @@ function SeenPending(
 
   if (updateType === "seen") {
     updateData.seen = !seenOrPending;
+    updateData.runtime_seen = totalRunTime;
   } else if (updateType === "pending") {
     updateData.pending = !seenOrPending;
+    updateData.runtime_seen = 0;
   }
 
   Object.keys(dataMediaUser).length

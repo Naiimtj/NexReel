@@ -16,7 +16,7 @@ import {
 } from "react-icons/io5";
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
-import SeenPending from "./SeenPending";
+import SeenPending from "./SeenPendingMedia/SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 export const MultiList = ({

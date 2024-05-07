@@ -7,10 +7,8 @@ import {
   IoCheckmarkCircleOutline,
   IoCheckmarkCircleSharp,
 } from "react-icons/io5";
-import {
-  getDetailMedia,
-} from "../../../services/DB/services-db";
-import SeenPending from "../MediaList/SeenPending";
+import { getDetailMedia } from "../../../services/DB/services-db";
+import SeenPending from "../MediaList/SeenPendingMedia/SeenPending";
 import { useAuthContext } from "../../context/auth-context";
 
 export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
@@ -27,10 +25,9 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
     //.Default
     id,
   } = season;
-  const url =
-    poster_path
-      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
-      : null;
+  const url = poster_path
+    ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+    : null;
   const poster = poster_path ? url : NoImage;
   const date =
     air_date === ""
@@ -83,7 +80,9 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
                 className="static aspect-auto rounded-xl justify-center"
                 src={poster}
                 alt={name}
-                onClick={() => season && navigate(`/tv/${idTvShow}/${NumberSeason}`)}
+                onClick={() =>
+                  season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+                }
               />
             ) : (
               <div className="relative flex justify-center items-center">
@@ -109,7 +108,9 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
           <div className="flex justify-between items-center pb-2">
             <h2
               className="cursor-pointer font-semibold text-base"
-              onClick={() => season && navigate(`/tv/${idTvShow}/${NumberSeason}`)}
+              onClick={() =>
+                season && navigate(`/tv/${idTvShow}/${NumberSeason}`)
+              }
             >
               {name}
             </h2>
@@ -122,7 +123,8 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
             <div
               className="cursor-pointer"
               onClick={() =>
-                season && navigate(`/tv/${idTvShow}/${NumberSeason}/${idSeason}`)
+                season &&
+                navigate(`/tv/${idTvShow}/${NumberSeason}/${idSeason}`)
               }
             >
               {`${t("Episodes")}: ${numEpis}`}

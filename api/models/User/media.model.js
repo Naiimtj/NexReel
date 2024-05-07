@@ -25,12 +25,13 @@ const mediaSchema = new Schema(
     seenComplete: {
       type: Boolean,
       default: false,
-    },
-    number_seasons: { type: Number },
-    number_of_episodes: { type: Number },
+    },    
     runtime: {
       type: Number,
     },
+    number_seasons: { type: Number },
+    number_of_episodes: { type: Number },
+    runtime_seen: {type: Number },
     vote: {
       type: Number,
       default: -1,

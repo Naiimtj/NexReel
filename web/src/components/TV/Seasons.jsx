@@ -7,14 +7,17 @@ import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 export const Seasons = ({
   info,
   idTvShow,
-  dataUser,
+  mediaIsPending,
+  mediaIsSeen,
   runTime,
   setChangeSeenPending,
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
+  runTimeSeasons,
 }) => {
   const [t] = useTranslation("translation");
+  const haveData = info && info.length > 0
   // - SEASONS
   const [modalMoreSeasons, setModalMoreSeasons] = useState(false);
   const handleDownShow = () => {
@@ -34,11 +37,27 @@ export const Seasons = ({
   };
   const cardsPerPage = getCardsPerPage();
   const size = cardsPerPage;
-  const items = info && info.slice(0, size);
+  const items = haveData && info.slice(0, size);
+
+  const SeasonSingleComponent = (season) => (
+    <SeasonSingle
+      key={season.id}
+      season={season}
+      idTvShow={idTvShow}
+      mediaIsPending={mediaIsPending}
+      mediaIsSeen={mediaIsSeen}
+      runTime={runTime * season.episode_count}
+      setChangeSeenPending={setChangeSeenPending}
+      changeSeenPending={changeSeenPending}
+      numberEpisodes={numberEpisodes}
+      numberSeasons={numberSeasons}
+      runTimeSeason={runTimeSeasons}
+    />
+  );
 
   return (
     <div className="text-gray-200 px-4">
-      {info && info.length > 0 ? (
+      {haveData ? (
         <div className="flex gap-1 text-xl">
           {t("SEASONS")}
           <p className="text-xs">{`(${info.length})`}</p>
@@ -46,7 +65,7 @@ export const Seasons = ({
       ) : null}
       <>
         {/* // - SEASONS */}
-        {info && info.length > 0 ? (
+        {haveData ? (
           info.length > cardsPerPage ? (
             <>
               {info &&
@@ -54,27 +73,14 @@ export const Seasons = ({
                   <>
                     <div className="text-gray-200 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-1 p-2 md:pt-4 md:px-4">
                       {items &&
-                        items.map((season, key) => {
-                          return (
-                            <SeasonSingle
-                              season={season}
-                              key={key}
-                              idTvShow={idTvShow}
-                              runTime={runTime}
-                              setChangeSeenPending={setChangeSeenPending}
-                              changeSeenPending={changeSeenPending}
-                              numberEpisodes={numberEpisodes}
-                              numberSeasons={numberSeasons}
-                            />
-                          );
-                        })}
+                        items.map((season) => SeasonSingleComponent(season))}
                     </div>
                     {items && (
                       <button
                         className="w-full flex justify-center cursor-pointer text-[#b1a9fa] transition ease-in-out md:hover:text-gray-200 duration-100"
                         onClick={handleDownShow}
                       >
-                        <IoIosArrowDown className="" size={60} />
+                        <IoIosArrowDown size={60} />
                       </button>
                     )}
                   </>
@@ -82,28 +88,14 @@ export const Seasons = ({
                   <>
                     <div className="text-gray-200 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 p-2 md:pt-4 md:px-4">
                       {info &&
-                        info.map((season, key) => {
-                          return (
-                            <SeasonSingle
-                              season={season}
-                              key={key}
-                              idTvShow={idTvShow}
-                              dataUser={dataUser}
-                              runTime={runTime}
-                              setChangeSeenPending={setChangeSeenPending}
-                              changeSeenPending={changeSeenPending}
-                              numberEpisodes={numberEpisodes}
-                              numberSeasons={numberSeasons}
-                            />
-                          );
-                        })}
+                        info.map((season) => SeasonSingleComponent(season))}
                     </div>
                     {info && (
                       <button
                         className="w-full flex justify-center cursor-pointer text-[#b1a9fa] transition ease-in-out md:hover:text-gray-200 duration-100"
                         onClick={handelUpHidden}
                       >
-                        <IoIosArrowUp className="" size={60} />
+                        <IoIosArrowUp size={60} />
                       </button>
                     )}
                   </>
@@ -112,21 +104,7 @@ export const Seasons = ({
           ) : (
             <div className="my-5 text-gray-200 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 p-2 md:pt-4 md:px-4">
               {info &&
-                info.map((season, key) => {
-                  return (
-                    <SeasonSingle
-                      season={season}
-                      key={key}
-                      idTvShow={idTvShow}
-                      dataUser={dataUser}
-                      runTime={runTime}
-                      setChangeSeenPending={setChangeSeenPending}
-                      changeSeenPending={changeSeenPending}
-                      numberEpisodes={numberEpisodes}
-                      numberSeasons={numberSeasons}
-                    />
-                  );
-                })}
+                info.map((season) => SeasonSingleComponent(season))}
             </div>
           )
         ) : null}
@@ -140,21 +118,25 @@ export default Seasons;
 Seasons.defaultProps = {
   info: [],
   idTvShow: 0,
-  dataUser: {},
+  mediaIsPending: false,
+  mediaIsSeen: false,
   runTime: 0,
   setChangeSeenPending: () => {},
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
+  runTimeSeasons: []
 };
 
 Seasons.propTypes = {
   info: PropTypes.array,
   idTvShow: PropTypes.number,
-  dataUser: PropTypes.object,
+  mediaIsPending: PropTypes.bool,
+  mediaIsSeen: PropTypes.bool,
   runTime: PropTypes.number,
   setChangeSeenPending: PropTypes.func,
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
+  runTimeSeasons: PropTypes.array,
 };

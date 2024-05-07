@@ -17,7 +17,7 @@ import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Episodes from "../../components/TV/Episodes";
 import PageTitle from "../../components/PageTitle";
-import SeenPendingSeason from "../../components/MediaList/SeenPendingSeason";
+import SeenPendingSeason from "../../components/MediaList/SeenPendingMedia/SeenPendingSeason";
 
 const TVSeason = () => {
   const { user, onReload } = useAuthContext();
@@ -73,7 +73,8 @@ const TVSeason = () => {
       ? new DateAndTimeConvert(runTimeSeason, t, false).TimeConvert()
       : 0;
   //- SEEN/NO SEEN
-  const handleSeenMedia = () => {
+  const handleSeenMedia = (event) => {
+    event.stopPropagation();
     new SeenPendingSeason(
       dataMediaUser,
       idTv,
@@ -84,11 +85,12 @@ const TVSeason = () => {
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
+      "seen",
       onReload,
-      number_seasons,
+      NSeason,
       number_of_episodes,
-      NSeason
-    ).Seen();
+      number_seasons
+    );
   };
 
   const dateSeason =

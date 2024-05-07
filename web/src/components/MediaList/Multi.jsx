@@ -18,7 +18,7 @@ import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import AddForum from "../../utils/Forum/AddForum";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
-import SeenPending from "./SeenPending";
+import SeenPending from "./SeenPendingMedia/SeenPending";
 
 export const Multi = ({
   info,
@@ -132,7 +132,7 @@ export const Multi = ({
 
   const { seen, pending, vote } = dataMediaUser;
   const runTime = processInfo.runTime;
-  
+
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();

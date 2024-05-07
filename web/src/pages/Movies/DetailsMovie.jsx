@@ -54,7 +54,7 @@ import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import calculateAverageVote from "../../components/MediaList/calculateAverageVote";
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
-import SeenPending from "../../components/MediaList/SeenPending";
+import SeenPending from "../../components/MediaList/SeenPendingMedia/SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 
 function compareStrings(str1, str2) {
@@ -113,14 +113,14 @@ function DetailsMovie({ info, crews, cast, media }) {
     const DataSeason = async () => {
       getSeasonDetails(id, 1)
         .then((data) => {
-          setSeason({0: data.episodes[1].runtime});
+          setSeason({ 0: data.episodes[1].runtime });
         })
         .catch((err) => err);
     };
     if (id && media === "tv") {
       DataSeason();
     }
-  }, [id, media])
+  }, [id, media]);
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -244,7 +244,7 @@ function DetailsMovie({ info, crews, cast, media }) {
         }
       });
     }
-  }, [pendingSeen,changeSeenPending, id, userExist]);
+  }, [pendingSeen, changeSeenPending, id, userExist]);
   const { seen, pending } = dataMediaUser;
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
@@ -363,14 +363,19 @@ function DetailsMovie({ info, crews, cast, media }) {
       false,
       true
     ).DateTimeConvert();
+  const runTimeSeasons =
+    seasons &&
+    seasons.map((season) => season.episode_count * processInfo.runTime);
+  const haveSpecialSeason = number_of_seasons === runTimeSeasons.length;
+  let totalRunTime = 0;
+  for (let i = haveSpecialSeason ? 1 : 0; i < runTimeSeasons.length; i++) {
+    totalRunTime += runTimeSeasons[i];
+  }
   processInfo.TotalTime =
-    number_of_episodes * number_of_episodes > 0
-      ? new DateAndTimeConvert(
-        processInfo.runTime * number_of_episodes,
-          t,
-          false
-        ).TimeConvert()
+    totalRunTime > 0
+      ? new DateAndTimeConvert(totalRunTime, t, false).TimeConvert()
       : 0;
+
   processInfo.watchingBuy =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.buy
       ? detailsWatchList.ES.buy
@@ -447,6 +452,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       </button>
     </div>
   );
+
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
@@ -463,7 +469,9 @@ function DetailsMovie({ info, crews, cast, media }) {
       "seen",
       onReload,
       number_of_episodes,
-      number_of_seasons
+      number_of_seasons,
+      runTimeSeasons,
+      totalRunTime
     );
   };
   // - PENDING/NO PENDING
@@ -482,7 +490,9 @@ function DetailsMovie({ info, crews, cast, media }) {
       "pending",
       onReload,
       number_of_episodes,
-      number_of_seasons
+      number_of_seasons,
+      runTimeSeasons,
+      totalRunTime
     );
   };
 
@@ -592,7 +602,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                       type={media}
                       runTime={
                         media === "tv"
-                          ? processInfo.runTime[0]
+                          ? processInfo.runTime
                           : processInfo.runTime
                       }
                     />
@@ -752,9 +762,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   mediaId={id}
                   media_type={media}
                   runtime={
-                    media === "tv"
-                      ? processInfo.runTime[0]
-                      : processInfo.runTime
+                    media === "tv" ? processInfo.runTime : processInfo.runTime
                   }
                   setPendingSeen={setPendingSeen}
                   pendingSeen={pendingSeen}
@@ -1235,12 +1243,14 @@ function DetailsMovie({ info, crews, cast, media }) {
               <Seasons
                 info={seasons && seasons}
                 idTvShow={id}
-                dataUser={dataUser}
-                runTime={processInfo.runTime[0]}
+                mediaIsPending={pending}
+                mediaIsSeen = {seen}
+                runTime={processInfo.runTime}
                 setChangeSeenPending={setChangeSeenPending}
                 changeSeenPending={changeSeenPending}
                 numberEpisodes={number_of_episodes}
                 numberSeasons={number_of_seasons}
+                runTimeSeasons={runTimeSeasons}
               />
             )
           )}
