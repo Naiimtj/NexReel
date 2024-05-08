@@ -355,18 +355,33 @@ function DetailsMovie({ info, crews, cast, media }) {
       false,
       true
     ).DateTimeConvert();
-  const runTimeSeasons =
-    seasons &&
-    seasons.map((season) => season.episode_count * processInfo.runTime);
-  const haveSpecialSeason = number_of_seasons === runTimeSeasons.length;
-  let totalRunTime = 0;
-  for (let i = haveSpecialSeason ? 1 : 0; i < runTimeSeasons.length; i++) {
-    totalRunTime += runTimeSeasons[i];
+
+  if (media === "tv") {
+    processInfo.runTimeSeasons =
+      media === "tv" &&
+      seasons &&
+      seasons.map((season) => season.episode_count * processInfo.runTime);
+    processInfo.haveSpecialSeason =
+      number_of_seasons === processInfo.runTimeSeasons.length;
+    let totalRunTime = 0;
+    for (
+      let i = processInfo.haveSpecialSeason ? 1 : 0;
+      i < processInfo.runTimeSeasons.length;
+      i++
+    ) {
+      totalRunTime += processInfo.runTimeSeasons[i];
+    }
+    processInfo.TotalTime =
+      totalRunTime > 0
+        ? new DateAndTimeConvert(totalRunTime, t, false).TimeConvert()
+        : 0;
+  } else {
+    processInfo.TotalTime = new DateAndTimeConvert(
+      processInfo.runTime,
+      t,
+      false
+    ).TimeConvert();
   }
-  processInfo.TotalTime =
-    totalRunTime > 0
-      ? new DateAndTimeConvert(totalRunTime, t, false).TimeConvert()
-      : 0;
 
   processInfo.watchingBuy =
     detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.buy
@@ -462,8 +477,8 @@ function DetailsMovie({ info, crews, cast, media }) {
       onReload,
       number_of_episodes,
       number_of_seasons,
-      runTimeSeasons,
-      totalRunTime
+      processInfo.runTimeSeasons,
+      processInfo.totalRunTime
     );
   };
   // - PENDING/NO PENDING
@@ -483,8 +498,8 @@ function DetailsMovie({ info, crews, cast, media }) {
       onReload,
       number_of_episodes,
       number_of_seasons,
-      runTimeSeasons,
-      totalRunTime
+      processInfo.runTimeSeasons,
+      processInfo.totalRunTime
     );
   };
 
@@ -1212,7 +1227,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                 changeSeenPending={changeSeenPending}
                 numberEpisodes={number_of_episodes}
                 numberSeasons={number_of_seasons}
-                runTimeSeasons={runTimeSeasons}
+                runTimeSeasons={processInfo.runTimeSeasons}
               />
             )
           )}
