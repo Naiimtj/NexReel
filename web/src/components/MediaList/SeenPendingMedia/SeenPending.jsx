@@ -26,6 +26,7 @@ function SeenPending(
           vote: dataMediaUser.vote,
           number_seasons: numberSeasons,
           number_of_episodes: numberEpisodes,
+          runtime_seen: totalRunTime,
           runtime_seasons: runTimeSeasons,
         }
       : {

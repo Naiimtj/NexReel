@@ -363,17 +363,21 @@ function DetailsMovie({ info, crews, cast, media }) {
       seasons.map((season) => season.episode_count * processInfo.runTime);
     processInfo.haveSpecialSeason =
       number_of_seasons === processInfo.runTimeSeasons.length;
-    let totalRunTime = 0;
+    processInfo.totalRunTime = 0;
     for (
       let i = processInfo.haveSpecialSeason ? 1 : 0;
       i < processInfo.runTimeSeasons.length;
       i++
     ) {
-      totalRunTime += processInfo.runTimeSeasons[i];
+      processInfo.totalRunTime += processInfo.runTimeSeasons[i];
     }
     processInfo.TotalTime =
-      totalRunTime > 0
-        ? new DateAndTimeConvert(totalRunTime, t, false).TimeConvert()
+      processInfo.totalRunTime > 0
+        ? new DateAndTimeConvert(
+            processInfo.totalRunTime,
+            t,
+            false
+          ).TimeConvert()
         : 0;
   } else {
     processInfo.TotalTime = new DateAndTimeConvert(

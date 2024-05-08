@@ -18,7 +18,7 @@ export const SeasonSingle = ({
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
-  runTimeSeason,
+  runTimeSeasons,
 }) => {
   const [t] = useTranslation("translation");
   const { onReload } = useAuthContext();
@@ -89,7 +89,7 @@ export const SeasonSingle = ({
       season_number,
       numberEpisodes,
       numberSeasons,
-      runTimeSeason
+      runTimeSeasons
     );
   };
 
@@ -184,7 +184,7 @@ SeasonSingle.defaultProps = {
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
-  runTimeSeason: [],
+  runTimeSeasons: [],
 };
 
 SeasonSingle.propTypes = {
@@ -197,5 +197,5 @@ SeasonSingle.propTypes = {
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
-  runTimeSeason: PropTypes.array,
+  runTimeSeasons: PropTypes.array,
 };

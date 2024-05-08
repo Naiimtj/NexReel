@@ -63,6 +63,7 @@ module.exports.create = async (req, res, next) => {
         number_seasons: number_seasons,
         number_of_episodes: number_of_episodes,
         runtime_seen,
+        runtime_seasons,
       };
     }
     // Create new media

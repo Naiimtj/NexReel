@@ -15,7 +15,7 @@ function SeenPendingSeason(
   NumberSeason,
   numberEpisodes,
   numberSeasons,
-  runTimeSeason,
+  runTimeSeasons,
 ) {
   const updateData = {
     mediaId: id.toString(),
@@ -25,7 +25,7 @@ function SeenPendingSeason(
     vote: dataMediaUser.vote || -1,
     number_seasons: numberSeasons,
     number_of_episodes: numberEpisodes,
-    runtime_seasons: runTimeSeason,
+    runtime_seasons: runTimeSeasons,
   };
 
   if (updateType === "seen") {

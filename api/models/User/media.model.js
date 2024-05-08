@@ -32,6 +32,7 @@ const mediaSchema = new Schema(
     number_seasons: { type: Number },
     number_of_episodes: { type: Number },
     runtime_seen: {type: Number },
+    runtime_seasons: {type: Array },
     vote: {
       type: Number,
       default: -1,

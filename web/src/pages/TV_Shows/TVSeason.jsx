@@ -60,22 +60,21 @@ const TVSeason = () => {
       });
     }
   }, [changeSeenPending, pendingSeen, idTv, userExist, NSeason]);
-  const { seen, pending, runtime, number_seasons, number_of_episodes } =
+  const { seen, pending, runtime, number_seasons, number_of_episodes, runtime_seasons } =
     dataMediaUser;
-  const runTimeSeason =
-    season && season.episodes && season.episodes.length * runtime;
   const TotalTime =
-    runTimeSeason > 0
-      ? new DateAndTimeConvert(runTimeSeason, t, false).TimeConvert()
+    runtime > 0
+      ? new DateAndTimeConvert(runtime, t, false).TimeConvert()
       : 0;
+      console.log(dataMediaUser);
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
-    new SeenPendingSeason(
+    SeenPendingSeason(
       dataMediaUser,
       idTv,
       "tv",
-      runTimeSeason || 0,
+      runtime,
       seen,
       setChangeSeenPending,
       changeSeenPending,
@@ -85,7 +84,8 @@ const TVSeason = () => {
       onReload,
       NSeason,
       number_of_episodes,
-      number_seasons
+      number_seasons,
+      runtime_seasons
     );
   };
 

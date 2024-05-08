@@ -73,7 +73,7 @@ module.exports.create = async (req, res, next) => {
       mediaData.pending = true;
 
       req.body = mediaData;
-      await mediasController.update(req, res, next, updateSeason=true);
+      await mediasController.update(req, res, next, (updateSeason = true));
     }
   } catch (error) {
     next(error);
@@ -82,15 +82,33 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.detail = async (req, res, next) => {
   try {
-    const media = await MediaTvSeason.findOne({
+    const media = await Media.findOne({
       mediaId: req.params.mediaId,
       userId: req.user.id,
-      season: req.params.season,
     });
-    if (!media) {
-      res.status(204).json({ result: false });
+    if (!media.seen) {
+      const mediaSeason = await MediaTvSeason.findOne({
+        mediaId: req.params.mediaId,
+        userId: req.user.id,
+        season: req.params.season,
+      });
+      if (!mediaSeason) {
+        res.status(204).json({ result: false });
+      } else {
+        res.status(200).json(mediaSeason);
+      }
     } else {
-      res.status(200).json(media);
+      const mediaSeason = {
+        ...media.toObject(),
+        season: req.params.season,
+        runtime: media.runtime_seasons[req.params.season],
+      };
+      delete mediaSeason.seenComplete;
+      delete mediaSeason.runtime_seen;
+      delete mediaSeason._id;
+      delete mediaSeason.__v;
+
+      res.status(200).json(mediaSeason);
     }
   } catch (error) {
     next(error);
@@ -120,7 +138,7 @@ module.exports.update = async (req, res, next) => {
       pending: pendingData,
       runtime: runtime || media.runtime,
       vote: vote || media.vote,
-      runtime_seasons
+      runtime_seasons,
     };
     if (!media) {
       next(createError(404, "Season not found"));
