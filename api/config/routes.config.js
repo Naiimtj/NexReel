@@ -53,7 +53,9 @@ router.delete("/users/:userId/nofollow", auth.isAuthenticated, users.unFollow);
 router.post("/medias", auth.isAuthenticated, medias.create);
 router.get("/medias/:id", auth.isAuthenticated, medias.detail);
 router.get("/medias", auth.isAuthenticated, medias.list);
-router.patch("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.update);
+router.patch("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, (req, res, next) => {
+  medias.update(req, res, next, false);
+});
 router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.delete);
 
 // - MEDIA TV SEASON

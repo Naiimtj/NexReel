@@ -140,7 +140,7 @@ module.exports.detail = async (req, res, next) => {
 };
 
 module.exports.update = async (req, res, next, updateSeason) => {
-  try {
+    try {
     const { seen, pending, vote, runtime_seasons, runtime } = req.body;
     const userId = req.user.id;
     let data = {};
@@ -214,7 +214,7 @@ module.exports.update = async (req, res, next, updateSeason) => {
         new: true,
       }
     );
-    console.log(data);
+    // console.log(data);
     if (updateMedia) {
       // If media is TV and seen or pending, create or update TV seasons
       if (data.media_type === "tv" && !seenData && pendingData) {
@@ -240,21 +240,21 @@ module.exports.update = async (req, res, next, updateSeason) => {
               runtime: runtime_seasons[seasonNumber],
               like: data.like,
               seen: updateSeason ? data.seen : seenData,
-              pending: updateSeason ? data.seen : pendingData,
+              pending: updateSeason ? data.pending : pendingData,
               vote: data.vote,
             };
             if (!mediaTvSeasonExists) {
               seasonPromises.push(MediaTvSeason.create(seasonData));
             } else {
-              seasonPromises.push(
-                MediaTvSeason.findByIdAndUpdate(
-                  mediaTvSeasonExists.id,
-                  seasonData,
-                  {
-                    new: true,
-                  }
-                )
-              );
+              // seasonPromises.push(
+              //   MediaTvSeason.findByIdAndUpdate(
+              //     mediaTvSeasonExists.id,
+              //     seasonData,
+              //     {
+              //       new: true,
+              //     }
+              //   )
+              // );
             }
         }
 

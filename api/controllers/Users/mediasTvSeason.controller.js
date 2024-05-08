@@ -73,7 +73,6 @@ module.exports.create = async (req, res, next) => {
       mediaData.pending = true;
 
       req.body = mediaData;
-      req.params.id = req.params.mediaId;
       await mediasController.update(req, res, next, updateSeason=true);
     }
   } catch (error) {
@@ -143,6 +142,7 @@ module.exports.update = async (req, res, next) => {
       const allSeasonsSeen =
         allSeasons.filter((season) => season.seen === true).length ===
         updateMedia.number_seasons;
+      console.log(allSeasonsSeen);
       if (allSeasonsSeen) {
         let mediaData = {
           seen: true,

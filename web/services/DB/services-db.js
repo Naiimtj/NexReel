@@ -383,9 +383,8 @@ export async function deleteFollowPlaylist(id) {
 // . POST
 // Add Media
 export async function postMedia(data) {
-  const url = "/medias";
   try {
-    const response = await service.post(url, data);
+    const response = await service.post("/medias", data);
     return response;
   } catch (err) {
     console.error("Error Post Media:", err);
@@ -413,9 +412,8 @@ export async function getDetailMedia(id) {
 // * PATCH
 // Update Medias
 export async function patchMedia(id, data) {
-  const url = `/medias/${id}`;
   try {
-    const response = await service.patch(url, data);
+    const response = await service.patch(`/medias/${id}`, data);
     return response;
   } catch (err) {
     console.error("Error update media user:", err);
