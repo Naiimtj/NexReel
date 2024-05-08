@@ -98,17 +98,17 @@ module.exports.detail = async (req, res, next) => {
         res.status(200).json(mediaSeason);
       }
     } else {
-      const mediaSeason = {
-        ...media.toObject(),
-        season: req.params.season,
-        runtime: media.runtime_seasons[req.params.season],
-      };
-      delete mediaSeason.seenComplete;
-      delete mediaSeason.runtime_seen;
-      delete mediaSeason._id;
-      delete mediaSeason.__v;
+      // const mediaSeason = {
+      //   ...media.toObject(),
+      //   season: req.params.season,
+      //   runtime: media.runtime_seasons[req.params.season],
+      // };
+      // delete mediaSeason.runtime_seen;
+      // delete mediaSeason._id;
+      // delete mediaSeason.__v;
 
-      res.status(200).json(mediaSeason);
+      // res.status(200).json(mediaSeason);
+      res.status(204).json({ result: false });
     }
   } catch (error) {
     next(error);
@@ -157,13 +157,25 @@ module.exports.update = async (req, res, next) => {
         userId: req.user.id,
         mediaId: updateMedia.mediaId,
       });
+      console.log(updateMedia);
       const allSeasonsSeen =
         allSeasons.filter((season) => season.seen === true).length ===
         updateMedia.number_seasons;
-      console.log(allSeasonsSeen);
       if (allSeasonsSeen) {
+        const haveSpecialSeason =
+          updateMedia.number_seasons === runtime_seasons.length;
+        let totalRunTime = 0;
+        for (
+          let i = haveSpecialSeason ? 1 : 0;
+          i < runtime_seasons.length;
+          i++
+        ) {
+          totalRunTime += runtime_seasons[i];
+        }
         let mediaData = {
+          mediaId: updateMedia.mediaId,
           seen: true,
+          runtime_seen: totalRunTime,
         };
         req.body = mediaData;
         await mediasController.update(req, res, next);

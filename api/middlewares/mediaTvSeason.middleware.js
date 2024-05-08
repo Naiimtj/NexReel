@@ -26,7 +26,6 @@ module.exports.exists = async (req, res, next) => {
       delete mediaSeason.seenComplete;
       delete mediaSeason.runtime_seen;
       req.media = mediaSeason;
-      console.log(mediaSeason);
       next();
     } else {
       next(createError(404, "Media not found"));

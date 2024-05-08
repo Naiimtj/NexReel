@@ -50,15 +50,18 @@ export const SeasonSingle = ({
   const idSeason = idInfo;
 
   const [pendingSeen, setPendingSeen] = useState(false);
-  const [dataMediaUser, setDataMediaUser] = useState([]);
+  const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
-    if (mediaIsPending) {
+    if (!mediaIsSeen && mediaIsPending) {
       getDetailSeasons(idTvShow, season_number).then((d) => {
         setDataMediaUser(d);
       });
+    } else {
+      setDataMediaUser({});
     }
   }, [
     mediaIsPending,
+    mediaIsSeen,
     pendingSeen,
     changeSeenPending,
     onReload,
@@ -67,10 +70,9 @@ export const SeasonSingle = ({
   ]);
 
   const seasonSeen =
-    (mediaIsPending && dataMediaUser && dataMediaUser.seen) ||
-    (!mediaIsPending && mediaIsSeen);
-  // console.log(seasonSeen);
-  // console.log(dataMediaUser);
+    (mediaIsPending && dataMediaUser && dataMediaUser.seen) || mediaIsSeen;
+  console.log(mediaIsSeen);
+  console.log(dataMediaUser);
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();

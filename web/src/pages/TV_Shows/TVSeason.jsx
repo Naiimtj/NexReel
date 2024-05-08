@@ -60,18 +60,24 @@ const TVSeason = () => {
       });
     }
   }, [changeSeenPending, pendingSeen, idTv, userExist, NSeason]);
-  const { seen, pending, runtime, number_seasons, number_of_episodes, runtime_seasons } =
-    dataMediaUser;
+  const {
+    seen,
+    pending,
+    runtime,
+    number_seasons,
+    number_of_episodes,
+    runtime_seasons,
+    seenComplete,
+  } = dataMediaUser;
   const TotalTime =
-    runtime > 0
-      ? new DateAndTimeConvert(runtime, t, false).TimeConvert()
-      : 0;
-      console.log(dataMediaUser);
+    runtime > 0 ? new DateAndTimeConvert(runtime, t, false).TimeConvert() : 0;
+
+  const dataMediaSeason = dataMediaUser && seenComplete ? {} : dataMediaUser
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
     SeenPendingSeason(
-      dataMediaUser,
+      dataMediaSeason,
       idTv,
       "tv",
       runtime,

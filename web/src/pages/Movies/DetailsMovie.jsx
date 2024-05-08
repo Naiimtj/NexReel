@@ -355,12 +355,11 @@ function DetailsMovie({ info, crews, cast, media }) {
       false,
       true
     ).DateTimeConvert();
-
+  processInfo.runTimeSeasons =
+    media === "tv" &&
+    seasons &&
+    seasons.map((season) => season.episode_count * processInfo.runTime);
   if (media === "tv") {
-    processInfo.runTimeSeasons =
-      media === "tv" &&
-      seasons &&
-      seasons.map((season) => season.episode_count * processInfo.runTime);
     processInfo.haveSpecialSeason =
       number_of_seasons === processInfo.runTimeSeasons.length;
     processInfo.totalRunTime = 0;

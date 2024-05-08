@@ -51,7 +51,7 @@ export const Seasons = ({
       changeSeenPending={changeSeenPending}
       numberEpisodes={numberEpisodes}
       numberSeasons={numberSeasons}
-      runTimeSeason={runTimeSeasons}
+      runTimeSeasons={runTimeSeasons}
     />
   );
 
