@@ -3,13 +3,10 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { NoImage, tv } from "../../assets/image";
 import { useTranslation } from "react-i18next";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
 import { getDetailSeasons } from "../../../services/DB/services-db";
 import { useAuthContext } from "../../context/auth-context";
 import SeenPendingSeason from "../MediaList/SeenPendingMedia/SeenPendingSeason";
+import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
 export const SeasonSingle = ({
   season,
@@ -160,27 +157,12 @@ export const SeasonSingle = ({
             {/* //-SEEN/UNSEEN */}
             <div className="inline-block">
               <div className="text-right align-middle">
-                {seasonSeen !== true ? (
-                  <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                    <IoCheckmarkCircleOutline
-                      className="inline-block"
-                      size={20}
-                      color="#FFCA28"
-                      alt={t("Seen")}
-                      onClick={handleSeenMedia}
-                    />
-                  </button>
-                ) : (
-                  <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                    <IoCheckmarkCircleSharp
-                      className="inline-block"
-                      size={20}
-                      color="#FFCA28"
-                      alt={t("Unseen")}
-                      onClick={handleSeenMedia}
-                    />
-                  </button>
-                )}
+                <SeenPendingButton
+                  condition={seasonSeen}
+                  size={20}
+                  text={"Seen"}
+                  handle={handleSeenMedia}
+                />
               </div>
             </div>
           </div>

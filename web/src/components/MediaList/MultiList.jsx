@@ -9,15 +9,11 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { getRating } from "../../../services/IMDB/services-imdb";
 import calculateAverageVote from "./calculateAverageVote";
-import { BsAlarm, BsAlarmFill } from "react-icons/bs";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
 import { useAuthContext } from "../../context/auth-context";
 import { FaStar, FaTrash } from "react-icons/fa";
 import SeenPending from "./SeenPendingMedia/SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
+import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
 export const MultiList = ({
   info,
@@ -330,53 +326,23 @@ export const MultiList = ({
           {/* //-SEEN/UNSEEN */}
           <div className="text-right align-middle">
             {mediaType !== "person" ? (
-              seen !== true ? (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <IoCheckmarkCircleOutline
-                    className="inline-block"
-                    size={20}
-                    color="#FFCA28"
-                    alt={t("Seen")}
-                    onClick={handleSeenMedia}
-                  />
-                </button>
-              ) : (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <IoCheckmarkCircleSharp
-                    className="inline-block"
-                    size={20}
-                    color="#FFCA28"
-                    alt={t("Unseen")}
-                    onClick={handleSeenMedia}
-                  />
-                </button>
-              )
+              <SeenPendingButton
+                condition={seen}
+                size={20}
+                text={"Seen"}
+                handle={handleSeenMedia}
+              />
             ) : null}
           </div>
           {/* //-PENDING/NO PENDING */}
           <div className="text-right align-middle">
             {mediaType !== "person" ? (
-              pending !== true ? (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <BsAlarm
-                    className="inline-block"
-                    size={17}
-                    color="#FFCA28"
-                    alt={t("Pending")}
-                    onClick={handlePending}
-                  />
-                </button>
-              ) : (
-                <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                  <BsAlarmFill
-                    className="inline-block"
-                    size={17}
-                    color="#FFCA28"
-                    alt={t("No Pending")}
-                    onClick={handlePending}
-                  />
-                </button>
-              )
+              <SeenPendingButton
+                condition={pending}
+                size={17}
+                text={"Pending"}
+                handle={handlePending}
+              />
             ) : null}
           </div>
         </div>

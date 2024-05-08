@@ -28,16 +28,7 @@ import {
   tv,
   PLEX,
 } from "../../assets/image";
-import {
-  BsFillCaretDownFill,
-  BsFillCaretUpFill,
-  BsAlarm,
-  BsAlarmFill,
-} from "react-icons/bs";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
+import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
 // components & utils
@@ -56,6 +47,7 @@ import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPendingMedia/SeenPending";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
+import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
 function compareStrings(str1, str2) {
   // Function to remove diacritics
@@ -570,27 +562,12 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {userExist ? (
                     <div className="text-right align-middle">
                       {media !== "person" ? (
-                        seen !== true ? (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <IoCheckmarkCircleOutline
-                              className="inline-block"
-                              size={25}
-                              color="#FFCA28"
-                              alt={t("Seen")}
-                              onClick={handleSeenMedia}
-                            />
-                          </button>
-                        ) : (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <IoCheckmarkCircleSharp
-                              className="inline-block"
-                              size={25}
-                              color="#FFCA28"
-                              alt={t("Unseen")}
-                              onClick={handleSeenMedia}
-                            />
-                          </button>
-                        )
+                        <SeenPendingButton
+                          condition={seen}
+                          size={20}
+                          text={"Seen"}
+                          handle={handleSeenMedia}
+                        />
                       ) : null}
                     </div>
                   ) : null}
@@ -611,27 +588,12 @@ function DetailsMovie({ info, crews, cast, media }) {
                   {userExist ? (
                     <div className="text-right align-middle">
                       {media !== "person" ? (
-                        pending !== true ? (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <BsAlarm
-                              className="inline-block"
-                              size={22}
-                              color="#FFCA28"
-                              alt={t("Pending")}
-                              onClick={handlePending}
-                            />
-                          </button>
-                        ) : (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <BsAlarmFill
-                              className="inline-block"
-                              size={22}
-                              color="#FFCA28"
-                              alt={t("No Pending")}
-                              onClick={handlePending}
-                            />
-                          </button>
-                        )
+                        <SeenPendingButton
+                          condition={pending}
+                          size={17}
+                          text={"Pending"}
+                          handle={handlePending}
+                        />
                       ) : null}
                     </div>
                   ) : null}
@@ -1244,7 +1206,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                 info={seasons && seasons}
                 idTvShow={id}
                 mediaIsPending={pending}
-                mediaIsSeen = {seen}
+                mediaIsSeen={seen}
                 runTime={processInfo.runTime}
                 setChangeSeenPending={setChangeSeenPending}
                 changeSeenPending={changeSeenPending}

@@ -11,18 +11,14 @@ import {
 import { deleteMedia, getDetailMedia } from "../../../services/DB/services-db";
 // img
 import { NoImageEpis } from "../../assets/image";
-import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
 // components
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import { useAuthContext } from "../../context/auth-context";
 import CarouselCredits from "../../utils/Carousel/CarouselCredits";
 import PageTitle from "../../components/PageTitle";
 import SeenPendingEpisode from "../../components/MediaList/SeenPendingMedia/SeenPendingEpisode";
+import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
 const TVEpisode = () => {
   const [t] = useTranslation("translation");
@@ -263,51 +259,21 @@ const TVEpisode = () => {
                   <div className="mb-1 grid grid-cols-3 gap-2 top-0 w-full pr-4">
                     {/* //-SEEN/UNSEEN */}
                     <div className="text-center align-middle">
-                      {seen !== true ? (
-                        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                          <IoCheckmarkCircleOutline
-                            className="inline-block"
-                            size={20}
-                            color="#FFCA28"
-                            alt={t("Seen")}
-                            onClick={handleSeenMedia}
-                          />
-                        </button>
-                      ) : (
-                        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                          <IoCheckmarkCircleSharp
-                            className="inline-block"
-                            size={20}
-                            color="#FFCA28"
-                            alt={t("Unseen")}
-                            onClick={handleSeenMedia}
-                          />
-                        </button>
-                      )}
+                      <SeenPendingButton
+                        condition={seen}
+                        size={20}
+                        text={"Seen"}
+                        handle={handleSeenMedia}
+                      />
                     </div>
                     {/* //-PENDING/NO PENDING */}
                     <div className="col-start-3 text-center align-middle">
-                      {pending !== true ? (
-                        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                          <BsAlarm
-                            className="inline-block"
-                            size={17}
-                            color="#FFCA28"
-                            alt={t("Pending")}
-                            onClick={handleSeenMedia}
-                          />
-                        </button>
-                      ) : (
-                        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                          <BsAlarmFill
-                            className="inline-block"
-                            size={17}
-                            color="#FFCA28"
-                            alt={t("No Pending")}
-                            onClick={handleSeenMedia}
-                          />
-                        </button>
-                      )}
+                      <SeenPendingButton
+                        condition={pending}
+                        size={17}
+                        text={"Pending"}
+                        handle={handleSeenMedia}
+                      />
                     </div>
                   </div>
                 ) : null}

@@ -9,15 +9,11 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useAuthContext } from "../../context/auth-context";
 import { getDetailSeasons } from "../../../services/DB/services-db";
 import { NoImage, tv } from "../../assets/image";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
-import { BsAlarm, BsAlarmFill } from "react-icons/bs";
 import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
 import Episodes from "../../components/TV/Episodes";
 import PageTitle from "../../components/PageTitle";
 import SeenPendingSeason from "../../components/MediaList/SeenPendingMedia/SeenPendingSeason";
+import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
 const TVSeason = () => {
   const { user, onReload } = useAuthContext();
@@ -224,51 +220,21 @@ const TVSeason = () => {
             )}
             {/* // . BUTTON SEEN/UNSEEN & NO BUTTON PENDING/UNPENDING */}
             {userExist ? (
-              <div className="mb-1 grid grid-cols-3 gap-2 top-0 w-full pr-4">
+              <div className="flex justify-around top-0 w-full mt-4">
                 {/* //-SEEN/UNSEEN */}
-                <div className="text-center align-middle">
-                  {seen !== true ? (
-                    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                      <IoCheckmarkCircleOutline
-                        className="inline-block"
-                        size={20}
-                        color="#FFCA28"
-                        alt={t("Seen")}
-                        onClick={handleSeenMedia}
-                      />
-                    </button>
-                  ) : (
-                    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                      <IoCheckmarkCircleSharp
-                        className="inline-block"
-                        size={20}
-                        color="#FFCA28"
-                        alt={t("Unseen")}
-                        onClick={handleSeenMedia}
-                      />
-                    </button>
-                  )}
-                </div>
+                <SeenPendingButton
+                  condition={seen}
+                  size={20}
+                  text={"Seen"}
+                  handle={handleSeenMedia}
+                />
                 {/* //-PENDING/NO PENDING */}
-                <div className="col-start-3 text-center align-middle">
-                  {pending !== true ? (
-                    <BsAlarm
-                      className="inline-block"
-                      size={17}
-                      color="#FFCA28"
-                      alt={t("Pending")}
-                      onClick={handleSeenMedia}
-                    />
-                  ) : (
-                    <BsAlarmFill
-                      className="inline-block"
-                      size={17}
-                      color="#FFCA28"
-                      alt={t("No Pending")}
-                      onClick={handleSeenMedia}
-                    />
-                  )}
-                </div>
+                <SeenPendingButton
+                  condition={pending}
+                  size={17}
+                  text={"Pending"}
+                  handle={handleSeenMedia}
+                />
               </div>
             ) : null}
           </div>
