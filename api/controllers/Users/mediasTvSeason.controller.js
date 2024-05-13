@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const MediaTvSeason = require("../../models/User/mediaTvSeason.model");
-const Media = require("../../models/User/media.model");
+const MediaTv = require("../../models/User/mediaTv.model");
 const mediasController = require("./medias.controller");
 
 module.exports.create = async (req, res, next) => {
@@ -82,7 +82,7 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.detail = async (req, res, next) => {
   try {
-    const media = await Media.findOne({
+    const media = await MediaTv.findOne({
       mediaId: req.params.mediaId,
       userId: req.user.id,
     });
@@ -108,7 +108,7 @@ module.exports.detail = async (req, res, next) => {
       // delete mediaSeason.__v;
 
       // res.status(200).json(mediaSeason);
-      res.status(204).json({ result: false });
+      return next(createError(404, "Season no exists"));
     }
   } catch (error) {
     next(error);
@@ -157,30 +157,35 @@ module.exports.update = async (req, res, next) => {
         userId: req.user.id,
         mediaId: updateMedia.mediaId,
       });
-      console.log(updateMedia);
+      console.log("updateMedia*********", updateMedia);
+
+      const haveSpecialSeason =
+        updateMedia.number_seasons === runtime_seasons.length;
+      let totalRunTime = 0;
+      for (let i = haveSpecialSeason ? 1 : 0; i < runtime_seasons.length; i++) {
+        totalRunTime += runtime_seasons[i];
+      }
+
       const allSeasonsSeen =
         allSeasons.filter((season) => season.seen === true).length ===
         updateMedia.number_seasons;
       if (allSeasonsSeen) {
-        const haveSpecialSeason =
-          updateMedia.number_seasons === runtime_seasons.length;
-        let totalRunTime = 0;
-        for (
-          let i = haveSpecialSeason ? 1 : 0;
-          i < runtime_seasons.length;
-          i++
-        ) {
-          totalRunTime += runtime_seasons[i];
-        }
         let mediaData = {
           mediaId: updateMedia.mediaId,
           seen: true,
           runtime_seen: totalRunTime,
         };
         req.body = mediaData;
-        await mediasController.update(req, res, next);
+        await MediaTv.update(req, res, next);
       } else {
-        res.status(200).json(updateMedia);
+        let mediaData = {
+          mediaId: updateMedia.mediaId,
+          pending: true,          
+          runtime_seen: totalRunTime,
+        };
+        req.body = mediaData;
+        await MediaTv.update(req, res, next);
+        // res.status(200).json(updateMedia);
       }
     }
   } catch (error) {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import DetailsMovie from "./Movies/DetailsMovie";
+import DetailsMedia from "./Movies/DetailsMedia";
 import Spinner from "../utils/Spinner/Spinner";
 import { getCredits, getMediaDetails } from "../../services/TMDB/services-tmdb";
 import { useTranslation } from "react-i18next";
 
-const DetailsMedia = () => {
+const Media = () => {
   const { id, media_type } = useParams();
   const [t] = useTranslation("translation");
   const [castList, setCastList] = useState([]);
@@ -39,12 +39,11 @@ const DetailsMedia = () => {
     >
       <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
         {!loading ? (
-          <DetailsMovie
+          <DetailsMedia
             cast={castList}
             crews={crewsList}
             info={dataDetails}
-            addButton={true}
-            media={media_type}
+            mediaType={media_type}
           />
         ) : (
           <Spinner result />
@@ -54,4 +53,4 @@ const DetailsMedia = () => {
   );
 };
 
-export default DetailsMedia;
+export default Media;

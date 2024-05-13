@@ -71,8 +71,8 @@ export const SeasonSingle = ({
 
   const seasonSeen =
     (mediaIsPending && dataMediaUser && dataMediaUser.seen) || mediaIsSeen;
-  console.log(mediaIsSeen);
-  console.log(dataMediaUser);
+  // console.log(mediaIsSeen);
+  // console.log(dataMediaUser);
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();

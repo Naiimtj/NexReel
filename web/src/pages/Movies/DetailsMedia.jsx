@@ -28,6 +28,7 @@ import {
   tv,
   PLEX,
 } from "../../assets/image";
+import RepeatSeenActive from "../../components/Icons/RepeatSeenActive";
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 import { RiMovie2Line } from "react-icons/ri";
 import { BiSolidRightArrow } from "react-icons/bi";
@@ -46,8 +47,10 @@ import calculateAverageVote from "../../components/MediaList/calculateAverageVot
 import Seasons from "../../components/TV/Seasons";
 import PageTitle from "../../components/PageTitle";
 import SeenPending from "../../components/MediaList/SeenPendingMedia/SeenPending";
+import Repeat from "../../components/MediaList/Repeat";
 import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
 import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
+import RepeatSeenNoActive from "../../components/Icons/RepeatSeenNoActive";
 
 function compareStrings(str1, str2) {
   // Function to remove diacritics
@@ -63,7 +66,7 @@ function compareStrings(str1, str2) {
   return str1Normalized === str2Normalized;
 }
 
-function DetailsMovie({ info, crews, cast, media }) {
+function DetailsMedia({ info, crews, cast, mediaType }) {
   const [t, i18next] = useTranslation("translation");
   const { user, onReload } = useAuthContext();
   const userExist = !!user;
@@ -109,10 +112,10 @@ function DetailsMovie({ info, crews, cast, media }) {
         })
         .catch((err) => err);
     };
-    if (id && media === "tv") {
+    if (id && mediaType === "tv") {
       DataSeason();
     }
-  }, [id, media]);
+  }, [id, mediaType]);
   useEffect(() => {
     const Data = async () => {
       getUser()
@@ -145,35 +148,35 @@ function DetailsMovie({ info, crews, cast, media }) {
   const [tmbdEnApi, setTmbdEnApi] = useState({});
   const [wordsKeyData, setWordsKeyData] = useState({});
   useEffect(() => {
-    if ((langApi, media, id)) {
-      getWatchList(media, id, langApi).then((data) => {
+    if ((langApi, mediaType, id)) {
+      getWatchList(mediaType, id, langApi).then((data) => {
         setDetailsWatchList(data.results);
       });
-      getMediaDetailsEN(media, id, langApi).then((data) => {
+      getMediaDetailsEN(mediaType, id, langApi).then((data) => {
         setTmbdEnApi(data);
       });
-      getKeyWords(media, id, langApi).then((data) => {
+      getKeyWords(mediaType, id, langApi).then((data) => {
         setWordsKeyData(data);
       });
     }
-  }, [langApi, id, media]);
+  }, [langApi, id, mediaType]);
   useEffect(() => {
-    if ((langTrailer, media, id)) {
-      getTrailer(media, id, langTrailer).then((data) => {
+    if ((langTrailer, mediaType, id)) {
+      getTrailer(mediaType, id, langTrailer).then((data) => {
         setTrailerListData(data.results);
       });
     }
-  }, [langTrailer, id, media]);
+  }, [langTrailer, id, mediaType]);
   // - KEYWORDS
   const [modalKeywords, setModalKeywords] = useState(false);
   const [wordsKey, setWordsKey] = useState(null);
   useEffect(() => {
     if (Object.keys(wordsKeyData).length > 0) {
       const wordsKey =
-        media === "movie" ? wordsKeyData.keywords : wordsKeyData.results;
+        mediaType === "movie" ? wordsKeyData.keywords : wordsKeyData.results;
       setWordsKey(wordsKey);
     }
-  }, [media, wordsKeyData]);
+  }, [mediaType, wordsKeyData]);
   // -API IMDB y Filmafinity
   const [imdbList, setImdbList] = useState({});
   useEffect(() => {
@@ -197,7 +200,7 @@ function DetailsMovie({ info, crews, cast, media }) {
       getPlexAllData().then((data) => {
         const isInPlex =
           data &&
-          data[media].filter(
+          data[mediaType].filter(
             (i) =>
               removeSpaces(i.originalTitle.toLowerCase()) === // TMDB ORIGINAL TITLE
                 removeSpaces(OriginalTitle.toLowerCase()) ||
@@ -217,18 +220,19 @@ function DetailsMovie({ info, crews, cast, media }) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [media, original_name, original_title, user, userExist]);
+  }, [mediaType, original_name, original_title, user, userExist]);
   // -VER TRAILER
   const [modal, setModal] = useState(false);
   const handleVerTrailer = () => {
     setModal(true);
   };
   const [pendingSeen, setPendingSeen] = useState(false);
+  const [repeating, setRepeating] = useState(false);
   // ! USER COMPARATOR
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
-      getDetailMedia(id).then((isInMediaUser) => {
+      getDetailMedia(id, mediaType).then((isInMediaUser) => {
         if (isInMediaUser) {
           setDataMediaUser(isInMediaUser);
         } else {
@@ -236,8 +240,8 @@ function DetailsMovie({ info, crews, cast, media }) {
         }
       });
     }
-  }, [pendingSeen, changeSeenPending, id, userExist]);
-  const { seen, pending } = dataMediaUser;
+  }, [mediaType, pendingSeen, changeSeenPending, id, userExist]);
+  const { seen, pending, repeat } = dataMediaUser;
 
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
@@ -287,13 +291,13 @@ function DetailsMovie({ info, crews, cast, media }) {
       : null;
   const processInfo = {};
   processInfo.poster = url || NoImage;
-  processInfo.mediaType = media === "movie" ? "Movie" : "TV Show";
+  processInfo.mediaType = mediaType === "movie" ? "Movie" : "TV Show";
   processInfo.title = title || name;
   processInfo.titleVOSE = original_title || original_name;
   processInfo.genre = genres || [];
   processInfo.productCompany = production_companies || [];
   processInfo.runTime =
-    media === "movie"
+    mediaType === "movie"
       ? runtime
       : episode_run_time && episode_run_time.length > 0
       ? episode_run_time
@@ -356,10 +360,10 @@ function DetailsMovie({ info, crews, cast, media }) {
       true
     ).DateTimeConvert();
   processInfo.runTimeSeasons =
-    media === "tv" &&
+    mediaType === "tv" &&
     seasons &&
     seasons.map((season) => season.episode_count * processInfo.runTime);
-  if (media === "tv") {
+  if (mediaType === "tv") {
     processInfo.haveSpecialSeason =
       number_of_seasons === processInfo.runTimeSeasons.length;
     processInfo.totalRunTime = 0;
@@ -415,7 +419,7 @@ function DetailsMovie({ info, crews, cast, media }) {
 
   processInfo.trailer = trailer && trailer[0] ? trailer[0].key : null;
   processInfo.collection = belongs_to_collection;
-  processInfo.status = media === "tv" ? status : null;
+  processInfo.status = mediaType === "tv" ? status : null;
 
   const directing = crews.filter((crew) => crew.department === "Directing");
 
@@ -445,7 +449,9 @@ function DetailsMovie({ info, crews, cast, media }) {
           alt={t("Close Keywords")}
         />
       </button>
-      {modalKeywords && <KeyWords wordsKey={wordsKey} media={media} id={id} />}
+      {modalKeywords && (
+        <KeyWords wordsKey={wordsKey} media={mediaType} id={id} />
+      )}
     </div>
   ) : (
     <div>
@@ -462,14 +468,14 @@ function DetailsMovie({ info, crews, cast, media }) {
       </button>
     </div>
   );
-
+  
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
     SeenPending(
       dataMediaUser,
       id,
-      media,
+      mediaType,
       processInfo.runTime,
       seen,
       setChangeSeenPending,
@@ -490,7 +496,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     SeenPending(
       dataMediaUser,
       id,
-      media,
+      mediaType,
       processInfo.runTime,
       pending,
       setChangeSeenPending,
@@ -506,6 +512,25 @@ function DetailsMovie({ info, crews, cast, media }) {
     );
   };
 
+  // - REPEAT SEEN/NO REPEAT SEEN
+  const handleRepeatSeen = (event) => {
+    event.stopPropagation();
+    Repeat(
+      dataMediaUser,
+      id,
+      mediaType,
+      processInfo.runTime,
+      seen,
+      pending,
+      repeat,
+      setChangeSeenPending,
+      changeSeenPending,
+      setRepeating,
+      repeating,
+      onReload
+    );
+  };
+
   const poster = poster_path ? (
     <img
       className="rounded-xl w-48 sm:w-auto justify-self-center"
@@ -516,7 +541,7 @@ function DetailsMovie({ info, crews, cast, media }) {
     <div className="relative flex justify-center items-center">
       <img
         className="absolute h-24 opacity-10"
-        src={media === "movie" ? movie : media === "tv" ? tv : null}
+        src={mediaType === "movie" ? movie : mediaType === "tv" ? tv : null}
         alt={t("Icon people")}
       />
       <img
@@ -575,11 +600,11 @@ function DetailsMovie({ info, crews, cast, media }) {
               )}
               {poster}
               {userExist ? (
-                <div className="grid grid-cols-5 gap-4 text-center mt-5 justify-center justify-items-center">
+                <div className="grid grid-cols-6 gap-4 text-center mt-5 justify-center justify-items-center">
                   {/* //-SEEN/UNSEEN */}
                   {userExist ? (
                     <div className="text-right align-middle">
-                      {media !== "person" ? (
+                      {mediaType !== "person" ? (
                         <SeenPendingButton
                           condition={seen}
                           size={20}
@@ -594,27 +619,51 @@ function DetailsMovie({ info, crews, cast, media }) {
                     <ShowPlaylistMenu
                       userId={user.id}
                       id={Number(id)}
-                      type={media}
+                      type={mediaType}
                       runTime={
-                        media === "tv"
+                        mediaType === "tv"
                           ? processInfo.runTime
                           : processInfo.runTime
                       }
                     />
                   ) : null}
-                  {/* //-PENDING/NO PENDING */}
-                  {userExist ? (
-                    <div className="text-right align-middle">
-                      {media !== "person" ? (
+                  <div className={`col-span-2 align-middle flex gap-4`}>
+                    {/* //-REPEAT/NO REPEAT */}
+                    {userExist ? (
+                      mediaType !== "person" && seen ? (
+                        repeat ? (
+                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
+                            <RepeatSeenActive
+                              className="inline-block fill-[#FFCA28]"
+                              alt={t("Repeat")}
+                              onClick={handleRepeatSeen}
+                            />
+                          </button>
+                        ) : (
+                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
+                            <RepeatSeenNoActive
+                              className="inline-block fill-[#FFCA28]"
+                              width={24}
+                              height={24}
+                              alt={t("No Repeat")}
+                              onClick={handleRepeatSeen}
+                            />
+                          </button>
+                        )
+                      ) : null
+                    ) : null}
+                    {/* //-PENDING/NO PENDING */}
+                    {userExist ? (
+                      mediaType !== "person" ? (
                         <SeenPendingButton
                           condition={pending}
                           size={17}
                           text={"Pending"}
                           handle={handlePending}
                         />
-                      ) : null}
-                    </div>
-                  ) : null}
+                      ) : null
+                    ) : null}
+                  </div>
                 </div>
               ) : null}
               {/* //-WHERE SEE OR BUY */}
@@ -715,7 +764,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                   <div>
                     <Certification
                       info={processInfo.countries}
-                      media={media}
+                      media={mediaType}
                       id={id}
                       lang={langApi}
                     />
@@ -740,9 +789,11 @@ function DetailsMovie({ info, crews, cast, media }) {
                 <Rating
                   dataMediaUser={dataMediaUser}
                   mediaId={id}
-                  media_type={media}
+                  media_type={mediaType}
                   runtime={
-                    media === "tv" ? processInfo.runTime : processInfo.runTime
+                    mediaType === "tv"
+                      ? processInfo.runTime
+                      : processInfo.runTime
                   }
                   setPendingSeen={setPendingSeen}
                   pendingSeen={pendingSeen}
@@ -776,7 +827,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                             )}
                           >
                             <Link
-                              to={`/${media}/${id}/genre/${idGen}`}
+                              to={`/${mediaType}/${id}/genre/${idGen}`}
                               className="inline-block capitalize cursor-pointer text-gray-200 hover:text-gray-400"
                             >
                               {gen.name}
@@ -845,7 +896,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                     ? processInfo.TimeHM
                     : null}
                 </div>
-                {media !== "tv" ? (
+                {mediaType !== "tv" ? (
                   <div
                     className={
                       processInfo.runTime !== 0
@@ -995,7 +1046,9 @@ function DetailsMovie({ info, crews, cast, media }) {
                           {", "}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() => navigate(`/${media}/${id}/credits`)}
+                            onClick={() =>
+                              navigate(`/${mediaType}/${id}/credits`)
+                            }
                           >
                             {t("more...")}
                           </button>
@@ -1039,7 +1092,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                                 <button
                                   className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                   onClick={() =>
-                                    navigate(`/${media}/${id}/credits`)
+                                    navigate(`/${mediaType}/${id}/credits`)
                                   }
                                 >
                                   {t("more...")}
@@ -1114,7 +1167,9 @@ function DetailsMovie({ info, crews, cast, media }) {
                           {", "}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() => navigate(`/${media}/${id}/credits`)}
+                            onClick={() =>
+                              navigate(`/${mediaType}/${id}/credits`)
+                            }
                           >
                             {t("more...")}
                           </button>
@@ -1166,7 +1221,7 @@ function DetailsMovie({ info, crews, cast, media }) {
                               <button
                                 className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                 onClick={() =>
-                                  navigate(`/${media}/${id}/credits`)
+                                  navigate(`/${mediaType}/${id}/credits`)
                                 }
                               >
                                 {t("more...")}
@@ -1184,7 +1239,7 @@ function DetailsMovie({ info, crews, cast, media }) {
         </div>
         {/* // - Complete equipment */}
         <div className="text-purpleNR pr-4 text-right grid justify-center md:justify-end transition ease-in-out md:hover:text-gray-400 duration-300">
-          <Link to={`/${media}/${id}/credits`}>
+          <Link to={`/${mediaType}/${id}/credits`}>
             {t("Delivery and complete equipment")}
             <BiSolidRightArrow
               className="ml-1 cursor-pointer inline-block"
@@ -1199,7 +1254,7 @@ function DetailsMovie({ info, crews, cast, media }) {
               <CarouselCredits
                 title={t("MAIN CAST")}
                 info={items}
-                media={media}
+                media={mediaType}
                 id={id}
                 isUser={userExist}
                 nameFilm={processInfo.title}
@@ -1214,7 +1269,7 @@ function DetailsMovie({ info, crews, cast, media }) {
           {modal !== true && processInfo.collection ? (
             <Collections
               idCollection={processInfo.collection.id}
-              media={media}
+              media={mediaType}
               pendingSeenMedia={pendingSeen}
               setPendingSeenMedia={setPendingSeen}
             />
@@ -1239,9 +1294,11 @@ function DetailsMovie({ info, crews, cast, media }) {
           {/* //-RECOMMENDATIONS */}
           {!modal && info.id === id ? (
             <Recommendations
-              title={media === "movie" ? t("Recommendations") : t("Similar")}
+              title={
+                mediaType === "movie" ? t("Recommendations") : t("Similar")
+              }
               id={id}
-              media={media}
+              media={mediaType}
               lang={langApi}
               pendingSeenMedia={pendingSeen}
               setPendingSeenMedia={setPendingSeen}
@@ -1250,9 +1307,11 @@ function DetailsMovie({ info, crews, cast, media }) {
           {/* //-SIMILAR */}
           {!modal && info.id === id ? (
             <Similar
-              title={media === "movie" ? t("Similar") : t("Recommendations")}
+              title={
+                mediaType === "movie" ? t("Similar") : t("Recommendations")
+              }
               id={id}
-              media={media}
+              media={mediaType}
               lang={langApi}
               pendingSeenMedia={pendingSeen}
               setPendingSeenMedia={setPendingSeen}
@@ -1264,17 +1323,17 @@ function DetailsMovie({ info, crews, cast, media }) {
   );
 }
 
-export default DetailsMovie;
+export default DetailsMedia;
 
-DetailsMovie.defaultProps = {
+DetailsMedia.defaultProps = {
   info: {},
   crews: [],
   cast: [],
-  media: "",
+  mediaType: "",
 };
-DetailsMovie.propTypes = {
+DetailsMedia.propTypes = {
   info: PropTypes.object,
   crews: PropTypes.array,
   cast: PropTypes.array,
-  media: PropTypes.string,
+  mediaType: PropTypes.string,
 };

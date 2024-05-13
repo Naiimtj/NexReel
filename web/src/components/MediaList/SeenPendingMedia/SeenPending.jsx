@@ -45,14 +45,14 @@ function SeenPending(
   }
 
   Object.keys(dataMediaUser).length
-    ? patchMedia(id, updateData).then(() => {
+    ? patchMedia(id, mediaType, updateData).then(() => {
         if (setPendingSeen) {
           setPendingSeen(!pendingSeen);
         }
         onReload();
         setChangeSeenPending(!changeSeenPending);
       })
-    : postMedia(updateData).then(() => {
+    : postMedia(mediaType, updateData).then(() => {
         if (setPendingSeen) {
           setPendingSeen(!pendingSeen);
         }

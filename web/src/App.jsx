@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import NotFoundPage from "./pages/NoFoundPage";
 import Movies from "./pages/Movies/Movies";
 import TVShows from "./pages/TV_Shows/TVShows";
-import DetailsMedia from "./pages/Details.Media";
+import Media from "./pages/Media";
 import Login from "./pages/Login/Login";
 import { Authenticated, Unauthenticated, } from "../src/components/Users/authenticated";
 import SignUp from "./pages/SingUp/Singup";
@@ -52,7 +52,7 @@ function App() {
         />
         <Route path="/movie" element={<Movies />} />
         <Route path="/tv" element={<TVShows />} />
-        <Route path="/:media_type/:id" element={<DetailsMedia />} />
+        <Route path="/:media_type/:id" element={<Media />} />
         <Route path="/:media_type/:idMedia/person/:id" element={<Persons />} />
         <Route path="/:media_type/:id/credits" element={<CompleteCast />} />
         <Route path="/:media_type/:id/genre/:idGenre" element={<Genres />} />

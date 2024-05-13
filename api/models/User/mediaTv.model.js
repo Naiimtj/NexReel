@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const mediaSchema = new Schema(
+const mediaTvSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -22,13 +22,21 @@ const mediaSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    seenComplete: {
+      type: Boolean,
+      default: false,
+    },
     repeat: {
       type: Boolean,
       default: false,
-    },    
+    },
     runtime: {
       type: Number,
     },
+    number_seasons: { type: Number },
+    number_of_episodes: { type: Number },
+    runtime_seen: {type: Number },
+    runtime_seasons: {type: Array },
     vote: {
       type: Number,
       default: -1,
@@ -55,5 +63,5 @@ const mediaSchema = new Schema(
   }
 );
 
-const Media = mongoose.model("Media", mediaSchema);
-module.exports = Media;
+const MediaTv = mongoose.model("MediaTv", mediaTvSchema);
+module.exports = MediaTv;

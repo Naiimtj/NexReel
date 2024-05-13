@@ -382,9 +382,9 @@ export async function deleteFollowPlaylist(id) {
 // < MEDIAS
 // . POST
 // Add Media
-export async function postMedia(data) {
+export async function postMedia(mediaType, data) {
   try {
-    const response = await service.post("/medias", data);
+    const response = await service.post(`/medias/${mediaType}`, data);
     return response;
   } catch (err) {
     console.error("Error Post Media:", err);
@@ -402,8 +402,8 @@ export async function getAllMedia() {
 }
 // - GET
 // Detail Medias
-export async function getDetailMedia(id) {
-  const response = await service.get(`/medias/${id}`);
+export async function getDetailMedia(id, mediaType) {
+  const response = await service.get(`/medias/${id}/${mediaType}`);
   if (response) {
     return response;
   }
@@ -411,9 +411,10 @@ export async function getDetailMedia(id) {
 }
 // * PATCH
 // Update Medias
-export async function patchMedia(id, data) {
+export async function patchMedia(id, mediaType, data) {
+  console.log(mediaType);
   try {
-    const response = await service.patch(`/medias/${id}`, data);
+    const response = await service.patch(`/medias/${id}/${mediaType}`, data);
     return response;
   } catch (err) {
     console.error("Error update media user:", err);
