@@ -403,7 +403,7 @@ export async function getAllMedia() {
 // - GET
 // Detail Medias
 export async function getDetailMedia(id, mediaType) {
-  const response = await service.get(`/medias/${id}/${mediaType}`);
+  const response = await service.get(`/medias/${mediaType}/${id}`);
   if (response) {
     return response;
   }
@@ -412,9 +412,8 @@ export async function getDetailMedia(id, mediaType) {
 // * PATCH
 // Update Medias
 export async function patchMedia(id, mediaType, data) {
-  console.log(mediaType);
   try {
-    const response = await service.patch(`/medias/${id}/${mediaType}`, data);
+    const response = await service.patch(`/medias/${mediaType}/${id}`, data);
     return response;
   } catch (err) {
     console.error("Error update media user:", err);

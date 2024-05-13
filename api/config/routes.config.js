@@ -51,9 +51,9 @@ router.delete("/users/:userId/nofollow", auth.isAuthenticated, users.unFollow);
 // < MEDIA
 // - MEDIA
 router.post("/medias/:mediaType", auth.isAuthenticated, medias.create);
-router.get("/medias/:id/:mediaType", auth.isAuthenticated, medias.detail);
+router.get("/medias/:mediaType/:id", auth.isAuthenticated, medias.detail);
 router.get("/medias", auth.isAuthenticated, medias.list);
-router.patch("/medias/:id/:mediaType", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, (req, res, next) => {
+router.patch("/medias/:mediaType/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, (req, res, next) => {
   medias.update(req, res, next, false);
 });
 router.delete("/medias/:id", auth.isAuthenticated, authMedia.exists, authMedia.isOwnerOrAdmin, medias.delete);
