@@ -68,7 +68,7 @@ const TVEpisode = () => {
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
     if (userExist) {
-      getDetailMedia(idTv).then((d) => {
+      getDetailMedia(idTv, "tv").then((d) => {
         setDataMediaUser(d);
       });
     }

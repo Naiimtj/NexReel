@@ -241,8 +241,8 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
       });
     }
   }, [mediaType, pendingSeen, changeSeenPending, id, userExist]);
-  const { seen, pending, repeat } = dataMediaUser;
-
+  const { seen, pending, repeat, runtime_seen } = dataMediaUser;
+// console.log(dataMediaUser);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
   const [isTimeout, setIsTimeout] = useState(true);
@@ -1285,6 +1285,7 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
                 changeSeenPending={changeSeenPending}
                 numberEpisodes={number_of_episodes}
                 numberSeasons={number_of_seasons}
+                runtime_seen={runtime_seen}
                 runTimeSeasons={processInfo.runTimeSeasons}
               />
             )

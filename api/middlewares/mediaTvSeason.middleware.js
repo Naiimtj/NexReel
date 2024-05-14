@@ -1,7 +1,7 @@
 const createError = require("http-errors");
 const { ADMIN_ROLE } = require("../constants");
 const MediaTvSeason = require("../models/User/mediaTvSeason.model");
-const Media = require("../models/User/media.model");
+const MediaTv = require("../models/User/mediaTv.model");
 
 module.exports.exists = async (req, res, next) => {
   const mediaTvSeason = await MediaTvSeason.findOne({
@@ -13,7 +13,7 @@ module.exports.exists = async (req, res, next) => {
     req.media = mediaTvSeason;
     next();
   } else {
-    const media = await Media.findOne({
+    const media = await MediaTv.findOne({
       mediaId: req.params.mediaId,
       userId: req.user.id,
     });

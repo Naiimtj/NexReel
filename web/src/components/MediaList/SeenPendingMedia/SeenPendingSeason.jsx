@@ -15,9 +15,10 @@ function SeenPendingSeason(
   NumberSeason,
   numberEpisodes,
   numberSeasons,
-  runTimeSeasons,
+  runtime_seen,
+  runTimeSeasons
 ) {
-  const updateData = {
+  let updateData = {
     mediaId: id.toString(),
     media_type: mediaType,
     season: NumberSeason,
@@ -30,8 +31,7 @@ function SeenPendingSeason(
 
   if (updateType === "seen") {
     updateData.seen = !seenOrPending;
-  } else if (updateType === "pending") {
-    updateData.pending = !seenOrPending;
+    updateData.runtime_seen = !seenOrPending ? runtime_seen + runTimeSeasons[NumberSeason] : runtime_seen - runTimeSeasons[NumberSeason]
   }
 
   Object.keys(dataMediaUser).length

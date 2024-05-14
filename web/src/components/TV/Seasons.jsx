@@ -14,6 +14,7 @@ export const Seasons = ({
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
+  runtime_seen,
   runTimeSeasons,
 }) => {
   const [t] = useTranslation("translation");
@@ -23,7 +24,7 @@ export const Seasons = ({
   const handleDownShow = () => {
     setModalMoreSeasons(true);
   };
-  const handelUpHidden = () => {
+  const handleUpHidden = () => {
     setModalMoreSeasons(false);
   };
 
@@ -51,6 +52,7 @@ export const Seasons = ({
       changeSeenPending={changeSeenPending}
       numberEpisodes={numberEpisodes}
       numberSeasons={numberSeasons}
+      runtime_seen={runtime_seen}
       runTimeSeasons={runTimeSeasons}
     />
   );
@@ -93,7 +95,7 @@ export const Seasons = ({
                     {info && (
                       <button
                         className="w-full flex justify-center cursor-pointer text-[#b1a9fa] transition ease-in-out md:hover:text-gray-200 duration-100"
-                        onClick={handelUpHidden}
+                        onClick={handleUpHidden}
                       >
                         <IoIosArrowUp size={60} />
                       </button>
@@ -125,6 +127,7 @@ Seasons.defaultProps = {
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
+  runtime_seen: 0,
   runTimeSeasons: []
 };
 
@@ -138,5 +141,6 @@ Seasons.propTypes = {
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
+  runtime_seen: PropTypes.number,
   runTimeSeasons: PropTypes.array,
 };

@@ -117,8 +117,12 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    const { runtime, like, seen, vote, runtime_seasons } = req.body;
+    const { runtime, like, seen, vote, runtime_seen, runtime_seasons } =
+      req.body;
     const media = await req.media;
+    if (!media) {
+      next(createError(404, "Media or Season not found"));
+    }
     // If seen is true seenComplete is true
     let seenData = false;
     let pendingData = false;
@@ -138,11 +142,10 @@ module.exports.update = async (req, res, next) => {
       pending: pendingData,
       runtime: runtime || media.runtime,
       vote: vote || media.vote,
+      runtime_seen,
       runtime_seasons,
     };
-    if (!media) {
-      next(createError(404, "Season not found"));
-    }
+    
     const updateMedia = await MediaTvSeason.findOneAndUpdate(
       {
         userId: req.user.id,
@@ -152,42 +155,50 @@ module.exports.update = async (req, res, next) => {
       mediaData,
       { new: true }
     );
-    if (updateMedia) {
+    if (!updateMedia) {
+      next(createError(404, "Season not found"));
+    }
       const allSeasons = await MediaTvSeason.find({
         userId: req.user.id,
         mediaId: updateMedia.mediaId,
       });
-      console.log("updateMedia*********", updateMedia);
+      const allSeasonsSeen =
+      allSeasons.filter((season) => season.seen === true).length ===
+      updateMedia.number_seasons;
 
       const haveSpecialSeason =
         updateMedia.number_seasons === runtime_seasons.length;
-      let totalRunTime = 0;
-      for (let i = haveSpecialSeason ? 1 : 0; i < runtime_seasons.length; i++) {
-        totalRunTime += runtime_seasons[i];
-      }
 
-      const allSeasonsSeen =
-        allSeasons.filter((season) => season.seen === true).length ===
-        updateMedia.number_seasons;
-      if (allSeasonsSeen) {
-        let mediaData = {
-          mediaId: updateMedia.mediaId,
-          seen: true,
-          runtime_seen: totalRunTime,
-        };
-        req.body = mediaData;
-        await MediaTv.update(req, res, next);
-      } else {
-        let mediaData = {
-          mediaId: updateMedia.mediaId,
-          pending: true,          
-          runtime_seen: totalRunTime,
-        };
-        req.body = mediaData;
-        await MediaTv.update(req, res, next);
-        // res.status(200).json(updateMedia);
+      let totalRunTimeMediaTv = 0;
+      for (let i = haveSpecialSeason ? 1 : 0; i < runtime_seasons.length; i++) {
+        totalRunTimeMediaTv += runtime_seasons[i];
       }
-    }
+      
+      if (allSeasonsSeen) {
+        mediaData.seen = true;
+        mediaData.seenComplete = true;
+        mediaData.pending = false;
+        mediaData.runtime_seen = totalRunTimeMediaTv;
+      } else {
+        mediaData.pending = true;
+        mediaData.seen = false;
+        mediaData.seenComplete = false;
+        mediaData.runtime_seen = runtime_seen;
+      }
+      delete mediaData.runtime
+      delete mediaData.vote
+      const UpdateMediaTv = await MediaTv.findOneAndUpdate(
+        {
+          userId: req.user.id,
+          mediaId: media.mediaId,
+        },
+        mediaData,
+        { new: true }
+      );
+      if (!UpdateMediaTv) {
+        next(createError(404, "Media TV not Update"));
+      }
+      res.status(200).json(updateMedia);
   } catch (error) {
     next(error);
   }
