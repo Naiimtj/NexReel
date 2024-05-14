@@ -15,7 +15,7 @@ const ViewsPending = ({ data }) => {
     getMediaDetails(media_type, mediaId, t("es-ES")).then((d) => {
       setDataMedia(d);
     });
-    getDetailMedia(mediaId).then((d) => {
+    getDetailMedia(mediaId, media_type).then((d) => {
       setDataMediaUser(d);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

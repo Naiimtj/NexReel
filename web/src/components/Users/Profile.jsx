@@ -104,21 +104,22 @@ const Profile = ({
     true,
     "long"
   ).DateTimeConvertLocale();
-  const checkMedias = !!(user && user.medias && user.medias.length > 0);
-  const UserMedias = checkMedias && user.medias;
-  const pendingData = checkMedias
-    ? DataOrder(
-        checkMedias,
-        user.medias.filter((i) => i.pending !== false)
-      )
-    : null;
+  const checkMedias =
+    !!(user && user.medias && user.medias.length > 0) ||
+    !!(user && user.mediasTv && user.mediasTv.length > 0);
+    const UserMedias = checkMedias && user.medias.concat(user.mediasTv);
 
-  const seenData = checkMedias
-    ? DataOrder(
-        checkMedias,
-        user.medias.filter((i) => i.seen !== false)
-      )
-    : null;
+    function filterMedias(medias, filtro) {
+      return medias.filter((media) => media[filtro] !== false);
+    }
+    
+    const pendingData = checkMedias
+      ? DataOrder(checkMedias, filterMedias(UserMedias, "pending"))
+      : null;
+    
+    const seenData = checkMedias
+      ? DataOrder(checkMedias, filterMedias(UserMedias, "seen"))
+      : null;
 
   const checkPlaylists = !!(
     user &&
@@ -143,9 +144,8 @@ const Profile = ({
   const [modalForm, setModalForm] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
   const TimeTotalSeenMin =
-    UserMedias &&
-    UserMedias.filter((i) => i.seen === true || i.vote !== -1)
-      .map(function (media) {
+  seenData &&
+  seenData.map(function (media) {
         return media.runtime && media.runtime ? media.runtime : 0;
       })
       .reduce(function (accumulator, valorActual) {
@@ -250,7 +250,7 @@ const Profile = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  
+
   return (
     <>
       {!Object.keys(user).length > 0 ? (

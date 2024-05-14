@@ -93,6 +93,12 @@ userSchema.virtual("medias", {
   foreignField: "userId",
 });
 
+userSchema.virtual("mediasTv", {
+  ref: "MediaTv",
+  localField: "_id",
+  foreignField: "userId",
+});
+
 // userSchema.virtual("mediasTvSeason", {
 //   ref: "MediaTvSeason",
 //   localField: "_id",
