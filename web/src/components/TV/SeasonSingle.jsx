@@ -62,10 +62,8 @@ export const SeasonSingle = ({
     }
   }, [
     mediaIsPending,
-    mediaIsSeen,
     pendingSeen,
-    changeSeenPending,
-    onReload,
+    mediaIsSeen,
     idTvShow,
     season_number,
   ]);
@@ -74,6 +72,7 @@ export const SeasonSingle = ({
     (mediaIsPending && dataMediaUser && dataMediaUser.seen) || mediaIsSeen;
   // console.log(mediaIsSeen);
   // console.log(dataMediaUser);
+  const runTimeSeason = runTime * season.episode_count;
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
@@ -81,6 +80,7 @@ export const SeasonSingle = ({
       dataMediaUser,
       idTvShow,
       "tv",
+      runTimeSeason,
       runTime,
       seasonSeen,
       setChangeSeenPending,
@@ -188,7 +188,7 @@ SeasonSingle.defaultProps = {
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
-  runtime_seen:0,
+  runtime_seen: 0,
   runTimeSeasons: [],
 };
 

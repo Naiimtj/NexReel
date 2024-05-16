@@ -3,6 +3,27 @@ const MediaTvSeason = require("../../models/User/mediaTvSeason.model");
 const MediaTv = require("../../models/User/mediaTv.model");
 const mediasController = require("./medias.controller");
 
+async function createSeasons(seasonData, runtime_seasons) {
+  const { mediaId, userId, number_seasons } = seasonData;
+  const seasonPromises = [];
+  // Create TV seasons based on the number of seasons provided
+  for (let seasonNumber = 1; seasonNumber <= number_seasons; seasonNumber++) {
+    const tvSeasonExists = await MediaTvSeason.findOne({
+      mediaId: mediaId,
+      userId: userId,
+      season: seasonNumber,
+    });
+    if (!tvSeasonExists) {
+      seasonData.runtime = runtime_seasons[seasonNumber];
+      seasonData.season = `${seasonNumber}`;
+      seasonPromises.push(MediaTvSeason.create(seasonData));
+    }
+  }
+
+  // Wait for all TV seasons to be created
+  await Promise.all(seasonPromises);
+}
+
 module.exports.create = async (req, res, next) => {
   try {
     const {
@@ -16,6 +37,7 @@ module.exports.create = async (req, res, next) => {
       pending,
       vote,
       runtime_seasons,
+      runtime_seen,
     } = req.body;
 
     const userId = req.user.id;
@@ -63,7 +85,10 @@ module.exports.create = async (req, res, next) => {
       return next(createError(404, "Season already exists"));
     } else {
       await MediaTvSeason.create(tvSeasonData);
-
+      const mediaTvExists = await MediaTv.findOne({
+        mediaId: req.params.mediaId,
+        userId,
+      });
       let mediaData = { ...tvSeasonData };
       delete mediaData.userId;
       delete mediaData.season;
@@ -71,9 +96,33 @@ module.exports.create = async (req, res, next) => {
       mediaData.like = false;
       mediaData.seen = false;
       mediaData.pending = true;
+      mediaData.runtime_seen = runtime_seen;
 
-      req.body = mediaData;
-      await mediasController.update(req, res, next, (updateSeason = true));
+      console.log("MEDIA DATA", mediaData);
+      if (!mediaTvExists) {
+        req.body = mediaData;
+        await mediasController.create(req, res, next);
+        return;
+      } else {
+        req.media = mediaData;
+        req.body = {};
+        await mediasController.update(req, res, next, (updateSeason = true));
+        // Create basic Data for Season
+        const seasonData = {
+          userId,
+          mediaId: req.params.mediaId,
+          media_type: mediaData.media_type,
+          number_seasons: mediaData.number_seasons,
+          number_of_episodes: mediaData.number_of_episodes,
+          like: mediaData.like,
+          seen: !mediaData.seen,
+          pending: !mediaData.pending,
+          seenComplete: !mediaData.seen,
+          vote: mediaData.vote,
+        };
+        createSeasons(seasonData, mediaData.runtime_seasons);
+        return;
+      }
     }
   } catch (error) {
     next(error);
@@ -145,11 +194,11 @@ module.exports.update = async (req, res, next) => {
       runtime_seen,
       runtime_seasons,
     };
-    
+    const mediaId = media.mediaId;
     const updateMedia = await MediaTvSeason.findOneAndUpdate(
       {
         userId: req.user.id,
-        mediaId: media.mediaId,
+        mediaId,
         season: req.params.season,
       },
       mediaData,
@@ -158,47 +207,48 @@ module.exports.update = async (req, res, next) => {
     if (!updateMedia) {
       next(createError(404, "Season not found"));
     }
-      const allSeasons = await MediaTvSeason.find({
-        userId: req.user.id,
-        mediaId: updateMedia.mediaId,
-      });
-      const allSeasonsSeen =
+    const allSeasons = await MediaTvSeason.find({
+      userId: req.user.id,
+      mediaId: mediaId,
+    });
+    const allSeasonsSeen =
       allSeasons.filter((season) => season.seen === true).length ===
       updateMedia.number_seasons;
 
-      const haveSpecialSeason =
-        updateMedia.number_seasons === runtime_seasons.length;
+    const haveSpecialSeason =
+      updateMedia.number_seasons === runtime_seasons.length;
 
-      let totalRunTimeMediaTv = 0;
-      for (let i = haveSpecialSeason ? 1 : 0; i < runtime_seasons.length; i++) {
-        totalRunTimeMediaTv += runtime_seasons[i];
-      }
-      
-      if (allSeasonsSeen) {
-        mediaData.seen = true;
-        mediaData.seenComplete = true;
-        mediaData.pending = false;
-        mediaData.runtime_seen = totalRunTimeMediaTv;
-      } else {
-        mediaData.pending = true;
-        mediaData.seen = false;
-        mediaData.seenComplete = false;
-        mediaData.runtime_seen = runtime_seen;
-      }
-      delete mediaData.runtime
-      delete mediaData.vote
-      const UpdateMediaTv = await MediaTv.findOneAndUpdate(
-        {
-          userId: req.user.id,
-          mediaId: media.mediaId,
-        },
-        mediaData,
-        { new: true }
-      );
-      if (!UpdateMediaTv) {
-        next(createError(404, "Media TV not Update"));
-      }
-      res.status(200).json(updateMedia);
+    let totalRunTimeMediaTv = 0;
+    for (let i = haveSpecialSeason ? 1 : 0; i < runtime_seasons.length; i++) {
+      totalRunTimeMediaTv += runtime_seasons[i];
+    }
+
+    if (allSeasonsSeen) {
+      mediaData.seen = true;
+      mediaData.seenComplete = true;
+      mediaData.pending = false;
+      mediaData.runtime_seen = totalRunTimeMediaTv;
+      await MediaTvSeason.deleteMany({ mediaId });
+    } else {
+      mediaData.pending = true;
+      mediaData.seen = false;
+      mediaData.seenComplete = false;
+      mediaData.runtime_seen = runtime_seen;
+    }
+    delete mediaData.runtime;
+    delete mediaData.vote;
+    const UpdateMediaTv = await MediaTv.findOneAndUpdate(
+      {
+        userId: req.user.id,
+        mediaId,
+      },
+      mediaData,
+      { new: true }
+    );
+    if (!UpdateMediaTv) {
+      next(createError(404, "Media TV not Update"));
+    }
+    res.status(200).json(updateMedia);
   } catch (error) {
     next(error);
   }

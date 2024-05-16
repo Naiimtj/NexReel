@@ -13,7 +13,8 @@ import {
 } from "../../../services/TMDB/services-tmdb";
 import { getRating } from "../../../services/IMDB/services-imdb";
 import {
-  getDetailMedia,
+  // getAllMedia,
+  // getDetailMedia,
   getPlexAllData,
   getUser,
 } from "../../../services/DB/services-db";
@@ -66,7 +67,15 @@ function compareStrings(str1, str2) {
   return str1Normalized === str2Normalized;
 }
 
-function DetailsMedia({ info, crews, cast, mediaType }) {
+function DetailsMedia({
+  info,
+  crews,
+  cast,
+  mediaType,
+  dataMediaUser,
+  setChangeSeenPending,
+  changeSeenPending,
+}) {
   const [t, i18next] = useTranslation("translation");
   const { user, onReload } = useAuthContext();
   const userExist = !!user;
@@ -102,7 +111,6 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
   } = info;
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
-  const [changeSeenPending, setChangeSeenPending] = useState(true);
   const [runtimeSeason, setSeason] = useState({});
   useEffect(() => {
     const DataSeason = async () => {
@@ -128,7 +136,6 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
       Data();
     }
   }, [userExist, dataUser]);
-
   // SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -229,20 +236,30 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
   const [pendingSeen, setPendingSeen] = useState(false);
   const [repeating, setRepeating] = useState(false);
   // ! USER COMPARATOR
-  const [dataMediaUser, setDataMediaUser] = useState({});
-  useEffect(() => {
-    if (userExist) {
-      getDetailMedia(id, mediaType).then((isInMediaUser) => {
-        if (isInMediaUser) {
-          setDataMediaUser(isInMediaUser);
-        } else {
-          setDataMediaUser({});
-        }
-      });
-    }
-  }, [mediaType, pendingSeen, changeSeenPending, id, userExist]);
+  // const [dataMediaUser, setDataMediaUser] = useState({});
+  // useEffect(() => {
+  //   if (userExist) {
+  //     getAllMedia()
+  //       .then((allMedias) => {
+  //         const isMediaExist = allMedias.find(
+  //           (media) => media.mediaId === id.toString()
+  //         );
+  //         if (isMediaExist) {
+  //           getDetailMedia(id, mediaType).then((dataMediaUser) => {
+  //             if (dataMediaUser) {
+  //               setDataMediaUser(dataMediaUser);
+  //             } else {
+  //               setDataMediaUser({});
+  //             }
+  //           });
+  //         } else {
+  //           setDataMediaUser({});
+  //         }
+  //       })
+  //       .catch((err) => err);
+  //   }
+  // }, [mediaType, pendingSeen, changeSeenPending, id, userExist]);
   const { seen, pending, repeat, runtime_seen } = dataMediaUser;
-// console.log(dataMediaUser);
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
   const [isTimeout, setIsTimeout] = useState(true);
@@ -468,7 +485,7 @@ function DetailsMedia({ info, crews, cast, mediaType }) {
       </button>
     </div>
   );
-  
+
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
     event.stopPropagation();
@@ -1331,10 +1348,16 @@ DetailsMedia.defaultProps = {
   crews: [],
   cast: [],
   mediaType: "",
+  dataMediaUser: {},
+  setChangeSeenPending: () => {},
+  changeSeenPending: true,
 };
 DetailsMedia.propTypes = {
   info: PropTypes.object,
   crews: PropTypes.array,
   cast: PropTypes.array,
   mediaType: PropTypes.string,
+  dataMediaUser: PropTypes.object,
+  setChangeSeenPending: PropTypes.func,
+  changeSeenPending: PropTypes.bool,
 };

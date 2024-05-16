@@ -4,13 +4,19 @@ import DetailsMedia from "./Movies/DetailsMedia";
 import Spinner from "../utils/Spinner/Spinner";
 import { getCredits, getMediaDetails } from "../../services/TMDB/services-tmdb";
 import { useTranslation } from "react-i18next";
+import { useAuthContext } from "../context/auth-context";
+import { getAllMedia } from "../../services/DB/services-db";
 
 const Media = () => {
   const { id, media_type } = useParams();
   const [t] = useTranslation("translation");
+  const { user } = useAuthContext();
+  const userExist = !!user;
   const [castList, setCastList] = useState([]);
   const [crewsList, setCrewsList] = useState([]);
   const [dataDetails, setDataDetails] = useState([]);
+  const [dataMediaUser, setDataMediaUser] = useState({});
+  const [changeSeenPending, setChangeSeenPending] = useState(true);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (id && media_type) {
@@ -24,6 +30,19 @@ const Media = () => {
       });
     }
   }, [t, id, media_type]);
+
+  useEffect(() => {
+    if (userExist) {
+      getAllMedia()
+        .then((allMedias) => {
+          const isMediaExist = allMedias.find(
+            (media) => media.mediaId === id.toString()
+          );
+          setDataMediaUser(isMediaExist || {});
+        })
+        .catch((err) => err);
+    }
+  }, [changeSeenPending, id, userExist]);
 
   return (
     <div
@@ -44,6 +63,9 @@ const Media = () => {
             crews={crewsList}
             info={dataDetails}
             mediaType={media_type}
+            dataMediaUser={dataMediaUser}
+            setChangeSeenPending={setChangeSeenPending}
+            changeSeenPending={changeSeenPending}
           />
         ) : (
           <Spinner result />

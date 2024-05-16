@@ -40,6 +40,7 @@ module.exports.create = async (req, res, next) => {
       runtime_seasons,
       runtime_seen,
     } = req.body;
+    console.log("MEDIA BODY DATA", req.body);
 
     const userId = req.user.id;
 
@@ -131,7 +132,6 @@ module.exports.detail = async (req, res, next) => {
         userId: req.user.id,
       });
     }
-    console.log(media);
     if (!media) {
       return next(createError(404, "Media not found"));
     }
@@ -189,6 +189,7 @@ module.exports.update = async (req, res, next, updateSeason) => {
       repeat: seenData && !pendingData && repeat,
       vote: vote || media.vote,
     };
+    console.log("MEDIA BODY DATA", req.body);
     if (!seenData && !pendingData) {
       await module.exports.delete(req, res, next);
       return;
@@ -205,15 +206,15 @@ module.exports.update = async (req, res, next, updateSeason) => {
     // TV
     if (!updateMedia && media.media_type === "tv") {
       const haveSpecialSeason =
-      media.number_seasons === media.runtime_seasons.length;
-    let totalRunTime = 0;
-    for (
-      let i = haveSpecialSeason ? 1 : 0;
-      i < media.runtime_seasons.length;
-      i++
-    ) {
-      totalRunTime += media.runtime_seasons[i];
-    }
+        media.number_seasons === media.runtime_seasons.length;
+      let totalRunTime = 0;
+      for (
+        let i = haveSpecialSeason ? 1 : 0;
+        i < media.runtime_seasons.length;
+        i++
+      ) {
+        totalRunTime += media.runtime_seasons[i];
+      }
       mediaData.number_seasons = media.number_seasons;
       mediaData.number_of_episodes = media.number_of_episodes;
       mediaData.runtime_seen = seenData ? runtime_seen || totalRunTime : 0;
@@ -226,8 +227,7 @@ module.exports.update = async (req, res, next, updateSeason) => {
         }
       );
     }
-    console.log("****updateMedia****", updateMedia);
-    if (updateMedia) {
+    if (updateMedia && !updateSeason) {
       // If media is TV and is pending, create or update TV seasons
       if (updateMedia.media_type === "tv" && !seenData && pendingData) {
         // Create basic Data for Season
@@ -263,7 +263,8 @@ module.exports.list = async (req, res, next) => {
     if (!media && !mediaTv) {
       next(createError(404, "Media not found"));
     }
-    res.status(200).json(media.concat(mediaTv));
+    const allData = media.concat(mediaTv);
+    res.status(200).json(allData);
   } catch (error) {
     next(error);
   }
