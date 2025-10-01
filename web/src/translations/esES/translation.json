@@ -431,6 +431,7 @@
   "NEXT EPISODE": "PRÓXIMO EPISODIO",
   "CREATE BY": "CREADO POR",
   "SEASONS": "TEMPORADAS",
+  "Episode": "Episodio",
   "Episodes": "Episodios",
   "Season": "Temporada",
   "episodes": "episodios",
@@ -478,5 +479,9 @@
   "results": "resultados",
   "Action & Adventure": "Acción & Aventura",
   "Sci-Fi & Fantasy": "Ciencia ficción & Fantasía",
-  "Soap": "Telenovela"
+  "Soap": "Telenovela",
+  "Previous": "Anterior",
+  "Next": "Siguiente",
+  "No Information": "Sin Información",
+  "Issued": "Emitido"
 }

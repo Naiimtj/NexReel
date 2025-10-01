@@ -147,17 +147,17 @@ module.exports.detail = async (req, res, next) => {
         res.status(200).json(mediaSeason);
       }
     } else {
-      // const mediaSeason = {
-      //   ...media.toObject(),
-      //   season: req.params.season,
-      //   runtime: media.runtime_seasons[req.params.season],
-      // };
-      // delete mediaSeason.runtime_seen;
-      // delete mediaSeason._id;
-      // delete mediaSeason.__v;
+      const mediaSeason = {
+        ...media.toObject(),
+        season: req.params.season,
+        runtime: media.runtime_seasons[req.params.season],
+      };
+      delete mediaSeason.runtime_seen;
+      delete mediaSeason._id;
+      delete mediaSeason.__v;
 
-      // res.status(200).json(mediaSeason);
-      return next(createError(404, "Season no exists"));
+      res.status(200).json(mediaSeason);
+      // return next(createError(404, "Season no exists"));
     }
   } catch (error) {
     next(error);

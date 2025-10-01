@@ -317,8 +317,9 @@ function DetailsMedia({
     mediaType === "movie"
       ? runtime
       : episode_run_time && episode_run_time.length > 0
-      ? episode_run_time
-      : runtimeSeason[0] || 0;
+      ? runtimeSeason[0]
+      : 0;
+  console.log(episode_run_time)
   processInfo.TimeHM =
     runtime > 0 && !episode_run_time
       ? new DateAndTimeConvert(processInfo.runTime, t, false).TimeConvert()
@@ -329,9 +330,9 @@ function DetailsMedia({
   processInfo.numEpis = number_of_episodes;
   processInfo.voteTMDB =
     vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0;
-  processInfo.voteIMDB = imdbList.imDb > 0 ? Number(imdbList.imDb) : null;
+  processInfo.voteIMDB = imdbList.IMDb?.audience?.rating > 0 ? Number(imdbList.IMDb.audience?.rating) : null;
   processInfo.voteFILMA =
-    imdbList.filmAffinity > 0 ? Number(imdbList.filmAffinity) : null;
+    imdbList.FilmAffinity?.audience?.rating > 0 ? Number(imdbList.FilmAffinity.audience?.rating) : null;
   processInfo.voteAverage = calculateAverageVote(
     processInfo.voteTMDB,
     processInfo.voteIMDB,
@@ -376,6 +377,7 @@ function DetailsMedia({
       false,
       true
     ).DateTimeConvert();
+  processInfo.collection = belongs_to_collection;
   processInfo.runTimeSeasons =
     mediaType === "tv" &&
     seasons &&
@@ -391,7 +393,7 @@ function DetailsMedia({
     ) {
       processInfo.totalRunTime += processInfo.runTimeSeasons[i];
     }
-    processInfo.TotalTime =
+    processInfo.TotalTimeMarathon =
       processInfo.totalRunTime > 0
         ? new DateAndTimeConvert(
             processInfo.totalRunTime,
@@ -400,11 +402,7 @@ function DetailsMedia({
           ).TimeConvert()
         : 0;
   } else {
-    processInfo.TotalTime = new DateAndTimeConvert(
-      processInfo.runTime,
-      t,
-      false
-    ).TimeConvert();
+    processInfo.TotalTimeMarathon = 0
   }
 
   processInfo.watchingBuy =
@@ -435,7 +433,6 @@ function DetailsMedia({
       : t("Available");
 
   processInfo.trailer = trailer && trailer[0] ? trailer[0].key : null;
-  processInfo.collection = belongs_to_collection;
   processInfo.status = mediaType === "tv" ? status : null;
 
   const directing = crews.filter((crew) => crew.department === "Directing");
@@ -955,10 +952,10 @@ function DetailsMedia({
                 ) : null}
               </div>
               {/* // . MARATHON */}
-              {processInfo.TotalTime !== 0 ? (
+              {processInfo.TotalTimeMarathon !== 0 ? (
                 <div className="text-xs ml-4 mt-0.5 pb-4 flex gap-1">
                   <p>{t("Binge-watch a series")}: </p>
-                  {processInfo.TotalTime}
+                  {processInfo.TotalTimeMarathon}
                 </div>
               ) : null}
               {/* // - DESCRIPTION */}

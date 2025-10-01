@@ -102,9 +102,9 @@ const TVEpisode = () => {
       ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
       : null;
   const dateSeason =
-    season.air_date &&
+    episode.air_date &&
     new DateAndTimeConvert(
-      season.air_date,
+      episode.air_date,
       t,
       false,
       false,
@@ -113,41 +113,15 @@ const TVEpisode = () => {
       false
     ).DateTimeConvert();
   //-FILTROS
-  const directores =
+  const directed =
     episode &&
     episode.crew &&
     episode.crew.filter((crew) => crew.department === "Directing");
-  const guionistas =
+  const written =
     episode &&
     episode.crew &&
     episode.crew.filter((crew) => crew.department === "Writing");
-  console.log(season);
-  //-ID EPISODe ANTERIOR
-  const EpAnterior =
-    episode &&
-    season &&
-    season.episodes &&
-    season.episodes.filter(
-      (epi) => epi.episode_number === episode.episode_number - 1
-    );
-  const EpisAntID =
-    EpAnterior &&
-    EpAnterior.map((episID) => {
-      return episID.id;
-    });
-  //-ID EPISODe SIGUIENTE
-  const EpSiguiente =
-    episode &&
-    season &&
-    season.episodes &&
-    season.episodes.filter(
-      (epi) => epi.episode_number === episode.episode_number + 1
-    );
-  const EpisSigID =
-    EpSiguiente &&
-    EpSiguiente.map((episID) => {
-      return episID.id;
-    });
+
   return (
     <div>
       <PageTitle title={`${episode.name}`} />
@@ -163,7 +137,7 @@ const TVEpisode = () => {
         }}
       >
         <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
-          {/* //.VOLVER A SERIE */}
+          {/* //.BACK TV SHOW */}
           <button
             className="ml-5 pt-5 hover:text-purpleNR"
             onClick={() => navigate(`/tv/${idTv}`)}
@@ -171,12 +145,12 @@ const TVEpisode = () => {
             <IoIosArrowBack
               className="inline-block mr-1"
               size={25}
-              alt="Antes"
-              onClick={() => navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)}
+              alt={`${t("Previous")} ${t("Tv Show")}`}
+              onClick={() => navigate(`/tv/${idTv}`)}
             />
             {tvDetails.name}
           </button>
-          {/* //.VOLVER A TEMPORADA */}
+          {/* //.BACK SEASON */}
           <button
             className="ml-5 pt-5 hover:text-purpleNR"
             onClick={() => navigate(`/tv/${idTv}/${NSeason}`)}
@@ -184,15 +158,17 @@ const TVEpisode = () => {
             <IoIosArrowBack
               className="inline-block mr-1"
               size={25}
-              alt="Antes"
-              onClick={() => navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)}
+              alt={`${t("Previous")} ${t("Season")}`}
+              onClick={() => navigate(`/tv/${idTv}/${NSeason}`)}
             />
-            Temporada {NSeason}
+            {t("Season")} {NSeason}
           </button>
-          {/* //.EPISODe ANTERIOR */}
+          {/* //.PREVIOUS EPISODE */}
           <button
             className="ml-5 pt-5 text-gray-200  md:hover:text-purpleNR"
-            onClick={() => navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)}
+            onClick={() =>
+              navigate(`/tv/${idTv}/${NSeason}/${episode.episode_number - 1}`)
+            }
           >
             {season.episodes &&
             season.episodes.length - episode.episode_number ===
@@ -201,9 +177,11 @@ const TVEpisode = () => {
               <IoIosArrowBack
                 className="inline-block mr-1"
                 size={25}
-                alt="Antes"
+                alt={`${t("Previous")} ${t("Episode")}`}
                 onClick={() =>
-                  navigate(`/tv/${idTv}/${NSeason}/${EpisAntID[0]}`)
+                  navigate(
+                    `/tv/${idTv}/${NSeason}/${episode.episode_number - 1}`
+                  )
                 }
               />
             )}
@@ -212,7 +190,7 @@ const TVEpisode = () => {
               season.episodes &&
             season.episodes.length - 1
               ? null
-              : "Episode " + (episode.episode_number - 1)}
+              : `${t("Episode")} ${episode.episode_number - 1}`}
           </button>
           <div className="inline-block px-2 text-gray-500">
             {(season.episodes &&
@@ -224,28 +202,32 @@ const TVEpisode = () => {
               ? null
               : "<| |>"}
           </div>
-          {/* //.EPISODe SIGUIENTE */}
+          {/* //.NEXT EPISODE */}
           <button
             className="pt-5 text-gray-200  md:hover:text-purpleNR"
-            onClick={() => navigate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)}
+            onClick={() =>
+              navigate(`/tv/${idTv}/${NSeason}/${episode.episode_number + 1}`)
+            }
           >
             {season.episodes &&
             season.episodes.length === episode.episode_number
               ? null
-              : "Episode " + (episode.episode_number + 1)}
+              : `${t("Episode")} ${episode.episode_number + 1}`}
             {season.episodes &&
             season.episodes.length === episode.episode_number ? null : (
               <IoIosArrowForward
                 className="inline-block mr-1"
                 size={25}
-                alt="Despues"
+                alt={`${t("Next")} ${t("Episode")}`}
                 onClick={() =>
-                  navigate(`/tv/${idTv}/${NSeason}/${EpisSigID[0]}`)
+                  navigate(
+                    `/tv/${idTv}/${NSeason}/${episode.episode_number + 1}`
+                  )
                 }
               />
             )}
           </button>
-          {/* // INFORMACIÓN EPISODe */}
+          {/* // EPISODE INFO */}
           <div className="static h-full w-full p-2 md:pt-4 md:px-4 mt-6">
             <div className="rounded-xl grid grid-rows-1 justify-items-center">
               <img
@@ -262,7 +244,7 @@ const TVEpisode = () => {
                       <SeenPendingButton
                         condition={seen}
                         size={20}
-                        text={"Seen"}
+                        text={t("Seen")}
                         handle={handleSeenMedia}
                       />
                     </div>
@@ -271,135 +253,121 @@ const TVEpisode = () => {
                       <SeenPendingButton
                         condition={pending}
                         size={17}
-                        text={"Pending"}
+                        text={t("Pending")}
                         handle={handleSeenMedia}
                       />
                     </div>
                   </div>
                 ) : null}
               </div>
+              {/* //-EPISODE NAME*/}
               <h1 className="font-semibold text-3xl my-2">{episode.name}</h1>
             </div>
-            <div className=" px-2 ">
-              {/* //-NOMBRE Y Nº EPISODe */}
-              <div className="">
-                <div className="">
-                  <p className="text-gray-500">
-                    {season.name} / {"Episode "}
-                    {episode.episode_number}
-                  </p>
-                </div>
-              </div>
+            <div className="px-2">
+              {/* //-EPISODE NAME Y Nº EPISODE */}
+              <p className="text-gray-500">
+                {season.name} / {"Episode "}
+                {episode.episode_number}
+              </p>
             </div>
-            {/* //-dateSeason Y SINOPSIS */}
+            {/* //-SEASON DATA AND SYNOPSIS */}
             <div className="text-gray-200 rounded-xl mb-10 w-full">
               <div className="pl-10 text-lg">
                 <div className="text-xs text-right text-gray-400">
-                  Emitido: {dateSeason}
+                  {t("Issued")}: {dateSeason}
                 </div>
-                <h1 className="mt-4 ">
+                <h1 className="mt-4">
                   {episode.overview === ""
-                    ? "Sin Información"
+                    ? t("No Information")
                     : episode.overview}
                 </h1>
               </div>
-              <div className=""></div>
             </div>
-            {/* //-DIRIGIDO POR */}
-            <div className="">
-              {directores && directores.length === 0 ? null : (
-                <div className="pl-10 flex flex-row text-sm mb-4">
-                  <div className="inline-block text-gray-400">
-                    {directores && directores.length === 0
-                      ? null
-                      : directores && directores.length === 1
-                      ? directores &&
-                        directores.map((guio, index) => {
-                          return (
-                            <div key={index}>
-                              {guio.name && "DIRIGIDO POR: "}
-                            </div>
-                          );
-                        })
-                      : "DIRIGIDO POR: "}
-                  </div>
-
-                  <div className="inline-block text-gray-400 pl-1">
-                    {directores && directores.length === 0
-                      ? null
-                      : directores &&
-                        directores.map((guio, index) => {
-                          return (
-                            <div
-                              className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
-                              onClick={() => navigate(`/person/${guio.id}`)}
-                              key={index}
-                            >
-                              {guio.name}
-                              {index !== directores.length - 1 ? ", " : ""}
-                            </div>
-                          );
-                        })}
-                  </div>
+            {/* //-DIRECTED BY */}
+            {directed && directed.length === 0 ? null : (
+              <div className="pl-10 flex flex-row text-sm mb-4">
+                <div className="inline-block text-gray-400">
+                  {directed && directed.length === 0
+                    ? null
+                    : directed && directed.length === 1
+                    ? directed &&
+                      directed.map((direct, index) => {
+                        return (
+                          <div key={index}>
+                            {direct.name && `${t("DIRECTED BY")}: `}
+                          </div>
+                        );
+                      })
+                    : `${t("DIRECTED BY")}: `}
                 </div>
-              )}
-            </div>
-            {/* //-ESCRITO POR */}
-            <div className="">
-              {guionistas && guionistas.length === 0 ? null : (
-                <div className="pl-10 flex flex-row text-sm mb-4">
-                  <div className="inline-block text-gray-400">
-                    {guionistas && guionistas.length === 0
-                      ? null
-                      : guionistas && guionistas.length === 1
-                      ? guionistas &&
-                        guionistas.map((guio, index) => {
-                          return (
-                            <div key={index}>
-                              {guio.name && "ESCRITO POR: "}
-                            </div>
-                          );
-                        })
-                      : "ESCRITO POR: "}
-                  </div>
-
-                  <div className="inline-block text-gray-400 pl-1">
-                    {guionistas && guionistas.length === 0
-                      ? null
-                      : guionistas &&
-                        guionistas.map((guio, index) => {
-                          return (
-                            <div
-                              className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
-                              onClick={() => navigate(`/person/${guio.id}`)}
-                              key={index}
-                            >
-                              {guio.name}
-                              {index !== guionistas.length - 1 ? ", " : ""}
-                            </div>
-                          );
-                        })}
-                  </div>
+                <div className="inline-block text-gray-400 pl-1">
+                  {directed && directed.length === 0
+                    ? null
+                    : directed &&
+                      directed.map((direct, index) => {
+                        return (
+                          <div
+                            className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
+                            onClick={() => navigate(`/person/${direct.id}`)}
+                            key={index}
+                          >
+                            {direct.name}
+                            {index !== directed.length - 1 ? ", " : ""}
+                          </div>
+                        );
+                      })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            {/* //-WRITTEN BY */}
+            {written && written.length === 0 ? null : (
+              <div className="pl-10 flex flex-row text-sm mb-4">
+                <div className="inline-block text-gray-400">
+                  {written && written.length === 0
+                    ? null
+                    : written && written.length === 1
+                    ? written &&
+                      written.map((writer, index) => {
+                        return (
+                          <div key={index}>
+                            {writer.name && `${t("WRITTEN BY")}: `}
+                          </div>
+                        );
+                      })
+                    : `${t("WRITTEN BY")}: `}
+                </div>
+                <div className="inline-block text-gray-400 pl-1">
+                  {written && written.length === 0
+                    ? null
+                    : written &&
+                      written.map((writer, index) => {
+                        return (
+                          <div
+                            className="inline-block pr-1 cursor-pointer text-gray-200 hover:text-gray-500"
+                            onClick={() => navigate(`/person/${writer.id}`)}
+                            key={index}
+                          >
+                            {writer.name}
+                            {index !== written.length - 1 ? ", " : ""}
+                          </div>
+                        );
+                      })}
+                </div>
+              </div>
+            )}
             {/* //-REPARTO PRINCIPAL */}
-            <>
-              {episode &&
-              episode.guest_stars &&
-              episode.guest_stars.length === 0 ? null : (
-                <div className="text-gray-200 rounded-xl mb-10 ">
-                  <div className="">
-                    <CarouselCredits
-                      title={t("MAIN CAST")}
-                      info={episode.guest_stars}
-                      media={"tv"}
-                      id={Number(idTv)}
-                    />
-                  </div>
-                </div>
-              )}
-            </>
+            {episode &&
+            episode.guest_stars &&
+            episode.guest_stars.length === 0 ? null : (
+              <div className="text-gray-200 rounded-xl mb-10 ">
+                <CarouselCredits
+                  title={t("MAIN CAST")}
+                  info={episode.guest_stars}
+                  media={"tv"}
+                  id={Number(idTv)}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -73,7 +73,7 @@ export const Multi = ({
   const [imdbData, setImdbData] = useState({});
   useEffect(() => {
     if (i18next.language && mediaType && imdbID !== "") {
-      getRating(imdbID, i18next.language, true).then((data) => {
+      getRating(imdbID).then((data) => {
         setImdbData(data);
       });
     }
@@ -89,8 +89,8 @@ export const Multi = ({
     bgPoster: url || NoImage,
     voteAverage: calculateAverageVote(
       vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0,
-      imdbData.imDb > 0 ? Number(imdbData.imDb) : null,
-      imdbData.filmAffinity > 0 ? Number(imdbData.filmAffinity) : null
+      imdbData.IMDb?.audience?.rating > 0 ? Number(imdbData.IMDb?.audience?.rating) : null,
+      imdbData.FilmAffinity?.audience?.rating > 0 ? Number(imdbData.FilmAffinity?.audience?.rating) : null
     ),
     title: title || name,
     date: release_date
