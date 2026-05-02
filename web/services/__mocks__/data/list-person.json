@@ -1,0 +1,36 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99997,
+      "known_for_department": "Directing",
+      "name": "Carlos Nexreel",
+      "original_name": "Carlos Nexreel",
+      "popularity": 12.3,
+      "profile_path": null,
+      "known_for": [
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "genre_ids": [878, 53],
+          "id": 99999,
+          "media_type": "movie",
+          "original_language": "es",
+          "original_title": "The Origin of NexReel",
+          "overview": "En un futuro no muy lejano...",
+          "popularity": 87.4,
+          "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+          "release_date": "2024-03-22",
+          "title": "El Origen de NexReel",
+          "video": false,
+          "vote_average": 7.8,
+          "vote_count": 1452
+        }
+      ]
+    }
+  ],
+  "total_pages": 1,
+  "total_results": 1
+}

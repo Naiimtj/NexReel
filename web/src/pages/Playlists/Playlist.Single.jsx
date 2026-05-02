@@ -1,37 +1,35 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useAuthContext } from "../../context/auth-context";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useAuthContext } from '../../context/auth-context';
+import { useMediaContext } from '../../context/media-context';
+import { useTranslation } from 'react-i18next';
 // services
 import {
   deleteFollowPlaylist,
   deletePlaylist,
   deletePlaylistMedia,
-  getAllMedia,
   getDetailPlaylist,
   getDetailUser,
   getUser,
   patchFollowPlaylist,
   postFollowPlaylist,
-} from "../../../services/DB/services-db";
+} from '../../../services/DB/services-db';
 // icons
-import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
-import { MdModeEditOutline, MdViewCarousel } from "react-icons/md";
-import { HiSortAscending, HiSortDescending, HiUserGroup } from "react-icons/hi";
-import { IoIosArrowBack } from "react-icons/io";
-import { BiHeart, BiSolidHeart } from "react-icons/bi";
-import { FaTrash } from "react-icons/fa";
+import { HiSortAscending, HiSortDescending, HiUserGroup } from 'react-icons/hi';
+import { IoIosArrowBack } from 'react-icons/io';
+import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 // components
-import Multi from "../../components/MediaList/Multi";
-import MultiList from "../../components/MediaList/MultiList";
-import Carousel from "../../utils/Carousel/Carousel";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import Spinner from "../../utils/Spinner/Spinner";
-import EditPlaylist from "../../components/Users/Playlist/EditPlaylist";
-import PopSureDelete from "../../components/PopUp/PopSureDelete";
-import PageTitle from "../../components/PageTitle";
-import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
-import CarouselCredits from "../../utils/Carousel/CarouselCredits";
+import Multi from '../../components/MediaList/Multi';
+import MultiList from '../../components/MediaList/MultiList';
+import Carousel from '../../utils/Carousel/Carousel';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import Spinner from '../../utils/Spinner/Spinner';
+import EditPlaylist from '../../components/Users/Playlist/EditPlaylist';
+import { BaseIcon, DeleteConfirmModal } from '../../components/base';
+import PageTitle from '../../components/PageTitle';
+import ButtonIsFollowing from '../../utils/ButtonIsFollowing';
+import CarouselCredits from '../../utils/Carousel/CarouselCredits';
+import ViewToggle from '../../utils/Buttons/ViewToggle';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -43,8 +41,9 @@ function DataOrder(check, data, state) {
 }
 
 const PlaylistSingle = () => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
+  const { mediasUser } = useMediaContext();
   const { userId, id } = useParams();
   const isOtherUser = user.id !== userId;
   const [dataPlaylist, setDataPlaylist] = useState({});
@@ -100,10 +99,10 @@ const PlaylistSingle = () => {
     ? DataOrder(checkMedias, medias, isAsc)
     : null;
   const dataMedias = checkMedias
-    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type !== "person")
+    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type !== 'person')
     : null;
   const dataMediasPersons = checkMedias
-    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type === "person")
+    ? dataMediasAll && dataMediasAll.filter((f) => f.media_type === 'person')
     : null;
   let isCarousel;
   let isSquare;
@@ -138,34 +137,19 @@ const PlaylistSingle = () => {
   // -NO FOLLOW
   const handleUnFollow = () => {
     deleteFollowPlaylist(id).then(() =>
-      setChangeSeenPending(!changeSeenPending)
+      setChangeSeenPending(!changeSeenPending),
     );
   };
-  const [mediasUser, setMediasUser] = useState([]);
-  useEffect(() => {
-    const Data = async () => {
-      getAllMedia()
-        .then((data) => {
-          setMediasUser(data);
-        })
-        .catch((err) => err);
-    };
-    if (user) {
-      Data();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, changeSeenPending]);
-
   // -LIKE
   const handleLike = () => {
     patchFollowPlaylist(id, { like: true }).then(() =>
-      setChangeSeenPending(!changeSeenPending)
+      setChangeSeenPending(!changeSeenPending),
     );
   };
   // -UNLIKE
   const handleUnLike = () => {
     patchFollowPlaylist(id, { like: false }).then(() =>
-      setChangeSeenPending(!changeSeenPending)
+      setChangeSeenPending(!changeSeenPending),
     );
   };
   const TimeTotalSeenMin =
@@ -179,7 +163,7 @@ const PlaylistSingle = () => {
       }, 0);
   const TimeTotalSeen = new DateAndTimeConvert(
     TimeTotalSeenMin,
-    t
+    t,
   ).TimeConvert();
 
   const [editPlaylist, setEditPlaylist] = useState(false);
@@ -221,7 +205,7 @@ const PlaylistSingle = () => {
   useEffect(() => {
     const deleteMedia = async () => {
       try {
-        await deletePlaylistMedia(!isOtherUser ? id : "", {
+        await deletePlaylistMedia(!isOtherUser ? id : '', {
           mediaIdDelete: idDelete,
         });
         setChangeSeenPending(!changeSeenPending);
@@ -270,15 +254,15 @@ const PlaylistSingle = () => {
             {/* // . BACK USER & PLAYLIST */}
             <div className="text-gray-200 mb-4">
               <Link
-                to={!isOtherUser ? "/me" : `/users/${dataUser.id}`}
+                to={!isOtherUser ? '/me' : `/users/${dataUser.id}`}
                 className="ml-5 pt-5 text-[#b1a9fa] md:hover:text-gray-500 capitalize"
               >
                 <IoIosArrowBack
                   className="inline-block mr-1"
                   size={25}
-                  alt={t("Left arrow icon")}
+                  alt={t('Left arrow icon')}
                 />
-                {dataUser.username}
+                {dataUser?.username}
               </Link>
               <Link
                 to={`/playlists/${dataUser.id}`}
@@ -287,9 +271,9 @@ const PlaylistSingle = () => {
                 <IoIosArrowBack
                   className="inline-block mr-1"
                   size={25}
-                  alt={t("Left arrow icon")}
+                  alt={t('Left arrow icon')}
                 />
-                {t("Playlists")}
+                {t('Playlists')}
               </Link>
             </div>
             {!editPlaylist ? (
@@ -302,21 +286,24 @@ const PlaylistSingle = () => {
                 <div className="bg-local backdrop-blur-md bg-[#20283E]/80 rounded-xl h-full py-10 px-3">
                   <div className="relative">
                     {/* // - POP DELETE */}
-                    {popSureDel ? (
-                      <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle ">
-                        <PopSureDelete
-                          setPopSureDel={setPopSureDel}
-                          setAnswerDel={setAnswerDel}
-                        />
-                      </div>
-                    ) : null}
+                    <DeleteConfirmModal
+                      visible={popSureDel}
+                      onConfirm={() => {
+                        setPopSureDel(false);
+                        setAnswerDel(true);
+                      }}
+                      onCancel={() => {
+                        setPopSureDel(false);
+                        setAnswerDel(false);
+                      }}
+                    />
                     {/* // - TOP */}
                     <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center mb-1">
                       {t(title)}
                     </h1>
                     {/* // . TAGS */}
                     <div className="text-xs text-gray-500 text-center mb-4">
-                      {tags && tags.join(", ")}
+                      {tags && tags.join(', ')}
                     </div>
                     <div className="grid grid-cols-6 border-b border-gray-700 mb-2 pb-2">
                       {/* //-POSTER*/}
@@ -332,51 +319,66 @@ const PlaylistSingle = () => {
                         <div className="col-span-2">
                           <div className="flex gap-2">
                             <p className="text-gray-400">{`${t(
-                              "Create by"
+                              'Create by',
                             )}:`}</p>
                             <Link
                               to={
                                 isOtherUser
-                                  ? `/users/${dataPlaylist.user[0].id}`
-                                  : "/me"
+                                  ? `/users/${dataPlaylist.user?.id}`
+                                  : '/me'
                               }
                               className="capitalize text-purpleNR hover:text-gray-600 transition duration-300"
                             >
-                              {dataPlaylist &&
-                                dataPlaylist.user &&
-                                dataPlaylist.user[0].username}
+                              {dataPlaylist?.user?.username}
                             </Link>
                           </div>
                         </div>
-                        <div className="col-span-4 flex gap-2">
-                          <div className="text-gray-400">{`${t(
-                            "Description"
-                          )}:`}</div>
-                          <p className="font-normal">{description}</p>
-                        </div>
+                        {
+                          <div className="col-span-4 flex gap-2">
+                            <div className="text-gray-400">{`${t(
+                              'Description',
+                            )}:`}</div>
+                            <p className="font-normal">
+                              {description && description !== 'null'
+                                ? description
+                                : ''}
+                            </p>
+                          </div>
+                        }
                         <div className="col-span-2">
                           <div className="flex gap-2 mb-4">
-                            <p className="text-gray-400">{`${t(
-                              "Quantity Persons"
-                            )}:`}</p>
-                            <div className="inline-block capitalize">
-                              {dataMediasPersons && dataMediasPersons.length}
-                            </div>
+                            {dataMediasPersons &&
+                              dataMediasPersons.length > 0 && (
+                                <>
+                                  <p className="text-gray-400">{`${t(
+                                    'Quantity Persons',
+                                  )}:`}</p>
+                                  <div className="inline-block capitalize">
+                                    {dataMediasPersons
+                                      ? dataMediasPersons.length
+                                      : 0}
+                                  </div>
+                                </>
+                              )}
                           </div>
                           <div className="flex gap-2 mb-4">
                             <p className="text-gray-400">{`${t(
-                              "Quantity"
+                              'Quantity',
                             )}:`}</p>
                             <div className="inline-block capitalize">
-                              {dataMedias && dataMedias.length}
+                              {dataMedias ? dataMedias.length : 0}
                             </div>
                           </div>
-                          <div className="flex gap-2">
-                            <p className="text-gray-400">{`${t(
-                              "Total Time"
-                            )}:`}</p>
-                            <div className="inline-block">{TimeTotalSeen}</div>
-                          </div>
+                          {dataMedias && dataMedias.length > 0 && (
+                            <div className="flex gap-2">
+                              <p className="text-gray-400">{`${t(
+                                'Total Time',
+                              )}:`}</p>
+                              <div className="inline-block">
+                                {TimeTotalSeen}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                       {/* // - LIKES/FOLLOWS & BUTTONS */}
@@ -387,14 +389,14 @@ const PlaylistSingle = () => {
                             <div className="text-center flex items-center gap-2">
                               <BiSolidHeart
                                 size={20}
-                                alt={t("Solid Heart Icon")}
+                                alt={t('Solid Heart Icon')}
                                 className=""
                               />
                               <p>{TotalLikesFollowPlaylist}</p>
                             </div>
                           ) : null}
                           <div className="text-center flex items-center gap-2">
-                            <HiUserGroup size={20} alt={t("Followers")} />
+                            <HiUserGroup size={20} alt={t('Followers')} />
                             <p>{TotalFollowsPlaylist}</p>
                           </div>
                         </div>
@@ -411,7 +413,7 @@ const PlaylistSingle = () => {
                                     <p>{TotalLikesFollowPlaylist}</p>
                                     <BiHeart
                                       size={20}
-                                      alt={t("No Heart Icon")}
+                                      alt={t('No Heart Icon')}
                                       className="text-purpleNR cursor-pointer hover:text-gray-600 transition ease-in-out md:hover:scale-110 duration-300"
                                       onClick={handleLike}
                                     />
@@ -421,18 +423,20 @@ const PlaylistSingle = () => {
                                     <p>{TotalLikesFollowPlaylist}</p>
                                     <BiSolidHeart
                                       size={20}
-                                      alt={t("Solid Heart Icon")}
+                                      alt={t('Solid Heart Icon')}
                                       className="cursor-pointer text-red-200 hover:text-purpleNR transition ease-in-out md:hover:scale-110 duration-300"
                                       onClick={handleUnLike}
                                     />
                                   </div>
                                 )
                               ) : (
-                                <FaTrash
-                                  size={17}
-                                  alt={t("Delete Playlist Icon")}
-                                  className="text-red-500 md:hover:text-gray-500 duration-200 cursor-pointer"
+                                <BaseIcon
+                                  icon="trash"
+                                  size="small"
                                   onClick={handleDeletePlaylist}
+                                  aria-label={t('Delete Playlist')}
+                                  className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
+                                  tooltip={t('Delete')}
                                 />
                               )}
                             </>
@@ -453,11 +457,13 @@ const PlaylistSingle = () => {
                                 </div>
                               ) : null
                             ) : (
-                              <MdModeEditOutline
-                                size={20}
-                                alt={t("Edit Playlist Icon")}
-                                className="text-[#b1a9fa] md:hover:text-gray-500 duration-200 cursor-pointer"
+                              <BaseIcon
+                                icon="edit"
+                                size="small"
                                 onClick={() => setEditPlaylist(true)}
+                                aria-label={t('Edit Playlist')}
+                                className="text-[#b1a9fa] md:hover:text-gray-500 duration-200 cursor-pointer"
+                                tooltip={t('Edit')}
                               />
                             )}
                           </div>
@@ -468,20 +474,23 @@ const PlaylistSingle = () => {
                   {/* // - DOWN */}
                   <div className="relative">
                     {/* // - POP DELETE */}
-                    {popSureDelMedia ? (
-                      <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
-                        <PopSureDelete
-                          setPopSureDel={setPopSureDelMedia}
-                          setAnswerDel={setAnswerDelMedia}
-                        />
-                      </div>
-                    ) : null}
+                    <DeleteConfirmModal
+                      visible={popSureDelMedia}
+                      onConfirm={() => {
+                        setPopSureDelMedia(false);
+                        setAnswerDelMedia(true);
+                      }}
+                      onCancel={() => {
+                        setPopSureDelMedia(false);
+                        setAnswerDelMedia(false);
+                      }}
+                    />
                     {/* // - CAROUSEL */}
                     {checkMedias && dataMediasPersons.length > 0 ? (
                       <CarouselCredits
-                        title={"Persons"}
+                        title={'Persons'}
                         info={dataMediasPersons}
-                        media={"person"}
+                        media={'person'}
                         isUser={true}
                         isPlaylist={true}
                         setPopSureDel={setPopSureDelMedia}
@@ -501,10 +510,10 @@ const PlaylistSingle = () => {
                                 : null
                             }
                           >
-                            {t("Date Added")}
+                            {t('Date Added')}
                             <HiSortAscending
                               className="ml-1 text-2xl inline-block"
-                              alt={t("Ascendant")}
+                              alt={t('Ascendant')}
                             />
                           </div>
                         ) : (
@@ -516,55 +525,20 @@ const PlaylistSingle = () => {
                                 : null
                             }
                           >
-                            {t("Date Added")}
+                            {t('Date Added')}
                             <HiSortDescending
                               className="ml-1 text-2xl inline-block"
-                              alt={t("Descending")}
+                              alt={t('Descending')}
                             />
                           </div>
                         )}
                       </div>
                       {/* // . BUTTONS */}
                       <div className="col-span-2 flex items-center justify-end">
-                        {/* // CAROUSEL */}
-                        <div
-                          className={`mr-2 ${
-                            isCarousel
-                              ? "text-gray-500"
-                              : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                          }`}
-                        >
-                          <MdViewCarousel
-                            className="h-14 w-14 md:h-8 md:w-8"
-                            onClick={() => setVisualDesign(0)}
-                          />
-                        </div>
-                        {/* // SQUARE */}
-                        <div
-                          className={`mr-2 ${
-                            isSquare
-                              ? "text-gray-500"
-                              : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                          }`}
-                        >
-                          <BsGrid3X2GapFill
-                            className="h-14 w-14 md:h-8 md:w-8"
-                            onClick={() => setVisualDesign(1)}
-                          />
-                        </div>
-                        {/* // LIST */}
-                        <div
-                          className={`mr-2 ${
-                            isList
-                              ? "text-gray-500"
-                              : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                          }`}
-                        >
-                          <BsListUl
-                            className="h-14 w-14 md:h-8 md:w-8"
-                            onClick={() => setVisualDesign(2)}
-                          />
-                        </div>
+                        <ViewToggle
+                          visualDesign={visualDesign}
+                          setVisualDesign={setVisualDesign}
+                        />
                       </div>
                     </div>
                     {errorDelete ? (
@@ -578,7 +552,7 @@ const PlaylistSingle = () => {
                         info={dataMedias}
                         isUser
                         isAsc={isAsc}
-                        isPlaylist={!isOtherUser ? id : ""}
+                        isPlaylist={!isOtherUser ? id : ''}
                         setPopSureDel={setPopSureDelMedia}
                         setIdDelete={setIdDelete}
                       />
@@ -593,7 +567,7 @@ const PlaylistSingle = () => {
                             isUser
                             setChangeSeenPending={setChangeSeenPending}
                             changeSeenPending={changeSeenPending}
-                            isPlaylist={!isOtherUser ? id : ""}
+                            isPlaylist={!isOtherUser ? id : ''}
                             setPopSureDel={setPopSureDelMedia}
                             setIdDelete={setIdDelete}
                             mediasUser={mediasUser}
@@ -603,7 +577,7 @@ const PlaylistSingle = () => {
                     ) : null}
                     {/* // - LIST */}
                     {checkMedias && dataMedias.length > 0 && isList ? (
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-1 bg-white/20 p-2 rounded-lg">
                         {dataMedias.map((card, index) => (
                           <MultiList
                             key={`MultiList${index}${userId}`}
@@ -611,7 +585,7 @@ const PlaylistSingle = () => {
                             isUser
                             setChangeSeenPending={setChangeSeenPending}
                             changeSeenPending={changeSeenPending}
-                            isPlaylist={!isOtherUser ? id : ""}
+                            isPlaylist={!isOtherUser ? id : ''}
                             setPopSureDel={setPopSureDelMedia}
                             setIdDelete={setIdDelete}
                             mediasUser={mediasUser}

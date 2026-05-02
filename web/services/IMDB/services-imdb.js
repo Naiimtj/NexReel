@@ -1,44 +1,57 @@
-/* eslint-disable no-unused-vars */
-import axios from "axios";
-import MockRating from "./tt0012349 (el Chico - 1921)/Ratings tt0012349.json";
+import axios from 'axios';
+import mockRatings from '../__mocks__/data/ratings.json';
+
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_URL_IMDB,
   headers: {
-    "X-RapidAPI-Host": "film-show-ratings.p.rapidapi.com",
-    "X-RapidAPI-Key": import.meta.env.VITE_APIKEY_IMDB,
+    'X-RapidAPI-Host': 'film-show-ratings.p.rapidapi.com',
+    'X-RapidAPI-Key': import.meta.env.VITE_APIKEY_IMDB,
   },
 });
 
-const apiKeyIMDB = import.meta.env.VITE_APIKEY_IMDB || "";
+const apiKeyIMDB = import.meta.env.VITE_APIKEY_IMDB || '';
+const notUseIMDB = import.meta.env.VITE_NOT_USE_IMDB === 'true';
 
 // . Rating
 export async function getRating(id) {
+  if (!notUseIMDB) {
+    return {};
+  }
+  if (USE_MOCKS || apiKeyIMDB) {
+    return mockRatings;
+  }
   const url = `item/?id=${id}`;
-  console.log("url IMDB:", url);
   try {
     const response = await service.get(url);
     return response.data?.result?.ratings;
   } catch (err) {
-    console.error("Error External Id IMDB:", err);
+    console.error('Error External Id IMDB:', err);
     return {};
   }
 }
 
 // . Rating
-export async function getImdbPerson(id, lang = "es-ES") {
-  const langImdb = lang.split("-");
+export async function getImdbPerson(id, lang = 'es-ES') {
+  if (!notUseIMDB) {
+    return {};
+  }
+  if (USE_MOCKS || apiKeyIMDB) {
+    return {};
+  }
+  const langImdb = lang.split('-');
   try {
     const response = await service.get(
-      `${langImdb[0]}/API/Name/${apiKeyIMDB}/${id}`
+      `${langImdb[0]}/API/Name/${apiKeyIMDB}/${id}`,
     );
     if (response.data.errorMessage) {
-      console.error("Error Person IMDB:", response.data.errorMessage);
+      console.error('Error Person IMDB:', response.data.errorMessage);
     } else {
       return response;
     }
   } catch (err) {
-    console.error("Error Person TMDB:", err);
+    console.error('Error Person IMDB:', err);
     return {};
   }
 }

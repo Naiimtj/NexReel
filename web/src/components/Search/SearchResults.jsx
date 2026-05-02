@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 // import { Link } from "react-router-dom";
-import CarouselPersons from "./CarouselPersons";
-import { IoClose } from "react-icons/io5";
-import PlaylistsList from "../Users/Playlist/PlaylistsList";
-import Carousel from "../../utils/Carousel/Carousel";
+import CarouselPersons from './CarouselPersons';
+import { IoClose } from 'react-icons/io5';
+import PlaylistsList from '../Users/Playlist/PlaylistsList';
+import Carousel from '../../utils/Carousel/Carousel';
 
 const SearchResults = ({
   title,
@@ -16,32 +16,32 @@ const SearchResults = ({
   changeSeenPending,
   setChangeSeenPending,
 }) => {
-  const [t] = useTranslation("translation");
-  const mediaMovie = media === "movie" ? true : null;
-  const mediaTv = media === "tv" ? true : null;
-  const mediaPerson = media === "person" ? true : null;
-  const users = media === "user" ? true : null;
-  const playlists = media === "playlists" ? true : null;
+  const [t] = useTranslation('translation');
+  const mediaMovie = media === 'movie' ? true : null;
+  const mediaTv = media === 'tv' ? true : null;
+  const mediaPerson = media === 'person' ? true : null;
+  const users = media === 'user' ? true : null;
+  const playlists = media === 'playlists' ? true : null;
 
   return (
     <div
       className={
         users
-          ? "mt-1 w-full z-50 absolute left-0 grid gap-3 pb-4 pt-4 justify-items-center bg-local backdrop-blur-md bg-[#20283E]/60 rounded-b-lg text-gray-200 text-xl"
-          : "w-full"
+          ? 'mt-1 w-full z-50 absolute left-0 grid gap-3 pb-4 pt-4 justify-items-center bg-local backdrop-blur-md bg-[#20283E]/60 rounded-b-lg text-gray-200 text-xl'
+          : 'w-full'
       }
     >
       <div
         className="absolute z-50 my-2 mx-2 top-0 right-0 cursor-pointer"
         onClick={hideSearch}
       >
-        <IoClose size={30} alt={t("Close")} />
+        <IoClose size={30} alt={t('Close')} />
       </div>
       <div className="w-full px-4">
         {/* // - MOVIES & TV SHOWS */}
         {mediaMovie || mediaTv ? (
           <div className="w-full">
-            {listMedias && listMedias.results && listMedias.results ? (
+            {listMedias?.results ? (
               <Carousel
                 title={t(title)}
                 info={listMedias.results}
@@ -54,6 +54,7 @@ const SearchResults = ({
                 isChange={changeSeenPending}
                 isSetChange={setChangeSeenPending}
                 isAllCards
+                size="small"
               />
             ) : null}
           </div>
@@ -61,11 +62,9 @@ const SearchResults = ({
         {/* // - PERSONS */}
         {mediaPerson ? (
           <div className="w-full">
-            {listMedias &&
-            listMedias.results &&
-            listMedias.results.length > 0 ? (
+            {listMedias?.results?.length > 0 ? (
               <CarouselPersons
-                title={t("Persons")}
+                title={t('Persons')}
                 info={listMedias.results}
                 media={media}
                 hideSearch={hideSearch}
@@ -73,6 +72,7 @@ const SearchResults = ({
                 basicForum={basicForum}
                 isChange={changeSeenPending}
                 isSetChange={setChangeSeenPending}
+                size="small"
               />
             ) : null}
           </div>
@@ -80,14 +80,13 @@ const SearchResults = ({
         {/* // - USERS */}
         {users ? (
           <div className="w-full">
-            {listMedias &&
-            listMedias.results &&
-            listMedias.results.length > 0 ? (
+            {listMedias?.results?.length > 0 ? (
               <CarouselPersons
-                title={t("Users")}
+                title={t('Users')}
                 info={listMedias.results}
-                media={"user"}
+                media={'user'}
                 isForum={isForum}
+                size="small"
               />
             ) : null}
           </div>
@@ -95,7 +94,7 @@ const SearchResults = ({
         {/* // - PLAYLISTS */}
         {playlists ? (
           <div className="w-full">
-            {listMedias && listMedias.results && listMedias.results.length > 0
+            {listMedias?.results?.length > 0
               ? listMedias.results.map((playlist) => (
                   <PlaylistsList
                     key={`Search${playlist.id}`}
@@ -103,6 +102,7 @@ const SearchResults = ({
                     isOtherUser={true}
                     userId={playlist.author}
                     isForum={isForum}
+                    size="small"
                   />
                 ))
               : null}
@@ -120,7 +120,7 @@ const SearchResults = ({
       ) : null} */}
         {listMedias && listMedias.results && listMedias.results.length === 0 ? (
           <div className="mt-1 w-full text-center text-gray-200 text-xl">
-            {t("No Results")}
+            {t('No Results')}
           </div>
         ) : null}
       </div>
@@ -131,9 +131,9 @@ const SearchResults = ({
 export default SearchResults;
 
 SearchResults.defaultProps = {
-  title: "",
+  title: '',
   listMedias: {},
-  media: "",
+  media: '',
   hideSearch: () => {},
   changeSeenPending: false,
   setChangeSeenPending: () => {},

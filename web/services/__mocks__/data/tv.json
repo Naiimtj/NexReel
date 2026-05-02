@@ -1,0 +1,89 @@
+{
+  "adult": false,
+  "backdrop_path": "/34cMFil1HLvNbn9NwtXSut5c8tP.jpg",
+  "created_by": [
+    {
+      "id": 99997,
+      "credit_id": "mock001",
+      "name": "Carlos Nexreel",
+      "gender": 2,
+      "profile_path": null
+    }
+  ],
+  "episode_run_time": [45],
+  "first_air_date": "2023-09-10",
+  "genres": [
+    { "id": 18, "name": "Drama" },
+    { "id": 878, "name": "Ciencia ficción" }
+  ],
+  "homepage": "",
+  "id": 99998,
+  "in_production": true,
+  "languages": ["es"],
+  "last_air_date": "2024-11-28",
+  "last_episode_to_air": {
+    "id": 9999816,
+    "name": "El final del principio",
+    "overview": "La red lo conecta todo, y el equipo descubre que siempre lo supo.",
+    "vote_average": 8.1,
+    "vote_count": 320,
+    "air_date": "2024-11-28",
+    "episode_number": 8,
+    "episode_type": "finale",
+    "production_code": "",
+    "runtime": 52,
+    "season_number": 2,
+    "show_id": 99998,
+    "still_path": null
+  },
+  "name": "Crónicas del Nexreel",
+  "next_episode_to_air": null,
+  "networks": [],
+  "number_of_episodes": 16,
+  "number_of_seasons": 2,
+  "origin_country": ["ES"],
+  "original_language": "es",
+  "original_name": "NexReel Chronicles",
+  "overview": "Una serie de ciencia ficción sobre un grupo de investigadores que descubren una red oculta de información que conecta todos los eventos históricos de la humanidad. Cada episodio desvela una nueva capa del misterio que amenaza con cambiar todo lo que conocemos.",
+  "popularity": 124.7,
+  "poster_path": "/34cMFil1HLvNbn9NwtXSut5c8tP.jpg",
+  "production_companies": [
+    {
+      "id": 99001,
+      "logo_path": null,
+      "name": "NexReel Studios",
+      "origin_country": "ES"
+    }
+  ],
+  "production_countries": [{ "iso_3166_1": "ES", "name": "Spain" }],
+  "seasons": [
+    {
+      "air_date": "2023-09-10",
+      "episode_count": 8,
+      "id": 9999801,
+      "name": "Temporada 1",
+      "overview": "El equipo descubre la existencia de la red.",
+      "poster_path": null,
+      "season_number": 1,
+      "vote_average": 7.9
+    },
+    {
+      "air_date": "2024-05-14",
+      "episode_count": 8,
+      "id": 9999802,
+      "name": "Temporada 2",
+      "overview": "La conspiración se expande más allá de las fronteras.",
+      "poster_path": null,
+      "season_number": 2,
+      "vote_average": 8.2
+    }
+  ],
+  "spoken_languages": [
+    { "english_name": "Spanish", "iso_639_1": "es", "name": "Español" }
+  ],
+  "status": "Returning Series",
+  "tagline": "La red lo conecta todo.",
+  "type": "Scripted",
+  "vote_average": 8.1,
+  "vote_count": 987
+}

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const service = axios.create({
   withCredentials: true,
@@ -6,633 +6,286 @@ const service = axios.create({
 });
 
 service.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
+  (response) => response.data,
   (error) => {
     if (
       error.response.status === 401 &&
-      window.location.pathname !== "/login"
+      window.location.pathname !== '/login'
     ) {
-      localStorage.removeItem("user");
-      window.location.assign("/login");
+      localStorage.removeItem('user');
+      window.location.assign('/login');
     } else {
       return Promise.reject(error);
     }
-  }
+  },
 );
 
-// . POST
-// Log In
-export async function login(data) {
-  return service.post("/login", data);
-}
-// . POST
-// Log Out
-export async function logoutDB() {
-  const url = "/logout";
+const safe = async (label, fn, fallback = {}) => {
   try {
-    const response = await service.post(url);
-    return response;
+    return await fn();
   } catch (err) {
-    console.error("Error Log Out:", err);
-    return {};
+    console.error(`Error ${label}:`, err);
+    return fallback;
   }
-}
-// . POST
-// Register
-export async function postRegister(data) {
-  const formData = new FormData();
-  formData.append("username", data.username);
-  formData.append("email", data.email);
-  formData.append("password", data.password);
-  formData.append("region", data.region);
+};
 
-  if (data.avatarURL) {
-    formData.append("avatarURL", data.avatarURL[0]);
+const buildPlaylistFormData = (data) => {
+  const formData = new FormData();
+  formData.append('title', data.title);
+  formData.append('description', data.description);
+  for (const tag of data.tags) {
+    const trimmed = tag.trim();
+    if (trimmed) formData.append('tags[]', trimmed);
   }
-  const response = await service.post("/register", formData);
-  return response;
-}
+  if (
+    data.imgPlaylist &&
+    (typeof data.imgPlaylist === 'object' || data.imgPlaylist[0])
+  ) {
+    formData.append('imgPlaylist', data.imgPlaylist[0]);
+  }
+  return formData;
+};
+
+const buildForumFormData = (data) => {
+  const formData = new FormData();
+  formData.append('title', data.title);
+  for (const tag of data.tags) {
+    const trimmed = tag.trim();
+    if (trimmed) formData.append('tags[]', trimmed);
+  }
+  formData.append('shortDescription', data.shortDescription);
+  formData.append('description', data.description);
+  if (data.author !== undefined) formData.append('author', data.author);
+  if (
+    data.imgForum &&
+    (typeof data.imgForum === 'object' || data.imgForum[0])
+  ) {
+    formData.append('imgForum', data.imgForum[0]);
+  }
+  return formData;
+};
+
+// < AUTH
+export const login = (data) => service.post('login', data);
+
+export const logoutDB = () => safe('Log Out', () => service.post('logout'));
+
+export const postRegister = (data) => {
+  const formData = new FormData();
+  formData.append('username', data.username);
+  formData.append('email', data.email);
+  formData.append('password', data.password);
+  formData.append('region', data.region);
+  if (data.avatarURL) formData.append('avatarURL', data.avatarURL[0]);
+  return service.post('register', formData);
+};
 
 // < PLEX
-// - GET LIST ALL DATA
-// List of all data of plex
-export async function getPlexAllData() {
-  try {
-    const response = await service.get("/plex");
-    return response[0];
-  } catch (err) {
-    console.error("Error all plex data:", err);
-    return {};
-  }
-}
+export const getPlexData = () =>
+  safe('plex summary', () => service.get('plex'));
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+export const getPlexMovies = (q) =>
+  safe(
+    'fetching plex movies',
+    () => service.get('plex/movies', { params: q ? { q } : {} }),
+    [],
+  );
+
+export const getPlexTv = (q) =>
+  safe(
+    'fetching plex TV shows',
+    () => service.get('plex/tv', { params: q ? { q } : {} }),
+    [],
+  );
+
 // < USER
-//.SEARCH USER
-export async function getSearchUsers(searchValue) {
-  try {
-    const response = await service.get(`/users/search?username=${searchValue}`);
-    return response;
-  } catch (err) {
-    console.error("Error Search User:", err);
-    return {};
-  }
-}
-// - GET
-// User Profile
-export async function getUser() {
-  try {
-    const response = await service.get("/users/me");
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// - GET
-// Info User
-export async function getInfoUser(id) {
-  try {
-    const response = await service.get(`/users/${id}`);
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// - GET
-// All Users
-export async function getUsers() {
-  try {
-    const response = await service.get("/users");
-    return response;
-  } catch (err) {
-    console.error("Error all users:", err);
-    return {};
-  }
-}
-// * PATCH
-// Update user
-export async function patchUser(data) {
+export const getSearchUsers = (searchValue) =>
+  safe('Search User', () =>
+    service.get(`users/search?username=${searchValue}`),
+  );
+
+export const getUser = () =>
+  safe('profile', () => service.get('users/me'), null);
+
+export const getInfoUser = (id) =>
+  safe('profile', () => service.get(`users/${id}`));
+
+export const getUsers = () => safe('all users', () => service.get('users'));
+
+export const patchUser = (data) => {
   const formData = new FormData();
-  formData.append("username", data.username);
-  formData.append("email", data.email);
-  formData.append("region", data.region);
-  formData.append("favoritePhrase", data.favoritePhrase);
-  if (typeof data.avatarURL === "object") {
-    formData.append("avatarURL", data.avatarURL[0]);
+  formData.append('username', data.username);
+  formData.append('email', data.email);
+  formData.append('region', data.region);
+  formData.append('favoritePhrase', data.favoritePhrase);
+  if (typeof data.avatarURL === 'object') {
+    formData.append('avatarURL', data.avatarURL[0]);
   }
-  const response = await service.patch("users/me", formData);
-  return response;
-}
-// * PATCH
-// Update Notification Read
-export async function patchNotifications(data) {
-  const response = await service.patch("/users/me/notifications", data);
-  return response;
-}
-// ! DELETE
-// delete
-export async function deleteUser() {
-  const url = "/users/me";
+  return service.patch('users/me', formData);
+};
+
+export const patchNotifications = (data) =>
+  service.patch('users/me/notifications', data);
+
+export const deleteUser = () =>
+  safe('Delete user', () => service.delete('users/me'));
+
+// FOLLOW USER
+export const getDetailUser = (id) =>
+  safe('profile', () => service.get(`users/${id}/follow`));
+
+export const getFollowersUser = async () => {
   try {
-    const response = await service.delete(url);
-    return response;
+    return await service.get('user/followers');
   } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
+    console.error('Error profile:', err);
+    localStorage.removeItem('user');
+    return [];
   }
-}
-// --------- FOLLOW USER
-// - GET
-// Detail User
-export async function getDetailUser(id) {
-  const url = `/users/${id}/follow`;
-  try {
-    const response = await service.get(url);
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// - GET
-// Followers User
-export async function getFollowersUser() {
-  try {
-    const response = await service.get("/user/followers");
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    localStorage.removeItem("user");
-    return {};
-  }
-}
-// . POST
-// Confirm Following
-export async function postConfirmFollow(id) {
-  const url = `/users/${id}/follow`;
-  try {
-    const response = await service.post(url);
-    return response;
-  } catch (err) {
-    console.error("Error Confirm Follow:", err);
-    return {};
-  }
-}
-// . POST
-// Following
-export async function postFollow(id) {
-  const url = `/users/${id}/follows`;
-  try {
-    const response = await service.post(url);
-    return response;
-  } catch (err) {
-    console.error("Error Post Follow:", err);
-    return {};
-  }
-}
-// ! DELETE
-// Delete Follower
-export async function deleteFollower(id) {
-  const url = `/users/${id}/follows`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
-// ! DELETE
-// Delete Follow
-export async function UnFollow(id) {
-  const url = `/users/${id}/nofollow`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+};
+
+export const postConfirmFollow = (id) =>
+  safe('Confirm Follow', () => service.post(`users/${id}/follow`));
+
+export const postFollow = (id) =>
+  safe('Post Follow', () => service.post(`users/${id}/follows`));
+
+export const deleteFollower = (id) =>
+  safe('Delete user', () => service.delete(`users/${id}/follows`));
+
+export const UnFollow = (id) =>
+  safe('Delete user', () => service.delete(`users/${id}/nofollow`));
+
 // < PLAYLISTS
-//.SEARCH PLAYLISTS
-export async function getSearchPlaylists(searchValue) {
-  try {
-    const response = await service.get(
-      `/playlists/search?title=${searchValue}`
-    );
-    return response;
-  } catch (err) {
-    console.error("Error Search Playlists:", err);
-    return {};
-  }
-}
-// . POST
-// New Playlist
-export async function postPlaylist(data) {
-  const formData = new FormData();
-  formData.append("title", data.title);
-  formData.append("description", data.description);
-  for (const tag of data.tags) {
-    const trimmedTag = tag.trim();
-    if (trimmedTag) {
-      formData.append("tags[]", trimmedTag);
-    }
-  }
+export const getSearchPlaylists = (searchValue) =>
+  safe('Search Playlists', () =>
+    service.get(`playlists/search?title=${searchValue}`),
+  );
 
-  if (data.imgPlaylist) {
-    formData.append("imgPlaylist", data.imgPlaylist[0]);
-  }
-  const response = await service.post("/playlists", formData);
-  return response;
-}
-// - GET
-// List Playlist
-export async function getListPlaylist() {
-  const url = `/playlists`;
-  try {
-    const response = await service.get(url);
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// - GET
-// List Playlist for current user
-export async function getUserListPlaylist() {
-  const url = `/playlists/me`;
-  try {
-    const response = await service.get(url);
-    return response;
-  } catch (err) {
-    console.error("Error playlist:", err);
-    return {};
-  }
-}
-// - GET
-// Detail Playlist
-export async function getDetailPlaylist(id) {
-  const url = `/playlists/${id}`;
-  try {
-    const response = await service.get(url);
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// * PATCH
-// Update Playlist
-export async function patchPlaylist(id, data) {
-  const formData = new FormData();
-  formData.append("title", data.title);
-  formData.append("description", data.description);
-  for (const tag of data.tags) {
-    const trimmedTag = tag.trim();
-    if (trimmedTag) {
-      formData.append("tags[]", trimmedTag);
-    }
-  }
+export const postPlaylist = (data) =>
+  service.post('playlists', buildPlaylistFormData(data));
 
-  if (typeof data.imgPlaylist === "object") {
-    formData.append("imgPlaylist", data.imgPlaylist[0]);
-  }
-  const response = await service.patch(`/playlists/${id}`, formData);
-  return response;
-}
-// ! DELETE
-// delete
-export async function deletePlaylist(id) {
-  const url = `/playlists/${id}`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
-// ------- MEDIAS PLAYLIST
-// . POST MEDIA
-// New Media
-export async function postPlaylistMedia(id, data) {
-  const response = await service.post(`/playlists/${id}/media`, data);
-  return response;
-}
-// ! DELETE MEDIA
-// Delete One Media
-export async function deletePlaylistMedia(id, data) {
-  const response = await service.delete(`playlists/${id}/media`, { data });
-  return response;
-}
-// ------------ FOLLOW PLAYLISTS
-// . POST
-// Following
-export async function postFollowPlaylist(id) {
-  const url = `/playlists/${id}/follow`;
-  try {
-    const response = await service.post(url);
-    return response;
-  } catch (err) {
-    console.error("Error Post Follow:", err);
-    return {};
-  }
-}
-// - GET
-// Following Details
-export async function getFollowPlaylistDetail(id) {
-  const url = `/playlists/${id}/follow`;
-  try {
-    const response = await service.get(url);
-    return response;
-  } catch (err) {
-    return {};
-  }
-}
-// * PATCH
-// Update Following Playlist
-export async function patchFollowPlaylist(id, data) {
-  try {
-    const response = await service.patch(`/playlists/${id}/follow`, data);
-    return response;
-  } catch (err) {
-    console.error("Error update Follow Playlist:", err);
-    return {};
-  }
-}
-// ! DELETE
-// delete
-export async function deleteFollowPlaylist(id) {
-  const url = `/playlists/${id}/follow`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+export const getListPlaylist = () =>
+  safe('profile', () => service.get('playlists'));
+
+export const getUserListPlaylist = () =>
+  safe('playlist', () => service.get('playlists/me'), []);
+
+export const getDetailPlaylist = (id) =>
+  safe('profile', () => service.get(`playlists/${id}`));
+
+export const patchPlaylist = (id, data) =>
+  service.patch(`playlists/${id}`, buildPlaylistFormData(data));
+
+export const deletePlaylist = (id) =>
+  safe('Delete user', () => service.delete(`playlists/${id}`));
+
+// MEDIAS PLAYLIST
+export const postPlaylistMedia = (id, data) =>
+  service.post(`playlists/${id}/media`, data);
+
+export const deletePlaylistMedia = (id, data) =>
+  service.delete(`playlists/${id}/media`, { data });
+
+// FOLLOW PLAYLISTS
+export const postFollowPlaylist = (id) =>
+  safe('Post Follow', () => service.post(`playlists/${id}/follow`));
+
+export const getFollowPlaylistDetail = (id) =>
+  safe('Follow Playlist', () => service.get(`playlists/${id}/follow`));
+
+export const patchFollowPlaylist = (id, data) =>
+  safe('update Follow Playlist', () =>
+    service.patch(`playlists/${id}/follow`, data),
+  );
+
+export const deleteFollowPlaylist = (id) =>
+  safe('Delete user', () => service.delete(`playlists/${id}/follow`));
+
 // < MEDIAS
-// . POST
-// Add Media
-export async function postMedia(mediaType, data) {
-  try {
-    const response = await service.post(`/medias/${mediaType}`, data);
-    return response;
-  } catch (err) {
-    console.error("Error Post Media:", err);
-    return {};
-  }
-}
-// - GET
-// All Medias
-export async function getAllMedia() {
-  const response = await service.get("/medias");
-  if (response) {
-    return response;
-  }
-  return {};
-}
-// - GET
-// Detail Medias
-export async function getDetailMedia(id, mediaType) {
-  const response = await service.get(`/medias/${mediaType}/${id}`);
-  if (response) {
-    return response;
-  }
-  return {};
-}
-// * PATCH
-// Update Medias
-export async function patchMedia(id, mediaType, data) {
-  try {
-    const response = await service.patch(`/medias/${mediaType}/${id}`, data);
-    return response;
-  } catch (err) {
-    console.error("Error update media user:", err);
-    return {};
-  }
-}
-// ! DELETE
-// Delete Media
-export async function deleteMedia(id) {
-  const url = `/medias/${id}`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete Media:", err);
-    return {};
-  }
-}
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// < SEASONS
-// . POST
-// Add Media
-export async function postSeasons(mediaId, data) {
-  try {
-    const response = await service.post(`/seasons/${mediaId}`, data);
-    return response;
-  } catch (err) {
-    console.error("Error Post Season:", err);
-    return {};
-  }
-}
-// - GET
-// All Medias
-export async function getAllSeasons(mediaId) {
-  const response = await service.get(`/seasons/${mediaId}`);
-  if (response) {
-    return response;
-  }
-  return {};
-}
-// - GET
-// Detail Medias
-export async function getDetailSeasons(mediaId, season) {
-  const response = await service.get(`/seasons/${mediaId}/${season}`);
-  if (response) {
-    return response;
-  }
-  return {};
-}
-// * PATCH
-// Update Medias
-export async function patchSeasons(mediaId, season, data) {
-  try {
-    const response = await service.patch(`/seasons/${mediaId}/${season}`, data);
-    return response;
-  } catch (err) {
-    console.error("Error update media user:", err);
-    return {};
-  }
-}
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// < FORUMS
-// . POST
-// Add Forum
-export async function postForum(data) {
-  const formData = new FormData();
-  formData.append("title", data.title);
-  for (const tag of data.tags) {
-    const trimmedTag = tag.trim();
-    if (trimmedTag) {
-      formData.append("tags[]", trimmedTag);
-    }
-  }
-  formData.append("shortDescription", data.shortDescription);
-  formData.append("description", data.description);
-  if (data.imgForum) {
-    formData.append("imgForum", data.imgForum[0]);
-  }
-  const response = await service.post("/forums", formData);
-  return response;
-}
-// - GET
-// Detail Forums
-export async function getDetailForum(id) {
-  const url = `/forums/${id}`;
-  const response = await service.get(url);
-  if (response) {
-    return response;
-  }
-  return {};
-}
-// - GET
-// List Forum
-export async function getListForum() {
-  try {
-    const response = await service.get("/forums");
-    return response;
-  } catch (err) {
-    console.error("Error profile:", err);
-    return {};
-  }
-}
-// * PATCH
-// Update Forums
-export async function patchForum(id, data) {
-  const formData = new FormData();
-  formData.append("title", data.title);
-  formData.append("shortDescription", data.shortDescription);
-  formData.append("description", data.description);
-  for (const tag of data.tags) {
-    const trimmedTag = tag.trim();
-    if (trimmedTag) {
-      formData.append("tags[]", trimmedTag);
-    }
-  }
-  formData.append("author", data.author);
+export const postMedia = (mediaType, data) =>
+  safe('Post Media', () => service.post(`medias/${mediaType}`, data));
 
-  if (typeof data.imgForum === "object") {
-    formData.append("imgForum", data.imgForum[0]);
-  }
-  const response = await service.patch(`/forums/${id}`, formData);
-  return response;
-}
-// ! DELETE
-// Delete Forum
-export async function deleteForum(id) {
-  try {
-    const response = await service.delete(`/forums/${id}`);
-    return response;
-  } catch (err) {
-    console.error("Error Delete Forum:", err);
-    return {};
-  }
-}
-// // MEDIAS
-// . POST MEDIA
-// New Media
-export async function postForumsMedia(id, data) {
-  const response = await service.post(`/forums/${id}/media`, data);
-  return response;
-}
-// ! DELETE MEDIA
-// Delete One Media
-export async function deleteForumsMedia(id, data) {
-  const response = await service.delete(`forums/${id}/media`, { data });
-  return response;
-}
-// ------------- FOLLOW FORUMS
-// . POST
-// Following
-export async function postFollowForum(id) {
-  const url = `/forums/${id}/follow`;
-  try {
-    const response = await service.post(url);
-    return response;
-  } catch (err) {
-    console.error("Error Post Follow:", err);
-    return {};
-  }
-}
-// * PATCH
-// Update Following
-export async function patchFollowForum(id, data) {
-  try {
-    const response = await service.patch(`/forums/${id}/follow`, data);
-    return response;
-  } catch (err) {
-    console.error("Error update Follow Forum:", err);
-    return {};
-  }
-}
-// ! DELETE
-// delete
-export async function deleteFollowForum(id) {
-  const url = `/forums/${id}/follow`;
-  try {
-    const response = await service.delete(url);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
+export const getAllMedia = async () => {
+  const response = await service.get('medias');
+  return response || {};
+};
+
+export const getDetailMedia = async (id, mediaType) => {
+  const response = await service.get(`medias/${mediaType}/${id}`);
+  return response || {};
+};
+
+export const patchMedia = (id, mediaType, data) =>
+  safe('update media user', () =>
+    service.patch(`medias/${mediaType}/${id}`, data),
+  );
+
+export const deleteMedia = (id) =>
+  safe('Delete Media', () => service.delete(`medias/${id}`));
+
+// < SEASONS
+export const postSeasons = (mediaId, data) =>
+  safe('Post Season', () => service.post(`seasons/${mediaId}`, data));
+
+export const getAllSeasons = async (mediaId) => {
+  const response = await service.get(`seasons/${mediaId}`);
+  return response || {};
+};
+
+export const getDetailSeasons = async (mediaId, season) => {
+  const response = await service.get(`seasons/${mediaId}/${season}`);
+  return response || {};
+};
+
+export const patchSeasons = (mediaId, season, data) =>
+  safe('update media user', () =>
+    service.patch(`seasons/${mediaId}/${season}`, data),
+  );
+
+// < FORUMS
+export const postForum = (data) =>
+  service.post('forums', buildForumFormData(data));
+
+export const getDetailForum = async (id) => {
+  const response = await service.get(`forums/${id}`);
+  return response || {};
+};
+
+export const getListForum = () => safe('profile', () => service.get('forums'));
+
+export const patchForum = (id, data) =>
+  service.patch(`forums/${id}`, buildForumFormData(data));
+
+export const deleteForum = (id) =>
+  safe('Delete Forum', () => service.delete(`forums/${id}`));
+
+// MEDIAS FORUM
+export const postForumsMedia = (id, data) =>
+  service.post(`forums/${id}/media`, data);
+
+export const deleteForumsMedia = (id, data) =>
+  service.delete(`forums/${id}/media`, { data });
+
+// FOLLOW FORUMS
+export const postFollowForum = (id) =>
+  safe('Post Follow', () => service.post(`forums/${id}/follow`));
+
+export const patchFollowForum = (id, data) =>
+  safe('update Follow Forum', () => service.patch(`forums/${id}/follow`, data));
+
+export const deleteFollowForum = (id) =>
+  safe('Delete user', () => service.delete(`forums/${id}/follow`));
 
 // < MESSAGES
-// * PATCH
-// Update Message
-export async function patchMessage(id, data) {
-  try {
-    const response = await service.patch(`/messages/${id}`, data);
-    return response;
-  } catch (err) {
-    console.error("Error update Follow Forum:", err);
-    return {};
-  }
-}
-// ! DELETE
-// Delete Message
-export async function deleteMessage(id) {
-  try {
-    const response = await service.delete(`messages/${id}`);
-    return response;
-  } catch (err) {
-    console.error("Error Delete user:", err);
-    return {};
-  }
-}
-// . POST
-// Message Forum
-export async function postMessageForum(forumId, data) {
-  // const formData = new FormData();
-  // formData.append("textMessage", data.textMessage);
-  // console.log(data);
-  const response = await service.post(`/forums/${forumId}/messages`, data);
-  return response;
-}
-// - GET
-// List Forum Messages
-export async function getListMessages(forumId) {
-  const response = await service.get(`/forums/${forumId}/messages`);
-  return response;
-}
+export const patchMessage = (id, data) =>
+  safe('update Follow Forum', () => service.patch(`messages/${id}`, data));
+
+export const deleteMessage = (id) =>
+  safe('Delete user', () => service.delete(`messages/${id}`));
+
+export const postMessageForum = (forumId, data) =>
+  service.post(`forums/${forumId}/messages`, data);
+
+export const getListMessages = (forumId) =>
+  service.get(`forums/${forumId}/messages`);

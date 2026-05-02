@@ -1,82 +1,39 @@
-import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
-import { BsAlarm, BsAlarmFill } from "react-icons/bs";
-import {
-  IoCheckmarkCircleOutline,
-  IoCheckmarkCircleSharp,
-} from "react-icons/io5";
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { BaseIcon } from '../../components/base';
 
-const SeenPendingButton = ({ condition, size, text, handle }) => {
-  const [t] = useTranslation("translation");
-  let iconActive;
-  let iconNoActive;
-  switch (text) {
-    case "Pending":
-      iconActive = (
-        <BsAlarm
-          className="inline-block"
-          size={size}
-          color="#FFCA28"
-          alt={t(`${text}`)}
-          onClick={handle}
-        />
-      );
-      iconNoActive = (
-        <BsAlarmFill
-          className="inline-block"
-          size={size}
-          color="#FFCA28"
-          alt={t(`No ${text}`)}
-          onClick={handle}
-        />
-      );
-      break;
-    case "Seen":
-      iconActive = (
-        <IoCheckmarkCircleOutline
-          className="inline-block"
-          size={size}
-          color="#FFCA28"
-          alt={`${text}`}
-          onClick={handle}
-        />
-      );
-      iconNoActive = (
-        <IoCheckmarkCircleSharp
-          className="inline-block"
-          size={size}
-          color="#FFCA28"
-          alt={t(`No ${text}`)}
-          onClick={handle}
-        />
-      );
-      break;
-
-    default:
-      break;
-  }
-  return (
-    <>
-      {condition !== true ? (
-        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-          {iconActive}
-        </button>
-      ) : (
-        <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-          {iconNoActive}
-        </button>
-      )}
-    </>
-  );
+const ICONS = {
+  Pending: { active: 'alarmOutline', inactive: 'alarmFill' },
+  Seen: {
+    active: 'checkmarkCircleOutline',
+    inactive: 'checkmarkCircleFill',
+  },
 };
 
-export default SeenPendingButton;
+const SeenPendingButton = ({
+  condition = false,
+  size = 0,
+  text = '',
+  handle = () => {},
+}) => {
+  const [t] = useTranslation('translation');
+  const pair = ICONS[text];
+  if (!pair) return null;
 
-SeenPendingButton.defaultProps = {
-  condition: false,
-  size: 0,
-  text: "",
-  handle: () => {},
+  const iconName = condition ? pair.inactive : pair.active;
+  const label = condition ? t(`No ${text}`) : t(text);
+
+  return (
+    <BaseIcon
+      icon={iconName}
+      size={size}
+      color="#FFCA28"
+      className="inline-block transition ease-in-out md:hover:scale-110 duration-300"
+      aria-label={label}
+      onClick={handle}
+      tooltip={label}
+    />
+  );
 };
 
 SeenPendingButton.propTypes = {
@@ -85,3 +42,5 @@ SeenPendingButton.propTypes = {
   text: PropTypes.string,
   handle: PropTypes.func,
 };
+
+export default SeenPendingButton;

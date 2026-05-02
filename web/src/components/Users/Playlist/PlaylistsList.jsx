@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
   postFollowPlaylist,
-} from "../../../../services/DB/services-db";
-import { useAuthContext } from "../../../context/auth-context";
-import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from "react-icons/md";
-import { HiUserGroup } from "react-icons/hi";
-import { FaTrash } from "react-icons/fa";
+} from '../../../../services/DB/services-db';
+import { useAuthContext } from '../../../context/auth-context';
+import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from 'react-icons/md';
+import { HiUserGroup } from 'react-icons/hi';
+import { BaseIcon } from '../../base';
 
 export const PlaylistsList = ({
   info,
@@ -18,8 +18,19 @@ export const PlaylistsList = ({
   isOtherUser,
   setPopSureDel,
   setIdDelete,
+  size,
 }) => {
-  const [t] = useTranslation("translation");
+  const isSmall = size === 'small';
+  const posterClass = isSmall
+    ? 'static object-cover cursor-pointer rounded-lg w-[70px] h-[40px]'
+    : 'static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]';
+  const titleClass = isSmall
+    ? 'pl-2 text-sm line-clamp-1'
+    : 'pl-4 text-xl line-clamp-3';
+  const infoWrapperClass = isSmall
+    ? 'min-w-0 flex-auto px-1'
+    : 'min-w-0 flex-auto mt-4 px-2';
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const userExist = !!user;
   const {
@@ -31,7 +42,7 @@ export const PlaylistsList = ({
     tags,
     title,
   } = info;
-  const isPlaylist = !isOtherUser ? id : "";
+  const isPlaylist = !isOtherUser ? id : '';
 
   const [changeDataUser, setChangeDataUser] = useState(false);
   const [playlistFollow, setPlayListFollow] = useState({});
@@ -59,13 +70,13 @@ export const PlaylistsList = ({
   };
 
   const isFollowing =
-    playlistFollow === "" ? (
+    playlistFollow === '' ? (
       <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
         <MdOutlinePlaylistAdd
           className="inline-block"
           size={25}
           color="#FFCA28"
-          alt={t("Follow Playlist")}
+          alt={t('Follow Playlist')}
           onClick={handleFollow}
         />
       </button>
@@ -74,7 +85,7 @@ export const PlaylistsList = ({
         <MdOutlinePlaylistRemove
           className="inline-block"
           size={25}
-          alt={t("UnFollow Playlist")}
+          alt={t('UnFollow Playlist')}
           onClick={handleUnFollow}
         />
       </button>
@@ -101,24 +112,20 @@ export const PlaylistsList = ({
             <div className="h-full">
               {/* // . POSTER*/}
               <div className="transition ease-in-out md:hover:scale-105 duration-300">
-                <img
-                  className=" static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]"
-                  src={imgPlaylist}
-                  alt={title}
-                />
+                <img className={posterClass} src={imgPlaylist} alt={title} />
               </div>
             </div>
-            <div className="min-w-0 flex-auto mt-4 px-2">
+            <div className={infoWrapperClass}>
               {/* // . TITLE */}
               <div className="flex font-semibold text-sm md:text-base cursor-pointer">
-                <h1 className="pl-4 text-xl line-clamp-3">{title}</h1>
+                <h1 className={titleClass}>{title}</h1>
                 <p className="ml-1 text-xs">{`( ${
                   medias && medias.length
                 } )`}</p>
               </div>
               {/* // . TAGS */}
               <div className="pl-4 text-xs text-gray-500">
-                {tags && tags.join(", ")}
+                {tags && tags.join(', ')}
               </div>
             </div>
           </div>
@@ -132,24 +139,23 @@ export const PlaylistsList = ({
       {userExist ? (
         <div className="absolute bottom-0 mb-1 flex items-center justify-end gap-6 w-full pr-4">
           {/* // ! Delete Button */}
-          {isPlaylist !== "" ? (
-            <div
-              className="z-50 align-middle text-xs cursor-pointer"
+          {isPlaylist !== '' ? (
+            <BaseIcon
+              icon="trash"
+              size="x-small"
+              color="currentColor"
               onClick={handleDeletePlaylist}
-            >
-              <FaTrash
-                size={17}
-                alt={t("Delete Playlist Icon")}
-                className="text-red-500 md:hover:text-gray-500 duration-200 "
-              />
-            </div>
+              aria-label={t('Delete Playlist Icon')}
+              className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
+              tooltip={t('Delete')}
+            />
           ) : null}
           {/* // . FOLLOW/UNFOLLOW or NUM FOLLOWERS */}
           <div className="flex justify-end">
             {info && followersPlaylist && isOtherUser ? isFollowing : null}
             {info && followersPlaylist && !isOtherUser ? (
               <div className="flex justify-end gap-1">
-                <HiUserGroup size={20} alt={t("Followers")} />
+                <HiUserGroup size={20} alt={t('Followers')} />
                 {followersPlaylist.length}
               </div>
             ) : null}
@@ -164,10 +170,11 @@ export default PlaylistsList;
 
 PlaylistsList.defaultProps = {
   info: {},
-  userId: "",
+  userId: '',
   isOtherUser: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
+  size: 'normal',
 };
 
 PlaylistsList.propTypes = {
@@ -176,4 +183,5 @@ PlaylistsList.propTypes = {
   isOtherUser: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
+  size: PropTypes.oneOf(['small', 'normal']),
 };

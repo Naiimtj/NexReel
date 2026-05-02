@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import { MdModeEditOutline } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
+import PropTypes from 'prop-types';
+import { MdModeEditOutline } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { BaseIcon } from '../../base';
 
 const ForumReply = ({
   reply,
@@ -34,16 +34,16 @@ const ForumReply = ({
           <div className="flex justify-between text-sm">
             <div>
               <div className="flex gap-2">
-                <p>{`${transl("Create by")}:`}</p>
+                <p>{`${transl('Create by')}:`}</p>
                 <Link
-                  to={!isSender ? `/users/${reply.userSender[0].id}` : "/me"}
+                  to={!isSender ? `/users/${reply.userSender[0].id}` : '/me'}
                   className="capitalize text-purple-950 hover:text-gray-600 transition duration-300"
                 >
                   {reply && reply.userSender && reply.userSender[0].username}
                 </Link>
               </div>
               {!reply.edited ? (
-                <p className="italic text-xs">{transl("Edited")}</p>
+                <p className="italic text-xs">{transl('Edited')}</p>
               ) : null}
             </div>
             <div className="flex gap-2 items-center">
@@ -51,11 +51,14 @@ const ForumReply = ({
               {!isOtherUser || isSender ? (
                 <>
                   {!isOtherUser || isSender ? (
-                    <FaTrash
-                      size={17}
-                      alt={transl("Delete Forum Icon")}
-                      className="text-red-700 md:hover:text-gray-500 duration-200 cursor-pointer"
+                    <BaseIcon
+                      icon="trash"
+                      size="x-small"
+                      color="currentColor"
                       onClick={handleDeleteMessage}
+                      aria-label={transl('Delete Forum Icon')}
+                      className="z-50 text-red-700 md:hover:text-gray-500 duration-200"
+                      tooltip={transl('Delete')}
                     />
                   ) : null}
                   {/* // FOLLOW & UNFOLLOW or NUM FOLLOWERS / EDIT Forum */}
@@ -63,7 +66,7 @@ const ForumReply = ({
                     {isSender ? (
                       <MdModeEditOutline
                         size={20}
-                        alt={transl("Edit Forum Icon")}
+                        alt={transl('Edit Forum Icon')}
                         className="text-gray-200 md:hover:text-gray-500 duration-200 cursor-pointer"
                         onClick={handleEditMessage}
                       />
@@ -93,7 +96,7 @@ ForumReply.defaultProps = {
   transl: () => {},
   setPopSureDel: () => {},
   setIdDelete: () => {},
-  userId: "",
+  userId: '',
   editMessage: true,
   setEditMessage: () => {},
   setIsSender: () => {},

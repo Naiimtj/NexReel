@@ -1,6 +1,6 @@
-import { patchMedia } from "../../../services/DB/services-db";
+import { patchMedia } from '../../../services/DB/services-db';
 
-function SeenPending(
+function Repeat(
   dataMediaUser,
   id,
   mediaType,
@@ -12,8 +12,11 @@ function SeenPending(
   changeSeenPending,
   setRepeating,
   repeating,
-  onReload
+  onReload,
 ) {
+  if (!seen && pending) return;
+  if (!Object.keys(dataMediaUser).length) return;
+
   const updateData = {
     mediaId: id.toString(),
     repeat: !repeat,
@@ -21,18 +24,12 @@ function SeenPending(
     runtime: runTime,
     vote: dataMediaUser.vote,
   };
-  console.log(updateData);
-  if (seen || !pending) {
-    Object.keys(dataMediaUser).length
-      ? patchMedia(id, mediaType, updateData).then(() => {
-          if (setRepeating) {
-            setRepeating(!repeating);
-          }
-          onReload();
-          setChangeSeenPending(!changeSeenPending);
-        })
-      : null;
-  }
+
+  patchMedia(id, mediaType, updateData).then(() => {
+    setRepeating?.(!repeating);
+    onReload();
+    setChangeSeenPending(!changeSeenPending);
+  });
 }
 
-export default SeenPending;
+export default Repeat;

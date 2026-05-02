@@ -1,0 +1,31 @@
+{
+  "id": 99999,
+  "results": [
+    {
+      "iso_3166_1": "ES",
+      "release_dates": [
+        {
+          "certification": "12",
+          "descriptors": [],
+          "iso_639_1": "es",
+          "note": "",
+          "release_date": "2024-03-22T00:00:00.000Z",
+          "type": 3
+        }
+      ]
+    },
+    {
+      "iso_3166_1": "US",
+      "release_dates": [
+        {
+          "certification": "PG-13",
+          "descriptors": [],
+          "iso_639_1": "",
+          "note": "",
+          "release_date": "2024-04-05T00:00:00.000Z",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import { NoImage, people } from "../assets/image";
-import { useAuthContext } from "../context/auth-context";
-import { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
-import AddForum from "../utils/Forum/AddForum";
-import ShowPlaylistMenu from "../utils/Playlists/ShowPlaylistMenu";
-import { getMediaDetails } from "../../services/TMDB/services-tmdb";
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { NoImage, people } from '../assets/image';
+import { useAuthContext } from '../context/auth-context';
+import { useEffect, useState } from 'react';
+import { BaseIcon } from './base';
+import { useTranslation } from 'react-i18next';
+import AddForum from '../utils/Forum/AddForum';
+import ShowPlaylistMenu from '../utils/Playlists/ShowPlaylistMenu';
+import { getMediaDetails } from '../../services/TMDB/services-tmdb';
 
 export const Credits = ({
   repInfo,
@@ -20,8 +20,9 @@ export const Credits = ({
   setPopSureDel,
   setIdDelete,
   basicForum,
+  size,
 }) => {
-  const [t, i18next] = useTranslation("translation");
+  const [t, i18next] = useTranslation('translation');
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const userExist = !!user;
@@ -41,7 +42,7 @@ export const Credits = ({
 
   useEffect(() => {
     if (i18next.language && !id && repInfo.mediaId) {
-      getMediaDetails("person", repInfo.mediaId, i18next.language).then((d) => {
+      getMediaDetails('person', repInfo.mediaId, i18next.language).then((d) => {
         setDataMedia(d);
       });
     }
@@ -56,7 +57,7 @@ export const Credits = ({
 
   const processInfo = {};
   switch (media) {
-    case "movie":
+    case 'movie':
       processInfo.repId = id;
       processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
@@ -65,7 +66,7 @@ export const Credits = ({
       processInfo.urlNavigation = `/${media}/${idInfo}/person/${id}`;
       processInfo.runTime = 0;
       break;
-    case "tv":
+    case 'tv':
       processInfo.repId = id;
       processInfo.repPoster = profile_path ? urlPoster : NoImage;
       processInfo.repName = name;
@@ -75,7 +76,7 @@ export const Credits = ({
       processInfo.urlNavigation = `/${media}/${idInfo}/person/${id}`;
       processInfo.runTime = 0;
       break;
-    case "person":
+    case 'person':
       processInfo.repId = id ? id : dataMedia.id;
       processInfo.repPoster = profile_path ? urlPoster : urlPosterPerson;
       processInfo.repName = name ? name : dataMedia.name;
@@ -87,11 +88,11 @@ export const Credits = ({
         : `/person/${dataMedia.id}`;
       processInfo.runTime = 0;
       break;
-    case "user":
+    case 'user':
       processInfo.repId = id;
       processInfo.repPoster = avatarURL !== null ? avatarURL : NoImage;
       processInfo.repName = username;
-      processInfo.repCharacter = "User";
+      processInfo.repCharacter = 'User';
       processInfo.urlNavigation = `/users/${id}`;
       processInfo.runTime = 0;
       break;
@@ -122,42 +123,45 @@ export const Credits = ({
     setPopSureDel(true);
     setIdDelete(`${processInfo.repId}`);
   };
+  const isSmall = size === 'small';
+  const isPersonOrUser = media === 'person' || media === 'user';
+  let posterSizeClass;
+  if (isSmall) posterSizeClass = isPersonOrUser ? 'h-20 w-20' : 'h-28 w-28';
+  else posterSizeClass = isPersonOrUser ? 'h-28 w-28' : 'h-40 w-40';
+  let placeholderIconClass;
+  if (isSmall)
+    placeholderIconClass = isPersonOrUser ? 'h-10 w-10' : 'h-14 w-14';
+  else placeholderIconClass = isPersonOrUser ? 'h-14 w-14' : 'h-20 w-20';
+  let nameTextClass;
+  if (isSmall) nameTextClass = 'text-xs';
+  else nameTextClass = isPersonOrUser ? 'text-sm' : 'text-base';
+  const characterTextClass = isSmall
+    ? 'align-middle text-xs text-gray-400 break-words'
+    : 'align-middle text-sm text-gray-400 break-words';
   return (
     <div className="slide flex flex-col justify-start content-center items-center">
       <div>
         {profile_path || avatarURL ? (
           <img
-            className={`cursor-pointer rounded-full object-cover ${
-              media === "person" || media === "user" ? "h-28 w-28" : "h-40 w-40"
-            } transition ease-in-out md:hover:scale-105 duration-300`}
+            className={`cursor-pointer rounded-full object-cover ${posterSizeClass} transition ease-in-out md:hover:scale-105 duration-300`}
             src={processInfo.repPoster}
             alt={processInfo.repName}
             onClick={() => navigate(processInfo.urlNavigation)}
           />
         ) : (
           <div
-            className={`relative flex justify-center items-center cursor-pointer rounded-full object-cover ${
-              media === "person" || media === "user" ? "h-28 w-28" : "h-40 w-40"
-            } transition ease-in-out md:hover:scale-105 duration-300`}
+            className={`relative flex justify-center items-center cursor-pointer rounded-full object-cover ${posterSizeClass} transition ease-in-out md:hover:scale-105 duration-300`}
             onClick={() => navigate(processInfo.urlNavigation)}
           >
             <img
-              className={`absolute opacity-10 object-cover ${
-                media === "person" || media === "user"
-                  ? "h-14 w-14"
-                  : "h-20 w-20"
-              }`}
+              className={`absolute opacity-10 object-cover ${placeholderIconClass}`}
               src={people}
-              alt={t("Icon people")}
+              alt={t('Icon people')}
             />
             <img
-              className={`rounded-full object-cover ${
-                media === "person" || media === "user"
-                  ? "h-28 w-28"
-                  : "h-40 w-40"
-              } `}
+              className={`rounded-full object-cover ${posterSizeClass} `}
               src={processInfo.repPoster}
-              alt={t("No photo")}
+              alt={t('No photo')}
             />
           </div>
         )}
@@ -174,39 +178,37 @@ export const Credits = ({
         className=" cursor-pointer text-center mt-4 w-full"
         onClick={() => navigate(processInfo.urlNavigation)}
       >
-        <h2
-          className={`font-semibold ${
-            media === "person" || media === "user" ? "text-sm" : "text-base"
-          } break-words`}
-        >
+        <h2 className={`font-semibold ${nameTextClass} break-words`}>
           {processInfo.repName}
         </h2>
 
-        <div className="align-middle text-sm text-gray-400 break-words">
+        <div className={characterTextClass}>
           {processInfo.repCharacter}
           {/* // ! Delete Button */}
-          {isPlaylist && isPlaylist !== "" ? (
-            <div className="inline-block align-middle text-xs ml-1">
-              <FaTrash
-                size={17}
-                alt={t("Delete Playlist Icon")}
-                className="text-red-500 md:hover:text-gray-500 duration-200"
-                onClick={handleDeletePlaylist}
-              />
-            </div>
+          {isPlaylist && isPlaylist !== '' ? (
+            <BaseIcon
+              icon="trash"
+              size="x-small"
+              color="currentColor"
+              onClick={handleDeletePlaylist}
+              aria-label={t('Delete Playlist Icon')}
+              className="z-50 text-red-500 md:hover:text-gray-500 duration-200 ml-1"
+              tooltip={t('Delete')}
+            />
           ) : null}
           {/* //.BUTTON AND SEEN/UNSEEN */}
           {userExist ? (
             <div className="mb-1 w-full pr-4">
               {/* //-ADD BUTTON PLAYLIST */}
-              {!isForum && media !== "user" ? (
+              {!isForum && media !== 'user' ? (
                 <ShowPlaylistMenu
                   userId={user.id}
                   id={Number(processInfo.repId)}
-                  type={"person"}
+                  type={'person'}
                   runTime={processInfo.runTime}
                   changeSeenPending={changeSeenPending}
                   setChangeSeenPending={setChangeSeenPending}
+                  size={size}
                 />
               ) : null}
               {isForum ? (
@@ -232,7 +234,7 @@ export default Credits;
 Credits.defaultProps = {
   idInfo: 0,
   repInfo: {},
-  media: "",
+  media: '',
   basicForum: {},
   isForum: false,
   changeSeenPending: false,
@@ -240,6 +242,7 @@ Credits.defaultProps = {
   isPlaylist: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
+  size: 'normal',
 };
 
 Credits.propTypes = {
@@ -253,4 +256,5 @@ Credits.propTypes = {
   isPlaylist: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
+  size: PropTypes.oneOf(['small', 'normal']),
 };

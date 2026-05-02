@@ -1,15 +1,24 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 // icons
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { GoDotFill, GoDot } from "react-icons/go";
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { GoDotFill, GoDot } from 'react-icons/go';
 // components
-import Multi from "../../components/MediaList/Multi";
-import { useAuthContext } from "../../context/auth-context";
-import {
-  getAllMedia,
-  getDetailForum,
-} from "../../../services/DB/services-db";
+import Multi from '../../components/MediaList/Multi';
+import { useAuthContext } from '../../context/auth-context';
+import { useMediaContext } from '../../context/media-context';
+import { getDetailForum } from '../../../services/DB/services-db';
+
+const SIZE_CONFIG = {
+  small: {
+    cardsPerPage: { sm: 3, md: 4, lg: 6, xl: 8 },
+    gridClass: 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
+  },
+  normal: {
+    cardsPerPage: { sm: 2, md: 3, lg: 4, xl: 6 },
+    gridClass: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
+  },
+};
 
 const Carousel = ({
   title,
@@ -27,32 +36,31 @@ const Carousel = ({
   isChange,
   setPendingSeenMedia,
   pendingSeenMedia,
+  size,
 }) => {
-  const [changeSeenPending, setChangeSeenPending] = useState(true);
+  const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
+  const headerTitleClass =
+    size === 'small'
+      ? 'pl-4 text-xs md:text-base uppercase'
+      : 'pl-4 text-sm md:text-2xl uppercase';
   const { user } = useAuthContext();
   const userExist = !!user;
-  const [mediasUser, setMediasUser] = useState([]);
+  const { mediasUser, refreshMedias } = useMediaContext();
+  const hasFetchedRef = useRef(false);
   useEffect(() => {
-    const Data = async () => {
-      getAllMedia()
-        .then((data) => {
-          setMediasUser(data);
-          setChangeSeenPending(!changeSeenPending);
-          isSetChange(false);
-        })
-        .catch((err) => err);
-    };
     const Data2 = async () => {
       setPendingSeenMedia(!pendingSeenMedia);
     };
-    if ((userExist && isChange) || (userExist && !mediasUser.length)) {
-      Data();
+    if (userExist && isChange) {
+      refreshMedias();
+      hasFetchedRef.current = true;
+      isSetChange(false);
     }
     if (userExist && isChange) {
       Data2();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userExist, changeSeenPending, isChange]);
+  }, [userExist, isChange]);
   const [dataForum, setDataForum] = useState({});
   // - FORUM
   useEffect(() => {
@@ -61,26 +69,32 @@ const Carousel = ({
         setDataForum(data);
       });
     };
-    if (isForum) {
+    if (isForum && isChange) {
       ForumData();
-      isSetChange(!isChange);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changeSeenPending, basicForum.id, isForum]);
+  }, [isChange, basicForum.id, isForum]);
   const ForumData = {
     id: dataForum.id,
     title: dataForum.title,
     medias: dataForum.medias,
   };
-  const mediaMovie = media === "movie";
-  const mediaTv = media === "tv";
+  const mediaMovie = media === 'movie';
+  const mediaTv = media === 'tv';
   const [currentPage, setCurrentPage] = useState(1);
+  // Reset to first page when the underlying data changes (e.g. navigating to
+  // another movie/collection) so the user is not stuck on a page that no
+  // longer has cards to render.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [info]);
   const getCardsPerPage = () => {
     const screenWidth = window.innerWidth;
-    if (screenWidth < 750) return 2;
-    if (screenWidth < 1000) return 3;
-    if (screenWidth < 1280) return 4;
-    return 6;
+    const { sm, md, lg, xl } = sizeConfig.cardsPerPage;
+    if (screenWidth < 750) return sm;
+    if (screenWidth < 1000) return md;
+    if (screenWidth < 1280) return lg;
+    return xl;
   };
   const cardsPerPage = getCardsPerPage();
   const handleNextPage = () => {
@@ -105,7 +119,7 @@ const Carousel = ({
   const startCardIndex = (currentPage - 1) * cardsPerPage;
   const visibleCards = allCards.slice(
     startCardIndex,
-    startCardIndex + cardsPerPage
+    startCardIndex + cardsPerPage,
   );
   // Dots
   const renderPageIndicator = () => {
@@ -124,7 +138,7 @@ const Carousel = ({
           className="cursor-pointer transition ease-in-out text-[#6676a7] md:hover:scale-110 md:hover:text-gray-200 duration-300"
         >
           {icon}
-        </div>
+        </div>,
       );
     }
     return indicators;
@@ -136,7 +150,7 @@ const Carousel = ({
         <div className="flex justify-between items-center">
           {/* // - TITLE */}
           <div className="flex text-gray-200">
-            <h1 className="pl-4 text-sm md:text-2xl uppercase">{title}</h1>
+            <h1 className={headerTitleClass}>{title}</h1>
             {isUser && title ? (
               <p className="ml-1 text-xs">{`( ${
                 allCards.length ? allCards.length : 0
@@ -185,7 +199,7 @@ const Carousel = ({
         <div className="flex justify-between items-center">
           {/* // - TITLE */}
           <div className="flex text-gray-200">
-            <h1 className="pl-4 text-sm md:text-2xl uppercase">{title}</h1>
+            <h1 className={headerTitleClass}>{title}</h1>
             {isUser && title ? (
               <p className="ml-1 text-xs">{`( ${
                 allCards.length ? allCards.length : 0
@@ -195,7 +209,7 @@ const Carousel = ({
         </div>
       )}
       {/* // - CARDS */}
-      <div className="my-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
+      <div className={`my-2 grid ${sizeConfig.gridClass} gap-2`}>
         {visibleCards.map((card, index) => (
           <Multi
             key={`carrousel2${index}${media}`}
@@ -212,6 +226,7 @@ const Carousel = ({
             isForum={isForum}
             basicForum={ForumData}
             mediasUser={mediasUser}
+            size={size}
           />
         ))}
       </div>
@@ -226,13 +241,13 @@ const Carousel = ({
 export default Carousel;
 
 Carousel.defaultProps = {
-  title: "",
+  title: '',
   info: [],
-  media: "",
+  media: '',
   isUser: false,
   isChange: false,
   isSetChange: () => {},
-  isPlaylist: "",
+  isPlaylist: '',
   setPopSureDel: () => {},
   setIdDelete: () => {},
   isAllCards: false,
@@ -241,6 +256,7 @@ Carousel.defaultProps = {
   isForum: false,
   setPendingSeenMedia: () => {},
   pendingSeenMedia: false,
+  size: 'normal',
 };
 
 Carousel.propTypes = {
@@ -259,4 +275,5 @@ Carousel.propTypes = {
   isForum: PropTypes.bool,
   setPendingSeenMedia: PropTypes.func,
   pendingSeenMedia: PropTypes.bool,
+  size: PropTypes.oneOf(['small', 'normal']),
 };

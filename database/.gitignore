@@ -1,0 +1,9 @@
+# Backup data (generated at runtime)
+backup_data/
+
+# Environment variables with secrets
+variables.env
+
+# Python
+__pycache__/
+*.pyc

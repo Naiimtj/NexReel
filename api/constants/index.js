@@ -1,9 +1,0 @@
-const DEFAULT_ROLE = 200;
-const ADMIN_ROLE = 999;
-const SUPERADMIN_ROLE = 9999;
-
-module.exports = {
-  DEFAULT_ROLE,
-  ADMIN_ROLE,
-  SUPERADMIN_ROLE,
-};

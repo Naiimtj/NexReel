@@ -1,15 +1,17 @@
-import { IoIosArrowBack } from "react-icons/io";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getAllMedia, getDetailUser, getUser } from "../../../../services/DB/services-db";
-import { useTranslation } from "react-i18next";
-import { useAuthContext } from "../../../context/auth-context";
-import { HiSortAscending, HiSortDescending } from "react-icons/hi";
-import Carousel from "../../../utils/Carousel/Carousel";
-import Multi from "../../../components/MediaList/Multi";
-import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
-import { MdViewCarousel } from "react-icons/md";
-import MultiList from "../../../components/MediaList/MultiList";
+import { IoIosArrowBack } from 'react-icons/io';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getDetailUser, getUser } from '../../../../services/DB/services-db';
+import { useTranslation } from 'react-i18next';
+import { useAuthContext } from '../../../context/auth-context';
+import { useMediaContext } from '../../../context/media-context';
+import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
+import Carousel from '../../../utils/Carousel/Carousel';
+import Multi from '../../../components/MediaList/Multi';
+import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
+import { MdViewCarousel } from 'react-icons/md';
+import MultiList from '../../../components/MediaList/MultiList';
+import ViewToggle from '../../../utils/Buttons/ViewToggle';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -21,7 +23,7 @@ function DataOrder(check, data, state) {
 }
 
 const PendingsViews = () => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const { id } = useParams();
   const { pathname } = useLocation();
@@ -49,20 +51,7 @@ const PendingsViews = () => {
       userData();
     }
   }, [changeSeenPending, id, isOtherUser]);
-  const [mediasUser, setMediasUser] = useState([]);
-  useEffect(() => {
-    const Data = async () => {
-      getAllMedia()
-        .then((data) => {
-          setMediasUser(data);
-        })
-        .catch((err) => err);
-    };
-    if (user) {
-      Data();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, changeSeenPending]);
+  const { mediasUser } = useMediaContext();
   const checkMedias = !!(
     dataUser &&
     dataUser.medias &&
@@ -70,12 +59,12 @@ const PendingsViews = () => {
   );
   let actualPage;
   let title;
-  if (pathname.startsWith("/pending")) {
-    actualPage = "pending";
-    title = "pendings";
-  } else if (pathname.startsWith("/view")) {
-    actualPage = "seen";
-    title = "views";
+  if (pathname.startsWith('/pending')) {
+    actualPage = 'pending';
+    title = 'pendings';
+  } else if (pathname.startsWith('/view')) {
+    actualPage = 'seen';
+    title = 'views';
   } else {
     actualPage = null;
   }
@@ -85,7 +74,7 @@ const PendingsViews = () => {
     ? DataOrder(
         checkMedias,
         dataUser.medias.filter((i) => i[actualPage] !== false),
-        isAsc
+        isAsc,
       )
     : null;
   let isCarousel;
@@ -120,7 +109,7 @@ const PendingsViews = () => {
         <div className="text-gray-200 mb-4">
           {/* // . BACK USER */}
           <Link
-            to={!isOtherUser ? "/me" : `/users/${dataUser.id}`}
+            to={!isOtherUser ? '/me' : `/users/${dataUser.id}`}
             className="ml-5 pt-5 text-[#b1a9fa] md:hover:text-gray-500 capitalize"
           >
             <IoIosArrowBack
@@ -142,10 +131,10 @@ const PendingsViews = () => {
                     checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
                   }
                 >
-                  {t("Date Added")}
+                  {t('Date Added')}
                   <HiSortAscending
                     className="ml-1 text-2xl inline-block"
-                    alt={t("Ascendant")}
+                    alt={t('Ascendant')}
                   />
                 </div>
               ) : (
@@ -155,77 +144,37 @@ const PendingsViews = () => {
                     checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
                   }
                 >
-                  {t("Date Added")}
+                  {t('Date Added')}
                   <HiSortDescending
                     className="ml-1 text-2xl inline-block"
-                    alt={t("Descending")}
+                    alt={t('Descending')}
                   />
                 </div>
               )}
             </div>
             {/* // . BUTTONs */}
             <div className="flex items-center justify-end">
-              {/* // CAROUSEL */}
-              <div
-                className={`mr-2 ${
-                  isCarousel
-                    ? "text-gray-500"
-                    : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                }`}
-              >
-                <MdViewCarousel
-                  className="h-14 w-14 md:h-8 md:w-8"
-                  onClick={() => setVisualDesign(0)}
-                />
-              </div>
-              {/* // SQUARE */}
-              <div
-                className={`mr-2 ${
-                  isSquare
-                    ? "text-gray-500"
-                    : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                }`}
-              >
-                <BsGrid3X2GapFill
-                  className="h-14 w-14 md:h-8 md:w-8"
-                  onClick={() => setVisualDesign(1)}
-                />
-              </div>
-              {/* // LIST */}
-              <div
-                className={`mr-2 ${
-                  isList
-                    ? "text-gray-500"
-                    : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                }`}
-              >
-                <BsListUl
-                  className="h-14 w-14 md:h-8 md:w-8"
-                  onClick={() => setVisualDesign(2)}
-                />
-              </div>
+              <ViewToggle
+                visualDesign={visualDesign}
+                setVisualDesign={setVisualDesign}
+              />
             </div>
           </div>
-              {/* // - TITLE */}
+          {/* // - TITLE */}
           {isCarousel ? null : (
             <div className="flex justify-between items-center">
               <div className="flex text-gray-200">
                 <h1 className="pl-4 text-sm md:text-2xl uppercase">
                   {`${t(title)} ( ${
-                  checkMedias && dataMedias.length ? dataMedias.length : 0
-                } )` }
+                    checkMedias && dataMedias.length ? dataMedias.length : 0
+                  } )`}
                 </h1>
               </div>
             </div>
           )}
           {/* // - CAROUSEL */}
           {checkMedias && dataMedias.length > 0 && isCarousel ? (
-            <Carousel
-              title={t(title)}
-              info={dataMedias}
-              isUser
-              isAsc={isAsc}
-            />
+            <Carousel title={t(title)} info={dataMedias} isUser isAsc={isAsc} />
           ) : null}
           {/* // - SQUARE */}
           {checkMedias && dataMedias.length > 0 && isSquare ? (

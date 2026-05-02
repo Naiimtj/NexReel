@@ -1,0 +1,45 @@
+{
+  "adult": false,
+  "backdrop_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+  "belongs_to_collection": null,
+  "budget": 15000000,
+  "genres": [
+    { "id": 878, "name": "Ciencia ficción" },
+    { "id": 53, "name": "Suspense" }
+  ],
+  "homepage": "",
+  "id": 99999,
+  "imdb_id": "tt9999999",
+  "original_language": "es",
+  "original_title": "The Origin of NexReel",
+  "overview": "En un futuro no muy lejano, un equipo de científicos descubre que la realidad tal como la conocemos es solo una capa de una simulación más profunda. Mientras intentan descifrar el código fuente del universo, una misteriosa organización hace todo lo posible por detenerlos antes de que revelen la verdad al mundo.",
+  "popularity": 87.4,
+  "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+  "production_companies": [
+    {
+      "id": 99001,
+      "logo_path": null,
+      "name": "NexReel Studios",
+      "origin_country": "ES"
+    },
+    {
+      "id": 99002,
+      "logo_path": null,
+      "name": "Producciones Ibéricas",
+      "origin_country": "ES"
+    }
+  ],
+  "production_countries": [{ "iso_3166_1": "ES", "name": "Spain" }],
+  "release_date": "2024-03-22",
+  "revenue": 42000000,
+  "runtime": 118,
+  "spoken_languages": [
+    { "english_name": "Spanish", "iso_639_1": "es", "name": "Español" }
+  ],
+  "status": "Released",
+  "tagline": "La verdad siempre tiene un precio.",
+  "title": "El Origen de NexReel",
+  "video": false,
+  "vote_average": 7.8,
+  "vote_count": 1452
+}

@@ -1,0 +1,29 @@
+{
+  "id": 99999,
+  "results": [
+    {
+      "id": "mock_trailer_01",
+      "iso_639_1": "es",
+      "iso_3166_1": "ES",
+      "key": "dQw4w9WgXcQ",
+      "name": "Tráiler Oficial",
+      "official": true,
+      "published_at": "2024-01-15T10:00:00.000Z",
+      "site": "YouTube",
+      "size": 1080,
+      "type": "Trailer"
+    },
+    {
+      "id": "mock_teaser_01",
+      "iso_639_1": "es",
+      "iso_3166_1": "ES",
+      "key": "9bZkp7q19f0",
+      "name": "Teaser Oficial",
+      "official": true,
+      "published_at": "2023-12-01T10:00:00.000Z",
+      "site": "YouTube",
+      "size": 1080,
+      "type": "Teaser"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+import uuid
+
+from sqlalchemy.orm import Session
+
+from api.core.database.models import {Entity}
+
+
+def get_{entity}(db: Session, {entity}_id: str):
+    return db.query({Entity}).filter({Entity}.{entity}_id == {entity}_id).first()
+
+
+def get_{entities}(db: Session, skip: int = 0, limit: int = 100):
+    return db.query({Entity}).offset(skip).limit(limit).all()
+
+
+def create_{entity}(db: Session, data: dict):
+    data["{entity}_id"] = str(uuid.uuid4())
+    db_item = {Entity}(**data)
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
+def update_{entity}(db: Session, {entity}_id: str, data: dict):
+    db_item = get_{entity}(db, {entity}_id)
+    if not db_item:
+        return None
+    for key, value in data.items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
+def delete_{entity}(db: Session, {entity}_id: str):
+    db_item = get_{entity}(db, {entity}_id)
+    if not db_item:
+        return None
+    db.delete(db_item)
+    db.commit()
+    return db_item

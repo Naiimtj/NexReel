@@ -1,22 +1,22 @@
-import { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useAuthContext } from "../../context/auth-context";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useAuthContext } from '../../context/auth-context';
+import { useTranslation } from 'react-i18next';
 import {
   deletePlaylist,
   getDetailUser,
   getUser,
-} from "../../../services/DB/services-db";
-import { IoIosArrowBack } from "react-icons/io";
-import { HiSortAscending, HiSortDescending } from "react-icons/hi";
-import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
-import Playlist from "../../components/Users/Playlist/Playlist";
-import NewPlaylist from "../../components/Users/Playlist/NewPlaylist";
-import { NoImageMore } from "../../assets/image";
-import PlaylistsList from "../../components/Users/Playlist/PlaylistsList";
-import PopSureDelete from "../../components/PopUp/PopSureDelete";
-import SearchPlaylists from "../../components/Users/Playlist/SearchPlaylists";
-import PageTitle from "../../components/PageTitle";
+} from '../../../services/DB/services-db';
+import { IoIosArrowBack } from 'react-icons/io';
+import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
+import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
+import Playlist from '../../components/Users/Playlist/Playlist';
+import NewPlaylist from '../../components/Users/Playlist/NewPlaylist';
+import { NoImageMore } from '../../assets/image';
+import PlaylistsList from '../../components/Users/Playlist/PlaylistsList';
+import { DeleteConfirmModal } from '../../components/base';
+import SearchPlaylists from '../../components/Users/Playlist/SearchPlaylists';
+import PageTitle from '../../components/PageTitle';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -28,12 +28,12 @@ function DataOrder(check, data, state) {
 }
 
 const Playlists = () => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const { userId } = useParams();
   const isOtherUser = user.id !== userId;
   const [dataUser, setDataUser] = useState({});
-  const title = t("Playlists");
+  const title = t('Playlists');
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [visualDesing, setVisualDesign] = useState(0);
   useEffect(() => {
@@ -143,10 +143,10 @@ const Playlists = () => {
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -157,7 +157,7 @@ const Playlists = () => {
         <div className="text-gray-200">
           {/* // . BACK USER */}
           <Link
-            to={!isOtherUser ? "/me" : `/users/${dataUser.id}`}
+            to={!isOtherUser ? '/me' : `/users/${dataUser.id}`}
             className="ml-5 pt-5 text-[#b1a9fa] md:hover:text-gray-500 capitalize"
           >
             <IoIosArrowBack
@@ -173,14 +173,17 @@ const Playlists = () => {
           <SearchPlaylists hiden={hiden} />
         </div>
         {/* // - POP DELETE */}
-        {popSureDel ? (
-          <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
-            <PopSureDelete
-              setPopSureDel={setPopSureDel}
-              setAnswerDel={setAnswerDel}
-            />
-          </div>
-        ) : null}
+        <DeleteConfirmModal
+          visible={popSureDel}
+          onConfirm={() => {
+            setPopSureDel(false);
+            setAnswerDel(true);
+          }}
+          onCancel={() => {
+            setPopSureDel(false);
+            setAnswerDel(false);
+          }}
+        />
         <>
           <div className="grid grid-cols-3 pr-2 ">
             {/* // . Asc/Desc */}
@@ -192,10 +195,10 @@ const Playlists = () => {
                     checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
                   }
                 >
-                  {t("Date Added")}
+                  {t('Date Added')}
                   <HiSortAscending
                     className="ml-1 text-2xl inline-block"
-                    alt={t("Ascendant")}
+                    alt={t('Ascendant')}
                   />
                 </div>
               ) : (
@@ -205,10 +208,10 @@ const Playlists = () => {
                     checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
                   }
                 >
-                  {t("Date Added")}
+                  {t('Date Added')}
                   <HiSortDescending
                     className="ml-1 text-2xl inline-block"
-                    alt={t("Descending")}
+                    alt={t('Descending')}
                   />
                 </div>
               )}
@@ -219,8 +222,8 @@ const Playlists = () => {
               <div
                 className={`mr-2 ${
                   isSquare
-                    ? "text-gray-500"
-                    : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
+                    ? 'text-gray-500'
+                    : 'cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200'
                 }`}
               >
                 <BsGrid3X2GapFill
@@ -232,8 +235,8 @@ const Playlists = () => {
               <div
                 className={`mr-2 ${
                   isList
-                    ? "text-gray-500"
-                    : "cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
+                    ? 'text-gray-500'
+                    : 'cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200'
                 }`}
               >
                 <BsListUl
@@ -270,12 +273,12 @@ const Playlists = () => {
                             <img
                               className="rounded-lg object-cover object-center w-[500px] h-[150px]"
                               src={NoImageMore}
-                              alt={"New Playlist"}
+                              alt={'New Playlist'}
                             />
                           </div>
                         </div>
                         <div className="text-gray-200 mt-2">
-                          <h3 className="pl-4 text-xl">{t("Add Playlist")}</h3>
+                          <h3 className="pl-4 text-xl">{t('Add Playlist')}</h3>
                         </div>
                       </div>
                     </button>
@@ -323,12 +326,12 @@ const Playlists = () => {
                             <img
                               className="rounded-lg object-cover object-center w-[500px] h-[150px]"
                               src={NoImageMore}
-                              alt={"New Playlist"}
+                              alt={'New Playlist'}
                             />
                           </div>
                         </div>
                         <div className="text-gray-200 mt-2">
-                          <h3 className="pl-4 text-xl">{t("Add Playlist")}</h3>
+                          <h3 className="pl-4 text-xl">{t('Add Playlist')}</h3>
                         </div>
                       </div>
                     </button>
@@ -357,7 +360,7 @@ const Playlists = () => {
                               <img
                                 className=" static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]"
                                 src={NoImageMore}
-                                alt={t("New Playlist")}
+                                alt={t('New Playlist')}
                               />
                             </div>
                           </div>
@@ -365,7 +368,7 @@ const Playlists = () => {
                             {/* // . TITLE */}
                             <div className="flex  font-semibold text-sm md:text-base cursor-pointer">
                               <h3 className="pl-4 text-xl">
-                                {t("Add Playlist")}
+                                {t('Add Playlist')}
                               </h3>
                             </div>
                           </div>
@@ -414,7 +417,7 @@ const Playlists = () => {
                               <img
                                 className=" static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]"
                                 src={NoImageMore}
-                                alt={t("New Playlist")}
+                                alt={t('New Playlist')}
                               />
                             </div>
                           </div>
@@ -422,7 +425,7 @@ const Playlists = () => {
                             {/* // . TITLE */}
                             <div className="flex  font-semibold text-sm md:text-base cursor-pointer">
                               <h3 className="pl-4 text-xl">
-                                {t("Add Playlist")}
+                                {t('Add Playlist')}
                               </h3>
                             </div>
                           </div>

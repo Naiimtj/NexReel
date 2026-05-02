@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
   postFollowPlaylist,
-} from "../../../../services/DB/services-db";
-import { useAuthContext } from "../../../context/auth-context";
-import {
-  MdOutlinePlaylistAdd,
-  MdOutlinePlaylistRemove,
-} from "react-icons/md";
-import { HiUserGroup } from "react-icons/hi";
-import { FaTrash } from "react-icons/fa";
+} from '../../../../services/DB/services-db';
+import { useAuthContext } from '../../../context/auth-context';
+import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from 'react-icons/md';
+import { HiUserGroup } from 'react-icons/hi';
+import { BaseIcon } from '../base';
 
 export const ForumsList = ({
   info,
@@ -22,12 +19,12 @@ export const ForumsList = ({
   setPopSureDel,
   setIdDelete,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const userExist = !!user;
   const { description, id, followersPlaylist, imgPlaylist, medias, title } =
     info;
-  const isPlaylist = !isOtherUser ? id : "";
+  const isPlaylist = !isOtherUser ? id : '';
 
   const [changeDataUser, setChangeDataUser] = useState(false);
   const [playlistFollow, setPlayListFollow] = useState({});
@@ -55,13 +52,13 @@ export const ForumsList = ({
   };
 
   const isFollowing =
-    playlistFollow === "" ? (
+    playlistFollow === '' ? (
       <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
         <MdOutlinePlaylistAdd
           className="inline-block"
           size={25}
           color="#FFCA28"
-          alt={t("Follow Playlist")}
+          alt={t('Follow Playlist')}
           onClick={handleFollow}
         />
       </button>
@@ -70,7 +67,7 @@ export const ForumsList = ({
         <MdOutlinePlaylistRemove
           className="inline-block"
           size={25}
-          alt={t("UnFollow Playlist")}
+          alt={t('UnFollow Playlist')}
           onClick={handleUnFollow}
         />
       </button>
@@ -124,24 +121,23 @@ export const ForumsList = ({
       {userExist ? (
         <div className="absolute bottom-0 mb-1 flex justify-end items-center gap-6 w-full pr-4">
           {/* // ! Delete Button */}
-          {isPlaylist !== "" ? (
-            <div
-              className="z-50 align-middle text-xs cursor-pointer"
+          {isPlaylist !== '' ? (
+            <BaseIcon
+              icon="trash"
+              size="x-small"
+              color="currentColor"
               onClick={handleDeletePlaylist}
-            >
-              <FaTrash
-                size={17}
-                alt={t("Delete Playlist Icon")}
-                className="text-red-500 md:hover:text-gray-500 duration-200 "
-              />
-            </div>
+              aria-label={t('Delete Playlist Icon')}
+              className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
+              tooltip={t('Delete')}
+            />
           ) : null}
           {/* // . FOLLOW/UNFOLLOW or NUM FOLLOWERS */}
           <div className="flex justify-end">
             {info && followersPlaylist && isOtherUser ? isFollowing : null}
             {info && followersPlaylist && !isOtherUser ? (
               <div className="flex justify-end gap-1">
-                <HiUserGroup size={20} alt={t("Followers")} />
+                <HiUserGroup size={20} alt={t('Followers')} />
                 {followersPlaylist.length}
               </div>
             ) : null}
@@ -156,7 +152,7 @@ export default ForumsList;
 
 ForumsList.defaultProps = {
   info: {},
-  userId: "",
+  userId: '',
   isOtherUser: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},

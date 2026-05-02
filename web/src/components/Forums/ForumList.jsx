@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   deleteFollowForum,
   getDetailForum,
   postFollowForum,
-} from "../../../services/DB/services-db";
-import { useAuthContext } from "../../context/auth-context";
-import { HiUserGroup } from "react-icons/hi";
-import { FaTrash } from "react-icons/fa";
-import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
+} from '../../../services/DB/services-db';
+import { useAuthContext } from '../../context/auth-context';
+import { HiUserGroup } from 'react-icons/hi';
+import { BaseIcon } from '../base';
+import ButtonIsFollowing from '../../utils/ButtonIsFollowing';
 
 export const ForumList = ({
   info,
@@ -19,13 +19,13 @@ export const ForumList = ({
   change,
   setChange,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const userExist = !!user;
   const { shortDescription, author, followers, imgForum, tags, title, id } =
     info;
   const isOtherUser = user.id !== author;
-  const isForum = !isOtherUser ? id : "";
+  const isForum = !isOtherUser ? id : '';
   const [ForumFollow, setForumFollow] = useState({});
 
   useEffect(() => {
@@ -96,15 +96,15 @@ export const ForumList = ({
               <p className="font-light">{shortDescription}</p>
             </div>
             <div className="pl-4 text-xs text-gray-500">
-              {tags && tags.join(", ")}
+              {tags && tags.join(', ')}
             </div>
           </div>
         </div>
       </Link>
       <div className="absolute top-0 right-0 mt-2 flex gap-2 justify-end items-center pr-4">
-        <p className="text-sm text-gray-400">{`${t("Created by")}:`}</p>
+        <p className="text-sm text-gray-400">{`${t('Created by')}:`}</p>
         <Link
-          to={`${isOtherUser ? `/users/${author}` : "/me"}`}
+          to={`${isOtherUser ? `/users/${author}` : '/me'}`}
           className="capitalize text-purpleNR hover:text-gray-200 transition duration-300"
         >
           {forumCreate}
@@ -114,17 +114,16 @@ export const ForumList = ({
       {userExist ? (
         <div className="absolute bottom-0 right-0 mb-1 flex justify-end items-center gap-6 pr-4">
           {/* // ! Delete Button */}
-          {isForum !== "" ? (
-            <div
-              className="z-50 align-middle text-xs cursor-pointer"
+          {isForum !== '' ? (
+            <BaseIcon
+              icon="trash"
+              size="x-small"
+              color="currentColor"
               onClick={handleDeleteForum}
-            >
-              <FaTrash
-                size={17}
-                alt={t("Delete Playlist Icon")}
-                className="text-red-500 md:hover:text-gray-500 duration-200 "
-              />
-            </div>
+              aria-label={t('Delete Playlist Icon')}
+              className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
+              tooltip={t('Delete')}
+            />
           ) : null}
           {/* // . FOLLOW/NO FOLLOW or NUM FOLLOWERS */}
           <div className="flex justify-end">
@@ -139,7 +138,7 @@ export const ForumList = ({
             ) : null}
             {info && followers && !isOtherUser ? (
               <div className="flex justify-end gap-1">
-                <HiUserGroup size={20} alt={t("Followers")} />
+                <HiUserGroup size={20} alt={t('Followers')} />
                 {followers.length}
               </div>
             ) : null}
@@ -154,7 +153,7 @@ export default ForumList;
 
 ForumList.defaultProps = {
   info: {},
-  userId: "",
+  userId: '',
   isOtherUser: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},

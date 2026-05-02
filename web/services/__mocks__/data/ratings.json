@@ -1,0 +1,18 @@
+{
+  "IMDb": {
+    "audience": { "rating": 7.8, "count": 1452 },
+    "critics": { "rating": null, "count": null }
+  },
+  "FilmAffinity": {
+    "audience": { "rating": 7.5, "count": 820 },
+    "critics": { "rating": null, "count": null }
+  },
+  "RottenTomatoes": {
+    "audience": { "rating": 82, "count": 1200 },
+    "critics": { "rating": 80, "count": 35 }
+  },
+  "Metacritic": {
+    "audience": { "rating": 7.6, "count": 230 },
+    "critics": { "rating": 74, "count": 18 }
+  }
+}

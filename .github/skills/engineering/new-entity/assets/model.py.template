@@ -1,0 +1,16 @@
+# Add to fastapi/api/core/database/models.py
+# Do NOT create a separate file
+
+class {Entity}(Base):
+    __tablename__ = "{table_name}"
+
+    {entity}_id = Column(String(36), primary_key=True)
+    name = Column(String(255), nullable=False)
+    # ... add columns matching migration ...
+
+    # For FK relationships:
+    # some_id = Column(String(36), ForeignKey("other_table.other_id"), nullable=True)
+    # other = relationship("Other")
+
+    # For composite PK:
+    # __table_args__ = (PrimaryKeyConstraint("col1", "col2"),)

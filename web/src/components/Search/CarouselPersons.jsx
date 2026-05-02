@@ -1,10 +1,21 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 // icons
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { GoDotFill, GoDot } from "react-icons/go";
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { GoDotFill, GoDot } from 'react-icons/go';
 // components
-import Credits from "../Credits";
+import Credits from '../Credits';
+
+const SIZE_CONFIG = {
+  small: {
+    cardsPerPage: { sm: 3, md: 6, lg: 9, xl: 9 },
+    gridClass: 'grid-cols-3 md:grid-cols-6 lg:grid-cols-9 xl:grid-cols-9',
+  },
+  normal: {
+    cardsPerPage: { sm: 2, md: 4, lg: 8, xl: 10 },
+    gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:grid-cols-10',
+  },
+};
 
 const CarouselPersons = ({
   title,
@@ -16,15 +27,25 @@ const CarouselPersons = ({
   isForum,
   changeSeenPending,
   setChangeSeenPending,
-  basicForum
+  basicForum,
+  size,
 }) => {
+  const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
+  const headerTitleClass =
+    size === 'small'
+      ? 'pl-4 text-xs md:text-base uppercase'
+      : 'pl-4 text-sm md:text-2xl uppercase';
   const [currentPage, setCurrentPage] = useState(1);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [info]);
   const getCardsPerPage = () => {
     const screenWidth = window.innerWidth;
-    if (screenWidth < 750) return 2;
-    if (screenWidth < 1000) return 4;
-    if (screenWidth < 1280) return 8;
-    return 10;
+    const { sm, md, lg, xl } = sizeConfig.cardsPerPage;
+    if (screenWidth < 750) return sm;
+    if (screenWidth < 1000) return md;
+    if (screenWidth < 1280) return lg;
+    return xl;
   };
   const cardsPerPage = getCardsPerPage();
   const handleNextPage = () => {
@@ -42,7 +63,7 @@ const CarouselPersons = ({
   const startCardIndex = (currentPage - 1) * cardsPerPage;
   const visibleCards = allCards.slice(
     startCardIndex,
-    startCardIndex + cardsPerPage
+    startCardIndex + cardsPerPage,
   );
   // Dots
   const renderPageIndicator = () => {
@@ -61,7 +82,7 @@ const CarouselPersons = ({
           className="cursor-pointer transition ease-in-out text-[#6676a7] md:hover:scale-110 md:hover:text-gray-200 duration-300"
         >
           {icon}
-        </div>
+        </div>,
       );
     }
     return indicators;
@@ -73,7 +94,7 @@ const CarouselPersons = ({
         <div className="flex justify-between items-center">
           {/* // - TITLE */}
           <div className="flex text-gray-200">
-            <h1 className="pl-4 text-sm md:text-2xl uppercase">{title}</h1>
+            <h1 className={headerTitleClass}>{title}</h1>
             {isUser && title ? (
               <p className="ml-1 text-xs">{`( ${
                 allCards.length ? allCards.length : 0
@@ -122,7 +143,7 @@ const CarouselPersons = ({
         <div className="flex justify-between items-center">
           {/* // - TITLE */}
           <div className="flex text-gray-200">
-            <h1 className="pl-4 text-sm md:text-2xl uppercase">{title}</h1>
+            <h1 className={headerTitleClass}>{title}</h1>
             {isUser && title ? (
               <p className="ml-1 text-xs">{`( ${
                 allCards.length ? allCards.length : 0
@@ -133,7 +154,7 @@ const CarouselPersons = ({
       )}
       {/* // - CARDS */}
       <div
-        className={`mt-1 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:grid-cols-10 gap-1 text-gray-200 rounded-xl justify-items-center items-start`}
+        className={`mt-1 grid ${sizeConfig.gridClass} gap-1 text-gray-200 rounded-xl justify-items-center items-start`}
         onClick={hideSearch}
       >
         {visibleCards.map((card, index) => (
@@ -147,6 +168,7 @@ const CarouselPersons = ({
             isForum={isForum}
             basicForum={basicForum}
             hideSearch={hideSearch}
+            size={size}
           />
         ))}
       </div>
@@ -161,19 +183,20 @@ const CarouselPersons = ({
 export default CarouselPersons;
 
 CarouselPersons.defaultProps = {
-  title: "",
+  title: '',
   id: 0,
   info: [],
-  media: "",
+  media: '',
   isUser: false,
   changeSeenPending: false,
   setChangeSeenPending: () => {},
-  isPlaylist: "",
+  isPlaylist: '',
   setPopSureDel: () => {},
   setIdDelete: () => {},
   isForum: false,
   hideSearch: () => {},
   basicForum: {},
+  size: 'normal',
 };
 
 CarouselPersons.propTypes = {
@@ -188,4 +211,5 @@ CarouselPersons.propTypes = {
   isForum: PropTypes.bool,
   hideSearch: PropTypes.func,
   basicForum: PropTypes.object,
+  size: PropTypes.oneOf(['small', 'normal']),
 };

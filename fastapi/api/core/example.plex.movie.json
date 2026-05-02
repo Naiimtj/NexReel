@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaContainer size="1" allowSync="1" identifier="com.plexapp.plugins.library" librarySectionID="18" librarySectionTitle="PEL&#205;CULAS" librarySectionUUID="82ea6e8b-195e-446b-ba88-57705c69deeb" mediaTagPrefix="/system/bundle/media/flags/" mediaTagVersion="1775731696">
+    <Video ratingKey="50910" key="/library/metadata/50910" guid="plex://movie/5d77682a961905001eb91f89" slug="hulk" studio="Marvel Enterprises" type="movie" title="Hulk" titleSort="Hulk 1" librarySectionTitle="PEL&#205;CULAS" librarySectionID="18" librarySectionKey="/library/sections/18" contentRating="es/12" contentRatingAge="13" summary="Bruce Banner un brillante investigador en el campo de la tecnolog&#237;a gen&#233;tica, oculta un pasado doloroso que lo ha dejado estigmatizado. Su antigua novia, la investigadora Betty Ross (Jennifer Connelly), que perdi&#243; la paciencia esperando que recuperara la estabilidad emocional, fue testigo de un grave accidente sufrido por Banner en el laboratorio: debido a una explosi&#243;n el cuerpo del cient&#237;fico absorbi&#243; una dosis letal de rayos gamma; desde entonces, Banner empez&#243; a sentir en su interior la presencia de un ente peligroso y, a la vez, oscuramente atractivo. Mientras tanto, Hulk, una criatura salvaje y prodigiosamente fuerte aparece espor&#225;dicamente, dejando tras de s&#237; una estela de destrucci&#243;n. Se trata de una situaci&#243;n de emergencia que exige la intervenci&#243;n del ej&#233;rcito, encabezado por el padre de Betty, el general &#34;Thunderbolt&#34; Ross. Betty es la &#250;nica que sospecha que Bruce tiene algo que ver con Hulk." audienceRating="5.7" viewCount="3" lastViewedAt="1596326160" year="2003" tagline="Desata el h&#233;roe interior." thumb="/library/metadata/50910/thumb/1774549814" art="/library/metadata/50910/art/1774549814" duration="8293375" originallyAvailableAt="2003-06-19" addedAt="1544195176" updatedAt="1774549814" audienceRatingImage="imdb://image.rating" primaryExtraKey="/library/metadata/87528">
+        <Media id="195319" duration="8293375" bitrate="9983" width="1920" height="1040" aspectRatio="1.85" audioChannels="2" audioCodec="aac" videoCodec="h264" videoResolution="1080" container="mkv" videoFrameRate="24p" audioProfile="lc" videoProfile="high" hasVoiceActivity="0">
+            <Part id="211993" key="/library/parts/211993/1544195176/file.mkv" duration="8293375" file="/shares/NAIPLEX_4/Pelis/Superheroes/MARVEL/Hulk/Hulk I (2003).mkv" size="10349576724" audioProfile="lc" container="mkv" videoProfile="high">
+                <Stream id="579387" streamType="1" default="1" codec="h264" index="0" bitrate="9983" bitDepth="8" chromaLocation="left" chromaSubsampling="4:2:0" codedHeight="1040" codedWidth="1920" frameRate="23.976" hasScalingMatrix="0" height="1040" level="41" profile="high" refFrames="4" scanType="progressive" width="1920" displayTitle="1080p" extendedDisplayTitle="1080p (H.264)"></Stream>
+                <Stream id="579388" streamType="2" selected="1" default="1" codec="aac" index="1" channels="2" language="Espa&#241;ol" languageTag="es" languageCode="spa" audioChannelLayout="stereo" profile="lc" samplingRate="48000" displayTitle="Espa&#241;ol (AAC Stereo)" extendedDisplayTitle="Espa&#241;ol (AAC Stereo)"></Stream>
+                <Stream id="579389" streamType="2" codec="aac" index="2" channels="2" language="English" languageTag="en" languageCode="eng" audioChannelLayout="stereo" profile="lc" samplingRate="48000" displayTitle="English (AAC Stereo)" extendedDisplayTitle="English (AAC Stereo)"></Stream>
+                <Stream id="579390" streamType="3" canAutoSync="0" selected="1" default="1" forced="1" codec="srt" index="3" language="Espa&#241;ol" languageTag="es" languageCode="spa" displayTitle="Espa&#241;ol Forced" extendedDisplayTitle="Espa&#241;ol Forced (SRT)"></Stream>
+                <Stream id="579391" streamType="3" canAutoSync="0" codec="srt" index="4" language="Espa&#241;ol" languageTag="es" languageCode="spa" displayTitle="Espa&#241;ol" extendedDisplayTitle="Espa&#241;ol (SRT)"></Stream>
+                <Stream id="579392" streamType="3" canAutoSync="0" codec="srt" index="5" language="English" languageTag="en" languageCode="eng" displayTitle="English" extendedDisplayTitle="English (SRT)"></Stream>
+            </Part>
+        </Media>
+        <Image alt="Hulk" type="coverPoster" url="/library/metadata/50910/thumb/1774549814" />
+        <Image alt="Hulk" type="background" url="/library/metadata/50910/art/1774549814" />
+        <Image alt="Hulk" type="backgroundSquare" url="/library/metadata/50910/squareArt/1774549814" />
+        <UltraBlurColors topLeft="113626" topRight="29654e" bottomRight="1d562e" bottomLeft="2c6457" />
+        <Genre id="22966" filter="genre=22966" tag="Action" />
+        <Genre id="22693" filter="genre=22693" tag="Adventure" />
+        <Genre id="146951" filter="genre=146951" tag="Ciencia ficci&#243;n" />
+        <Genre id="22527" filter="genre=22527" tag="Drama" />
+        <Country id="146775" filter="country=146775" tag="United States of America" />
+        <Guid id="imdb://tt0286716" />
+        <Guid id="tmdb://1927" />
+        <Guid id="tvdb://1117" />
+        <Rating image="imdb://image.rating" value="5.7" type="audience" />
+        <Rating image="rottentomatoes://image.rating.ripe" value="6.3" type="critic" />
+        <Rating image="rottentomatoes://image.rating.spilled" value="2.9" type="audience" />
+        <Rating image="themoviedb://image.rating" value="5.6" type="audience" />
+        <Collection id="129837" filter="collection=129837" tag="Hulk" />
+        <Collection id="106038" filter="collection=106038" tag="Marvel - Colecci&#243;n" />
+        <Director id="306822" filter="director=306822" tag="Ang Lee" tagKey="5d776825eb5d26001f1dd122" thumb="https://metadata-static.plex.tv/2/people/2e5654ae143086bd619efcc3c0f44712.jpg" />
+        <Writer id="276169" filter="writer=276169" tag="Stan Lee" tagKey="5d7768274de0ee001fcc8955" thumb="https://metadata-static.plex.tv/a/people/ab04e310ed927e8d727c77f51ce3bae1.jpg" />
+        <Writer id="276170" filter="writer=276170" tag="Jack Kirby" tagKey="5d776874103a2d001f571dc0" />
+        <Writer id="311220" filter="writer=311220" tag="James Schamus" tagKey="5d776825eb5d26001f1dd124" thumb="https://metadata-static.plex.tv/6/people/6bc2e51e429a87671a0293aa876a28d0.jpg" />
+        <Writer id="276172" filter="writer=276172" tag="John Turman" tagKey="5d77682b961905001eb9240c" />
+        <Writer id="276071" filter="writer=276071" tag="Michael France" tagKey="5d77682b961905001eb9240d" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb9240d.jpg" />
+        <Role id="288141" filter="actor=288141" tag="Eric Bana" tagKey="5d776824961905001eb90977" role="Bruce Banner" thumb="https://metadata-static.plex.tv/5/people/51d655d129fe2cacc03c4abdf74607ef.jpg" />
+        <Role id="279996" filter="actor=279996" tag="Jennifer Connelly" tagKey="5d77682585719b001f3a0898" role="Betty Ross" thumb="https://metadata-static.plex.tv/7/people/783d027cb6dfdd19b4a42e3882cf6318.jpg" />
+        <Role id="295266" filter="actor=295266" tag="Sam Elliott" tagKey="5d7768256f4521001ea989c2" role="Ross" thumb="https://metadata-static.plex.tv/e/people/e408224db074585dfff2321387b71eb4.jpg" />
+        <Role id="280498" filter="actor=280498" tag="Josh Lucas" tagKey="5d776826880197001ec9073a" role="Talbot" thumb="https://metadata-static.plex.tv/c/people/ca9f1e1b596e1e66495b4b5d41fea0e7.jpg" />
+        <Role id="288835" filter="actor=288835" tag="Nick Nolte" tagKey="5d776825999c64001ec2bf6d" role="Father" thumb="https://metadata-static.plex.tv/c/people/cb369ca4199727091f96dcfeabb9a102.jpg" />
+        <Role id="311221" filter="actor=311221" tag="Paul Kersey" tagKey="5d77682b961905001eb923e7" role="Young David Banner" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb923e7.jpg" />
+        <Role id="311223" filter="actor=311223" tag="Todd Tesen" tagKey="5d77682b961905001eb923e9" role="Young Ross" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb923e9.jpg" />
+        <Role id="311222" filter="actor=311222" tag="Cara Buono" tagKey="5d77682b961905001eb923e8" role="Edith Banner" thumb="https://metadata-static.plex.tv/8/people/860102f082d6e57803a6269b7257fde2.jpg" />
+        <Role id="289194" filter="actor=289194" tag="Kevin Rankin" tagKey="5d77682b961905001eb923ea" role="Harper" thumb="https://metadata-static.plex.tv/5/people/5c2f39a23ce9cbb83b1203222c9c7046.jpg" />
+        <Role id="285347" filter="actor=285347" tag="Celia Weston" tagKey="5d776827961905001eb91484" role="Mrs. Krenzler" thumb="https://metadata-static.plex.tv/c/people/c6491e09857db58d701db89f092119c7.jpg" />
+        <Role id="311224" filter="actor=311224" tag="Mike Erwin" tagKey="5d77682b961905001eb923eb" role="Teenage Bruce Banner" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb923eb.jpg" />
+        <Role id="311225" filter="actor=311225" tag="Lou Ferrigno" tagKey="5d77682a961905001eb91e6d" role="Security Guard" thumb="https://metadata-static.plex.tv/c/people/ca5858990731ddbbef85f664bce62e9f.jpg" />
+        <Role id="276115" filter="actor=276115" tag="Stan Lee" tagKey="5d7768274de0ee001fcc8955" role="Security Guard" thumb="https://metadata-static.plex.tv/a/people/ab04e310ed927e8d727c77f51ce3bae1.jpg" />
+        <Role id="311226" filter="actor=311226" tag="Regi Davis" tagKey="5d77682b961905001eb923ec" role="Security Guard" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb923ec.jpg" />
+        <Role id="311227" filter="actor=311227" tag="Craig Damon" tagKey="5d77682b961905001eb923ed" role="Security Guard" />
+        <Role id="311228" filter="actor=311228" tag="Geoffrey Scott" tagKey="5d77682b961905001eb923ee" role="President" thumb="https://metadata-static.plex.tv/people/5d77682b961905001eb923ee.jpg" />
+        <Role id="311229" filter="actor=311229" tag="Regina McKee Redwing" tagKey="5d77682b961905001eb923ef" role="National Security Advisor" thumb="https://image.tmdb.org/t/p/original/ezBpZnhKKCVeSbj6HRblvfKxKJC.jpg" />
+        <Role id="295900" filter="actor=295900" tag="Daniel Dae Kim" tagKey="5d776828a091de001f2e6398" role="Aide" thumb="https://metadata-static.plex.tv/4/people/4098e99d8a201a625f16e76ee4e2ed2a.jpg" />
+        <Role id="311230" filter="actor=311230" tag="Daniella Kuhn" tagKey="5d77682b961905001eb923f0" role="Edith&#39;s Friend" thumb="https://metadata-static.plex.tv/b/people/b2cd491918a48b79958a61ab009d0b69.jpg" />
+        <Role id="430950" filter="actor=430950" tag="Michael Kronenberg" tagKey="5f3faa6ab981640042c9e85e" role="Bruce Banner as Child" />
+        <Role id="430951" filter="actor=430951" tag="David Kronenberg" tagKey="5f3faa69b981640042c9e854" role="Bruce Banner as Child" />
+        <Role id="311232" filter="actor=311232" tag="Rhiannon Leigh Wryn" tagKey="5d77682b961905001eb923f3" role="Betty Ross as Child" thumb="https://metadata-static.plex.tv/a/people/a11c970edfd5b1b91618c9fecda2110c.jpg" />
+        <Role id="311233" filter="actor=311233" tag="Lou Richards" tagKey="5d77682b961905001eb923f4" role="Pediatrician" thumb="https://metadata-static.plex.tv/d/people/d93b52e0748571f55bab3ded2781ef89.jpg" />
+        <Role id="430952" filter="actor=430952" tag="Jenn Gotzon Chandler" tagKey="5d7768373c3c2a001fbceaeb" role="Waitress" thumb="https://metadata-static.plex.tv/b/people/b7bbf299a6cb9b09ef7eaac01ad7cb02.jpg" />
+        <Role id="430953" filter="actor=430953" tag="Louanne Kelley" tagKey="5d776dc2fb0d55001f5a9b5b" role="Delivery Doctor" thumb="https://metadata-static.plex.tv/7/people/76670f2046df31cee7fa2cc6fcd7bf26.jpg" />
+        <Role id="311236" filter="actor=311236" tag="Toni Kallen" tagKey="5d77682b961905001eb923f7" role="Delivery Nurse" thumb="https://image.tmdb.org/t/p/original/ePJNXJOxExRifPBuB6eZ1G04tWJ.jpg" />
+        <Role id="430954" filter="actor=430954" tag="Paul Kim Jr." tagKey="5d77682b961905001eb923f8" role="Officer" thumb="https://metadata-static.plex.tv/0/people/0e337cfeb0f9e031768fbabd24af579a.jpg" />
+        <Role id="311238" filter="actor=311238" tag="John Littlefield" tagKey="5d77682b961905001eb923f9" role="Security NCO" thumb="https://metadata-static.plex.tv/b/people/b4b07c0047565096cdfbf68834ed59a7.jpg" />
+        <Role id="430955" filter="actor=430955" tag="Lorenzo Callender" tagKey="5d77695f7a53e9001e6e44e6" role="Soldier" thumb="https://metadata-static.plex.tv/d/people/db9a45e835c9d742b65b813611f1603a.jpg" />
+        <Role id="430956" filter="actor=430956" tag="Todd Lee Coralli" tagKey="5f3fe153427eeb0041e5f2e3" role="Soldier" />
+        <Role id="311241" filter="actor=311241" tag="Johnny Kastl" tagKey="5d77682b961905001eb923fc" role="Soldier" thumb="https://metadata-static.plex.tv/2/people/259b07c34122c3fe9f12b69ac54b5a82.jpg" />
+        <Role id="430957" filter="actor=430957" tag="Eric Ware" tagKey="5d7768943ab0e7001f504dbf" role="Soldier" />
+        <Role id="285565" filter="actor=285565" tag="Jesse Corti" tagKey="5d77682b961905001eb923fe" role="Colonel" thumb="https://metadata-static.plex.tv/d/people/df5d5bba771074acf904df4dad665a7a.jpg" />
+        <Role id="430958" filter="actor=430958" tag="Rob Swanson" tagKey="5d77684f8a7581001f130308" role="Colonel" />
+        <Role id="268753" filter="actor=268753" tag="Mark Atteberry" tagKey="5d77682b961905001eb92400" role="Technician" thumb="https://metadata-static.plex.tv/2/people/2b895d511cbbdd7f096d71c583a7bbef.jpg" />
+        <Role id="430959" filter="actor=430959" tag="Eva Burkley" tagKey="5f3f930f427eeb0041e2dffe" role="Technician" />
+        <Role id="430960" filter="actor=430960" tag="Rondda Holeman" tagKey="5f3fe15452f20000414b27cd" role="Technician" />
+        <Role id="271953" filter="actor=271953" tag="John A. Maraffi" tagKey="5d77682b961905001eb92403" role="Technician" />
+        <Role id="272799" filter="actor=272799" tag="Michael Papajohn" tagKey="5d77682585719b001f3a05f3" role="Technician" thumb="https://metadata-static.plex.tv/f/people/fd4f30fd872b33a280eaa39e41bb4397.jpg" />
+        <Role id="430961" filter="actor=430961" tag="David St. Pierre" tagKey="5ec4093c02f59c003e4e2d73" role="Technician" thumb="https://metadata-static.plex.tv/1/people/1970dd4271fe4def68c8dfe59bfb6e5f.jpg" />
+        <Role id="311246" filter="actor=311246" tag="Boni Yanagisawa" tagKey="5d77682b961905001eb92405" role="Technician" thumb="https://metadata-static.plex.tv/3/people/312faf044008a1c100d4793194ea4f5c.jpg" />
+        <Role id="430962" filter="actor=430962" tag="David Sutherland" tagKey="5f3fe156fea1a1003f992a02" role="Tank Commander" />
+        <Role id="311248" filter="actor=311248" tag="Sean Mahon" tagKey="5d776829e6d55c002040b348" role="Comanche Pilot" thumb="https://metadata-static.plex.tv/2/people/28104d92f10c7c442593f88046fea7cb.jpg" />
+        <Role id="430963" filter="actor=430963" tag="Brett Thacher" tagKey="5f3fe15786422500427d4cf6" role="Comanche Pilot" />
+        <Role id="311250" filter="actor=311250" tag="Kirk B.R. Woller" tagKey="5d776826103a2d001f564255" role="Comanche Pilot" thumb="https://metadata-static.plex.tv/people/5d776826103a2d001f564255.jpg" />
+        <Role id="430964" filter="actor=430964" tag="Randy Neville" tagKey="5f3fe155cae2c60042ea0a2f" role="F-22 Pilot" />
+        <Role id="268353" filter="actor=268353" tag="John Prosky" tagKey="5d7768273c3c2a001fbcb2ac" role="Atheon Technician" thumb="https://metadata-static.plex.tv/2/people/27a82b2940816755f5f0a7875f5ea41f.jpg" />
+        <Role id="430965" filter="actor=430965" tag="Amir Faraj" tagKey="5f3fe156ce2564003f87dfb3" role="Boy" />
+        <Role id="430966" filter="actor=430966" tag="Ricardo Aguilar" tagKey="5ec410483173800041d41bcc" role="Boy&#39;s Father" />
+        <Role id="311254" filter="actor=311254" tag="Victor Rivers" tagKey="5d77682a6f4521001ea99e6b" role="Paramilitary" thumb="https://metadata-static.plex.tv/b/people/b9be0d1ccee77bf166d1edda65e2e36c.jpg" />
+        <Role id="430967" filter="actor=430967" tag="Lyndon Karp" tagKey="5f3fe15703883a0040ad7817" role="Davey" />
+        <Role id="281617" filter="actor=281617" tag="Rick Avery" tagKey="5d7768253c3c2a001fbcacee" role="Soldier (uncredited)" thumb="https://metadata-static.plex.tv/d/people/d00748c7a0a19666c094e1cd0e4123db.jpg" />
+        <Role id="278774" filter="actor=278774" tag="Thomas Rosales Jr." tagKey="5d7768263c3c2a001fbcadd4" role="Rebel Militant (uncredited)" thumb="https://metadata-static.plex.tv/c/people/c8da3a356209e73f48e97a3d5c653dd5.jpg" />
+        <Role id="430968" filter="actor=430968" tag="Ray Buffer" tagKey="5d776ef3ad5437001f806a05" role="Atheon Captain (uncredited)" />
+        <Role id="281557" filter="actor=281557" tag="Andy Arness" tagKey="5d776828a091de001f2e6455" role="Soldier (uncredited)" thumb="https://metadata-static.plex.tv/people/5d776828a091de001f2e6455.jpg" />
+        <Role id="303652" filter="actor=303652" tag="Rory J. Aylward" tagKey="5d77689eebdf2200209c3d17" role="Second Tank Commander (uncredited)" />
+        <Role id="430969" filter="actor=430969" tag="Cougar Zank" tagKey="5f3feb4586422500427e1ba8" role="Army Military / SWAT (uncredited)" />
+        <Role id="468551" filter="actor=468551" tag="Ang Lee" tagKey="5d776825eb5d26001f1dd122" role="Hulk (voice) (uncredited)" thumb="https://metadata-static.plex.tv/2/people/2e5654ae143086bd619efcc3c0f44712.jpg" />
+        <Producer id="278233" filter="producer=278233" tag="Gale Anne Hurd" tagKey="5d776824151a60001f24a3bd" thumb="https://metadata-static.plex.tv/a/people/aa243adb74317f314bd1a02d0cb4b24b.jpg" />
+        <Producer id="311256" filter="producer=311256" tag="James Schamus" tagKey="5d776825eb5d26001f1dd124" thumb="https://metadata-static.plex.tv/6/people/6bc2e51e429a87671a0293aa876a28d0.jpg" />
+        <Producer id="276168" filter="producer=276168" tag="Avi Arad" tagKey="5d7768274de0ee001fcc8949" thumb="https://metadata-static.plex.tv/f/people/f7e1fa1dafd50ab5d87d0f7794b13ad3.jpg" />
+        <Producer id="430970" filter="producer=430970" tag="Larry Franco" tagKey="5d776829880197001ec911d5" thumb="https://metadata-static.plex.tv/2/people/214f7ddc4ea78f106aa340be842c5a75.jpg" />
+        <Similar id="36934" filter="similar=36934" tag="Daredevil" />
+        <Similar id="37124" filter="similar=37124" tag="Superman Returns" />
+        <Similar id="38401" filter="similar=38401" tag="The Incredible Hulk" />
+        <Similar id="37131" filter="similar=37131" tag="Ghost Rider" />
+        <Similar id="30816" filter="similar=30816" tag="Fantastic Four" />
+        <Similar id="91663" filter="similar=91663" tag="Fantastic Four: Rise of the Silver Surfer" />
+        <Similar id="36938" filter="similar=36938" tag="Batman &amp; Robin" />
+        <Similar id="36966" filter="similar=36966" tag="Batman Forever" />
+        <Similar id="32457" filter="similar=32457" tag="Blade: Trinity" />
+        <Similar id="32992" filter="similar=32992" tag="Hellboy II: The Golden Army" />
+        <Similar id="36081" filter="similar=36081" tag="Godzilla" />
+        <Similar id="32455" filter="similar=32455" tag="Blade II" />
+        <Similar id="32993" filter="similar=32993" tag="Hellboy" />
+        <Similar id="37615" filter="similar=37615" tag="The League of Extraordinary Gentlemen" />
+        <Similar id="32573" filter="similar=32573" tag="Van Helsing" />
+        <Similar id="35210" filter="similar=35210" tag="Batman Returns" />
+        <Similar id="31563" filter="similar=31563" tag="Terminator 3: Rise of the Machines" />
+        <Similar id="32454" filter="similar=32454" tag="Blade" />
+        <Similar id="38331" filter="similar=38331" tag="Elektra" />
+        <Similar id="38070" filter="similar=38070" tag="Green Lantern" />
+        <CommonSenseMedia id="448356" oneLiner="The Hulk lacks personality; not a great movie.">
+            <AgeRating type="official" rating="2" age="13" />
+        </CommonSenseMedia>
+        <Field locked="1" name="titleSort" />
+        <Field locked="1" name="thumb" />
+        <Field locked="1" name="art" />
+        <Field locked="1" name="collection" />
+    </Video>
+</MediaContainer>

@@ -1,0 +1,21 @@
+from pydantic import BaseModel
+
+
+class {Entity}Base(BaseModel):
+    name: str
+    # ... required fields (exclude PK) ...
+
+
+class {Entity}Create({Entity}Base):
+    pass
+
+
+class {Entity}Update(BaseModel):
+    name: str | None = None
+    # ... ALL fields optional for partial update ...
+
+
+class {Entity}Read({Entity}Base):
+    {entity}_id: str
+
+    model_config = {"from_attributes": True}

@@ -1,36 +1,36 @@
-import { useTranslation } from "react-i18next";
-import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   UnFollow,
   deleteFollower,
   getUser,
   postFollow,
   getFollowersUser,
-} from "../../../services/DB/services-db";
-import UserDetails from "./UserDetails";
-import ViewsPending from "./ViewsPending";
-import Playlist from "./Playlist/Playlist";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import Spinner from "../../utils/Spinner/Spinner";
-import EmptySmall from "../MediaList/EmptySmall";
-import UpdateProfile from "./UpdateProfile";
-import Carousel from "../../utils/Carousel/Carousel";
+} from '../../../services/DB/services-db';
+import UserDetails from './UserDetails';
+import ViewsPending from './ViewsPending';
+import Playlist from './Playlist/Playlist';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import Spinner from '../../utils/Spinner/Spinner';
+import EmptySmall from '../MediaList/EmptySmall';
+import UpdateProfile from './UpdateProfile';
+import Carousel from '../../utils/Carousel/Carousel';
 import {
   FaUserAltSlash,
   FaUserClock,
   FaUserPlus,
   FaUserTimes,
-} from "react-icons/fa";
-import { MdModeEditOutline } from "react-icons/md";
-import { RiLockPasswordFill } from "react-icons/ri";
-import UpdatePassword from "./UpdatePassword";
-import NewPlaylist from "./Playlist/NewPlaylist";
-import { NoImageMore } from "../../assets/image";
-import PopSureDelete from "../PopUp/PopSureDelete";
-import SearchUsers from "./SearchUsers";
-import PageTitle from "../PageTitle";
+} from 'react-icons/fa';
+import { MdModeEditOutline } from 'react-icons/md';
+import { RiLockPasswordFill } from 'react-icons/ri';
+import UpdatePassword from './UpdatePassword';
+import NewPlaylist from './Playlist/NewPlaylist';
+import { NoImageMore } from '../../assets/image';
+import { DeleteConfirmModal } from '../base';
+import SearchUsers from './SearchUsers';
+import PageTitle from '../PageTitle';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -48,7 +48,7 @@ const Profile = ({
   setChangeOtherUser,
   currentUser,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [user, setUser] = useState({});
   const otherUser = dataUser && dataUser.user;
@@ -79,7 +79,7 @@ const Profile = ({
   const isFollowingOtherUser =
     followers &&
     followers.filter(
-      (i) => i.UserIDFollower === user.id && i.UserConfirm === true
+      (i) => i.UserIDFollower === user.id && i.UserConfirm === true,
     ).length > 0;
 
   useEffect(() => {
@@ -102,24 +102,24 @@ const Profile = ({
     false,
     false,
     true,
-    "long"
+    'long',
   ).DateTimeConvertLocale();
   const checkMedias =
     !!(user && user.medias && user.medias.length > 0) ||
     !!(user && user.mediasTv && user.mediasTv.length > 0);
-    const UserMedias = checkMedias && user.medias.concat(user.mediasTv);
+  const UserMedias = checkMedias && user.medias.concat(user.mediasTv);
 
-    function filterMedias(medias, filtro) {
-      return medias.filter((media) => media[filtro] !== false);
-    }
-    
-    const pendingData = checkMedias
-      ? DataOrder(checkMedias, filterMedias(UserMedias, "pending"))
-      : null;
-    
-    const seenData = checkMedias
-      ? DataOrder(checkMedias, filterMedias(UserMedias, "seen"))
-      : null;
+  function filterMedias(medias, filtro) {
+    return medias.filter((media) => media && media[filtro] !== false);
+  }
+
+  const pendingData = checkMedias
+    ? DataOrder(checkMedias, filterMedias(UserMedias, 'pending'))
+    : null;
+
+  const seenData = checkMedias
+    ? DataOrder(checkMedias, filterMedias(UserMedias, 'seen'))
+    : null;
 
   const checkPlaylists = !!(
     user &&
@@ -144,8 +144,9 @@ const Profile = ({
   const [modalForm, setModalForm] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
   const TimeTotalSeenMin =
-  seenData &&
-  seenData.map(function (media) {
+    seenData &&
+    seenData
+      .map(function (media) {
         return media.runtime && media.runtime ? media.runtime : 0;
       })
       .reduce(function (accumulator, valorActual) {
@@ -153,27 +154,27 @@ const Profile = ({
       }, 0);
   const TimeTotalSeen = new DateAndTimeConvert(
     TimeTotalSeenMin,
-    t
+    t,
   ).TimeConvert();
   // Follow
   const handleFollow = () => {
     postFollow(user.id).then(
       () => setChangeSeenPending(!changeSeenPending),
-      setChangeOtherUser(!changeOtherUser)
+      setChangeOtherUser(!changeOtherUser),
     );
   };
   const [hovered, setHovered] = useState(false);
   const handleUnFollow = () => {
     UnFollow(user.id).then(
       () => setChangeSeenPending(!changeSeenPending),
-      setChangeOtherUser(!changeOtherUser)
+      setChangeOtherUser(!changeOtherUser),
     );
   };
 
   const handleDeleteFollower = () => {
     deleteFollower(user.id).then(
       () => setChangeSeenPending(!changeSeenPending),
-      setChangeOtherUser(!changeOtherUser)
+      setChangeOtherUser(!changeOtherUser),
     );
   };
 
@@ -244,10 +245,10 @@ const Profile = ({
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -257,11 +258,11 @@ const Profile = ({
         <Spinner result />
       ) : (
         <div
-          className={isFollowing || isFollowing === undefined ? "mb-20" : ""}
+          className={isFollowing || isFollowing === undefined ? 'mb-20' : ''}
         >
           <PageTitle
             title={`${
-              Object.keys(user).length && t("Profile") + " " + user.username
+              Object.keys(user).length && t('Profile') + ' ' + user.username
             }`}
           />
           <div className="text-gray-200 mt-6 h-full w-full">
@@ -290,15 +291,15 @@ const Profile = ({
                     alt={t('"Profile avatar"')}
                   />
                   <h1 className="italic text-center mt-2">
-                    {user.favoritePhrase !== "" && user.favoritePhrase !== null
+                    {user.favoritePhrase !== '' && user.favoritePhrase !== null
                       ? `"${user.favoritePhrase}"`
-                      : `"${t("Personalized phrase")}"`}
+                      : `"${t('Personalized phrase')}"`}
                   </h1>
 
                   {isConfirm || !isOtherUser ? (
                     <>
                       <h1 className="font-semibold text-left mt-2">
-                        {t("Time Viewed")}
+                        {t('Time Viewed')}
                       </h1>
                       <p className="text-center">{TimeTotalSeen}</p>
                     </>
@@ -313,13 +314,13 @@ const Profile = ({
                     {/* // . INFO USER */}
                     <div>
                       <div className="flex justify-between">
-                        <h3 className="font-semibold text-xl ">{t("Name")}:</h3>
+                        <h3 className="font-semibold text-xl ">{t('Name')}:</h3>
                       </div>
                       <p className="font-base text-base mb-4">
                         {user.username}
                       </p>
                       <h3 className="font-semibold text-xl ">
-                        {t("Member since")}:{" "}
+                        {t('Member since')}:{' '}
                       </h3>
                       <p className="font-base text-base mb-4">{newDate}</p>
                       {/* // - BUTTON FOLLOW */}
@@ -331,9 +332,9 @@ const Profile = ({
                           >
                             <FaUserPlus
                               className="h-14 w-14 md:h-5 md:w-5"
-                              alt={t("Follow")}
+                              alt={t('Follow')}
                             />
-                            {t("Follow")}
+                            {t('Follow')}
                           </div>
                         </div>
                       ) : null}
@@ -352,17 +353,17 @@ const Profile = ({
                               >
                                 <FaUserTimes
                                   className="h-14 w-14 md:h-5 md:w-5"
-                                  alt={t("Cancel request")}
+                                  alt={t('Cancel request')}
                                 />
-                                {t("Cancel request")}
+                                {t('Cancel request')}
                               </div>
                             ) : (
                               <div className="flex items-center gap-2">
                                 <FaUserClock
                                   className="h-14 w-14 md:h-5 md:w-5"
-                                  alt={t("Waiting confirmation Icon")}
+                                  alt={t('Waiting confirmation Icon')}
                                 />
-                                {t("Waiting confirmation")}
+                                {t('Waiting confirmation')}
                               </div>
                             )}
                           </div>
@@ -381,14 +382,14 @@ const Profile = ({
                             onClick={() => setModalForm(true)}
                           >
                             <MdModeEditOutline className="h-14 w-14 md:h-4 md:w-4" />
-                            {t("Edit profile")}
+                            {t('Edit profile')}
                           </button>
                           <button
                             className="flex items-center gap-1 transition ease-in-out text-purpleNR md:hover:text-gray-500 duration-200 cursor-pointer"
                             onClick={() => setModalPassword(true)}
                           >
                             <RiLockPasswordFill className="h-14 w-14 md:h-4 md:w-4" />
-                            {t("Change password")}
+                            {t('Change password')}
                           </button>
                         </div>
                       )}
@@ -402,9 +403,9 @@ const Profile = ({
                           >
                             <FaUserTimes
                               className="h-12 w-12 md:h-5 md:w-5"
-                              alt={t("Unfollow")}
+                              alt={t('Unfollow')}
                             />
-                            {t("Unfollow")}
+                            {t('Unfollow')}
                           </div>
                         ) : null}
                         {/* // . DELETE FOLLOWER */}
@@ -415,9 +416,9 @@ const Profile = ({
                           >
                             <FaUserAltSlash
                               className="h-12 w-12 md:h-5 md:w-5"
-                              alt={t("Remove Follower")}
+                              alt={t('Remove Follower')}
                             />
-                            {t("Remove Follower")}
+                            {t('Remove Follower')}
                           </div>
                         ) : null}
                       </div>
@@ -429,7 +430,7 @@ const Profile = ({
                         {FollowersUser && FollowersUser.length > 0 && (
                           <div>
                             <h1 className="font-semibold text-xl inline-block">
-                              {t("Followers")}
+                              {t('Followers')}
                             </h1>
                             <p className="inline-block ml-1">{`(${FollowersUser.length})`}</p>
                             <div className="flex flex-row gap-2 mt-2">
@@ -441,12 +442,12 @@ const Profile = ({
                                     num={index}
                                     isFollower
                                   />
-                                ) : null
+                                ) : null,
                               )}
                               {user.followers.length > 5 ? (
                                 <div className="flex flex-col justify-end">
                                   <button className="cursor-pointer text-left text-base font-semibold px:center text-[#7B6EF6] transition ease-in-out md:hover:scale-105 duration-300 hover:text-grayNR">
-                                    {t("See all")}
+                                    {t('See all')}
                                   </button>
                                 </div>
                               ) : null}
@@ -457,7 +458,7 @@ const Profile = ({
                         {FollowingUser && FollowingUser.length > 0 && (
                           <div>
                             <h1 className="font-semibold text-xl inline-block">
-                              {t("Following")}
+                              {t('Following')}
                             </h1>
                             <p className="inline-block ml-1">{`(${FollowingUser.length})`}</p>
                             <div className="flex flex-row gap-2 mt-2">
@@ -468,12 +469,12 @@ const Profile = ({
                                     data={i}
                                     num={index}
                                   />
-                                ) : null
+                                ) : null,
                               )}
                               {FollowingUser.length > 5 ? (
                                 <div className="flex flex-col justify-end">
                                   <button className="cursor-pointer text-left text-base font-semibold px:center text-[#7B6EF6] transition ease-in-out md:hover:scale-105 duration-300 hover:text-grayNR">
-                                    {t("See all")}
+                                    {t('See all')}
                                   </button>
                                 </div>
                               ) : null}
@@ -495,7 +496,7 @@ const Profile = ({
                 <div className="text-gray-200 pt-4">
                   <div className="text-gray-200 px-4 md:px-6">
                     <Carousel
-                      title={t("All")}
+                      title={t('All')}
                       info={UserMedias}
                       isUser
                       isSetChange={setChangeSeenPending}
@@ -511,7 +512,7 @@ const Profile = ({
                   <div className="flex justify-between pr-2">
                     <Link to={`/pending/${user.id}`}>
                       <div className="flex transition ease-in-out text-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide">
-                        <h1 className="pl-4 text-2xl">{t("PENDINGS")}</h1>
+                        <h1 className="pl-4 text-2xl">{t('PENDINGS')}</h1>
                         <p className="ml-1 text-xs">{`( ${
                           checkMedias && pendingData.length
                             ? pendingData.length
@@ -531,7 +532,7 @@ const Profile = ({
                             setChangeSeenPending={setChangeSeenPending}
                             changeSeenPending={changeSeenPending}
                           />
-                        ) : null
+                        ) : null,
                       )}
                       {pendingData.length > 2 ? (
                         <div className="hidden xl:flex justify-end bg-local backdrop-blur-md bg-[#20283E]/80 p-1 rounded-xl ">
@@ -552,7 +553,7 @@ const Profile = ({
                         to={`/pending/${user.id}`}
                         className="transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300"
                       >
-                        {t("See all")}
+                        {t('See all')}
                       </Link>
                     </div>
                   ) : null}
@@ -562,7 +563,7 @@ const Profile = ({
                   <div className="flex justify-between pr-2 ">
                     <Link to={`/view/${user.id}`}>
                       <div className="flex transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide">
-                        <h1 className="pl-4 text-2xl">{t("VIEWS")}</h1>
+                        <h1 className="pl-4 text-2xl">{t('VIEWS')}</h1>
                         <p className="ml-1 text-xs">{`( ${
                           checkMedias && seenData.length ? seenData.length : 0
                         } )`}</p>
@@ -580,7 +581,7 @@ const Profile = ({
                             setChangeSeenPending={setChangeSeenPending}
                             changeSeenPending={changeSeenPending}
                           />
-                        ) : null
+                        ) : null,
                       )}
                       {seenData.length > 2 ? (
                         <div className="hidden xl:flex justify-end bg-local backdrop-blur-md bg-[#20283E]/80 p-1 rounded-xl ">
@@ -600,7 +601,7 @@ const Profile = ({
                         to={`/view/${user.id}`}
                         className="transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300"
                       >
-                        {t("See all")}
+                        {t('See all')}
                       </Link>
                     </div>
                   ) : null}
@@ -612,7 +613,7 @@ const Profile = ({
                   to={`/playlists/${user.id}`}
                   className="flex justify-start  text-2xl transition ease-in-out text-purpleNR md:hover:text-gray-500 duration-300 tracking-wide"
                 >
-                  {t("Playlists")}
+                  {t('Playlists')}
                   {checkPlaylists && (
                     <p className="text-sm ml-1">( {playlistData.length} )</p>
                   )}
@@ -620,14 +621,17 @@ const Profile = ({
               </div>
               <div className="bg-local rounded-xl backdrop-blur-3xl bg-[#2c3349]/80 py-4 px-2 grid sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-1 mt-4">
                 {/* // - POP DELETE */}
-                {popSureDel ? (
-                  <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
-                    <PopSureDelete
-                      setPopSureDel={setPopSureDel}
-                      setAnswerDel={setAnswerDel}
-                    />
-                  </div>
-                ) : null}
+                <DeleteConfirmModal
+                  visible={popSureDel}
+                  onConfirm={() => {
+                    setPopSureDel(false);
+                    setAnswerDel(true);
+                  }}
+                  onCancel={() => {
+                    setPopSureDel(false);
+                    setAnswerDel(false);
+                  }}
+                />
                 {/* // New Playlist */}
                 {!isOtherUser && createPlaylist ? (
                   <div className="col-span-full">
@@ -674,13 +678,13 @@ const Profile = ({
                               <img
                                 className="rounded-lg object-cover object-center w-[500px] h-[150px]"
                                 src={NoImageMore}
-                                alt={"New Playlist"}
+                                alt={'New Playlist'}
                               />
                             </div>
                           </div>
                           <div className="text-gray-200 mt-2">
                             <h3 className="pl-4 text-xl">
-                              {t("Add Playlist")}
+                              {t('Add Playlist')}
                             </h3>
                           </div>
                         </div>
@@ -695,7 +699,7 @@ const Profile = ({
                       to={`/playlists/${user.id}`}
                       className="transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 pr-2"
                     >
-                      {t("See all")}
+                      {t('See all')}
                     </Link>
                   </div>
                 ) : null}
@@ -707,7 +711,7 @@ const Profile = ({
                     to={`/playlistsFollow/${user.id}`}
                     className="flex justify-start  text-2xl transition ease-in-out text-purpleNR md:hover:text-gray-500 duration-300 tracking-wide"
                   >
-                    {t("Playlists Follow")}
+                    {t('Playlists Follow')}
                     {checkPlaylistsFollow && (
                       <p className="text-sm ml-1">
                         ( {playlistsFollowData.length} )
@@ -716,7 +720,7 @@ const Profile = ({
                   </Link>
                 ) : (
                   <div className="flex justify-start  text-2xl transition ease-in-out text-grayNR duration-300 tracking-wide">
-                    {t("Playlists Follow")}
+                    {t('Playlists Follow')}
                   </div>
                 )}
               </div>
@@ -742,7 +746,7 @@ const Profile = ({
                   ))
                 ) : (
                   <div className="ml-4 text-green-50 italic">
-                    {t("Not follow playlists")}{" "}
+                    {t('Not follow playlists')}{' '}
                   </div>
                 )}
                 {checkPlaylists && playlistData.length > 4 ? (
@@ -751,7 +755,7 @@ const Profile = ({
                       to={`/playlistsFollow/${user.id}`}
                       className="transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 pr-2"
                     >
-                      {t("See all")}
+                      {t('See all')}
                     </Link>
                   </div>
                 ) : null}
@@ -765,7 +769,7 @@ const Profile = ({
                   to={`/playlists/${user.id}`}
                   className="flex justify-start  text-2xl transition ease-in-out text-purpleNR md:hover:text-gray-500 duration-300 tracking-wide"
                 >
-                  {t("Playlists")}
+                  {t('Playlists')}
                   {checkPlaylists && (
                     <p className="text-sm ml-1">( {playlistData.length} )</p>
                   )}
@@ -796,7 +800,7 @@ const Profile = ({
                       to={`/playlists/${user.id}`}
                       className="transition ease-in-out text-purpleNR fill-purptext-purpleNR md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 pr-2"
                     >
-                      {t("See all")}
+                      {t('See all')}
                     </Link>
                   </div>
                 ) : null}

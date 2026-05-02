@@ -1,0 +1,50 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from api.core.crud.{entity} import (
+    create_{entity},
+    delete_{entity},
+    get_{entity},
+    get_{entities},
+    update_{entity},
+)
+from api.core.schemas.{entity} import {Entity}Create, {Entity}Read, {Entity}Update
+from api.dependencies import get_db
+
+router = APIRouter(prefix="/{entities}", tags=["{Entities}"])
+
+
+@router.get("/", response_model=list[{Entity}Read])
+def list_{entities}(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_{entities}(db, skip=skip, limit=limit)
+
+
+@router.get("/{{{entity}_id}}", response_model={Entity}Read)
+def read_{entity}({entity}_id: str, db: Session = Depends(get_db)):
+    item = get_{entity}(db, {entity}_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="{Entity} not found")
+    return item
+
+
+@router.post("/", response_model={Entity}Read, status_code=201)
+def create_{entity}_endpoint(data: {Entity}Create, db: Session = Depends(get_db)):
+    return create_{entity}(db, data.model_dump())
+
+
+@router.put("/{{{entity}_id}}", response_model={Entity}Read)
+def update_{entity}_endpoint(
+    {entity}_id: str, data: {Entity}Update, db: Session = Depends(get_db)
+):
+    item = update_{entity}(db, {entity}_id, data.model_dump(exclude_unset=True))
+    if not item:
+        raise HTTPException(status_code=404, detail="{Entity} not found")
+    return item
+
+
+@router.delete("/{{{entity}_id}}", response_model={Entity}Read)
+def delete_{entity}_endpoint({entity}_id: str, db: Session = Depends(get_db)):
+    item = delete_{entity}(db, {entity}_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="{Entity} not found")
+    return item

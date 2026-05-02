@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaContainer size="1" allowSync="1" identifier="com.plexapp.plugins.library" librarySectionID="10" librarySectionTitle="Series de TV" librarySectionUUID="9ae28a05-7469-4269-8184-e724b7ecc06a" mediaTagPrefix="/system/bundle/media/flags/" mediaTagVersion="1775731696">
+    <Directory ratingKey="111029" key="/library/metadata/111029/children" skipChildren="1" guid="plex://show/5fd4f9d15e58c2002ed6b402" slug="the-acolyte" studio="Lucasfilm Ltd." type="show" title="The Acolyte" titleSort="Acolyte" librarySectionTitle="Series de TV" librarySectionID="10" librarySectionKey="/library/sections/10" contentRating="es/12" contentRatingAge="10" summary="&#34;Star Wars: The Acolyte&#34; es una serie ambientada en los &#250;ltimos d&#237;as de la era de la Alta Rep&#250;blica, cien a&#241;os antes de &#34;La amenaza fantasma&#34;. La trama sigue a una respetada Maestra Jedi que se enfrenta a una serie de cr&#237;menes y a una peligrosa guerrera de su pasado. A medida que se investigan los cr&#237;menes, se revela un camino oscuro donde fuerzas siniestras est&#225;n en juego y nada es lo que parece." index="1" audienceRating="5.5" year="2024" tagline="Star Wars: The Acolyte" thumb="/library/metadata/111029/thumb/1767359986" art="/library/metadata/111029/art/1767359986" theme="/library/metadata/111029/theme/1767359986" duration="2400000" originallyAvailableAt="2024-06-04" leafCount="8" viewedLeafCount="0" childCount="1" addedAt="1717766244" updatedAt="1767359986" audienceRatingImage="themoviedb://image.rating" primaryExtraKey="/library/metadata/111033">
+        <Image alt="The Acolyte" type="coverPoster" url="/library/metadata/111029/thumb/1767359986" />
+        <Image alt="The Acolyte" type="background" url="/library/metadata/111029/art/1767359986" />
+        <UltraBlurColors topLeft="172b56" topRight="62331e" bottomRight="2b5812" bottomLeft="3a468a" />
+        <Genre id="147186" filter="genre=147186" tag="Misterio" />
+        <Genre id="22966" filter="genre=22966" tag="Action" />
+        <Genre id="22693" filter="genre=22693" tag="Adventure" />
+        <Genre id="146935" filter="genre=146935" tag="Fantas&#237;a" />
+        <Genre id="146951" filter="genre=146951" tag="Ciencia ficci&#243;n" />
+        <Genre id="62947" filter="genre=62947" tag="Suspense" />
+        <Genre id="223614" filter="genre=223614" tag="Sci-Fi &amp; Fantasy" />
+        <Genre id="22527" filter="genre=22527" tag="Drama" />
+        <Country id="146775" filter="country=146775" tag="United States of America" />
+        <Guid id="imdb://tt12262202" />
+        <Guid id="tmdb://114479" />
+        <Guid id="tvdb://393197" />
+        <Rating image="imdb://image.rating" value="4.3" type="audience" />
+        <Rating image="rottentomatoes://image.rating.ripe" value="7.9" type="critic" />
+        <Rating image="rottentomatoes://image.rating.spilled" value="1.9" type="audience" />
+        <Rating image="themoviedb://image.rating" value="5.5" type="audience" />
+        <Role id="314461" filter="actor=314461" tag="Amandla Stenberg" tagKey="5d7768a423d5a3001f4ef6b6" role="Mae-ho &#39;Mae&#39; Aniseya / Verosha &#39;Osha&#39; Aniseya" thumb="https://metadata-static.plex.tv/c/people/cfd69e2c8a5b811cb85d067b6df87522.jpg" />
+        <Role id="382113" filter="actor=382113" tag="Lee Jung-jae" tagKey="5d77683a7e9a3c0020c6da6a" role="Master Sol" thumb="https://metadata-static.plex.tv/a/people/a8bb702495b2ac8ee1bc344ce35a1796.jpg" />
+        <Role id="308797" filter="actor=308797" tag="Joonas Suotamo" tagKey="5d7769a9594b2b001e6a6c1a" role="Kelnacca" thumb="https://metadata-static.plex.tv/e/people/ea9bbd2808a87d63d5b564d58b16e332.jpg" />
+        <Role id="321983" filter="actor=321983" tag="Charlie Barnett" tagKey="5d7768757a53e9001e6cf52f" role="Yord Fandar" thumb="https://metadata-static.plex.tv/8/people/800092e6c032e22579a404ee17639f39.jpg" />
+        <Role id="317781" filter="actor=317781" tag="Dafne Keen" tagKey="5d776abffb0d55001f54fb91" role="Jecki Lon" thumb="https://metadata-static.plex.tv/3/people/399ff2924ccf8899ff7dc1bcc64608bd.jpg" />
+        <Role id="320177" filter="actor=320177" tag="Manny Jacinto" tagKey="5d776b1023d5a3001f50c24a" role="Qimir" thumb="https://metadata-static.plex.tv/a/people/ac1911755114e29719f1dab242a9832b.jpg" />
+        <Role id="369300" filter="actor=369300" tag="Rebecca Henderson" tagKey="5d776885decfcd001f2eb610" role="Master Vernestra Rwoh" thumb="https://metadata-static.plex.tv/6/people/6b93cfc81fab44ef67fc3dff25f203d3.jpg" />
+        <Role id="419739" filter="actor=419739" tag="Leah Brady" tagKey="5f406b0903883a0040bcf278" role="Little Mae" thumb="https://metadata-static.plex.tv/b/people/b6ffb4492891900fc86e42adff89fa5f.jpg" />
+        <Role id="273848" filter="actor=273848" tag="Carrie-Anne Moss" tagKey="5d7768253c3c2a001fbcac40" role="Master Indara" thumb="https://metadata-static.plex.tv/0/people/0f3f7dd0d75ffa1d692b3c494ff9fb96.jpg" />
+        <Role id="391916" filter="actor=391916" tag="Jodie Smith" tagKey="5d776b3c96b655001fe09760" role="Mother Aniseya" thumb="https://metadata-static.plex.tv/3/people/37215d09fbbb001fdb3ede8dcbe32cf6.jpg" />
+        <Role id="277894" filter="actor=277894" tag="Dean-Charles Chapman" tagKey="5d776a34594b2b001e6b5d79" role="Torbin" thumb="https://metadata-static.plex.tv/7/people/7f5ee3bead08efd83b852a5b396754cc.jpg" />
+        <Role id="419948" filter="actor=419948" tag="Lauren Brady" tagKey="63e4af917008fe691dc77322" role="Little Osha" thumb="https://metadata-static.plex.tv/a/people/a08c8d98a3dc77cba4008448fd5d3fce.jpg" />
+        <Role id="419949" filter="actor=419949" tag="Abigail Thorn" tagKey="5f406cfd52f200004159a071" role="Ensign Eurus" thumb="https://metadata-static.plex.tv/d/people/d34100bb73a446d86ad12a99aed0c6cc.jpg" />
+        <Role id="419950" filter="actor=419950" tag="Margarita Levieva" tagKey="5d7768342ec6b5001f6bbb55" role="Mother Koril" thumb="https://metadata-static.plex.tv/a/people/a8539847aee9fdbcdc35b836e7e2b021.jpg" />
+        <Role id="419951" filter="actor=419951" tag="Amy Tsang" tagKey="5d7769909ab54400214f3aa0" role="Ensign Rane" thumb="https://metadata-static.plex.tv/7/people/72177ef647d7bc2ca7de406f320df189.jpg" />
+        <Role id="419952" filter="actor=419952" tag="Saskia Allen" tagKey="5e86f4d4a3121d004169110b" role="Scout Sarria" thumb="https://metadata-static.plex.tv/2/people/2d1dccceb946f6f7aa278cf643517776.jpg" />
+        <Role id="419953" filter="actor=419953" tag="Deborah Rosan" tagKey="5d7769a251dd69001fe1998e" role="Ensign Shima" thumb="https://metadata-static.plex.tv/3/people/30e555c395cc794abdf8710f36f0d20c.jpg" />
+        <Role id="485987" filter="actor=485987" tag="Tabitha Alege" tagKey="62bc6db98f05878d51ff479c" role="Elder Jaalyn" thumb="https://metadata-static.plex.tv/7/people/7885a10c34ee6ce2c56ba47120f7134d.jpg" />
+        <Role id="420515" filter="actor=420515" tag="Harry Trevaldwyn" tagKey="5d776f09ad5437001f808d05" role="Mog Adana" thumb="https://metadata-static.plex.tv/3/people/3607e79730062ec6a7e666009b414485.jpg" />
+        <Role id="442828" filter="actor=442828" tag="Anthony J. Abraham" tagKey="5f3fd7dcfea1a1003f985510" role="Fillik" thumb="https://metadata-static.plex.tv/5/people/58e3bde1e691a2d0636965aa23b71e51.jpg" />
+        <Role id="485988" filter="actor=485988" tag="Danielle Xin Yao Waterman" tagKey="666170f6f8f949f419ed65d4" role="Youngling" />
+        <Role id="485989" filter="actor=485989" tag="Sienna Khiroya" tagKey="66617112101163fa732c9232" role="Youngling" />
+        <Role id="485990" filter="actor=485990" tag="Jeramiah Evans" tagKey="64ccb4c7302d63af17f1effd" role="Youngling" />
+        <Role id="485991" filter="actor=485991" tag="Dan Milne" tagKey="5dce72e9b10fe5001f394fd0" role="Restrained Convict" thumb="https://metadata-static.plex.tv/4/people/46178ca0838f67fd7a885afc597f9474.jpg" />
+        <Role id="301984" filter="actor=301984" tag="Thomas Coombes" tagKey="5d77687d3ab0e7001f502af7" role="Convict" thumb="https://metadata-static.plex.tv/b/people/b4e9cd6a2fbf68164f23867ce21c0b57.jpg" />
+        <Role id="485992" filter="actor=485992" tag="Archie Singh Swali" tagKey="6661711249ce73de8b183570" role="Olega Urchin" thumb="https://metadata-static.plex.tv/0/people/0012418b8e6e4aef3fe9e190b62929c9.jpg" />
+        <Role id="280064" filter="actor=280064" tag="Nick Court" tagKey="5d776893fb0d55001f514337" role="Olega Master" thumb="https://metadata-static.plex.tv/4/people/47efa359de67f3a7b4ea55abf38eb4ec.jpg" />
+        <Role id="344302" filter="actor=344302" tag="Ed Kear" tagKey="5d776a0896b655001fde193c" role="Olega Padawan" thumb="https://metadata-static.plex.tv/people/5d776a0896b655001fde193c.jpg" />
+        <Role id="312498" filter="actor=312498" tag="Jumayn Hunter" tagKey="5d77683beb5d26001f1e2065" role="Scavenger" thumb="https://metadata-static.plex.tv/6/people/681afc9dd8df71e089aaefb2b138fe2b.jpg" />
+        <Role id="344298" filter="actor=344298" tag="Scroobius Pip" tagKey="5d776c9e96b655001fe364a1" role="Scavenger" thumb="https://metadata-static.plex.tv/6/people/6d83fb7fea3a31b6cf4262ec00bfde72.jpg" />
+        <Role id="274067" filter="actor=274067" tag="Paul Bullion" tagKey="5d776888decfcd001f2ebb53" role="Master Lakshay" thumb="https://metadata-static.plex.tv/f/people/f9da821e2e3c7f1ef4b18180d3552285.jpg" />
+        <Role id="302688" filter="actor=302688" tag="Indra Ov&#233;" tagKey="5d776824103a2d001f563ada" role="Master Holden" thumb="https://metadata-static.plex.tv/7/people/777eaa241b0d520c41abf6b75490ec44.jpg" />
+        <Role id="441176" filter="actor=441176" tag="Derek Arnold" tagKey="5d776aa9ad5437001f784e44" role="Master Ki-Adi-Mundi" thumb="https://metadata-static.plex.tv/3/people/3b8df005f9dda47ae0ff6a24dab6193b.jpg" />
+        <Role id="309421" filter="actor=309421" tag="Lewis Young" tagKey="5f40141abf3e560040b75ca8" role="Jedi Knight" thumb="https://metadata-static.plex.tv/7/people/739a44fc65dc558d99a38306ac6b2c3d.jpg" />
+        <Role id="299016" filter="actor=299016" tag="David Harewood" tagKey="5d77682aa091de001f2e6775" role="Senator Rayencourt" thumb="https://metadata-static.plex.tv/f/people/f191cd75a12eefb2a091c9d177ccccd3.jpg" />
+        <Role id="485993" filter="actor=485993" tag="Thara Sch&#246;&#246;n" tagKey="5f3fd59752f20000414a2b63" role="Tasi Lowa" thumb="https://metadata-static.plex.tv/3/people/32683a1e794a2d8c57930ebf7fcc40df.jpg" />
+        <CommonSenseMedia id="448356" oneLiner="Star Wars murder mystery has violence, some language.">
+            <AgeRating type="official" rating="4" age="10" />
+        </CommonSenseMedia>
+        <Field locked="1" name="thumb" />
+        <Field locked="1" name="art" />
+        <Location path="/shares/NAIPLEX_2/Series Naiplex2/The Acolyte (2024)" />
+    </Directory>
+</MediaContainer>

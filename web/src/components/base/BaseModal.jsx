@@ -1,0 +1,100 @@
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
+import BaseIcon from './BaseIcon';
+
+const BaseModal = ({
+  visible = false,
+  title,
+  onClose,
+  fullscreen = false,
+  fullHeight = false,
+  fullWidth = false,
+  closeButtonHidden = false,
+  className = '',
+  children,
+  ...props
+}) => {
+  useEffect(() => {
+    if (!visible) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape' && onClose) onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [visible, onClose]);
+
+  if (!visible) return null;
+
+  let sizeClasses = 'max-w-[90vw] max-h-[90vh]';
+  if (fullscreen) sizeClasses = 'w-screen h-screen';
+  else if (fullHeight) sizeClasses = 'h-screen max-w-[90vw]';
+  else if (fullWidth) sizeClasses = 'w-screen max-h-[90vh]';
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget && onClose) onClose();
+  };
+
+  const handleOverlayKey = (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) {
+      e.preventDefault();
+      if (onClose) onClose();
+    }
+  };
+
+  const modal = (
+    <div
+      className="fixed top-0 left-0 w-screen h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+      onClick={handleOverlayClick}
+      onKeyDown={handleOverlayKey}
+      {...props}
+    >
+      <dialog
+        open
+        aria-modal="true"
+        className={`bg-white text-black rounded-xl shadow-2xl relative overflow-y-auto p-0 ${sizeClasses} ${className}`.trim()}
+      >
+        {!closeButtonHidden && (
+          <BaseIcon
+            icon="close"
+            className="fill-gray-600 transition duration-200 hover:fill-purpleNR"
+            wrapperClassName="sticky z-10 top-1 mr-1 flex justify-end"
+            onClick={onClose}
+            tooltip="Close"
+            tooltipPosition="top"
+          />
+        )}
+        <div className="md:px-2 px-1 md:pb-2 pb-1">
+          {title && (
+            <h2 className="text-2xl font-semibold text-gray-900 md:mb-4 mb-2 text-center">
+              {title}
+            </h2>
+          )}
+          {children}
+        </div>
+      </dialog>
+    </div>
+  );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(modal, document.body);
+};
+
+BaseModal.propTypes = {
+  visible: PropTypes.bool,
+  title: PropTypes.node,
+  onClose: PropTypes.func,
+  fullscreen: PropTypes.bool,
+  fullHeight: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  closeButtonHidden: PropTypes.bool,
+  className: PropTypes.string,
+  children: PropTypes.node,
+};
+
+export default BaseModal;

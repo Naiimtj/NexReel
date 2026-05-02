@@ -1,25 +1,22 @@
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import Spinner from "../../../utils/Spinner/Spinner";
-import { Link } from "react-router-dom";
-import {
-  MdOutlinePlaylistAdd,
-  MdOutlinePlaylistRemove,
-} from "react-icons/md";
-import { HiUserGroup } from "react-icons/hi";
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import Spinner from '../../../utils/Spinner/Spinner';
+import { Link } from 'react-router-dom';
+import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from 'react-icons/md';
+import { HiUserGroup } from 'react-icons/hi';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
   postFollowPlaylist,
-} from "../../../../services/DB/services-db";
-import { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
+} from '../../../../services/DB/services-db';
+import { useEffect, useState } from 'react';
+import { BaseIcon } from '../base';
 
 const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { description, id, followersPlaylist, imgPlaylist, medias, title } =
     data;
-  const isPlaylist = !isOtherUser ? id : "";
+  const isPlaylist = !isOtherUser ? id : '';
 
   const [changeDataUser, setChangeDataUser] = useState(false);
   const [playlistFollow, setPlayListFollow] = useState({});
@@ -47,13 +44,13 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
   };
 
   const isFollowing =
-    playlistFollow === "" ? (
+    playlistFollow === '' ? (
       <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
         <MdOutlinePlaylistAdd
           className="inline-block"
           size={25}
           color="#FFCA28"
-          alt={t("Follow Playlist")}
+          alt={t('Follow Playlist')}
           onClick={handleFollow}
         />
       </button>
@@ -62,7 +59,7 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
         <MdOutlinePlaylistRemove
           className="inline-block"
           size={25}
-          alt={t("UnFollow Playlist")}
+          alt={t('UnFollow Playlist')}
           onClick={handleUnFollow}
         />
       </button>
@@ -115,17 +112,16 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
               </Link>
               <div className="">
                 {/* // ! Delete Button */}
-                {isPlaylist !== "" ? (
-                  <div
-                    className="absolute z-50 align-middle text-xs cursor-pointer"
+                {isPlaylist !== '' ? (
+                  <BaseIcon
+                    icon="trash"
+                    size="x-small"
+                    color="currentColor"
                     onClick={handleDeletePlaylist}
-                  >
-                    <FaTrash
-                      size={17}
-                      alt={t("Delete Playlist Icon")}
-                      className="text-red-500 md:hover:text-gray-500 duration-200 "
-                    />
-                  </div>
+                    aria-label={t('Delete Playlist Icon')}
+                    className="absolute z-50 text-red-500 md:hover:text-gray-500 duration-200"
+                    tooltip={t('Delete')}
+                  />
                 ) : null}
                 {/* //- FOLLOW/NO FOLLOW or NUM FOLLOWERS */}
                 <div className="flex justify-end">
@@ -134,7 +130,7 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
                     : null}
                   {data && followersPlaylist && !isOtherUser ? (
                     <div className="flex justify-end gap-1">
-                      <HiUserGroup size={20} alt={t("Followers")} />
+                      <HiUserGroup size={20} alt={t('Followers')} />
                       {followersPlaylist.length}
                     </div>
                   ) : null}
@@ -153,7 +149,7 @@ export default Forum;
 Forum.defaultProps = {
   data: {},
   isOtherUser: false,
-  userId: "",
+  userId: '',
   setPopSureDel: () => {},
   setIdDelete: () => {},
 };

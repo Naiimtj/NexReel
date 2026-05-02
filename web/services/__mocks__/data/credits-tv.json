@@ -1,0 +1,132 @@
+{
+  "id": 99998,
+  "cast": [
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99992,
+      "known_for_department": "Acting",
+      "name": "Sofía Montero",
+      "original_name": "Sofía Montero",
+      "popularity": 12.8,
+      "profile_path": null,
+      "roles": [
+        {
+          "credit_id": "tcast_001",
+          "character": "Investigadora Maya Solís",
+          "episode_count": 16
+        }
+      ],
+      "total_episode_count": 16,
+      "order": 0
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99991,
+      "known_for_department": "Acting",
+      "name": "Alejandro Vega",
+      "original_name": "Alejandro Vega",
+      "popularity": 15.3,
+      "profile_path": null,
+      "roles": [
+        {
+          "credit_id": "tcast_002",
+          "character": "Dr. Noel Aranda",
+          "episode_count": 14
+        }
+      ],
+      "total_episode_count": 14,
+      "order": 1
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99993,
+      "known_for_department": "Acting",
+      "name": "Rodrigo Fuentes",
+      "original_name": "Rodrigo Fuentes",
+      "popularity": 9.5,
+      "profile_path": null,
+      "roles": [
+        {
+          "credit_id": "tcast_003",
+          "character": "Agente Correa",
+          "episode_count": 16
+        }
+      ],
+      "total_episode_count": 16,
+      "order": 2
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99994,
+      "known_for_department": "Acting",
+      "name": "Isabel Torres",
+      "original_name": "Isabel Torres",
+      "popularity": 7.2,
+      "profile_path": null,
+      "roles": [
+        {
+          "credit_id": "tcast_004",
+          "character": "Dra. Ana Beltrán",
+          "episode_count": 10
+        }
+      ],
+      "total_episode_count": 10,
+      "order": 3
+    }
+  ],
+  "crew": [
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99997,
+      "known_for_department": "Directing",
+      "name": "Carlos Nexreel",
+      "original_name": "Carlos Nexreel",
+      "popularity": 12.3,
+      "profile_path": null,
+      "jobs": [
+        { "credit_id": "tcrew_001", "job": "Creator", "episode_count": 16 }
+      ],
+      "department": "Directing",
+      "total_episode_count": 16
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99997,
+      "known_for_department": "Directing",
+      "name": "Carlos Nexreel",
+      "original_name": "Carlos Nexreel",
+      "popularity": 12.3,
+      "profile_path": null,
+      "jobs": [
+        { "credit_id": "tcrew_002", "job": "Writer", "episode_count": 16 }
+      ],
+      "department": "Writing",
+      "total_episode_count": 16
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99996,
+      "known_for_department": "Production",
+      "name": "Lucía Morales",
+      "original_name": "Lucía Morales",
+      "popularity": 5.4,
+      "profile_path": null,
+      "jobs": [
+        {
+          "credit_id": "tcrew_003",
+          "job": "Executive Producer",
+          "episode_count": 16
+        }
+      ],
+      "department": "Production",
+      "total_episode_count": 16
+    }
+  ]
+}

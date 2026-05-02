@@ -1,0 +1,38 @@
+{
+  "id": 99999,
+  "results": {
+    "ES": {
+      "link": "https://www.themoviedb.org/movie/99999/watch?locale=ES",
+      "flatrate": [
+        {
+          "logo_path": "/9A1JSVmSxsyaBK4SUFsYVqbAYfW.jpg",
+          "provider_id": 8,
+          "provider_name": "Netflix",
+          "display_priority": 0
+        },
+        {
+          "logo_path": "/97yvRBw1GzX7fXprcF80er19ot.jpg",
+          "provider_id": 337,
+          "provider_name": "Disney Plus",
+          "display_priority": 1
+        }
+      ],
+      "buy": [
+        {
+          "logo_path": "/peURlLlr8jggOwK53fJ5wdQl05y.jpg",
+          "provider_id": 2,
+          "provider_name": "Apple TV",
+          "display_priority": 4
+        },
+        {
+          "logo_path": "/tbEdFQDwx5LEVr8WpSeXQSIirVq.jpg",
+          "provider_id": 3,
+          "provider_name": "Google Play Movies",
+          "display_priority": 5
+        }
+      ],
+      "free": null,
+      "ads": null
+    }
+  }
+}

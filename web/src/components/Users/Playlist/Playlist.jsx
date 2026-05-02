@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import Spinner from "../../../utils/Spinner/Spinner";
-import { Link } from "react-router-dom";
-import { HiUserGroup } from "react-icons/hi";
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import Spinner from '../../../utils/Spinner/Spinner';
+import { Link } from 'react-router-dom';
+import { HiUserGroup } from 'react-icons/hi';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
   postFollowPlaylist,
-} from "../../../../services/DB/services-db";
-import { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import ButtonIsFollowing from "../../../utils/ButtonIsFollowing";
+} from '../../../../services/DB/services-db';
+import { useEffect, useState } from 'react';
+import { BaseIcon } from '../../base';
+import ButtonIsFollowing from '../../../utils/ButtonIsFollowing';
 
 const Playlist = ({
   data,
@@ -19,7 +19,7 @@ const Playlist = ({
   setPopSureDel,
   setIdDelete,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const {
     description,
     tags,
@@ -29,7 +29,7 @@ const Playlist = ({
     medias,
     title,
   } = data;
-  const isPlaylist = !isOtherUser ? id : "";
+  const isPlaylist = !isOtherUser ? id : '';
 
   const [changeDataUser, setChangeDataUser] = useState(false);
   const [playlistFollow, setPlayListFollow] = useState({});
@@ -97,33 +97,34 @@ const Playlist = ({
                     medias && medias.length
                   } )`}</p>
                 </div>
-                <div className="font-semibold">
-                  <p className="font-normal text-xs">{description}</p>
-                </div>
+                {description !== 'null' && (
+                  <div className="font-semibold">
+                    <p className="font-normal text-xs">{description}</p>
+                  </div>
+                )}
                 <div className="text-xs text-gray-500 text-center">
-                  {tags && tags.join(", ")}
+                  {tags && tags.join(', ')}
                 </div>
               </Link>
               <div className="">
                 {/* // ! Delete Button */}
-                {isPlaylist !== "" ? (
-                  <div
-                    className="absolute z-50 align-middle text-xs cursor-pointer"
+                {isPlaylist !== '' ? (
+                  <BaseIcon
+                    icon="trash"
+                    size="x-small"
+                    color="currentColor"
                     onClick={handleDeletePlaylist}
-                  >
-                    <FaTrash
-                      size={17}
-                      alt={t("Delete Playlist Icon")}
-                      className="text-red-500 md:hover:text-gray-500 duration-200 "
-                    />
-                  </div>
+                    aria-label={t('Delete Playlist Icon')}
+                    className="absolute z-50 text-red-500 md:hover:text-gray-500 duration-200"
+                    tooltip={t('Delete')}
+                  />
                 ) : null}
                 {/* //- FOLLOW/NOFOLLOW or NUM FOLLOWERS */}
                 <div className="flex justify-end">
                   {data && followersPlaylist && isOtherUser ? (
                     <div className="pb-1">
                       <ButtonIsFollowing
-                        isFollowing={playlistFollow === ""}
+                        isFollowing={playlistFollow === ''}
                         handleFollow={handleFollow}
                         handleUnFollow={handleUnFollow}
                       />
@@ -131,7 +132,7 @@ const Playlist = ({
                   ) : null}
                   {data && followersPlaylist && !isOtherUser ? (
                     <div className="flex justify-end gap-1">
-                      <HiUserGroup size={20} alt={t("Followers")} />
+                      <HiUserGroup size={20} alt={t('Followers')} />
                       {followersPlaylist.length}
                     </div>
                   ) : null}
@@ -150,7 +151,7 @@ export default Playlist;
 Playlist.defaultProps = {
   data: {},
   isOtherUser: false,
-  userId: "",
+  userId: '',
   setPopSureDel: () => {},
   setIdDelete: () => {},
 };

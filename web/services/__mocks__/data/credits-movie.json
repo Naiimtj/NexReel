@@ -1,0 +1,143 @@
+{
+  "id": 99999,
+  "cast": [
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99991,
+      "known_for_department": "Acting",
+      "name": "Alejandro Vega",
+      "original_name": "Alejandro Vega",
+      "popularity": 15.3,
+      "profile_path": null,
+      "cast_id": 1,
+      "character": "Dr. Marcos Vidal",
+      "credit_id": "cast_001",
+      "order": 0
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99992,
+      "known_for_department": "Acting",
+      "name": "Sofía Montero",
+      "original_name": "Sofía Montero",
+      "popularity": 12.8,
+      "profile_path": null,
+      "cast_id": 2,
+      "character": "Agente Elena Cruz",
+      "credit_id": "cast_002",
+      "order": 1
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99993,
+      "known_for_department": "Acting",
+      "name": "Rodrigo Fuentes",
+      "original_name": "Rodrigo Fuentes",
+      "popularity": 9.5,
+      "profile_path": null,
+      "cast_id": 3,
+      "character": "Comandante Rivera",
+      "credit_id": "cast_003",
+      "order": 2
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99994,
+      "known_for_department": "Acting",
+      "name": "Isabel Torres",
+      "original_name": "Isabel Torres",
+      "popularity": 7.2,
+      "profile_path": null,
+      "cast_id": 4,
+      "character": "Dra. Ana Beltrán",
+      "credit_id": "cast_004",
+      "order": 3
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99995,
+      "known_for_department": "Acting",
+      "name": "Pablo Herrera",
+      "original_name": "Pablo Herrera",
+      "popularity": 6.8,
+      "profile_path": null,
+      "cast_id": 5,
+      "character": "Teniente Gómez",
+      "credit_id": "cast_005",
+      "order": 4
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99996,
+      "known_for_department": "Acting",
+      "name": "Lucía Morales",
+      "original_name": "Lucía Morales",
+      "popularity": 5.4,
+      "profile_path": null,
+      "cast_id": 6,
+      "character": "Directora Salas",
+      "credit_id": "cast_006",
+      "order": 5
+    }
+  ],
+  "crew": [
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99997,
+      "known_for_department": "Directing",
+      "name": "Carlos Nexreel",
+      "original_name": "Carlos Nexreel",
+      "popularity": 12.3,
+      "profile_path": null,
+      "credit_id": "crew_001",
+      "department": "Directing",
+      "job": "Director"
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99997,
+      "known_for_department": "Directing",
+      "name": "Carlos Nexreel",
+      "original_name": "Carlos Nexreel",
+      "popularity": 12.3,
+      "profile_path": null,
+      "credit_id": "crew_002",
+      "department": "Writing",
+      "job": "Screenplay"
+    },
+    {
+      "adult": false,
+      "gender": 1,
+      "id": 99996,
+      "known_for_department": "Production",
+      "name": "Lucía Morales",
+      "original_name": "Lucía Morales",
+      "popularity": 5.4,
+      "profile_path": null,
+      "credit_id": "crew_003",
+      "department": "Production",
+      "job": "Producer"
+    },
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 99993,
+      "known_for_department": "Production",
+      "name": "Rodrigo Fuentes",
+      "original_name": "Rodrigo Fuentes",
+      "popularity": 9.5,
+      "profile_path": null,
+      "credit_id": "crew_004",
+      "department": "Production",
+      "job": "Executive Producer"
+    }
+  ]
+}

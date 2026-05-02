@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useAuthContext } from "../../context/auth-context";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useAuthContext } from '../../context/auth-context';
+import { useTranslation } from 'react-i18next';
 // services
 import {
   deleteFollowForum,
@@ -10,26 +10,26 @@ import {
   getDetailForum,
   patchFollowForum,
   postFollowForum,
-} from "../../../services/DB/services-db";
+} from '../../../services/DB/services-db';
 // icons
-import { BsGrid3X2GapFill, BsListUl } from "react-icons/bs";
-import { MdModeEditOutline, MdViewCarousel } from "react-icons/md";
-import { HiSortAscending, HiSortDescending, HiUserGroup } from "react-icons/hi";
-import { IoIosArrowBack } from "react-icons/io";
-import { BiHeart, BiSolidHeart } from "react-icons/bi";
-import { FaTrash } from "react-icons/fa";
+import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
+import { MdModeEditOutline, MdViewCarousel } from 'react-icons/md';
+import { HiSortAscending, HiSortDescending, HiUserGroup } from 'react-icons/hi';
+import { IoIosArrowBack } from 'react-icons/io';
+import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 // components
-import Multi from "../../components/MediaList/Multi";
-import MultiList from "../../components/MediaList/MultiList";
-import Carousel from "../../utils/Carousel/Carousel";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import Spinner from "../../utils/Spinner/Spinner";
-import EditForum from "../../components/Forums/EditForum";
-import PopSureDelete from "../../components/PopUp/PopSureDelete";
-import ForumChat from "../../components/Forums/ForumReplay/ForumChat";
-import AddMediaForum from "../../components/Forums/AddMediaForum";
-import PageTitle from "../../components/PageTitle";
-import ButtonIsFollowing from "../../utils/ButtonIsFollowing";
+import Multi from '../../components/MediaList/Multi';
+import MultiList from '../../components/MediaList/MultiList';
+import Carousel from '../../utils/Carousel/Carousel';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import Spinner from '../../utils/Spinner/Spinner';
+import EditForum from '../../components/Forums/EditForum';
+import { BaseIcon, DeleteConfirmModal } from '../../components/base';
+import ForumChat from '../../components/Forums/ForumReplay/ForumChat';
+import AddMediaForum from '../../components/Forums/AddMediaForum';
+import PageTitle from '../../components/PageTitle';
+import ButtonIsFollowing from '../../utils/ButtonIsFollowing';
+import ViewToggle from '../../utils/Buttons/ViewToggle';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -41,7 +41,7 @@ function DataOrder(check, data, state) {
 }
 
 const ForumSingle = () => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user } = useAuthContext();
   const { id } = useParams();
   const [dataForum, setDataForum] = useState({});
@@ -120,13 +120,13 @@ const ForumSingle = () => {
   // -LIKE
   const handleLike = () => {
     patchFollowForum(id, { like: true }).then(() =>
-      setChangeSeenPending(!changeSeenPending)
+      setChangeSeenPending(!changeSeenPending),
     );
   };
   // -UNLIKE
   const handleUnLike = () => {
     patchFollowForum(id, { like: false }).then(() =>
-      setChangeSeenPending(!changeSeenPending)
+      setChangeSeenPending(!changeSeenPending),
     );
   };
   const TimeTotalSeenMin =
@@ -140,7 +140,7 @@ const ForumSingle = () => {
       }, 0);
   const TimeTotalSeen = new DateAndTimeConvert(
     TimeTotalSeenMin,
-    t
+    t,
   ).TimeConvert();
   const [editForum, setEditForum] = useState(false);
 
@@ -182,7 +182,7 @@ const ForumSingle = () => {
   useEffect(() => {
     const deleteMedia = async () => {
       try {
-        await deleteForumsMedia(!isOtherUser ? id : "", {
+        await deleteForumsMedia(!isOtherUser ? id : '', {
           mediaIdDelete: idDelete,
         });
         setChangeSeenPending(!changeSeenPending);
@@ -227,7 +227,7 @@ const ForumSingle = () => {
         <div className="w-full h-full text-gray-200">
           <PageTitle
             title={`${
-              Object.keys(dataForum).length && `${t("Forum")}-${title}`
+              Object.keys(dataForum).length && `${t('Forum')}-${title}`
             }`}
           />
           <div className="relative text-gray-200 mb-20 mt-6">
@@ -240,9 +240,9 @@ const ForumSingle = () => {
                 <IoIosArrowBack
                   className="inline-block mr-1"
                   size={25}
-                  alt={t("Left arrow icon")}
+                  alt={t('Left arrow icon')}
                 />
-                {t("Forums")}
+                {t('Forums')}
               </Link>
             </div>
             {!editForum ? (
@@ -256,14 +256,17 @@ const ForumSingle = () => {
                   >
                     <div className="relative bg-local backdrop-blur-md bg-[#20283E]/80 rounded-t-xl h-full pt-5 px-3 border-b border-gray-700">
                       {/* // - POP DELETE */}
-                      {popSureDel ? (
-                        <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
-                          <PopSureDelete
-                            setPopSureDel={setPopSureDel}
-                            setAnswerDel={setAnswerDel}
-                          />
-                        </div>
-                      ) : null}
+                      <DeleteConfirmModal
+                        visible={popSureDel}
+                        onConfirm={() => {
+                          setPopSureDel(false);
+                          setAnswerDel(true);
+                        }}
+                        onCancel={() => {
+                          setPopSureDel(false);
+                          setAnswerDel(false);
+                        }}
+                      />
                       {/* // ! TOP */}
                       <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center">
                         {t(title)}
@@ -282,22 +285,22 @@ const ForumSingle = () => {
                         </div>
                         {/* // - INFO Forum */}
                         <div className="col-span-4 ml-10 grid grid-cols-4">
-                          {dataForum && tags && tags[0] !== "" ? (
+                          {dataForum && tags && tags[0] !== '' ? (
                             <div className="col-span-3">
                               <p className="text-gray-400 text-xs">
-                                {tags.join(", ")}
+                                {tags.join(', ')}
                               </p>
                             </div>
                           ) : null}
                           <div className="flex justify-end gap-2">
                             <p className="text-gray-400">{`${t(
-                              "Create by"
+                              'Create by',
                             )}:`}</p>
                             <Link
                               to={
                                 isOtherUser
                                   ? `/users/${userCreate[0].id}`
-                                  : "/me"
+                                  : '/me'
                               }
                               className="capitalize text-purpleNR hover:text-gray-600 transition duration-300"
                             >
@@ -308,14 +311,14 @@ const ForumSingle = () => {
                           </div>
                           <div className="col-span-4 flex flex-col">
                             <div className="text-gray-400">{`${t(
-                              "Description"
+                              'Description',
                             )}:`}</div>
                             <p className="font-normal">{description}</p>
                           </div>
                           <div className="col-span-4 grid grid-cols-2">
                             <div className="flex gap-2">
                               <p className="text-gray-400">{`${t(
-                                "Quantity"
+                                'Quantity',
                               )}:`}</p>
                               <div className="inline-block capitalize">
                                 {dataMedias && dataMedias.length > 0
@@ -325,7 +328,7 @@ const ForumSingle = () => {
                             </div>
                             <div className="flex gap-2">
                               <p className="text-gray-400">{`${t(
-                                "Total Time"
+                                'Total Time',
                               )}:`}</p>
                               <div className="inline-block capitalize">
                                 {TimeTotalSeen}
@@ -341,7 +344,7 @@ const ForumSingle = () => {
                               <div className="text-center flex items-center gap-2">
                                 <BiSolidHeart
                                   size={20}
-                                  alt={t("Solid Heart Icon")}
+                                  alt={t('Solid Heart Icon')}
                                   className=""
                                 />
                                 <p>{TotalLikesFollowForum}</p>
@@ -362,7 +365,7 @@ const ForumSingle = () => {
                                   </div>
                                 ) : null
                               ) : null}
-                              <HiUserGroup size={20} alt={t("Followers")} />
+                              <HiUserGroup size={20} alt={t('Followers')} />
                               <p>{TotalFollowsForum}</p>
                             </div>
                           </div>
@@ -379,7 +382,7 @@ const ForumSingle = () => {
                                       <p>{TotalLikesFollowForum}</p>
                                       <BiHeart
                                         size={20}
-                                        alt={t("No Heart Icon")}
+                                        alt={t('No Heart Icon')}
                                         className="text-purpleNR cursor-pointer hover:text-gray-600 transition ease-in-out md:hover:scale-110 duration-300"
                                         onClick={handleLike}
                                       />
@@ -389,18 +392,21 @@ const ForumSingle = () => {
                                       <p>{TotalLikesFollowForum}</p>
                                       <BiSolidHeart
                                         size={20}
-                                        alt={t("Solid Heart Icon")}
+                                        alt={t('Solid Heart Icon')}
                                         className="cursor-pointer text-red-200 hover:text-purpleNR transition ease-in-out md:hover:scale-110 duration-300"
                                         onClick={handleUnLike}
                                       />
                                     </div>
                                   )
                                 ) : (
-                                  <FaTrash
-                                    size={17}
-                                    alt={t("Delete Forum Icon")}
-                                    className="text-red-500 md:hover:text-gray-500 duration-200 cursor-pointer"
+                                  <BaseIcon
+                                    icon="trash"
+                                    size="x-small"
+                                    color="currentColor"
                                     onClick={handleDeleteForum}
+                                    aria-label={t('Delete Forum Icon')}
+                                    className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
+                                    tooltip={t('Delete')}
                                   />
                                 )}
                               </>
@@ -410,7 +416,7 @@ const ForumSingle = () => {
                               {isOtherUser ? null : (
                                 <MdModeEditOutline
                                   size={20}
-                                  alt={t("Edit Forum Icon")}
+                                  alt={t('Edit Forum Icon')}
                                   className="text-purpleNR md:hover:text-gray-500 duration-200 cursor-pointer"
                                   onClick={() => setEditForum(true)}
                                 />
@@ -435,14 +441,17 @@ const ForumSingle = () => {
                   <div className="px-3 pb-6">
                     <div className="relative border-b border-gray-700 pb-4">
                       {/* // - POP DELETE */}
-                      {popSureDelMedia ? (
-                        <div className="absolute object-cover backdrop-blur-md bg-transparent/30 rounded-3xl h-full w-full z-50 grid justify-center align-middle">
-                          <PopSureDelete
-                            setPopSureDel={setPopSureDelMedia}
-                            setAnswerDel={setAnswerDelMedia}
-                          />
-                        </div>
-                      ) : null}
+                      <DeleteConfirmModal
+                        visible={popSureDelMedia}
+                        onConfirm={() => {
+                          setPopSureDelMedia(false);
+                          setAnswerDelMedia(true);
+                        }}
+                        onCancel={() => {
+                          setPopSureDelMedia(false);
+                          setAnswerDelMedia(false);
+                        }}
+                      />
                       {/* // . ORDER & VISUALIZATION */}
                       <div className="grid grid-cols-3">
                         {/* // - Asc/Desc */}
@@ -456,10 +465,10 @@ const ForumSingle = () => {
                                   : null
                               }
                             >
-                              {t("Date Added")}
+                              {t('Date Added')}
                               <HiSortAscending
                                 className="ml-1 text-2xl inline-block"
-                                alt={t("Ascendant")}
+                                alt={t('Ascendant')}
                               />
                             </div>
                           ) : (
@@ -471,55 +480,20 @@ const ForumSingle = () => {
                                   : null
                               }
                             >
-                              {t("Date Added")}
+                              {t('Date Added')}
                               <HiSortDescending
                                 className="ml-1 text-2xl inline-block"
-                                alt={t("Descending")}
+                                alt={t('Descending')}
                               />
                             </div>
                           )}
                         </div>
                         {/* // - BUTTONS */}
                         <div className="col-span-2 flex items-center justify-end">
-                          {/* // CAROUSEL */}
-                          <div
-                            className={`mr-2 ${
-                              isCarousel
-                                ? "text-gray-500"
-                                : "cursor-pointer text-purpleNR md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                            }`}
-                          >
-                            <MdViewCarousel
-                              className="h-14 w-14 md:h-8 md:w-8"
-                              onClick={() => setVisualDesign(0)}
-                            />
-                          </div>
-                          {/* // SQUARE */}
-                          <div
-                            className={`mr-2 ${
-                              isSquare
-                                ? "text-gray-500"
-                                : "cursor-pointer text-purpleNR md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                            }`}
-                          >
-                            <BsGrid3X2GapFill
-                              className="h-14 w-14 md:h-8 md:w-8"
-                              onClick={() => setVisualDesign(1)}
-                            />
-                          </div>
-                          {/* // LIST */}
-                          <div
-                            className={`mr-2 ${
-                              isList
-                                ? "text-gray-500"
-                                : "cursor-pointer text-purpleNR md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200"
-                            }`}
-                          >
-                            <BsListUl
-                              className="h-14 w-14 md:h-8 md:w-8"
-                              onClick={() => setVisualDesign(2)}
-                            />
-                          </div>
+                          <ViewToggle
+                            visualDesign={visualDesign}
+                            setVisualDesign={setVisualDesign}
+                          />
                         </div>
                       </div>
                       {errorDelete ? (
@@ -533,7 +507,7 @@ const ForumSingle = () => {
                           info={dataMedias}
                           isUser
                           isAsc={isAsc}
-                          isPlaylist={!isOtherUser ? user.id : ""}
+                          isPlaylist={!isOtherUser ? user.id : ''}
                           setPopSureDel={setPopSureDelMedia}
                           setIdDelete={setIdDelete}
                         />
@@ -548,7 +522,7 @@ const ForumSingle = () => {
                               isUser
                               setChangeSeenPending={setChangeSeenPending}
                               changeSeenPending={changeSeenPending}
-                              isPlaylist={!isOtherUser ? user.id : ""}
+                              isPlaylist={!isOtherUser ? user.id : ''}
                               setPopSureDel={setPopSureDelMedia}
                               setIdDelete={setIdDelete}
                             />
@@ -565,7 +539,7 @@ const ForumSingle = () => {
                               isUser
                               setChangeSeenPending={setChangeSeenPending}
                               changeSeenPending={changeSeenPending}
-                              isPlaylist={!isOtherUser ? user.id : ""}
+                              isPlaylist={!isOtherUser ? user.id : ''}
                               setPopSureDel={setPopSureDelMedia}
                               setIdDelete={setIdDelete}
                             />

@@ -1,20 +1,10 @@
 const calculateAverageVote = (voteTMDB, voteIMDB, voteFILMA) => {
-  // Calculate the average rating if both IMDB and FILMA votes are not null.
-  const ConditionValoration =
-    voteIMDB === null || voteFILMA === null
-      ? null
-      : (voteIMDB + voteFILMA + voteTMDB) / 3;
-
-  // Calculate the average rating if only the FILMA vote is null.
-  const ConditionIMDB =
-    voteFILMA === null && voteIMDB === null ? null : (voteIMDB + voteTMDB) / 2;
-
-  // Determine the final rating based on the above conditions.
-  const finalRating =
-    ConditionValoration === null && ConditionIMDB === null
-      ? voteTMDB
-      : ConditionValoration || ConditionIMDB;
-  return finalRating || null;
+  const values = [voteTMDB, voteIMDB, voteFILMA].filter(
+    (v) => v !== null && v !== undefined,
+  );
+  if (!values.length) return null;
+  const avg = values.reduce((a, b) => a + b, 0) / values.length;
+  return Math.round(avg * 100) / 100;
 };
 
 export default calculateAverageVote;

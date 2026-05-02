@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{root}}/static/swagger-dark-mode.css"
+      id="dark-theme"
+    />
+    <link rel="stylesheet" href="{{root}}/static/swagger-custom.css" />
+    <script>
+      (function () {
+        var saved = localStorage.getItem('nexreel-swagger-theme');
+        if (saved === 'light')
+          document.getElementById('dark-theme').disabled = true;
+      })();
+    </script>
+    <link
+      rel="shortcut icon"
+      href="https://fastapi.tiangolo.com/img/favicon.png"
+    />
+    <title>NexReel API Docs</title>
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script src="{{root}}/static/swagger-custom.js"></script>
+    <script>
+      const ui = SwaggerUIBundle({
+        url: '{{root}}/openapi.json',
+        dom_id: '#swagger-ui',
+        layout: 'BaseLayout',
+        deepLinking: true,
+        showExtensions: true,
+        showCommonExtensions: true,
+        operationsSorter: 'method',
+        defaultModelsExpandDepth: -1,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset,
+        ],
+      });
+    </script>
+  </body>
+</html>

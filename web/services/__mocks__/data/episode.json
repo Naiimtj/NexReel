@@ -1,0 +1,25 @@
+{
+  "air_date": "2023-09-10",
+  "crew": [
+    {
+      "id": 99997,
+      "credit_id": "ep_crew_001",
+      "name": "Carlos Nexreel",
+      "department": "Directing",
+      "job": "Director",
+      "profile_path": null
+    }
+  ],
+  "episode_number": 1,
+  "guest_stars": [],
+  "id": 9999801,
+  "name": "El Despertar",
+  "overview": "Maya Solís recibe un mensaje cifrado que cambiará su vida para siempre.",
+  "production_code": "",
+  "runtime": 48,
+  "season_number": 1,
+  "show_id": 99998,
+  "still_path": null,
+  "vote_average": 8.0,
+  "vote_count": 210
+}

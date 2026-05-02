@@ -1,0 +1,25 @@
+{
+  "id": 99990,
+  "name": "Colección NexReel",
+  "overview": "La saga completa de El Origen de NexReel y sus secuelas.",
+  "poster_path": null,
+  "backdrop_path": null,
+  "parts": [
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [878, 53],
+      "id": 99999,
+      "original_language": "es",
+      "original_title": "The Origin of NexReel",
+      "overview": "En un futuro no muy lejano, un equipo de científicos descubre que la realidad es una simulación.",
+      "popularity": 87.4,
+      "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+      "release_date": "2024-03-22",
+      "title": "El Origen de NexReel",
+      "video": false,
+      "vote_average": 7.8,
+      "vote_count": 1452
+    }
+  ]
+}

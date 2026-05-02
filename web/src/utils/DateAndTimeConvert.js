@@ -1,83 +1,87 @@
 class DateAndTimeConvert {
   constructor(date, lang, secondsBool, noYear, noMonth, noTime, monthLonger) {
-    this.date = date; // number
-    this.time = date; // number
-    this.lang = lang; // t of useTranslation !Important for translation
-    this.secondsBool = secondsBool; // bool
-    this.noYear = noYear; // bool
-    this.noMonth = noMonth; // bool
-    this.noTime = noTime; // bool
-    this.monthLonger = monthLonger
+    this.date = date;
+    this.time = date;
+    this.lang = lang;
+    this.secondsBool = secondsBool;
+    this.noYear = noYear;
+    this.noMonth = noMonth;
+    this.noTime = noTime;
+    this.monthLonger = monthLonger;
   }
 
   DateTimeConvert() {
     const months = [
-      `${this.lang("Jan")}`,
-      `${this.lang("Feb")}`,
-      `${this.lang("Mar")}`,
-      `${this.lang("Apr")}`,
-      `${this.lang("May")}`,
-      `${this.lang("Jun")}`,
-      `${this.lang("Jul")}`,
-      `${this.lang("Aug")}`,
-      `${this.lang("Sep")}`,
-      `${this.lang("Oct")}`,
-      `${this.lang("Nov")}`,
-      `${this.lang("Dec")}`,
-    ];
-    let dateTime = this.date;
-    const mydate = new Date(dateTime);
-    const currdate = mydate.getDate(dateTime);
-    const currmonth = mydate.getMonth(dateTime);
-    const curryear = mydate.getFullYear(dateTime);
-    const minuts =
-      mydate.getMinutes(dateTime) < 10
-        ? `0${mydate.getMinutes(dateTime)}`
-        : mydate.getMinutes(dateTime);
-    const hours = mydate.getHours();
-    const hoursEN = hours > 12 ? hours - 12 : hours;
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const country = this.lang("en");
-    const time =
-      country === "en" ? `${hoursEN}:${minuts} ${ampm}` : `${hours}:${minuts}`;
-    const convertDate = `${currdate}${
-      this.noMonth ? "" : ` ${months[currmonth]}`
-    }${this.noYear ? "" : ` ${curryear}`}${this.noTime ? "" : `, ${time}`}`;
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ].map((m) => this.lang(m));
 
-    return convertDate;
+    const mydate = new Date(this.date);
+    const day = mydate.getDate();
+    const month = months[mydate.getMonth()];
+    const year = mydate.getFullYear();
+    const minutes = String(mydate.getMinutes()).padStart(2, '0');
+    const hours = mydate.getHours();
+    const isEN = this.lang('en') === 'en';
+    const time = isEN
+      ? `${hours > 12 ? hours - 12 : hours}:${minutes} ${hours >= 12 ? 'PM' : 'AM'}`
+      : `${hours}:${minutes}`;
+
+    return [
+      day,
+      this.noMonth ? '' : ` ${month}`,
+      this.noYear ? '' : ` ${year}`,
+      this.noTime ? '' : `, ${time}`,
+    ].join('');
   }
 
   TimeConvert() {
-    const yearInMinutes = 365 * 24 * 60;
-    const monthInMinutes = 30 * 24 * 60;
-    const dayInMinutes = 24 * 60;
-    const hourInMinutes = 60;
+    const YEAR = 365 * 24 * 60;
+    const MONTH = 30 * 24 * 60;
+    const DAY = 24 * 60;
+    const HOUR = 60;
 
-    const years = Math.floor(this.time / yearInMinutes);
-    const months = Math.floor((this.time % yearInMinutes) / monthInMinutes);
-    const days = Math.floor(((this.time % yearInMinutes) % monthInMinutes) / dayInMinutes);
-    const hours = Math.floor((((this.time % yearInMinutes) % monthInMinutes) % dayInMinutes) / hourInMinutes);
-    const mins = (((this.time % yearInMinutes) % monthInMinutes) % dayInMinutes) % hourInMinutes;
-    
-    const timeText = `${years > 0 ? years + this.lang("year(s)") : ""}${months > 0 ? months + this.lang(" month(s) ") : ""}${days > 0 ? days + this.lang(" day(s) ") : ""}${hours > 0 ? hours + this.lang(" h ") : ""}${mins > 0 ? mins + this.lang(" min") : ""}`;
+    const years = Math.floor(this.time / YEAR);
+    const months = Math.floor((this.time % YEAR) / MONTH);
+    const days = Math.floor(((this.time % YEAR) % MONTH) / DAY);
+    const hours = Math.floor((((this.time % YEAR) % MONTH) % DAY) / HOUR);
+    const mins = (((this.time % YEAR) % MONTH) % DAY) % HOUR;
 
-    return timeText.trim();    
+    const parts = [
+      years > 0 && `${years}${this.lang(years === 1 ? ' year ' : ' years ')}`,
+      months > 0 &&
+        `${months}${this.lang(months === 1 ? ' month ' : ' months ')}`,
+      days > 0 && `${days}${this.lang(days === 1 ? ' day ' : ' days ')}`,
+      hours > 0 && `${hours}${this.lang(' h ')}`,
+      mins > 0 && `${mins}${this.lang(' min ')}`,
+    ].filter(Boolean);
+
+    return parts.join('').trim();
   }
-  
+
   DateTimeConvertLocale() {
-    let dateTime = this.date;
-    const MonthLonger = this.monthLonger ? this.monthLonger : this.noMonth
-    const MonthData = this.noMonth && !this.monthLonger ? undefined : MonthLonger
-    return new Date(dateTime).toLocaleString(this.lang('en-EN'), {
+    const monthLonger = this.monthLonger || this.noMonth;
+    const monthData =
+      this.noMonth && !this.monthLonger ? undefined : monthLonger;
+    return new Date(this.date).toLocaleString(this.lang('en-EN'), {
       day: 'numeric',
-      month: !MonthData ? undefined : 'short',
+      month: monthData ? 'short' : undefined,
       year: this.noYear ? undefined : 'numeric',
       hour: this.noTime ? undefined : 'numeric',
       minute: this.noTime ? undefined : 'numeric',
       second: this.secondsBool ? 'numeric' : undefined,
     });
   }
-
 }
 
 export default DateAndTimeConvert;

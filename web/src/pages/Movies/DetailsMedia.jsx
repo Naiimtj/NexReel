@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/auth-context";
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/auth-context';
 // services
 import {
   getKeyWords,
@@ -10,14 +10,13 @@ import {
   getSeasonDetails,
   getTrailer,
   getWatchList,
-} from "../../../services/TMDB/services-tmdb";
-import { getRating } from "../../../services/IMDB/services-imdb";
+} from '../../../services/TMDB/services-tmdb';
+import { getRating } from '../../../services/IMDB/services-imdb';
 import {
-  // getAllMedia,
-  // getDetailMedia,
-  getPlexAllData,
+  getPlexMovies,
+  getPlexTv,
   getUser,
-} from "../../../services/DB/services-db";
+} from '../../../services/DB/services-db';
 // img
 import {
   NoImage,
@@ -28,44 +27,42 @@ import {
   movie,
   tv,
   PLEX,
-} from "../../assets/image";
-import RepeatSeenActive from "../../components/Icons/RepeatSeenActive";
-import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
-import { RiMovie2Line } from "react-icons/ri";
-import { BiSolidRightArrow } from "react-icons/bi";
+} from '../../assets/image';
+import RepeatSeenActive from '../../components/Icons/RepeatSeenActive';
+import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
+import { RiMovie2Line } from 'react-icons/ri';
+import { BiSolidRightArrow } from 'react-icons/bi';
 // components & utils
-import Trailers from "../../components/MediaList/Trailers";
-import KeyWords from "../../components/MediaList/KeyWords";
-import Collections from "../../components/Movie/Collections";
-import Rating from "../../components/MediaList/Rating/Rating";
-import CarouselCredits from "../../utils/Carousel/CarouselCredits";
-import Similar from "../../components/MediaList/Similar";
-import Recommendations from "../../components/MediaList/Recommendations";
-import CountryName from "../../components/CountryName";
-import Certification from "../../components/MediaList/Certification/Certification";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import calculateAverageVote from "../../components/MediaList/calculateAverageVote";
-import Seasons from "../../components/TV/Seasons";
-import PageTitle from "../../components/PageTitle";
-import SeenPending from "../../components/MediaList/SeenPendingMedia/SeenPending";
-import Repeat from "../../components/MediaList/Repeat";
-import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
-import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
-import RepeatSeenNoActive from "../../components/Icons/RepeatSeenNoActive";
+import Trailers from '../../components/MediaList/Trailers';
+import KeyWords from '../../components/MediaList/KeyWords';
+import Collections from '../../components/Movie/Collections';
+import Rating from '../../components/MediaList/Rating/Rating';
+import CarouselCredits from '../../utils/Carousel/CarouselCredits';
+import Similar from '../../components/MediaList/Similar';
+import Recommendations from '../../components/MediaList/Recommendations';
+import CountryName from '../../components/CountryName';
+import Certification from '../../components/MediaList/Certification/Certification';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import calculateAverageVote from '../../components/MediaList/calculateAverageVote';
+import Seasons from '../../components/TV/Seasons';
+import PageTitle from '../../components/PageTitle';
+import SeenPending from '../../components/MediaList/SeenPendingMedia/SeenPending';
+import Repeat from '../../components/MediaList/Repeat';
+import ShowPlaylistMenu from '../../utils/Playlists/ShowPlaylistMenu';
+import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
+import RepeatSeenNoActive from '../../components/Icons/RepeatSeenNoActive';
 
-function compareStrings(str1, str2) {
-  // Function to remove diacritics
-  function removeDiacritics(text) {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  }
+const removeDiacritics = (text) =>
+  text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-  // Remove diacritics and convert to lowercase for comparison
-  const str1Normalized = removeDiacritics(str1).toLowerCase();
-  const str2Normalized = removeDiacritics(str2).toLowerCase();
+const compareStrings = (a, b) =>
+  removeDiacritics(a).toLowerCase() === removeDiacritics(b).toLowerCase();
 
-  // Compare the normalized strings
-  return str1Normalized === str2Normalized;
-}
+const uniqueById = (list, limit) => {
+  const seen = new Map();
+  for (const item of list) if (!seen.has(item.id)) seen.set(item.id, item);
+  return Array.from(seen.values()).slice(0, limit);
+};
 
 function DetailsMedia({
   info,
@@ -76,7 +73,7 @@ function DetailsMedia({
   setChangeSeenPending,
   changeSeenPending,
 }) {
-  const [t, i18next] = useTranslation("translation");
+  const [t, i18next] = useTranslation('translation');
   const { user, onReload } = useAuthContext();
   const userExist = !!user;
   const {
@@ -120,7 +117,7 @@ function DetailsMedia({
         })
         .catch((err) => err);
     };
-    if (id && mediaType === "tv") {
+    if (id && mediaType === 'tv') {
       DataSeason();
     }
   }, [id, mediaType]);
@@ -132,7 +129,7 @@ function DetailsMedia({
         })
         .catch((err) => err);
     };
-    if (userExist && !Object.keys(dataUser).length) {
+    if (userExist && !dataUser?.id) {
       Data();
     }
   }, [userExist, dataUser]);
@@ -142,8 +139,8 @@ function DetailsMedia({
   }, [id]);
 
   // Language Selected
-  const [langApi, setLangApi] = useState("es-ES");
-  const [langTrailer, setLangTrailer] = useState("es-ES"); // if much probably have trailer in english compared of another language
+  const [langApi, setLangApi] = useState('es-ES');
+  const [langTrailer, setLangTrailer] = useState('es-ES'); // if much probably have trailer in english compared of another language
   useEffect(() => {
     setLangApi(i18next.language);
     setLangTrailer(i18next.language);
@@ -180,7 +177,7 @@ function DetailsMedia({
   useEffect(() => {
     if (Object.keys(wordsKeyData).length > 0) {
       const wordsKey =
-        mediaType === "movie" ? wordsKeyData.keywords : wordsKeyData.results;
+        mediaType === 'movie' ? wordsKeyData.keywords : wordsKeyData.results;
       setWordsKey(wordsKey);
     }
   }, [mediaType, wordsKeyData]);
@@ -196,38 +193,70 @@ function DetailsMedia({
   // - SERVICES PLEX
   const [isInPlex, setIsInPlex] = useState(false);
   useEffect(() => {
-    const OriginalTitle = original_title || original_name;
-    const TitleTMDB = title || name;
-    const yearMedia =
-      release_date || first_air_date
-        ? new Date(release_date || first_air_date).getFullYear()
-        : null;
-    if (OriginalTitle && userExist && user.isPlexFriend) {
-      const removeSpaces = (str) => str.replace(/\s/g, "");
-      getPlexAllData().then((data) => {
-        const isInPlex =
-          data &&
-          data[mediaType].filter(
-            (i) =>
-              removeSpaces(i.originalTitle.toLowerCase()) === // TMDB ORIGINAL TITLE
-                removeSpaces(OriginalTitle.toLowerCase()) ||
-              removeSpaces(i.title.toLowerCase()) ===
-                removeSpaces(OriginalTitle.toLowerCase()) ||
-              removeSpaces(i.originalTitle.toLowerCase()) === // TMDB TITLE
-                removeSpaces(TitleTMDB.toLowerCase()) ||
-              removeSpaces(i.title.toLowerCase()) ===
-                removeSpaces(TitleTMDB.toLowerCase()) ||
-              compareStrings(i.originalTitle, OriginalTitle) || // COMPARING remove diacritics
-              compareStrings(i.title, OriginalTitle) ||
-              compareStrings(i.originalTitle, TitleTMDB) ||
-              (compareStrings(i.title, TitleTMDB) &&
-                Number(i.year) === Number(yearMedia))
-          );
-        setIsInPlex(isInPlex.length > 0);
-      });
-    }
+    // Use dataUser (fresh from API) if available, fall back to user (localStorage)
+    const plexFriend = dataUser?.id
+      ? dataUser.isPlexFriend
+      : user?.isPlexFriend;
+    if (!userExist || !plexFriend) return;
+
+    const fetchFn = mediaType === 'movie' ? getPlexMovies : getPlexTv;
+    fetchFn().then((data) => {
+      if (!data || !data.length) return;
+
+      // --- ID-based match (fastest, most reliable) ---
+      if (mediaType === 'movie' && imdb_id) {
+        if (data.some((i) => i.imdbId === imdb_id)) {
+          setIsInPlex(true);
+          return;
+        }
+      }
+      // For both movie and TV, try TMDB ID via tmdbId field
+      if (id) {
+        if (data.some((i) => i.tmdbId === String(id))) {
+          setIsInPlex(true);
+          return;
+        }
+      }
+
+      // --- Title-based fallback (for items Plex hasn't matched to external IDs) ---
+      const OriginalTitle = original_title || original_name;
+      const TitleTMDB = title || name;
+      const yearMedia =
+        release_date || first_air_date
+          ? new Date(release_date || first_air_date).getFullYear()
+          : null;
+      if (!OriginalTitle) return;
+
+      const removeSpaces = (str) => str.replace(/\s/g, '');
+      const found = data.some(
+        (i) =>
+          removeSpaces(i.originalTitle.toLowerCase()) ===
+            removeSpaces(OriginalTitle.toLowerCase()) ||
+          removeSpaces(i.title.toLowerCase()) ===
+            removeSpaces(OriginalTitle.toLowerCase()) ||
+          removeSpaces(i.originalTitle.toLowerCase()) ===
+            removeSpaces(TitleTMDB.toLowerCase()) ||
+          removeSpaces(i.title.toLowerCase()) ===
+            removeSpaces(TitleTMDB.toLowerCase()) ||
+          compareStrings(i.originalTitle, OriginalTitle) ||
+          compareStrings(i.title, OriginalTitle) ||
+          compareStrings(i.originalTitle, TitleTMDB) ||
+          (compareStrings(i.title, TitleTMDB) &&
+            Number(i.year) === Number(yearMedia)),
+      );
+      setIsInPlex(found);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaType, original_name, original_title, user, userExist]);
+  }, [
+    mediaType,
+    id,
+    imdb_id,
+    original_name,
+    original_title,
+    user,
+    userExist,
+    dataUser,
+  ]);
   // -VER TRAILER
   const [modal, setModal] = useState(false);
   const handleVerTrailer = () => {
@@ -235,111 +264,64 @@ function DetailsMedia({
   };
   const [pendingSeen, setPendingSeen] = useState(false);
   const [repeating, setRepeating] = useState(false);
-  // ! USER COMPARATOR
-  // const [dataMediaUser, setDataMediaUser] = useState({});
-  // useEffect(() => {
-  //   if (userExist) {
-  //     getAllMedia()
-  //       .then((allMedias) => {
-  //         const isMediaExist = allMedias.find(
-  //           (media) => media.mediaId === id.toString()
-  //         );
-  //         if (isMediaExist) {
-  //           getDetailMedia(id, mediaType).then((dataMediaUser) => {
-  //             if (dataMediaUser) {
-  //               setDataMediaUser(dataMediaUser);
-  //             } else {
-  //               setDataMediaUser({});
-  //             }
-  //           });
-  //         } else {
-  //           setDataMediaUser({});
-  //         }
-  //       })
-  //       .catch((err) => err);
-  //   }
-  // }, [mediaType, pendingSeen, changeSeenPending, id, userExist]);
   const { seen, pending, repeat, runtime_seen } = dataMediaUser;
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
 
-  const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
-    let timerId;
-
-    if (isTimeout && errorAddPlaylists) {
-      timerId = window.setTimeout(() => {
-        setIsTimeout(false);
-        setErrorAddPlaylists(false);
-      }, 3000);
-    }
-    return () => {
-      if (timerId) {
-        clearTimeout(timerId); // Clean the timer
-      }
-    };
-  }, [isTimeout, errorAddPlaylists]);
+    if (!errorAddPlaylists) return undefined;
+    const timerId = window.setTimeout(() => setErrorAddPlaylists(false), 3000);
+    return () => clearTimeout(timerId);
+  }, [errorAddPlaylists]);
 
   // -MAIN CAST
   const size = 20;
   const items = cast && cast.slice(0, size);
   // Check if type trailer and change language
   const trailer =
-    trailerListData &&
-    trailerListData.length > 0 &&
-    trailerListData.filter((crew) => crew.type === "Trailer");
-  if (
-    trailerListData !== "" &&
-    trailerListData &&
-    trailerListData.length > 0 &&
-    trailerListData.length === 0 &&
-    langApi === "es-ES"
-  ) {
-    setLangTrailer("en-US");
-    const trailer =
-      trailerListData &&
-      trailerListData.length > 0 &&
-      trailerListData.filter((crew) => crew.type === "Trailer");
-    return trailer;
-  }
+    trailerListData?.length > 0 &&
+    trailerListData.filter((crew) => crew.type === 'Trailer');
   // -POSTER URL
-  const url =
-    (poster_path && poster_path !== undefined) || (poster_path && poster_path)
-      ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
-      : null;
+  const url = poster_path
+    ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
+    : null;
   const processInfo = {};
   processInfo.poster = url || NoImage;
-  processInfo.mediaType = mediaType === "movie" ? "Movie" : "TV Show";
+  processInfo.mediaType = mediaType === 'movie' ? 'Movie' : 'TV Show';
   processInfo.title = title || name;
   processInfo.titleVOSE = original_title || original_name;
   processInfo.genre = genres || [];
   processInfo.productCompany = production_companies || [];
   processInfo.runTime =
-    mediaType === "movie"
+    mediaType === 'movie'
       ? runtime
       : episode_run_time && episode_run_time.length > 0
-      ? runtimeSeason[0]
-      : 0;
-  console.log(episode_run_time)
+        ? runtimeSeason[0]
+        : 0;
   processInfo.TimeHM =
     runtime > 0 && !episode_run_time
       ? new DateAndTimeConvert(processInfo.runTime, t, false).TimeConvert()
       : processInfo.runTime && processInfo.runTime
-      ? `${processInfo.runTime} min.`
-      : null;
+        ? `${processInfo.runTime} min.`
+        : null;
   processInfo.numSeason = number_of_seasons;
   processInfo.numEpis = number_of_episodes;
   processInfo.voteTMDB =
     vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0;
-  processInfo.voteIMDB = imdbList.IMDb?.audience?.rating > 0 ? Number(imdbList.IMDb.audience?.rating) : null;
+  processInfo.voteIMDB =
+    imdbList.IMDb?.audience?.rating > 0
+      ? Number(imdbList.IMDb.audience.rating)
+      : null;
   processInfo.voteFILMA =
-    imdbList.FilmAffinity?.audience?.rating > 0 ? Number(imdbList.FilmAffinity.audience?.rating) : null;
+    imdbList.FilmAffinity?.audience?.rating > 0
+      ? Number(imdbList.FilmAffinity.audience.rating)
+      : null;
   processInfo.voteAverage = calculateAverageVote(
     processInfo.voteTMDB,
     processInfo.voteIMDB,
-    processInfo.voteFILMA
+    processInfo.voteFILMA,
   );
   processInfo.countries = production_countries || origin_country;
-  processInfo.description = overview || tmbdEnApi.overview || "";
+  processInfo.description = overview || tmbdEnApi.overview || '';
   processInfo.date =
     release_date || first_air_date
       ? new Date(release_date || first_air_date).getFullYear()
@@ -352,7 +334,7 @@ function DetailsMedia({
         false,
         false,
         true,
-        false
+        false,
       ).DateTimeConvert()
     : null;
   processInfo.NextEpAir =
@@ -364,7 +346,7 @@ function DetailsMedia({
           false,
           false,
           true,
-          false
+          false,
         ).DateTimeConvert()
       : null;
   processInfo.yearRelease =
@@ -375,14 +357,14 @@ function DetailsMedia({
       false,
       false,
       false,
-      true
+      true,
     ).DateTimeConvert();
   processInfo.collection = belongs_to_collection;
   processInfo.runTimeSeasons =
-    mediaType === "tv" &&
+    mediaType === 'tv' &&
     seasons &&
     seasons.map((season) => season.episode_count * processInfo.runTime);
-  if (mediaType === "tv") {
+  if (mediaType === 'tv') {
     processInfo.haveSpecialSeason =
       number_of_seasons === processInfo.runTimeSeasons.length;
     processInfo.totalRunTime = 0;
@@ -398,31 +380,19 @@ function DetailsMedia({
         ? new DateAndTimeConvert(
             processInfo.totalRunTime,
             t,
-            false
+            false,
           ).TimeConvert()
         : 0;
   } else {
-    processInfo.TotalTimeMarathon = 0
+    processInfo.TotalTimeMarathon = 0;
   }
 
-  processInfo.watchingBuy =
-    detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.buy
-      ? detailsWatchList.ES.buy
-      : null;
-
-  processInfo.watching =
-    detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.flatrate
-      ? detailsWatchList.ES.flatrate
-      : null;
+  const watch = detailsWatchList?.ES || {};
+  processInfo.watchingBuy = watch.buy || null;
+  processInfo.watching = watch.flatrate || null;
   processInfo.streaming = isInPlex || processInfo.watching ? true : null;
-  processInfo.watchingFree =
-    detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.free
-      ? detailsWatchList.ES.free
-      : null;
-  processInfo.watchingAds =
-    detailsWatchList && detailsWatchList.ES && detailsWatchList.ES.ads
-      ? detailsWatchList.ES.ads
-      : null;
+  processInfo.watchingFree = watch.free || null;
+  processInfo.watchingAds = watch.ads || null;
 
   processInfo.NoWatch =
     processInfo.streaming === null &&
@@ -430,56 +400,37 @@ function DetailsMedia({
     processInfo.watchingAds === null &&
     processInfo.watchingBuy === null
       ? null
-      : t("Available");
+      : t('Available');
 
-  processInfo.trailer = trailer && trailer[0] ? trailer[0].key : null;
-  processInfo.status = mediaType === "tv" ? status : null;
+  processInfo.trailer = trailer?.[0]?.key || null;
+  processInfo.status = mediaType === 'tv' ? status : null;
 
-  const directing = crews.filter((crew) => crew.department === "Directing");
+  const byDept = (dept) => crews.filter((crew) => crew.department === dept);
+  const directingAll = byDept('Directing');
+  const writersAll = byDept('Writing');
+  const productionsAll = byDept('Production');
+  const uniqueWriters = uniqueById(writersAll, 6);
+  const uniqueDirecting = uniqueById(directingAll, 3);
+  const uniqueProductions = uniqueById(productionsAll, 5);
 
-  const writers = crews.filter((crew) => crew.department === "Writing");
-  const productions = crews.filter((crew) => crew.department === "Production");
-
-  const uniqueWriters = Array.from(new Set(writers.map((a) => a.id)))
-    .map((id) => writers.find((a) => a.id === id))
-    .slice(0, 6);
-  const uniqueDirecting = Array.from(new Set(directing.map((a) => a.id)))
-    .map((id) => directing.find((a) => a.id === id))
-    .slice(0, 3);
-  const uniqueProductions = Array.from(new Set(productions.map((a) => a.id)))
-    .map((id) => productions.find((a) => a.id === id))
-    .slice(0, 5);
-
-  const keywordsGenre = modalKeywords ? (
+  const CaretIcon = modalKeywords ? BsFillCaretUpFill : BsFillCaretDownFill;
+  const keywordsGenre = (
     <div>
       <button
+        type="button"
         className="pt-2 cursor-pointer text-left text-sm  px:center text-purpleNR transition ease-in-out md:hover:text-gray-200 duration-300"
         onClick={() => setModalKeywords(!modalKeywords)}
       >
-        {t("Key Words")}
-        <BsFillCaretUpFill
+        {t('Key Words')}
+        <CaretIcon
           className="inline-block align-middle ml-1"
           size={16}
-          alt={t("Close Keywords")}
+          alt={t(modalKeywords ? 'Close Keywords' : 'Open Keywords')}
         />
       </button>
       {modalKeywords && (
         <KeyWords wordsKey={wordsKey} media={mediaType} id={id} />
       )}
-    </div>
-  ) : (
-    <div>
-      <button
-        className="pt-2 cursor-pointer text-left text-sm  px:center text-purpleNR transition ease-in-out md:hover:text-gray-200 duration-300"
-        onClick={() => setModalKeywords(!modalKeywords)}
-      >
-        {t("Key Words")}
-        <BsFillCaretDownFill
-          className="inline-block align-middle ml-1"
-          size={16}
-          alt={t("Open Keywords")}
-        />
-      </button>
     </div>
   );
 
@@ -496,12 +447,12 @@ function DetailsMedia({
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      "seen",
+      'seen',
       onReload,
       number_of_episodes,
       number_of_seasons,
       processInfo.runTimeSeasons,
-      processInfo.totalRunTime
+      processInfo.totalRunTime,
     );
   };
   // - PENDING/NO PENDING
@@ -517,12 +468,12 @@ function DetailsMedia({
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      "pending",
+      'pending',
       onReload,
       number_of_episodes,
       number_of_seasons,
       processInfo.runTimeSeasons,
-      processInfo.totalRunTime
+      processInfo.totalRunTime,
     );
   };
 
@@ -541,7 +492,7 @@ function DetailsMedia({
       changeSeenPending,
       setRepeating,
       repeating,
-      onReload
+      onReload,
     );
   };
 
@@ -555,8 +506,8 @@ function DetailsMedia({
     <div className="relative flex justify-center items-center">
       <img
         className="absolute h-24 opacity-10"
-        src={mediaType === "movie" ? movie : mediaType === "tv" ? tv : null}
-        alt={t("Icon people")}
+        src={mediaType === 'movie' ? movie : mediaType === 'tv' ? tv : null}
+        alt={t('Icon people')}
       />
       <img
         className="rounded-xl w-48 sm:w-auto justify-self-center"
@@ -583,7 +534,7 @@ function DetailsMedia({
                   <img
                     className="inline-block pr-1 py-2 w-4"
                     src={star}
-                    alt={t("Star Icon Rating")}
+                    alt={t('Star Icon Rating')}
                   />
                   <div className="inline-block inset-y-2  inset-x-5 text-amber-400 text-xs text-left leading-4">
                     {processInfo.voteAverage}
@@ -600,29 +551,29 @@ function DetailsMedia({
             // ! TRAILER NO OPEN
             // -VOTE AVERAGE, POSTER, BUTTONS, PLAYLISTS Y WHERE SEE
             <div className="relative row-span-2 rounded-xl col-span-2 sm:col-span-1 grid justify-items-stretch">
-              {processInfo.voteAverage && processInfo.voteAverage > 0 && (
+              {processInfo.voteAverage && processInfo.voteAverage > 0 ? (
                 <div className="absolute bottom-auto right-auto left-0 px-2 ml-[84px] sm:ml-2 inset-y-2 inset-x-8 backdrop-blur-md bg-black/50 rounded-lg">
                   <img
                     className="inline-block pr-1 py-2 w-4"
                     src={star}
-                    alt={t("Star Icon Rating")}
+                    alt={t('Star Icon Rating')}
                   />
                   <div className="inline-block inset-y-2 inset-x-5 text-amber-400 text-xs text-left leading-4">
                     {processInfo.voteAverage}
                   </div>
                 </div>
-              )}
+              ) : null}
               {poster}
               {userExist ? (
                 <div className="grid grid-cols-6 gap-4 text-center mt-5 justify-center justify-items-center">
                   {/* //-SEEN/UNSEEN */}
                   {userExist ? (
                     <div className="text-right align-middle">
-                      {mediaType !== "person" ? (
+                      {mediaType !== 'person' ? (
                         <SeenPendingButton
                           condition={seen}
                           size={20}
-                          text={"Seen"}
+                          text={'Seen'}
                           handle={handleSeenMedia}
                         />
                       ) : null}
@@ -634,22 +585,18 @@ function DetailsMedia({
                       userId={user.id}
                       id={Number(id)}
                       type={mediaType}
-                      runTime={
-                        mediaType === "tv"
-                          ? processInfo.runTime
-                          : processInfo.runTime
-                      }
+                      runTime={processInfo.runTime}
                     />
                   ) : null}
                   <div className={`col-span-2 align-middle flex gap-4`}>
                     {/* //-REPEAT/NO REPEAT */}
                     {userExist ? (
-                      mediaType !== "person" && seen ? (
+                      mediaType !== 'person' && seen ? (
                         repeat ? (
                           <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
                             <RepeatSeenActive
                               className="inline-block fill-[#FFCA28]"
-                              alt={t("Repeat")}
+                              alt={t('Repeat')}
                               onClick={handleRepeatSeen}
                             />
                           </button>
@@ -659,7 +606,7 @@ function DetailsMedia({
                               className="inline-block fill-[#FFCA28]"
                               width={24}
                               height={24}
-                              alt={t("No Repeat")}
+                              alt={t('No Repeat')}
                               onClick={handleRepeatSeen}
                             />
                           </button>
@@ -668,11 +615,11 @@ function DetailsMedia({
                     ) : null}
                     {/* //-PENDING/NO PENDING */}
                     {userExist ? (
-                      mediaType !== "person" ? (
+                      mediaType !== 'person' ? (
                         <SeenPendingButton
                           condition={pending}
                           size={17}
-                          text={"Pending"}
+                          text={'Pending'}
                           handle={handlePending}
                         />
                       ) : null
@@ -682,15 +629,15 @@ function DetailsMedia({
               ) : null}
               {/* //-WHERE SEE OR BUY */}
               <div className="text-left mt-2">
-                {processInfo.NoWatch === null ? t("Not Available") : null}
+                {processInfo.NoWatch === null ? t('Not Available') : null}
                 {/* // STREAM */}
-                {processInfo.streaming ? t("Stream") : null}
+                {processInfo.streaming ? t('Stream') : null}
                 <div>
                   {isInPlex ? (
                     <img
                       className="inline-block h-9 justify-self-center mb-1 rounded-xl border border-amber-600"
                       src={PLEX}
-                      alt={"Plex Icon"}
+                      alt={'Plex Icon'}
                     />
                   ) : null}
                   {processInfo.watching
@@ -700,7 +647,7 @@ function DetailsMedia({
                           src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
                           alt={watching.provider_name}
                           key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000
+                            (1 + index + Math.random()) * 0x10000,
                           )}
                         />
                       ))
@@ -712,7 +659,7 @@ function DetailsMedia({
                           src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
                           alt={watching.provider_name}
                           key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000
+                            (1 + index + Math.random()) * 0x10000,
                           )}
                         />
                       ))
@@ -720,9 +667,9 @@ function DetailsMedia({
                 </div>
               </div>
               {/* // BUY */}
-              <div className={processInfo.watchingBuy ? "text-left" : ""}>
-                {processInfo.watchingBuy ? t("Buy") : null}
-                <div className={processInfo.watchingBuy ? "pt-2" : ""}>
+              <div className={processInfo.watchingBuy ? 'text-left' : ''}>
+                {processInfo.watchingBuy ? t('Buy') : null}
+                <div className={processInfo.watchingBuy ? 'pt-2' : ''}>
                   {processInfo.watchingBuy && processInfo.watchingBuy
                     ? processInfo.watchingBuy.map((watchingBuy, index) => (
                         <img
@@ -730,7 +677,7 @@ function DetailsMedia({
                           src={`https://image.tmdb.org/t/p/original/${watchingBuy.logo_path}`}
                           alt={watchingBuy.provider_name}
                           key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000
+                            (1 + index + Math.random()) * 0x10000,
                           )}
                         />
                       ))
@@ -738,9 +685,9 @@ function DetailsMedia({
                 </div>
               </div>
               {/* // FREE */}
-              <div className={processInfo.watchingFree ? "text-left" : ""}>
-                {processInfo.watchingFree ? t("Free") : null}
-                <div className={processInfo.watchingFree ? "pt-2" : ""}>
+              <div className={processInfo.watchingFree ? 'text-left' : ''}>
+                {processInfo.watchingFree ? t('Free') : null}
+                <div className={processInfo.watchingFree ? 'pt-2' : ''}>
                   {processInfo.watchingFree && processInfo.watchingFree
                     ? processInfo.watchingFree.map((watchingFree, index) => (
                         <img
@@ -748,7 +695,7 @@ function DetailsMedia({
                           src={`https://image.tmdb.org/t/p/original/${watchingFree.logo_path}`}
                           alt={watchingFree.provider_name}
                           key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000
+                            (1 + index + Math.random()) * 0x10000,
                           )}
                         />
                       ))
@@ -785,7 +732,7 @@ function DetailsMedia({
                   </div>
                   {processInfo.status ? (
                     <div>
-                      {processInfo.status === "Returning Series" ? (
+                      {processInfo.status === 'Returning Series' ? (
                         <div className="text-xs text-green-700 capitalize">
                           {t(processInfo.status)}
                         </div>
@@ -805,7 +752,7 @@ function DetailsMedia({
                   mediaId={id}
                   media_type={mediaType}
                   runtime={
-                    mediaType === "tv"
+                    mediaType === 'tv'
                       ? processInfo.runTime
                       : processInfo.runTime
                   }
@@ -819,7 +766,7 @@ function DetailsMedia({
                   <div className="text-gray-400">
                     {processInfo.titleVOSE === null
                       ? null
-                      : `${t("Original title")}:`}
+                      : `${t('Original title')}:`}
                     <div className="text-gray-200 inline-block pl-1">
                       {processInfo.titleVOSE === null
                         ? null
@@ -837,7 +784,7 @@ function DetailsMedia({
                           <div
                             className="inline-block pr-1"
                             key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000
+                              (1 + index + Math.random()) * 0x10000,
                             )}
                           >
                             <Link
@@ -848,8 +795,8 @@ function DetailsMedia({
                             </Link>
                             {processInfo.genre &&
                             index !== processInfo.genre.length - 1
-                              ? " - "
-                              : ""}
+                              ? ' - '
+                              : ''}
                           </div>
                         );
                       })}
@@ -867,7 +814,7 @@ function DetailsMedia({
                       <img
                         className="inline-block w-6 rounded-md"
                         src={FILMA}
-                        alt={t("Filmaffinity Icon")}
+                        alt={t('Filmaffinity Icon')}
                       />
                       <div className="inline-block text-amber-400 text-xs text-left pl-2">
                         {processInfo.voteFILMA}
@@ -880,7 +827,7 @@ function DetailsMedia({
                       <img
                         className="inline-block pr-1 w-10"
                         src={IMDB}
-                        alt={t("IMDB Icon")}
+                        alt={t('IMDB Icon')}
                       />
                       <div className="inline-block text-amber-400 text-xs text-left pl-1">
                         {processInfo.voteIMDB}
@@ -893,7 +840,7 @@ function DetailsMedia({
                       <img
                         className="inline-block pr-1 w-10"
                         src={TMDB}
-                        alt={t("TMDB Icon")}
+                        alt={t('TMDB Icon')}
                       />
                       <div className="inline-block text-amber-400 text-xs text-left pl-1">
                         {processInfo.voteTMDB}
@@ -904,18 +851,18 @@ function DetailsMedia({
               </div>
               {/* // - RUNTIME & TRAILER */}
               <div className="flex items-center mt-4">
-                <div className={processInfo.runTime !== 0 ? "pr-2" : ""}>
+                <div className={processInfo.runTime !== 0 ? 'pr-2' : ''}>
                   {/* // . TIME MIN */}
                   {processInfo.TimeHM && processInfo.TimeHM !== 0
                     ? processInfo.TimeHM
                     : null}
                 </div>
-                {mediaType !== "tv" ? (
+                {mediaType !== 'tv' ? (
                   <div
                     className={
                       processInfo.runTime !== 0
-                        ? "inline-block text-xs pr-1"
-                        : ""
+                        ? 'inline-block text-xs pr-1'
+                        : ''
                     }
                   >
                     {/* //. TIME */}
@@ -930,9 +877,9 @@ function DetailsMedia({
                     <div className="text-xs">
                       {/* // SEASONS+EPISODES */}
                       {processInfo.numEpis &&
-                        `(${processInfo.numSeason} ${t("S")}. ${
+                        `(${processInfo.numSeason} ${t('S')}. ${
                           processInfo.numEpis
-                        } ${t("Ep")})`}
+                        } ${t('Ep')})`}
                     </div>
                   </>
                 )}
@@ -944,8 +891,8 @@ function DetailsMedia({
                         className="flex items-center gap-0.5 cursor-pointer text-left text-sm md:text-base font-medium px:center text-purpleNR transition hover:text-grayNR duration-300 ml-4"
                         onClick={handleVerTrailer}
                       >
-                        <RiMovie2Line alt={t("See Trailer")} />
-                        {`${t("Trailer")}`}
+                        <RiMovie2Line alt={t('See Trailer')} />
+                        {`${t('Trailer')}`}
                       </button>
                     )}
                   </>
@@ -954,7 +901,7 @@ function DetailsMedia({
               {/* // . MARATHON */}
               {processInfo.TotalTimeMarathon !== 0 ? (
                 <div className="text-xs ml-4 mt-0.5 pb-4 flex gap-1">
-                  <p>{t("Binge-watch a series")}: </p>
+                  <p>{t('Binge-watch a series')}: </p>
                   {processInfo.TotalTimeMarathon}
                 </div>
               ) : null}
@@ -965,13 +912,13 @@ function DetailsMedia({
                 <div className="flex flex-row text-sm mb-4">
                   <div
                     className={
-                      processInfo.yearRelease ? "basis-1/2 grid-rows-2" : ""
+                      processInfo.yearRelease ? 'basis-1/2 grid-rows-2' : ''
                     }
                   >
                     <div>
                       <div className="inline-block text-gray-400 mr-1">
                         {processInfo.yearRelease && processInfo.yearRelease
-                          ? `${t("PREMIERE")}:`
+                          ? `${t('PREMIERE')}:`
                           : null}
                       </div>
                       <div className="inline-block">
@@ -983,7 +930,7 @@ function DetailsMedia({
                     <div className="inline-block text-gray-400 mr-1">
                       {processInfo.countries &&
                       processInfo.countries.length !== 0
-                        ? `${t("COUNTRY")}:`
+                        ? `${t('COUNTRY')}:`
                         : null}
                     </div>
                     <div className="inline-block">
@@ -992,14 +939,14 @@ function DetailsMedia({
                           <div
                             className="inline-block pr-1"
                             key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000
+                              (1 + index + Math.random()) * 0x10000,
                             )}
                           >
                             <CountryName info={county.iso_3166_1} />
                             {processInfo.countries &&
                             index !== processInfo.countries.length - 1
-                              ? ", "
-                              : ""}
+                              ? ', '
+                              : ''}
                           </div>
                         ))}
                     </div>
@@ -1010,7 +957,7 @@ function DetailsMedia({
                   {processInfo.LastAirDate ? (
                     <div className="flex gap-2 basis-1/2">
                       <div className="text-gray-400 mb-2">
-                        {t("LAST EPISODE")}:
+                        {t('LAST EPISODE')}:
                       </div>
                       <span>{processInfo.LastAirDate}</span>
                     </div>
@@ -1018,7 +965,7 @@ function DetailsMedia({
                   {/* // NEXT EPISODE */}
                   {processInfo.NextEpAir ? (
                     <div className="flex gap-2 basis-1/2">
-                      <div className="text-gray-400">{t("NEXT EPISODE")}:</div>
+                      <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
                       <span>{processInfo.NextEpAir}</span>
                     </div>
                   ) : null}
@@ -1027,7 +974,7 @@ function DetailsMedia({
                 {created_by && created_by.length > 0 ? (
                   <div className="flex flex-row text-sm my-4">
                     <div className="inline-block text-gray-400 mr-1">
-                      {`${t("CREATE BY")}:`}
+                      {`${t('CREATE BY')}:`}
                     </div>
                     <div className="inline-block text-gray-400">
                       {created_by &&
@@ -1035,20 +982,20 @@ function DetailsMedia({
                           index < 5 ? (
                             <button
                               className={`inline-block ${
-                                index !== created_by.length - 1 ? "pr-1" : ""
+                                index !== created_by.length - 1 ? 'pr-1' : ''
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
                               onClick={() => navigate(`/person/${created.id}`)}
                               key={Math.floor(
                                 (1 + index + Math.random()) * 0x10000 +
-                                  created.id
+                                  created.id,
                               )}
                             >
                               {created.name}
                               {created_by && index !== created_by.length - 1
-                                ? ", "
-                                : ""}
+                                ? ', '
+                                : ''}
                             </button>
-                          ) : null
+                          ) : null,
                         )}
                     </div>
                     <div
@@ -1057,14 +1004,14 @@ function DetailsMedia({
                     >
                       {created_by && created_by.length > 5 ? (
                         <div className="inline-block">
-                          {", "}
+                          {', '}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                             onClick={() =>
                               navigate(`/${mediaType}/${id}/credits`)
                             }
                           >
-                            {t("more...")}
+                            {t('more...')}
                           </button>
                         </div>
                       ) : null}
@@ -1076,7 +1023,7 @@ function DetailsMedia({
                   <div className="flex flex-row text-sm basis-1/2">
                     <div className="basis-1/2">
                       <div className="inline-block text-gray-400 mr-1">
-                        {`${t("DIRECTED BY")}:`}
+                        {`${t('DIRECTED BY')}:`}
                       </div>
                       <div className="inline-block">
                         {[
@@ -1086,30 +1033,30 @@ function DetailsMedia({
                                 className="inline-block pr-1 cursor-pointer hover:text-gray-400"
                                 onClick={() => navigate(`/person/${dire.id}`)}
                                 key={Math.floor(
-                                  (1 + index + Math.random()) * 0x10000
+                                  (1 + index + Math.random()) * 0x10000,
                                 )}
                               >
                                 {dire.name}
                                 {uniqueDirecting &&
                                 index !== uniqueDirecting.length - 1
-                                  ? ", "
-                                  : ""}
+                                  ? ', '
+                                  : ''}
                               </button>
                             )),
                           <div
                             className="inline-block"
                             key={Math.floor((1 + Math.random()) * 0x10000)}
                           >
-                            {directing && directing.length > 3 ? (
+                            {directingAll && directingAll.length > 3 ? (
                               <div className="inline-block">
-                                {", "}
+                                {', '}
                                 <button
                                   className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                   onClick={() =>
                                     navigate(`/${mediaType}/${id}/credits`)
                                   }
                                 >
-                                  {t("more...")}
+                                  {t('more...')}
                                 </button>
                               </div>
                             ) : null}
@@ -1122,21 +1069,21 @@ function DetailsMedia({
                     processInfo.productCompany.length > 0 ? (
                       <div className="basis-1/2">
                         <div className="inline-block text-gray-400 mr-1">
-                          {`${t("PRODUCER")}:`}
+                          {`${t('PRODUCER')}:`}
                         </div>
                         <div className="inline-block">
                           {processInfo.productCompany.map((producer, index) => (
                             <div
                               className="inline-block pr-1"
                               key={Math.floor(
-                                (1 + index + Math.random()) * 0x10000
+                                (1 + index + Math.random()) * 0x10000,
                               )}
                             >
                               {producer.name}
                               {processInfo.productCompany &&
                               index !== processInfo.productCompany.length - 1
-                                ? ", "
-                                : ""}
+                                ? ', '
+                                : ''}
                             </div>
                           ))}
                         </div>
@@ -1148,7 +1095,7 @@ function DetailsMedia({
                 {uniqueWriters && uniqueWriters.length > 0 ? (
                   <div className="flex flex-row text-sm my-4">
                     <div className="inline-block text-gray-400 mr-1">
-                      {`${t("WRITTEN BY")}:`}
+                      {`${t('WRITTEN BY')}:`}
                     </div>
                     <div className="inline-block text-gray-400">
                       {uniqueWriters &&
@@ -1157,18 +1104,18 @@ function DetailsMedia({
                             className={`inline-block ${
                               uniqueWriters &&
                               index !== uniqueWriters.length - 1
-                                ? "pr-1"
-                                : ""
+                                ? 'pr-1'
+                                : ''
                             } cursor-pointer text-gray-200 hover:text-gray-400`}
                             onClick={() => navigate(`/person/${writer.id}`)}
                             key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000
+                              (1 + index + Math.random()) * 0x10000,
                             )}
                           >
                             {writer.name}
                             {uniqueWriters && index !== uniqueWriters.length - 1
-                              ? ", "
-                              : ""}
+                              ? ', '
+                              : ''}
                           </button>
                         ))}
                     </div>
@@ -1176,16 +1123,16 @@ function DetailsMedia({
                       className="inline-block"
                       key={Math.floor((1 + Math.random()) * 0x10000)}
                     >
-                      {writers && writers.length > 3 ? (
+                      {writersAll && writersAll.length > 3 ? (
                         <div className="inline-block">
-                          {", "}
+                          {', '}
                           <button
                             className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                             onClick={() =>
                               navigate(`/${mediaType}/${id}/credits`)
                             }
                           >
-                            {t("more...")}
+                            {t('more...')}
                           </button>
                         </div>
                       ) : null}
@@ -1197,7 +1144,7 @@ function DetailsMedia({
                   <div className="flex flex-row text-sm mb-4">
                     <div className="inline-block text-gray-400 mr-1">
                       {uniqueProductions && uniqueProductions.length !== 0
-                        ? `${t("PRODUCTION")}:`
+                        ? `${t('PRODUCTION')}:`
                         : null}
                     </div>
                     <div className="inline-block pr-1 text-gray-400">
@@ -1208,37 +1155,37 @@ function DetailsMedia({
                               className={`inline-block ${
                                 uniqueProductions &&
                                 index !== uniqueProductions.length - 1
-                                  ? "pr-1"
-                                  : ""
+                                  ? 'pr-1'
+                                  : ''
                               } cursor-pointer text-gray-200 hover:text-gray-400`}
                               onClick={() =>
                                 navigate(`/person/${production.id}`)
                               }
                               key={Math.floor(
-                                (1 + index + Math.random()) * 0x10000
+                                (1 + index + Math.random()) * 0x10000,
                               )}
                             >
                               {production.name}
                               {uniqueProductions &&
                               index !== uniqueProductions.length - 1
-                                ? ", "
-                                : ""}
+                                ? ', '
+                                : ''}
                             </button>
                           )),
                         <div
                           className="inline-block"
                           key={Math.floor((1 + Math.random()) * 0x10000)}
                         >
-                          {productions && productions.length > 3 ? (
+                          {productionsAll && productionsAll.length > 3 ? (
                             <div className="inline-block">
-                              {", "}
+                              {', '}
                               <button
                                 className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
                                 onClick={() =>
                                   navigate(`/${mediaType}/${id}/credits`)
                                 }
                               >
-                                {t("more...")}
+                                {t('more...')}
                               </button>
                             </div>
                           ) : null}
@@ -1254,10 +1201,10 @@ function DetailsMedia({
         {/* // - Complete equipment */}
         <div className="text-purpleNR pr-4 text-right grid justify-center md:justify-end transition ease-in-out md:hover:text-gray-400 duration-300">
           <Link to={`/${mediaType}/${id}/credits`}>
-            {t("Delivery and complete equipment")}
+            {t('Delivery and complete equipment')}
             <BiSolidRightArrow
               className="ml-1 cursor-pointer inline-block"
-              alt={t("Right arrow icon")}
+              alt={t('Right arrow icon')}
             />
           </Link>
         </div>
@@ -1266,7 +1213,7 @@ function DetailsMedia({
           <div className="text-gray-200 rounded-xl ">
             <div className="px-4">
               <CarouselCredits
-                title={t("MAIN CAST")}
+                title={t('MAIN CAST')}
                 info={items}
                 media={mediaType}
                 id={id}
@@ -1310,7 +1257,7 @@ function DetailsMedia({
           {!modal && info.id === id ? (
             <Recommendations
               title={
-                mediaType === "movie" ? t("Recommendations") : t("Similar")
+                mediaType === 'movie' ? t('Recommendations') : t('Similar')
               }
               id={id}
               media={mediaType}
@@ -1323,7 +1270,7 @@ function DetailsMedia({
           {!modal && info.id === id ? (
             <Similar
               title={
-                mediaType === "movie" ? t("Similar") : t("Recommendations")
+                mediaType === 'movie' ? t('Similar') : t('Recommendations')
               }
               id={id}
               media={mediaType}
@@ -1344,7 +1291,7 @@ DetailsMedia.defaultProps = {
   info: {},
   crews: [],
   cast: [],
-  mediaType: "",
+  mediaType: '',
   dataMediaUser: {},
   setChangeSeenPending: () => {},
   changeSeenPending: true,
