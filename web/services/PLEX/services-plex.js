@@ -52,10 +52,7 @@ export async function getPlexMovie(media, OriginalTitle, imdb_id, id) {
         media
       )}/all?X-Plex-Token=${apiKeyPLEX}&title=${OriginalTitle}`
     );
-    const results =
-      response.data.MediaContainer && response.data.MediaContainer.Metadata
-        ? response.data.MediaContainer.Metadata
-        : null;
+    const results = response.data.MediaContainer?.Metadata ?? null;
     if (results) {
       const verifySameMedia = results.map((i) => i.ratingKey);
       const resultFinal = await Promise.all(
@@ -65,12 +62,7 @@ export async function getPlexMovie(media, OriginalTitle, imdb_id, id) {
       );
       if (resultFinal) {
         const isSameMedia =
-          resultFinal &&
-          resultFinal[0] &&
-          resultFinal[0].data &&
-          resultFinal[0].data.MediaContainer &&
-          resultFinal[0].data.MediaContainer.Metadata[0] &&
-          resultFinal[0].data.MediaContainer.Metadata[0].Guid.map((mediaId) => {
+          resultFinal[0]?.data?.MediaContainer?.Metadata?.[0]?.Guid?.map((mediaId) => {
             const partsString = mediaId.id.split("://");
             if (imdb_id) {
               return partsString[0] === "imdb" && partsString[1] === imdb_id;

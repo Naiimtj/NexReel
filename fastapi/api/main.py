@@ -58,8 +58,8 @@ def _seed_admin_user() -> None:
         db.execute(
             text(
                 """
-                INSERT INTO users (email, username, password, region, role, avatar_url, is_plex_friendly)
-                VALUES (:email, :username, :password, :region, :role, :avatar_url, :is_plex_friendly)
+                INSERT INTO users (email, username, password, region, role, avatar_url, is_plex_friend)
+                VALUES (:email, :username, :password, :region, :role, :avatar_url, :is_plex_friend)
                 ON CONFLICT DO NOTHING
                 """
             ),
@@ -70,7 +70,7 @@ def _seed_admin_user() -> None:
                 "region": "ES",
                 "role": ADMIN_ROLE,
                 "avatar_url": "https://res.cloudinary.com/dznwlaen6/image/upload/v1703234529/nexreel/ekto0wthkx2fi0hric8y.jpg",
-                "is_plex_friendly": True,
+                "is_plex_friend": True,
             },
         )
         db.commit()

@@ -131,3 +131,41 @@ ps:
 # Logs del stack completo
 logs service="fastapi":
     {{compose}} logs -f --tail=150 {{service}}
+
+# ──────────────────────── Despliegue en servidor Debian ────────────────────────
+# Usa example-nginx/docker-compose.yml + example-nginx/.env
+prod_compose := compose + " -f example-nginx/docker-compose.yml --env-file example-nginx/.env"
+
+# Construye todas las imágenes del stack productivo (komga + nexreel + proxy)
+prod-build:
+    {{prod_compose}} build
+
+# Levanta el stack productivo completo en segundo plano
+prod-up:
+    {{prod_compose}} up -d
+
+# Apaga el stack productivo
+prod-down:
+    {{prod_compose}} down
+
+# Reinicia solo los servicios de NexReel sin tocar Komga ni el proxy
+prod-restart-nexreel:
+    {{prod_compose}} restart nexreel-web nexreel-fastapi nexreel-postgres nexreel-backup
+
+# Reconstruye y redeploy del frontend NexReel tras cambios en `web/`
+prod-refresh-web:
+    {{prod_compose}} build nexreel-web
+    {{prod_compose}} up -d nexreel-web
+
+# Reconstruye y redeploy de la API NexReel tras cambios en `fastapi/`
+prod-refresh-api:
+    {{prod_compose}} build nexreel-fastapi
+    {{prod_compose}} up -d nexreel-fastapi
+
+# Logs de un servicio del stack productivo (por defecto: nexreel-fastapi)
+prod-logs service="nexreel-fastapi":
+    {{prod_compose}} logs -f --tail=150 {{service}}
+
+# Estado de todos los contenedores del stack productivo
+prod-ps:
+    {{prod_compose}} ps
