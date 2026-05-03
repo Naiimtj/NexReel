@@ -50,3 +50,4 @@ dist-ssr
 old-api
 fastapi-example
 web-example
+example-nginx

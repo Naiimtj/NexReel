@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../context/auth-context';
 // services
 import {
@@ -12,11 +12,7 @@ import {
   getWatchList,
 } from '../../../services/TMDB/services-tmdb';
 import { getRating } from '../../../services/IMDB/services-imdb';
-import {
-  getPlexMovies,
-  getPlexTv,
-  getUser,
-} from '../../../services/DB/services-db';
+import { getUser } from '../../../services/DB/services-db';
 // img
 import {
   NoImage,
@@ -28,19 +24,18 @@ import {
   tv,
   PLEX,
 } from '../../assets/image';
-import RepeatSeenActive from '../../components/Icons/RepeatSeenActive';
 import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
-import { RiMovie2Line } from 'react-icons/ri';
 import { BiSolidRightArrow } from 'react-icons/bi';
 // components & utils
-import Trailers from '../../components/MediaList/Trailers';
+import { BaseIcon } from '../../components/base';
+import BaseModal from '../../components/base/BaseModal';
 import KeyWords from '../../components/MediaList/KeyWords';
 import Collections from '../../components/Movie/Collections';
 import Rating from '../../components/MediaList/Rating/Rating';
 import CarouselCredits from '../../utils/Carousel/CarouselCredits';
 import Similar from '../../components/MediaList/Similar';
 import Recommendations from '../../components/MediaList/Recommendations';
-import CountryName from '../../components/CountryName';
+import CountryFlag from '../../components/CountryFlag';
 import Certification from '../../components/MediaList/Certification/Certification';
 import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
 import calculateAverageVote from '../../components/MediaList/calculateAverageVote';
@@ -50,13 +45,13 @@ import SeenPending from '../../components/MediaList/SeenPendingMedia/SeenPending
 import Repeat from '../../components/MediaList/Repeat';
 import ShowPlaylistMenu from '../../utils/Playlists/ShowPlaylistMenu';
 import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
-import RepeatSeenNoActive from '../../components/Icons/RepeatSeenNoActive';
-
-const removeDiacritics = (text) =>
-  text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-const compareStrings = (a, b) =>
-  removeDiacritics(a).toLowerCase() === removeDiacritics(b).toLowerCase();
+import RepeatSeenButton from '../../utils/Buttons/RepeatSeenButton';
+import ProvidersSection, {
+  ProviderLogo,
+} from '../../components/MediaList/Details/ProvidersSection';
+import ExternalRating from '../../components/MediaList/Details/ExternalRating';
+import CreditList from '../../components/MediaList/Details/CreditList';
+import usePlexMatch from '../../components/MediaList/Details/usePlexMatch';
 
 const uniqueById = (list, limit) => {
   const seen = new Map();
@@ -106,7 +101,6 @@ function DetailsMedia({
     // .Default
     id,
   } = info;
-  const navigate = useNavigate();
   const [dataUser, setDataUser] = useState({});
   const [runtimeSeason, setSeason] = useState({});
   useEffect(() => {
@@ -191,72 +185,16 @@ function DetailsMedia({
     }
   }, [langApi, imdb_id]);
   // - SERVICES PLEX
-  const [isInPlex, setIsInPlex] = useState(false);
-  useEffect(() => {
-    // Use dataUser (fresh from API) if available, fall back to user (localStorage)
-    const plexFriend = dataUser?.id
-      ? dataUser.isPlexFriend
-      : user?.isPlexFriend;
-    if (!userExist || !plexFriend) return;
-
-    const fetchFn = mediaType === 'movie' ? getPlexMovies : getPlexTv;
-    fetchFn().then((data) => {
-      if (!data || !data.length) return;
-
-      // --- ID-based match (fastest, most reliable) ---
-      if (mediaType === 'movie' && imdb_id) {
-        if (data.some((i) => i.imdbId === imdb_id)) {
-          setIsInPlex(true);
-          return;
-        }
-      }
-      // For both movie and TV, try TMDB ID via tmdbId field
-      if (id) {
-        if (data.some((i) => i.tmdbId === String(id))) {
-          setIsInPlex(true);
-          return;
-        }
-      }
-
-      // --- Title-based fallback (for items Plex hasn't matched to external IDs) ---
-      const OriginalTitle = original_title || original_name;
-      const TitleTMDB = title || name;
-      const yearMedia =
-        release_date || first_air_date
-          ? new Date(release_date || first_air_date).getFullYear()
-          : null;
-      if (!OriginalTitle) return;
-
-      const removeSpaces = (str) => str.replace(/\s/g, '');
-      const found = data.some(
-        (i) =>
-          removeSpaces(i.originalTitle.toLowerCase()) ===
-            removeSpaces(OriginalTitle.toLowerCase()) ||
-          removeSpaces(i.title.toLowerCase()) ===
-            removeSpaces(OriginalTitle.toLowerCase()) ||
-          removeSpaces(i.originalTitle.toLowerCase()) ===
-            removeSpaces(TitleTMDB.toLowerCase()) ||
-          removeSpaces(i.title.toLowerCase()) ===
-            removeSpaces(TitleTMDB.toLowerCase()) ||
-          compareStrings(i.originalTitle, OriginalTitle) ||
-          compareStrings(i.title, OriginalTitle) ||
-          compareStrings(i.originalTitle, TitleTMDB) ||
-          (compareStrings(i.title, TitleTMDB) &&
-            Number(i.year) === Number(yearMedia)),
-      );
-      setIsInPlex(found);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
+  const plexFriend = dataUser?.id ? dataUser.isPlexFriend : user?.isPlexFriend;
+  const isInPlex = usePlexMatch({
+    enabled: !!(userExist && plexFriend),
     mediaType,
     id,
-    imdb_id,
-    original_name,
-    original_title,
-    user,
-    userExist,
-    dataUser,
-  ]);
+    imdbId: imdb_id,
+    originalTitle: original_title || original_name,
+    title: title || name,
+    releaseDate: release_date || first_air_date,
+  });
   // -VER TRAILER
   const [modal, setModal] = useState(false);
   const handleVerTrailer = () => {
@@ -266,6 +204,8 @@ function DetailsMedia({
   const [repeating, setRepeating] = useState(false);
   const { seen, pending, repeat, runtime_seen } = dataMediaUser;
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [crewExpanded, setCrewExpanded] = useState(false);
 
   useEffect(() => {
     if (!errorAddPlaylists) return undefined;
@@ -361,19 +301,25 @@ function DetailsMedia({
     ).DateTimeConvert();
   processInfo.collection = belongs_to_collection;
   processInfo.runTimeSeasons =
-    mediaType === 'tv' &&
-    seasons &&
-    seasons.map((season) => season.episode_count * processInfo.runTime);
-  if (mediaType === 'tv') {
+    mediaType === 'tv' && seasons
+      ? seasons.map((season) => season.episode_count * processInfo.runTime)
+      : [];
+  if (mediaType === 'tv' && processInfo.runTimeSeasons.length > 0) {
+    // TMDB: `number_of_seasons` excludes "Season 0" (Specials), but the
+    // `seasons` array includes it. So if lengths differ, specials exist and
+    // we must skip index 0 when summing the marathon time.
     processInfo.haveSpecialSeason =
-      number_of_seasons === processInfo.runTimeSeasons.length;
+      number_of_seasons !== processInfo.runTimeSeasons.length;
     processInfo.totalRunTime = 0;
     for (
       let i = processInfo.haveSpecialSeason ? 1 : 0;
       i < processInfo.runTimeSeasons.length;
       i++
     ) {
-      processInfo.totalRunTime += processInfo.runTimeSeasons[i];
+      const seasonRuntime = processInfo.runTimeSeasons[i];
+      if (Number.isFinite(seasonRuntime)) {
+        processInfo.totalRunTime += seasonRuntime;
+      }
     }
     processInfo.TotalTimeMarathon =
       processInfo.totalRunTime > 0
@@ -412,6 +358,47 @@ function DetailsMedia({
   const uniqueWriters = uniqueById(writersAll, 6);
   const uniqueDirecting = uniqueById(directingAll, 3);
   const uniqueProductions = uniqueById(productionsAll, 5);
+  const createdByList = (created_by || []).slice(0, 5);
+
+  const typeCountryStatusBlock = (
+    <div className="flex flex-col items-end">
+      {/* // . Type and Country */}
+      <div className="flex flex-row items-center gap-1 text-xs capitalize text-right">
+        {t(processInfo.mediaType)}
+        {/* Flag Country */}
+        {processInfo.countries?.map((county, index) => {
+          const code = typeof county === 'string' ? county : county.iso_3166_1;
+          if (!code) return null;
+          return (
+            <CountryFlag
+              key={`${code}-${index}`}
+              code={code}
+              className="text-xl align-middle"
+            />
+          );
+        })}
+      </div>
+      <Certification
+        info={processInfo.countries}
+        media={mediaType}
+        id={id}
+        lang={langApi}
+      />
+      {processInfo.status ? (
+        <div>
+          {processInfo.status === 'Returning Series' ? (
+            <div className="text-xs text-green-700 capitalize">
+              {t(processInfo.status)}
+            </div>
+          ) : (
+            <div className="text-xs text-red-700 capitalize">
+              {t(processInfo.status)}
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
 
   const CaretIcon = modalKeywords ? BsFillCaretUpFill : BsFillCaretDownFill;
   const keywordsGenre = (
@@ -496,9 +483,21 @@ function DetailsMedia({
     );
   };
 
+  const getIconImage = () => {
+    if (mediaType === 'movie') {
+      return movie;
+    } else if (mediaType === 'tv') {
+      return tv;
+    } else {
+      return null;
+    }
+  };
+
+  const iconImage = getIconImage();
+
   const poster = poster_path ? (
     <img
-      className="rounded-xl w-48 sm:w-auto justify-self-center"
+      className="rounded-xl w-32 md:w-full sm:w-auto justify-self-center"
       src={processInfo.poster}
       alt={name}
     />
@@ -506,11 +505,11 @@ function DetailsMedia({
     <div className="relative flex justify-center items-center">
       <img
         className="absolute h-24 opacity-10"
-        src={mediaType === 'movie' ? movie : mediaType === 'tv' ? tv : null}
+        src={iconImage}
         alt={t('Icon people')}
       />
       <img
-        className="rounded-xl w-48 sm:w-auto justify-self-center"
+        className="rounded-xl w-32 md:w-full sm:w-auto justify-self-center"
         src={processInfo.poster}
         alt={name}
       />
@@ -520,230 +519,120 @@ function DetailsMedia({
   return (
     <>
       <PageTitle title={`${processInfo.title} (${processInfo.date})`} />
+
       <div className="static content-center shadow-md">
-        {modal && (
-          <Trailers setModal={setModal} trailerVideo={processInfo.trailer} />
-        )}
-        <div className=" static h-full w-full grid md:grid-flow-col gap-4 p-2 md:pt-4 md:px-4 items-start">
-          {modal === true ? (
-            // ! TRAILER OPEN
-            // -VOTE AVERAGE, POSTER
-            <div className="static row-span-2 rounded-xl">
-              {processInfo.voteAverage && processInfo.voteAverage > 0 && (
-                <div className="hidden bottom-auto right-auto left-0 px-2 ml-2 inset-y-2 inset-x-8 backdrop-blur-md bg-black/50 rounded-lg">
-                  <img
-                    className="inline-block pr-1 py-2 w-4"
-                    src={star}
-                    alt={t('Star Icon Rating')}
-                  />
-                  <div className="inline-block inset-y-2  inset-x-5 text-amber-400 text-xs text-left leading-4">
-                    {processInfo.voteAverage}
+        <div className=" static h-full w-full flex flex-col md:flex-row md:gap-4 p-2 md:pt-4 md:px-4 items-start">
+          {/* -VOTE AVERAGE, POSTER, BUTTONS, PLAYLISTS Y WHERE SEE */}
+          <div className="flex flex-row md:flex-col gap-2 rounded-xl justify-between md:w-auto w-full">
+            <div className="flex flex-col">
+              <div className="relative flex flex-row w-32 md:w-60">
+                {processInfo.voteAverage && processInfo.voteAverage > 0 ? (
+                  <div className="z-10 absolute left-1 top-1 px-1 py-1 max-xs:hidden flex flex-row gap-1 items-center align-middle backdrop-blur-md bg-black/60 rounded-lg">
+                    <img alt="Star Icon" className="w-3" src={star} />
+                    <div className="text-amber-400 text-xs text-left">
+                      {processInfo.voteAverage}
+                    </div>
                   </div>
-                </div>
-              )}
-              <img
-                className="rounded-xl"
-                src={processInfo.poster}
-                alt={processInfo.title}
-              />
-            </div>
-          ) : (
-            // ! TRAILER NO OPEN
-            // -VOTE AVERAGE, POSTER, BUTTONS, PLAYLISTS Y WHERE SEE
-            <div className="relative row-span-2 rounded-xl col-span-2 sm:col-span-1 grid justify-items-stretch">
-              {processInfo.voteAverage && processInfo.voteAverage > 0 ? (
-                <div className="absolute bottom-auto right-auto left-0 px-2 ml-[84px] sm:ml-2 inset-y-2 inset-x-8 backdrop-blur-md bg-black/50 rounded-lg">
-                  <img
-                    className="inline-block pr-1 py-2 w-4"
-                    src={star}
-                    alt={t('Star Icon Rating')}
-                  />
-                  <div className="inline-block inset-y-2 inset-x-5 text-amber-400 text-xs text-left leading-4">
-                    {processInfo.voteAverage}
-                  </div>
-                </div>
-              ) : null}
-              {poster}
+                ) : null}
+                {poster}
+              </div>
               {userExist ? (
-                <div className="grid grid-cols-6 gap-4 text-center mt-5 justify-center justify-items-center">
+                <div className="flex flex-row items-center gap-4 text-center mt-2 md:mt-5 justify-around md:justify-between">
                   {/* //-SEEN/UNSEEN */}
-                  {userExist ? (
-                    <div className="text-right align-middle">
-                      {mediaType !== 'person' ? (
-                        <SeenPendingButton
-                          condition={seen}
-                          size={20}
-                          text={'Seen'}
-                          handle={handleSeenMedia}
-                        />
-                      ) : null}
-                    </div>
-                  ) : null}
+                  <div className="text-right align-middle">
+                    {mediaType !== 'person' && (
+                      <SeenPendingButton
+                        condition={seen}
+                        size={20}
+                        text={'Seen'}
+                        handle={handleSeenMedia}
+                      />
+                    )}
+                  </div>
                   {/* //-ADD PLAYLIST */}
-                  {userExist ? (
-                    <ShowPlaylistMenu
-                      userId={user.id}
-                      id={Number(id)}
-                      type={mediaType}
-                      runTime={processInfo.runTime}
-                    />
-                  ) : null}
-                  <div className={`col-span-2 align-middle flex gap-4`}>
+                  <ShowPlaylistMenu
+                    userId={user.id}
+                    id={Number(id)}
+                    type={mediaType}
+                    runTime={processInfo.runTime}
+                  />
+                  <div className={`flex gap-4`}>
                     {/* //-REPEAT/NO REPEAT */}
-                    {userExist ? (
-                      mediaType !== 'person' && seen ? (
-                        repeat ? (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <RepeatSeenActive
-                              className="inline-block fill-[#FFCA28]"
-                              alt={t('Repeat')}
-                              onClick={handleRepeatSeen}
-                            />
-                          </button>
-                        ) : (
-                          <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-                            <RepeatSeenNoActive
-                              className="inline-block fill-[#FFCA28]"
-                              width={24}
-                              height={24}
-                              alt={t('No Repeat')}
-                              onClick={handleRepeatSeen}
-                            />
-                          </button>
-                        )
-                      ) : null
-                    ) : null}
+                    {mediaType !== 'person' && seen && (
+                      <RepeatSeenButton
+                        condition={repeat}
+                        handle={handleRepeatSeen}
+                      />
+                    )}
                     {/* //-PENDING/NO PENDING */}
-                    {userExist ? (
-                      mediaType !== 'person' ? (
-                        <SeenPendingButton
-                          condition={pending}
-                          size={17}
-                          text={'Pending'}
-                          handle={handlePending}
-                        />
-                      ) : null
-                    ) : null}
+                    {mediaType !== 'person' && (
+                      <SeenPendingButton
+                        condition={pending}
+                        size={17}
+                        text={'Pending'}
+                        handle={handlePending}
+                      />
+                    )}
                   </div>
                 </div>
               ) : null}
-              {/* //-WHERE SEE OR BUY */}
-              <div className="text-left mt-2">
-                {processInfo.NoWatch === null ? t('Not Available') : null}
-                {/* // STREAM */}
-                {processInfo.streaming ? t('Stream') : null}
-                <div>
-                  {isInPlex ? (
-                    <img
-                      className="inline-block h-9 justify-self-center mb-1 rounded-xl border border-amber-600"
-                      src={PLEX}
-                      alt={'Plex Icon'}
-                    />
-                  ) : null}
-                  {processInfo.watching
-                    ? processInfo.watching.map((watching, index) => (
-                        <img
-                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
-                          alt={watching.provider_name}
-                          key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000,
-                          )}
-                        />
-                      ))
-                    : null}
-                  {processInfo.watchingAds
-                    ? processInfo.watchingAds.map((watching, index) => (
-                        <img
-                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watching.logo_path}`}
-                          alt={watching.provider_name}
-                          key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000,
-                          )}
-                        />
-                      ))
-                    : null}
+            </div>
+            {/* // . Type/Country/Status (mobile only, before Streaming) */}
+            <div className="flex flex-col w-full">
+              <div className="md:hidden w-full">{typeCountryStatusBlock}</div>
+              {/* // ! STREAMING */}
+              <div className="flex flex-col">
+                {/* //-WHERE SEE OR BUY */}
+                <div className="text-left mt-2 text-xs md:text-base">
+                  {processInfo.NoWatch === null ? t('Not Available') : null}
+                  {/* // STREAM */}
+                  {processInfo.streaming ? t('Stream') : null}
+                  <div className="mt-1">
+                    {isInPlex ? (
+                      <img
+                        className="inline-block h-8 md:h-8 justify-self-center mr-0.5 mb-1 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
+                        src={PLEX}
+                        alt={'Plex Icon'}
+                      />
+                    ) : null}
+                    {processInfo.watching?.map((p, i) => (
+                      <ProviderLogo
+                        key={`flatrate-${p.provider_id ?? p.provider_name}-${i}`}
+                        provider={p}
+                      />
+                    ))}
+                    {processInfo.watchingAds?.map((p, i) => (
+                      <ProviderLogo
+                        key={`ads-${p.provider_id ?? p.provider_name}-${i}`}
+                        provider={p}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              {/* // BUY */}
-              <div className={processInfo.watchingBuy ? 'text-left' : ''}>
-                {processInfo.watchingBuy ? t('Buy') : null}
-                <div className={processInfo.watchingBuy ? 'pt-2' : ''}>
-                  {processInfo.watchingBuy && processInfo.watchingBuy
-                    ? processInfo.watchingBuy.map((watchingBuy, index) => (
-                        <img
-                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchingBuy.logo_path}`}
-                          alt={watchingBuy.provider_name}
-                          key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000,
-                          )}
-                        />
-                      ))
-                    : null}
-                </div>
-              </div>
-              {/* // FREE */}
-              <div className={processInfo.watchingFree ? 'text-left' : ''}>
-                {processInfo.watchingFree ? t('Free') : null}
-                <div className={processInfo.watchingFree ? 'pt-2' : ''}>
-                  {processInfo.watchingFree && processInfo.watchingFree
-                    ? processInfo.watchingFree.map((watchingFree, index) => (
-                        <img
-                          className="inline-block h-10 w-auto rounded-xl px-1 pb-1"
-                          src={`https://image.tmdb.org/t/p/original/${watchingFree.logo_path}`}
-                          alt={watchingFree.provider_name}
-                          key={Math.floor(
-                            (1 + index + Math.random()) * 0x10000,
-                          )}
-                        />
-                      ))
-                    : null}
-                </div>
+                <ProvidersSection
+                  label={t('Buy')}
+                  providers={processInfo.watchingBuy}
+                />
+                <ProvidersSection
+                  label={t('Free')}
+                  providers={processInfo.watchingFree}
+                />
               </div>
             </div>
-          )}
+          </div>
           <div className="col-span-2">
-            <div className=" mt-6 px-2">
-              {/* //-NAME AND MEDIA */}
+            <div className="mt-4 md:mt-6">
+              {/* //- NAME AND MEDIA */}
               <div className="flex justify-between items-stretch">
-                <div className="inline-block ">
-                  <div className="font-semibold text-xl md:text-4xl pr-10 inline-block">
-                    {processInfo.title}
-                    {processInfo.date ? (
-                      <p className="ml-1 inline-block text-sm md:text-base">
-                        {`(${processInfo.date})`}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs capitalize text-right">
-                    {t(processInfo.mediaType)}
-                  </div>
-                  <div>
-                    <Certification
-                      info={processInfo.countries}
-                      media={mediaType}
-                      id={id}
-                      lang={langApi}
-                    />
-                  </div>
-                  {processInfo.status ? (
-                    <div>
-                      {processInfo.status === 'Returning Series' ? (
-                        <div className="text-xs text-green-700 capitalize">
-                          {t(processInfo.status)}
-                        </div>
-                      ) : (
-                        <div className="text-xs text-red-700 capitalize">
-                          {t(processInfo.status)}
-                        </div>
-                      )}
-                    </div>
+                <div className="flex flex-row justify-start font-semibold text-lg md:text-4xl pr-10">
+                  {processInfo.title}
+                  {processInfo.date ? (
+                    <p className="ml-1 inline-block text-xs md:text-sm">
+                      {`(${processInfo.date})`}
+                    </p>
                   ) : null}
                 </div>
+                <div className="hidden md:block">{typeCountryStatusBlock}</div>
               </div>
               {/* //-RATING */}
               {userExist ? (
@@ -761,7 +650,7 @@ function DetailsMedia({
                 />
               ) : null}
               {/* //-ORIGINAL NAME, YEAR & RATING PLATFORMS */}
-              <div className="flex justify-between items-stretch flex-row">
+              <div className="flex flex-row justify-between items-stretch">
                 <div className="text-xs md:text-base mt-4 basis-9/12 md:basis-10/12">
                   <div className="text-gray-400">
                     {processInfo.titleVOSE === null
@@ -808,45 +697,22 @@ function DetailsMedia({
                 </div>
                 {/* //-RATING OTHER PLATFORMS */}
                 <div className="text-right basis-3/12 md:basis-2/12">
-                  {/* //.FILMAFFINITY */}
-                  {processInfo.voteFILMA && processInfo.voteFILMA > 0 && (
-                    <div className="mb-1">
-                      <img
-                        className="inline-block w-6 rounded-md"
-                        src={FILMA}
-                        alt={t('Filmaffinity Icon')}
-                      />
-                      <div className="inline-block text-amber-400 text-xs text-left pl-2">
-                        {processInfo.voteFILMA}
-                      </div>
-                    </div>
-                  )}
-                  {/* //.IMDB */}
-                  {processInfo.voteIMDB && processInfo.voteIMDB > 0 && (
-                    <div>
-                      <img
-                        className="inline-block pr-1 w-10"
-                        src={IMDB}
-                        alt={t('IMDB Icon')}
-                      />
-                      <div className="inline-block text-amber-400 text-xs text-left pl-1">
-                        {processInfo.voteIMDB}
-                      </div>
-                    </div>
-                  )}
-                  {/* //.TMDB */}
-                  {processInfo.voteTMDB && processInfo.voteTMDB > 0 ? (
-                    <div>
-                      <img
-                        className="inline-block pr-1 w-10"
-                        src={TMDB}
-                        alt={t('TMDB Icon')}
-                      />
-                      <div className="inline-block text-amber-400 text-xs text-left pl-1">
-                        {processInfo.voteTMDB}
-                      </div>
-                    </div>
-                  ) : null}
+                  <ExternalRating
+                    icon={FILMA}
+                    alt={t('Filmaffinity Icon')}
+                    value={processInfo.voteFILMA}
+                    iconClassName="inline-block w-6 rounded-md"
+                  />
+                  <ExternalRating
+                    icon={IMDB}
+                    alt={t('IMDB Icon')}
+                    value={processInfo.voteIMDB}
+                  />
+                  <ExternalRating
+                    icon={TMDB}
+                    alt={t('TMDB Icon')}
+                    value={processInfo.voteTMDB}
+                  />
                 </div>
               </div>
               {/* // - RUNTIME & TRAILER */}
@@ -885,17 +751,14 @@ function DetailsMedia({
                 )}
                 {/* //.TRAILER */}
                 {processInfo.trailer ? (
-                  <>
-                    {processInfo.trailer && (
-                      <button
-                        className="flex items-center gap-0.5 cursor-pointer text-left text-sm md:text-base font-medium px:center text-purpleNR transition hover:text-grayNR duration-300 ml-4"
-                        onClick={handleVerTrailer}
-                      >
-                        <RiMovie2Line alt={t('See Trailer')} />
-                        {`${t('Trailer')}`}
-                      </button>
-                    )}
-                  </>
+                  <BaseIcon
+                    icon="trailer"
+                    size="md"
+                    onClick={handleVerTrailer}
+                    tooltip={t('See Trailer')}
+                    className="text-purpleNR transition hover:text-grayNR duration-300"
+                    wrapperClassName="inline-block ml-4"
+                  />
                 ) : null}
               </div>
               {/* // . MARATHON */}
@@ -905,295 +768,107 @@ function DetailsMedia({
                   {processInfo.TotalTimeMarathon}
                 </div>
               ) : null}
-              {/* // - DESCRIPTION */}
-              <div className="row-span-2 mt-2 md:mt-2 text-sm md:text-base">
-                <div className="pb-4">{processInfo.description}</div>
-                {/* //-PREMIERE & COUNTRY */}
-                <div className="flex flex-row text-sm mb-4">
+              {/* // ! INFORMATION */}
+              <div className="mt-2 text-sm md:text-base flex flex-col">
+                {/* // - DESCRIPTION */}
+                <div className="pb-4">
                   <div
-                    className={
-                      processInfo.yearRelease ? 'basis-1/2 grid-rows-2' : ''
-                    }
+                    className={`${
+                      descriptionExpanded ? '' : 'line-clamp-2'
+                    } md:line-clamp-none font-extralight text-sm`}
                   >
-                    <div>
-                      <div className="inline-block text-gray-400 mr-1">
-                        {processInfo.yearRelease && processInfo.yearRelease
-                          ? `${t('PREMIERE')}:`
-                          : null}
-                      </div>
-                      <div className="inline-block">
-                        {processInfo.yearRelease}
-                      </div>
-                    </div>
+                    {processInfo.description}
                   </div>
-                  <div className="basis-1/2">
-                    <div className="inline-block text-gray-400 mr-1">
-                      {processInfo.countries &&
-                      processInfo.countries.length !== 0
-                        ? `${t('COUNTRY')}:`
-                        : null}
+                  {processInfo.description && (
+                    <button
+                      type="button"
+                      className="md:hidden mt-1 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                      onClick={() => setDescriptionExpanded((v) => !v)}
+                    >
+                      {descriptionExpanded ? t('Read less') : t('Read more')}
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  {/* //- PREMIERE & COUNTRY */}
+                  <div className="flex flex-row gap-1 items-center text-sm">
+                    <div className="text-gray-400 text-xs">
+                      {processInfo.yearRelease ? `${t('PREMIERE')}:` : null}
                     </div>
-                    <div className="inline-block">
-                      {processInfo.countries &&
-                        processInfo.countries.map((county, index) => (
-                          <div
-                            className="inline-block pr-1"
-                            key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000,
-                            )}
-                          >
-                            <CountryName info={county.iso_3166_1} />
-                            {processInfo.countries &&
-                            index !== processInfo.countries.length - 1
-                              ? ', '
-                              : ''}
-                          </div>
-                        ))}
+                    <div className="text-grayNR text-xs">
+                      {processInfo.yearRelease}
                     </div>
                   </div>
                 </div>
                 {/* // - LAST EPISODE & NEXT EPISODE */}
-                <div className="flex text-sm mb-2">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                   {processInfo.LastAirDate ? (
-                    <div className="flex gap-2 basis-1/2">
-                      <div className="text-gray-400 mb-2">
-                        {t('LAST EPISODE')}:
-                      </div>
+                    <div className="flex flex-row gap-2 text-xs items-center">
+                      <div className="text-gray-400">{t('LAST EPISODE')}:</div>
                       <span>{processInfo.LastAirDate}</span>
                     </div>
                   ) : null}
                   {/* // NEXT EPISODE */}
                   {processInfo.NextEpAir ? (
-                    <div className="flex gap-2 basis-1/2">
+                    <div className="flex flex-row gap-2 text-xs items-center">
                       <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
                       <span>{processInfo.NextEpAir}</span>
                     </div>
                   ) : null}
                 </div>
-                {/* //-CREATE BY */}
-                {created_by && created_by.length > 0 ? (
-                  <div className="flex flex-row text-sm my-4">
-                    <div className="inline-block text-gray-400 mr-1">
-                      {`${t('CREATE BY')}:`}
-                    </div>
-                    <div className="inline-block text-gray-400">
-                      {created_by &&
-                        created_by.map((created, index) =>
-                          index < 5 ? (
-                            <button
-                              className={`inline-block ${
-                                index !== created_by.length - 1 ? 'pr-1' : ''
-                              } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() => navigate(`/person/${created.id}`)}
-                              key={Math.floor(
-                                (1 + index + Math.random()) * 0x10000 +
-                                  created.id,
-                              )}
-                            >
-                              {created.name}
-                              {created_by && index !== created_by.length - 1
-                                ? ', '
-                                : ''}
-                            </button>
-                          ) : null,
-                        )}
-                    </div>
-                    <div
-                      className="inline-block"
-                      key={Math.floor((1 + Math.random()) * 0x10000)}
-                    >
-                      {created_by && created_by.length > 5 ? (
-                        <div className="inline-block">
-                          {', '}
-                          <button
-                            className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() =>
-                              navigate(`/${mediaType}/${id}/credits`)
-                            }
-                          >
-                            {t('more...')}
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : null}
-                {/* //-DIRECTED BY & PRODUCER */}
-                {uniqueDirecting && uniqueDirecting.length > 0 ? (
-                  <div className="flex flex-row text-sm basis-1/2">
-                    <div className="basis-1/2">
-                      <div className="inline-block text-gray-400 mr-1">
-                        {`${t('DIRECTED BY')}:`}
-                      </div>
-                      <div className="inline-block">
-                        {[
-                          uniqueDirecting &&
-                            uniqueDirecting.map((dire, index) => (
-                              <button
-                                className="inline-block pr-1 cursor-pointer hover:text-gray-400"
-                                onClick={() => navigate(`/person/${dire.id}`)}
-                                key={Math.floor(
-                                  (1 + index + Math.random()) * 0x10000,
-                                )}
-                              >
-                                {dire.name}
-                                {uniqueDirecting &&
-                                index !== uniqueDirecting.length - 1
-                                  ? ', '
-                                  : ''}
-                              </button>
-                            )),
-                          <div
-                            className="inline-block"
-                            key={Math.floor((1 + Math.random()) * 0x10000)}
-                          >
-                            {directingAll && directingAll.length > 3 ? (
-                              <div className="inline-block">
-                                {', '}
-                                <button
-                                  className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                                  onClick={() =>
-                                    navigate(`/${mediaType}/${id}/credits`)
-                                  }
-                                >
-                                  {t('more...')}
-                                </button>
-                              </div>
-                            ) : null}
-                          </div>,
-                        ]}
-                      </div>
-                    </div>
-                    {/* // . PRODUCER */}
-                    {processInfo.productCompany &&
-                    processInfo.productCompany.length > 0 ? (
-                      <div className="basis-1/2">
-                        <div className="inline-block text-gray-400 mr-1">
-                          {`${t('PRODUCER')}:`}
-                        </div>
-                        <div className="inline-block">
-                          {processInfo.productCompany.map((producer, index) => (
-                            <div
-                              className="inline-block pr-1"
-                              key={Math.floor(
-                                (1 + index + Math.random()) * 0x10000,
-                              )}
-                            >
-                              {producer.name}
-                              {processInfo.productCompany &&
-                              index !== processInfo.productCompany.length - 1
-                                ? ', '
-                                : ''}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-                {/* //-WRITTEN BY */}
-                {uniqueWriters && uniqueWriters.length > 0 ? (
-                  <div className="flex flex-row text-sm my-4">
-                    <div className="inline-block text-gray-400 mr-1">
-                      {`${t('WRITTEN BY')}:`}
-                    </div>
-                    <div className="inline-block text-gray-400">
-                      {uniqueWriters &&
-                        uniqueWriters.map((writer, index) => (
-                          <button
-                            className={`inline-block ${
-                              uniqueWriters &&
-                              index !== uniqueWriters.length - 1
-                                ? 'pr-1'
-                                : ''
-                            } cursor-pointer text-gray-200 hover:text-gray-400`}
-                            onClick={() => navigate(`/person/${writer.id}`)}
-                            key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000,
-                            )}
-                          >
-                            {writer.name}
-                            {uniqueWriters && index !== uniqueWriters.length - 1
-                              ? ', '
-                              : ''}
-                          </button>
-                        ))}
-                    </div>
-                    <div
-                      className="inline-block"
-                      key={Math.floor((1 + Math.random()) * 0x10000)}
-                    >
-                      {writersAll && writersAll.length > 3 ? (
-                        <div className="inline-block">
-                          {', '}
-                          <button
-                            className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                            onClick={() =>
-                              navigate(`/${mediaType}/${id}/credits`)
-                            }
-                          >
-                            {t('more...')}
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : null}
-                {/* //-PRODUCTION  */}
-                {uniqueProductions && uniqueProductions.length > 0 ? (
-                  <div className="flex flex-row text-sm mb-4">
-                    <div className="inline-block text-gray-400 mr-1">
-                      {uniqueProductions && uniqueProductions.length !== 0
-                        ? `${t('PRODUCTION')}:`
-                        : null}
-                    </div>
-                    <div className="inline-block pr-1 text-gray-400">
-                      {[
-                        uniqueProductions &&
-                          uniqueProductions.map((production, index) => (
-                            <button
-                              className={`inline-block ${
-                                uniqueProductions &&
-                                index !== uniqueProductions.length - 1
-                                  ? 'pr-1'
-                                  : ''
-                              } cursor-pointer text-gray-200 hover:text-gray-400`}
-                              onClick={() =>
-                                navigate(`/person/${production.id}`)
-                              }
-                              key={Math.floor(
-                                (1 + index + Math.random()) * 0x10000,
-                              )}
-                            >
-                              {production.name}
-                              {uniqueProductions &&
-                              index !== uniqueProductions.length - 1
-                                ? ', '
-                                : ''}
-                            </button>
-                          )),
-                        <div
-                          className="inline-block"
-                          key={Math.floor((1 + Math.random()) * 0x10000)}
-                        >
-                          {productionsAll && productionsAll.length > 3 ? (
-                            <div className="inline-block">
-                              {', '}
-                              <button
-                                className="transition ease-in-out text-purpleNR md:hover:text-gray-400 duration-300 cursor-pointer"
-                                onClick={() =>
-                                  navigate(`/${mediaType}/${id}/credits`)
-                                }
-                              >
-                                {t('more...')}
-                              </button>
-                            </div>
-                          ) : null}
-                        </div>,
-                      ]}
-                    </div>
-                  </div>
-                ) : null}
+                <button
+                  type="button"
+                  className="md:hidden my-2 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                  onClick={() => setCrewExpanded((v) => !v)}
+                >
+                  {crewExpanded ? t('Hide credits') : t('Show credits')}
+                </button>
+                <div
+                  className={`${crewExpanded ? 'block' : 'hidden'} md:block`}
+                >
+                  {/* //-CREATE BY */}
+                  <CreditList
+                    label={t('CREATE BY')}
+                    items={createdByList}
+                    totalCount={created_by?.length || 0}
+                    mediaType={mediaType}
+                    mediaId={id}
+                  />
+                  {/* //-DIRECTED BY & PRODUCER */}
+                  {uniqueDirecting && uniqueDirecting.length > 0 ? (
+                    <>
+                      <CreditList
+                        label={t('DIRECTED BY')}
+                        items={uniqueDirecting}
+                        totalCount={directingAll.length}
+                        mediaType={mediaType}
+                        mediaId={id}
+                      />
+                      <CreditList
+                        label={t('PRODUCER')}
+                        items={processInfo.productCompany}
+                        linkable={false}
+                      />
+                    </>
+                  ) : null}
+                  {/* //-WRITTEN BY */}
+                  <CreditList
+                    label={t('WRITTEN BY')}
+                    items={uniqueWriters}
+                    totalCount={writersAll.length}
+                    mediaType={mediaType}
+                    mediaId={id}
+                  />
+                  {/* //-PRODUCTION  */}
+                  <CreditList
+                    label={t('PRODUCTION')}
+                    items={uniqueProductions}
+                    totalCount={productionsAll.length}
+                    mediaType={mediaType}
+                    mediaId={id}
+                    containerClassName="flex flex-row text-sm mb-4"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1209,7 +884,7 @@ function DetailsMedia({
           </Link>
         </div>
         {/* //- MAIN CAST */}
-        {modal !== true && items.length > 0 ? (
+        {items.length > 0 ? (
           <div className="text-gray-200 rounded-xl ">
             <div className="px-4">
               <CarouselCredits
@@ -1221,13 +896,14 @@ function DetailsMedia({
                 nameFilm={processInfo.title}
                 changeSeenPending={changeSeenPending}
                 setChangeSeenPending={setChangeSeenPending}
+                size={'small'}
               />
             </div>
           </div>
         ) : null}
         {/* //-COLLECTIONS / SEASONS */}
         <div className="text-lg">
-          {modal !== true && processInfo.collection ? (
+          {processInfo.collection ? (
             <Collections
               idCollection={processInfo.collection.id}
               media={mediaType}
@@ -1254,7 +930,7 @@ function DetailsMedia({
         </div>
         <div className="pb-6">
           {/* //-RECOMMENDATIONS */}
-          {!modal && info.id === id ? (
+          {info.id === id ? (
             <Recommendations
               title={
                 mediaType === 'movie' ? t('Recommendations') : t('Similar')
@@ -1267,7 +943,7 @@ function DetailsMedia({
             />
           ) : null}
           {/* //-SIMILAR */}
-          {!modal && info.id === id ? (
+          {info.id === id ? (
             <Similar
               title={
                 mediaType === 'movie' ? t('Similar') : t('Recommendations')
@@ -1280,6 +956,19 @@ function DetailsMedia({
             />
           ) : null}
         </div>
+        <BaseModal
+          visible={modal}
+          onClose={() => setModal(false)}
+          className="bg-black"
+        >
+          <iframe
+            title={`${processInfo.title} trailer`}
+            className="w-full aspect-video"
+            src={`https://www.youtube.com/embed/${processInfo.trailer}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </BaseModal>
       </div>
     </>
   );

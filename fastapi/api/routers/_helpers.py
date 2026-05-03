@@ -51,6 +51,7 @@ async def parse_form(request: Request) -> tuple[dict[str, Any], dict[str, Starle
 def get_media_for_user(db: Session, user_id: str, media_id: str) -> dict[str, Any] | None:
     from api.core.nexreel.repository import serialize_media, serialize_media_tv
 
+    media_id = str(media_id)
     media = fetch_one(
         db,
         "SELECT * FROM media WHERE media_id = :media_id AND user_id = :user_id",

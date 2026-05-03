@@ -11,9 +11,7 @@ const TVShows = () => {
       <div className="mt-10">
         <Top media="tv" />
       </div>
-      <div className="pb-20">
         <Streaming media="tv" />
-      </div>
     </div>
   );
 };

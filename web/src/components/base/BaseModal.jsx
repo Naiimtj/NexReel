@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import BaseIcon from './BaseIcon';
+import { t } from 'i18next';
 
 const BaseModal = ({
   visible = false,
@@ -12,6 +13,7 @@ const BaseModal = ({
   fullWidth = false,
   closeButtonHidden = false,
   className = '',
+  overlayClassName = '',
   children,
   ...props
 }) => {
@@ -31,7 +33,7 @@ const BaseModal = ({
 
   if (!visible) return null;
 
-  let sizeClasses = 'max-w-[90vw] max-h-[90vh]';
+  let sizeClasses = 'w-[75vw] h-auto';
   if (fullscreen) sizeClasses = 'w-screen h-screen';
   else if (fullHeight) sizeClasses = 'h-screen max-w-[90vw]';
   else if (fullWidth) sizeClasses = 'w-screen max-h-[90vh]';
@@ -49,7 +51,7 @@ const BaseModal = ({
 
   const modal = (
     <div
-      className="fixed top-0 left-0 w-screen h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+      className={`fixed top-0 left-0 w-screen h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 ${overlayClassName}`.trim()}
       onClick={handleOverlayClick}
       onKeyDown={handleOverlayKey}
       {...props}
@@ -57,15 +59,15 @@ const BaseModal = ({
       <dialog
         open
         aria-modal="true"
-        className={`bg-white text-black rounded-xl shadow-2xl relative overflow-y-auto p-0 ${sizeClasses} ${className}`.trim()}
+        className={`text-black rounded-xl shadow-2xl relative overflow-y-auto p-0 ${sizeClasses} ${className}`.trim()}
       >
         {!closeButtonHidden && (
           <BaseIcon
             icon="close"
-            className="fill-gray-600 transition duration-200 hover:fill-purpleNR"
+            className="fill-grayNR transition duration-200 hover:fill-purpleNR mb-1"
             wrapperClassName="sticky z-10 top-1 mr-1 flex justify-end"
             onClick={onClose}
-            tooltip="Close"
+            tooltip={t('Close')}
             tooltipPosition="top"
           />
         )}
@@ -94,6 +96,7 @@ BaseModal.propTypes = {
   fullWidth: PropTypes.bool,
   closeButtonHidden: PropTypes.bool,
   className: PropTypes.string,
+  overlayClassName: PropTypes.string,
   children: PropTypes.node,
 };
 

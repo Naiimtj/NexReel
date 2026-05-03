@@ -513,7 +513,6 @@ function ConvertCertifEx({ info, media }) {
         "18+": "+18",
       },
     };
-    console.log();
     processInfo.calif =
       info && info.release_dates[0]
         ? info.release_dates[0].certification
@@ -540,7 +539,7 @@ function ConvertCertifEx({ info, media }) {
     <div
       className={
         processInfo.calificationFinal
-          ? "text-xs text-center text-gray-400 border-2 border-gray-600"
+          ? "text-xs text-center text-gray-400 border border-gray-600 p-1 rounded-sm"
           : ""
       }
     >

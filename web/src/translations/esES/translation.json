@@ -407,6 +407,10 @@
   "Are you sure you want to delete?": "¿Seguro que quieres borrar?",
   "Yes": "Sí",
   "Available": "Disponible",
+  "Read more": "Leer más",
+  "Read less": "Leer menos",
+  "Show credits": "Mostrar créditos",
+  "Hide credits": "Ocultar créditos",
   "PREMIERE": "ESTRENO",
   "COUNTRY": "PAÍS",
   "DIRECTED BY": "DIRIGIDO POR",
@@ -499,5 +503,10 @@
   "Create playlist": "Crear playlist",
   "Edit Playlist": "Editar Playlist",
   "Delete Playlist": "Eliminar Playlist",
-  "Edit": "Editar"
+  "Edit": "Editar",
+  "Close": "Cerrar",
+  "Add": "Añadir",
+  "Save": "Guardar",
+  "Repeat": "Repetir",
+  "No Repeat": "No Repetir"
 }

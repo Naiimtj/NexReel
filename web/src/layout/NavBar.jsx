@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { BsSearch } from 'react-icons/bs';
 import BaseLink from '../components/base/BaseLink';
+import BaseModal from '../components/base/BaseModal';
 import Logo from '/img/logo.svg';
 import { useAuthContext } from '../context/auth-context';
 import { getInfoUser, logoutDB } from '../../services/DB/services-db';
@@ -12,19 +14,24 @@ const NavBar = () => {
   const [t] = useTranslation('translation');
   const { user, onLogout } = useAuthContext();
   const [dataUser, setDataUser] = useState({});
-  const [hiden, setHiden] = useState(false);
-  const searchRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setHiden(true);
-        setTimeout(() => setHiden(false), 500);
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setMobileMenuOpen(false);
       }
     };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   useEffect(() => {
     if (user?.id) {
@@ -36,54 +43,204 @@ const NavBar = () => {
 
   const logout = () => logoutDB().then(onLogout);
 
-  const handleHiden = () => {
-    setHiden(true);
-    setTimeout(() => setHiden(false), 500);
-  };
-
   return (
     <>
-      <div className="grid grid-cols-5 justify-between items-center relative">
+      <div className="flex flex-row justify-between items-center relative">
         <Link to="/" className="flex justify-center items-center">
           <img
-            className="h-5 md:h-7 lg:h-10 inline-block"
+            className="h-7 lg:h-10 inline-block"
             src={Logo}
             alt="NaiPlex Logo"
           />
-          <h1 className="text-gray-50 font-bold text-xs md:text-base lg:text-4xl ml-2 inline-block align-middle">
+          <h1 className="text-gray-50 font-bold text-base lg:text-4xl inline-block align-middle">
             NexReel
           </h1>
         </Link>
 
-        <div className="col-start-3 h-full" ref={searchRef}>
-          <SearchLayout hiden={hiden} />
+        <div className="flex justify-center">
+          <button
+            type="button"
+            aria-label={t('Search')}
+            onClick={() => setSearchModalOpen(true)}
+            className="p-2 rounded-md text-grayNR hover:text-purpleNR focus:outline-none"
+          >
+            <BsSearch className="h-5 w-5 md:h-6 md:w-6" />
+          </button>
         </div>
 
-        <nav className="text-right col-span-2 flex justify-end items-center">
-          <BaseLink to="/" variant="nav" className="pr-4">
-            {t('Home')}
-          </BaseLink>
-          <BaseLink to="/movie" variant="nav" className="pr-4">
-            {t('Movies')}
-          </BaseLink>
-          <BaseLink to="/tv" variant="nav" className="pr-4">
-            {t('TV Shows')}
-          </BaseLink>
-          {user && (
-            <div className="inline-block flex text-lg">
-              <UserMenu user={dataUser} logout={logout} translate={t} />
-            </div>
-          )}
-          {!user && (
-            <BaseLink to="/login" variant="nav">
-              {t('Login')}
+        <nav className="text-right flex justify-end items-center">
+          <div className="hidden md:flex items-center">
+            <BaseLink to="/" variant="nav" className="pr-4">
+              {t('Home')}
             </BaseLink>
-          )}
+            <BaseLink to="/movie" variant="nav" className="pr-4">
+              {t('Movies')}
+            </BaseLink>
+            <BaseLink to="/tv" variant="nav" className="pr-4">
+              {t('TV Shows')}
+            </BaseLink>
+            {user && (
+              <div className="flex text-lg">
+                <UserMenu user={dataUser} logout={logout} translate={t} />
+              </div>
+            )}
+            {!user && (
+              <BaseLink to="/login" variant="nav">
+                {t('Login')}
+              </BaseLink>
+            )}
+          </div>
+
+          <div className="md:hidden relative z-50" ref={mobileMenuRef}>
+            <button
+              type="button"
+              aria-label={t('Open menu')}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="relative z-50 p-2 rounded-md bg-gray-900/80 text-grayNR hover:text-purpleNR focus:outline-none"
+            >
+              {mobileMenuOpen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
+
+            {mobileMenuOpen && (
+              <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-50 z-50 py-2 text-left">
+                <BaseLink
+                  to="/"
+                  variant="nav"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                  onClick={closeMobileMenu}
+                >
+                  {t('Home')}
+                </BaseLink>
+                <BaseLink
+                  to="/movie"
+                  variant="nav"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                  onClick={closeMobileMenu}
+                >
+                  {t('Movies')}
+                </BaseLink>
+                <BaseLink
+                  to="/tv"
+                  variant="nav"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                  onClick={closeMobileMenu}
+                >
+                  {t('TV Shows')}
+                </BaseLink>
+
+                <div className="my-2 border-t border-gray-700" />
+
+                {user ? (
+                  <>
+                    <div className="flex items-center px-4 py-2">
+                      {dataUser?.avatarURL && (
+                        <img
+                          className="h-8 w-8 rounded-full object-cover mr-2"
+                          src={dataUser.avatarURL}
+                          alt={t('Avatar')}
+                        />
+                      )}
+                      <span className="text-grayNR text-sm truncate">
+                        {dataUser?.username || dataUser?.name || ''}
+                      </span>
+                    </div>
+                    <BaseLink
+                      to="/me"
+                      variant="nav"
+                      className="block px-4 py-2 hover:bg-gray-700"
+                      onClick={closeMobileMenu}
+                    >
+                      {t('Profile')}
+                    </BaseLink>
+                    <BaseLink
+                      to={`/playlists/${dataUser?.id || user.id}`}
+                      variant="nav"
+                      className="block px-4 py-2 hover:bg-gray-700"
+                      onClick={closeMobileMenu}
+                    >
+                      {t('Playlists')}
+                    </BaseLink>
+                    <BaseLink
+                      to="/forums"
+                      variant="nav"
+                      className="block px-4 py-2 hover:bg-gray-700"
+                      onClick={closeMobileMenu}
+                    >
+                      {t('Forums')}
+                    </BaseLink>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMobileMenu();
+                        logout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-grayNR hover:bg-gray-700 text-xs md:text-base"
+                    >
+                      {t('Sign out')}
+                    </button>
+                  </>
+                ) : (
+                  <BaseLink
+                    to="/login"
+                    variant="nav"
+                    className="block px-4 py-2 hover:bg-gray-700"
+                    onClick={closeMobileMenu}
+                  >
+                    {t('Login')}
+                  </BaseLink>
+                )}
+              </div>
+            )}
+          </div>
         </nav>
       </div>
-      <div className="z-49" onClick={handleHiden}>
-        <Outlet />
-      </div>
+      <BaseModal
+        visible={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        fullscreen
+        className="bg-[#20283E] text-gray-200 md:!w-[calc(100vw-1rem)] md:!h-[calc(100vh-5rem)] md:!rounded-xl"
+        overlayClassName="md:!items-start md:!pt-20"
+      >
+        <div className="px-2 md:px-6 pt-2 pb-4 flex flex-col items-stretch">
+          <SearchLayout
+            hiden={!searchModalOpen}
+            fullWidth
+            onSelect={() => setSearchModalOpen(false)}
+          />
+        </div>
+      </BaseModal>
+      <Outlet />
     </>
   );
 };

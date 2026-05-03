@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { BsSearch } from 'react-icons/bs';
 import { getSearch } from '../../services/TMDB/services-tmdb';
 import SearchResults from '../components/Search/SearchResults';
+import { BaseIcon } from '../components/base';
 
-const SearchLayout = ({ hiden = false }) => {
+const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
   const [t] = useTranslation('translation');
   const [moviesList, setMovies] = useState([]);
   const [tvList, setTvs] = useState([]);
@@ -19,6 +20,11 @@ const SearchLayout = ({ hiden = false }) => {
     setTvs([]);
     setPersons([]);
     setSearching(false);
+  };
+
+  const handleSelect = () => {
+    reset();
+    if (onSelect) onSelect();
   };
 
   useEffect(() => {
@@ -44,20 +50,34 @@ const SearchLayout = ({ hiden = false }) => {
   };
 
   return (
-    <div>
-      <div className="grid grid-flow-col auto-cols-max">
-        <div className="border-2 rounded-xl border-gray-600 flex flex-row p-1">
-          <div className="relative w-1/6 md:w-auto">
+    <div className={fullWidth ? 'w-full' : undefined}>
+      <div
+        className={`grid grid-flow-col max-w-full ${
+          fullWidth ? 'auto-cols-fr w-full' : 'auto-cols-max'
+        }`}
+      >
+        <div className="border-2 rounded-xl border-gray-600 flex flex-row p-1 w-full">
+          <div className="relative w-full">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400">
               <BsSearch />
             </span>
             <input
-              className="placeholder:italic placeholder:text-slate-400 block bg-transparent w-full border border-transparent pl-9 pr-3 shadow-sm focus:outline-none sm:text-sm text-grayNR"
+              className="placeholder:italic placeholder:text-slate-400 block bg-transparent w-full min-w-0 border border-transparent pl-9 pr-8 shadow-sm focus:outline-none sm:text-sm text-grayNR"
               placeholder={t('movie, tv, person...')}
               value={searchValue}
               onChange={onChangeInput}
               type="text"
             />
+            {searchValue && (
+              <BaseIcon
+                icon="close"
+                size="sm"
+                onClick={reset}
+                tooltip={t('Clear')}
+                className="fill-slate-400 transition duration-200 hover:fill-grayNR"
+                wrapperClassName="absolute inset-y-0 right-0 flex items-center pr-2"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -67,7 +87,7 @@ const SearchLayout = ({ hiden = false }) => {
             <SearchResults
               listMedias={personsList}
               media="person"
-              hideSearch={reset}
+              hideSearch={handleSelect}
             />
           )}
           {moviesList.results?.length > 0 && (
@@ -75,7 +95,7 @@ const SearchLayout = ({ hiden = false }) => {
               title={t('Movies')}
               listMedias={moviesList}
               media="movie"
-              hideSearch={reset}
+              hideSearch={handleSelect}
             />
           )}
           {tvList.results?.length > 0 && (
@@ -83,7 +103,7 @@ const SearchLayout = ({ hiden = false }) => {
               title={t('tv shows')}
               listMedias={tvList}
               media="tv"
-              hideSearch={reset}
+              hideSearch={handleSelect}
             />
           )}
         </div>
@@ -92,6 +112,10 @@ const SearchLayout = ({ hiden = false }) => {
   );
 };
 
-SearchLayout.propTypes = { hiden: PropTypes.bool };
+SearchLayout.propTypes = {
+  hiden: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  onSelect: PropTypes.func,
+};
 
 export default SearchLayout;

@@ -449,6 +449,8 @@ async function loadIds(fetchFn, setImdb, setTmdb) {
 
 ## BaseIcon Component
 
+> **MANDATORY RULE**: Every icon and every clickable icon button in the app MUST use `BaseIcon`. Never render `react-icons/*` components (e.g. `BsXLg`, `FaStar`, `BsSearch`) directly inside a button/control, and never inline raw `<svg>` for icons. If an icon is missing from `iconRegistry`, add a new `XxxIcon.jsx` under `web/src/components/base/icons/` and register it. See also `.github/instructions/frontend-icons.instructions.md`.
+
 `web/src/components/base/BaseIcon.jsx` is the canonical icon component. It renders SVGs from `iconRegistry` and provides built-in tooltip support via an internal `TooltipWrapper`.
 
 ### Props
@@ -490,7 +492,7 @@ This separation is intentional: if mouse handlers were on the outer div, they wo
 
 ### Why the `<button>` was removed from `BaseModal`
 
-Earlier `BaseModal.jsx` wrapped `BaseIcon` in a `<button>`. With `onClick` directly on `BaseIcon`, the SVG itself becomes interactive. **However, this loses keyboard accessibility** (SVGs are not focusable, no `Enter`/`Space` activation, no `aria-label`). When using `BaseIcon` as a primary control (close, submit, etc.), prefer the `<BaseIcon>` with `tooltip` prop — but be aware that the underlying SVG is not keyboard-focusable. For fully accessible interactive icons, wrap in `<button type="button" aria-label="...">` and put `BaseIcon` inside (without `onClick`).
+`BaseIcon` already handles `onClick` (it adds `cursor-pointer` automatically) and provides an accessible label through the `tooltip` prop. **Never wrap `BaseIcon` in a `<button>` or any other interactive element** — pass `onClick` directly to `BaseIcon`. This is the canonical pattern across the app.
 
 ### Tailwind `group` pattern with BaseIcon
 

@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-// icons
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { GoDotFill, GoDot } from 'react-icons/go';
 // components
 import Multi from '../../components/MediaList/Multi';
 import { useAuthContext } from '../../context/auth-context';
 import { useMediaContext } from '../../context/media-context';
 import { getDetailForum } from '../../../services/DB/services-db';
+import CarouselHeader from './CarouselHeader';
+import CarouselDots from './CarouselDots';
+import { useCarouselPagination } from './useCarouselPagination';
+import { useSwipe } from './useSwipe';
 
 const SIZE_CONFIG = {
   small: {
-    cardsPerPage: { sm: 3, md: 4, lg: 6, xl: 8 },
-    gridClass: 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
+    cardsPerPage: { sm: 2, md: 4, lg: 6, xl: 8 },
+    gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
   },
   normal: {
     cardsPerPage: { sm: 2, md: 3, lg: 4, xl: 6 },
@@ -41,7 +42,7 @@ const Carousel = ({
   const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
   const headerTitleClass =
     size === 'small'
-      ? 'pl-4 text-xs md:text-base uppercase'
+      ? 'pl-4 text-sm md:text-base uppercase'
       : 'pl-4 text-sm md:text-2xl uppercase';
   const { user } = useAuthContext();
   const userExist = !!user;
@@ -81,135 +82,48 @@ const Carousel = ({
   };
   const mediaMovie = media === 'movie';
   const mediaTv = media === 'tv';
-  const [currentPage, setCurrentPage] = useState(1);
-  // Reset to first page when the underlying data changes (e.g. navigating to
-  // another movie/collection) so the user is not stuck on a page that no
-  // longer has cards to render.
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [info]);
-  const getCardsPerPage = () => {
-    const screenWidth = window.innerWidth;
-    const { sm, md, lg, xl } = sizeConfig.cardsPerPage;
-    if (screenWidth < 750) return sm;
-    if (screenWidth < 1000) return md;
-    if (screenWidth < 1280) return lg;
-    return xl;
-  };
-  const cardsPerPage = getCardsPerPage();
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  // If it is even, 2 objects are subtracted from the array. If it is odd, no subtraction is made
-  const allCards =
-    !isAllCards &&
-    !isUser &&
-    info.length > cardsPerPage &&
-    cardsPerPage % 2 === 0
-      ? info.slice(0, -2)
-      : info;
-  const totalPages = Math.ceil(allCards.length / cardsPerPage);
-  const startCardIndex = (currentPage - 1) * cardsPerPage;
-  const visibleCards = allCards.slice(
-    startCardIndex,
-    startCardIndex + cardsPerPage,
-  );
-  // Dots
-  const renderPageIndicator = () => {
-    const indicators = [];
-    for (let i = 1; i <= totalPages; i++) {
-      const icon =
-        i === currentPage ? (
-          <GoDotFill size={20} alt="Icon Fill Dot Page" />
-        ) : (
-          <GoDot size={20} alt="Icon Empty Dot Page" />
-        );
-      indicators.push(
-        <div
-          key={`carousel1${i}${media}`}
-          onClick={() => setCurrentPage(i)}
-          className="cursor-pointer transition ease-in-out text-[#6676a7] md:hover:scale-110 md:hover:text-gray-200 duration-300"
-        >
-          {icon}
-        </div>,
-      );
-    }
-    return indicators;
-  };
+
+  const {
+    currentPage,
+    allCards,
+    totalPages,
+    visibleCards,
+    hasOverflow,
+    canPrev,
+    canNext,
+    handleNext,
+    handlePrev,
+    goToPage,
+  } = useCarouselPagination({
+    items: info,
+    breakpoints: sizeConfig.cardsPerPage,
+    trimTrailing: !isAllCards && !isUser,
+    resetKey: info,
+  });
+
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrev,
+  });
 
   return (
     <>
-      {allCards && allCards.length > cardsPerPage ? (
-        <div className="flex justify-between items-center">
-          {/* // - TITLE */}
-          <div className="flex text-gray-200">
-            <h1 className={headerTitleClass}>{title}</h1>
-            {isUser && title ? (
-              <p className="ml-1 text-xs">{`( ${
-                allCards.length ? allCards.length : 0
-              } )`}</p>
-            ) : null}
-          </div>
-          {/* // - BUTTONS */}
-          <div className="flex">
-            <div className="align-middle">
-              {startCardIndex > 0 ? (
-                <IoIosArrowBack
-                  className="inline-block cursor-pointer transition ease-in-out text-[#6676a7] md:hover:scale-110 md:hover:text-gray-200 duration-300"
-                  size={50}
-                  alt="Back Icon"
-                  onClick={handlePrevPage}
-                />
-              ) : (
-                <IoIosArrowBack
-                  className="inline-block text-gray-800"
-                  size={50}
-                  alt="Back Icon"
-                  onClick={handlePrevPage}
-                />
-              )}
-            </div>
-            <div className="align-middle">
-              {startCardIndex + cardsPerPage < allCards.length ? (
-                <IoIosArrowForward
-                  className="inline-block cursor-pointer transition ease-in-out text-[#6676a7] md:hover:scale-110 md:hover:text-gray-200 duration-300"
-                  size={50}
-                  alt="Before Icon"
-                  onClick={handleNextPage}
-                />
-              ) : (
-                <IoIosArrowForward
-                  className="inline-block text-gray-800"
-                  size={50}
-                  alt="Before Icon"
-                  onClick={handleNextPage}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex justify-between items-center">
-          {/* // - TITLE */}
-          <div className="flex text-gray-200">
-            <h1 className={headerTitleClass}>{title}</h1>
-            {isUser && title ? (
-              <p className="ml-1 text-xs">{`( ${
-                allCards.length ? allCards.length : 0
-              } )`}</p>
-            ) : null}
-          </div>
-        </div>
-      )}
+      <CarouselHeader
+        title={title}
+        count={allCards.length}
+        showCount={isUser}
+        showNav={hasOverflow}
+        canPrev={canPrev}
+        canNext={canNext}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        titleClassName={headerTitleClass}
+      />
       {/* // - CARDS */}
-      <div className={`my-2 grid ${sizeConfig.gridClass} gap-2`}>
+      <div
+        className={`my-2 grid ${sizeConfig.gridClass} gap-2 touch-pan-y`}
+        {...swipeHandlers}
+      >
         {visibleCards.map((card, index) => (
           <Multi
             key={`carrousel2${index}${media}`}
@@ -230,9 +144,13 @@ const Carousel = ({
           />
         ))}
       </div>
-      {/* // - PAGES */}
-      {allCards && allCards.length > cardsPerPage ? (
-        <div className="flex justify-center">{renderPageIndicator()}</div>
+      {hasOverflow ? (
+        <CarouselDots
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onSelect={goToPage}
+          keyPrefix={`carousel-${media}`}
+        />
       ) : null}
     </>
   );

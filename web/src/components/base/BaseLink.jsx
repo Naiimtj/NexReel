@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const navBase =
-  'text-xs md:text-base lg:text-xl hover:text-gray-300 transition duration-300';
+  'text-base lg:text-xl hover:text-gray-300 transition duration-300';
 
 const variantClasses = {
   nav: null,
@@ -23,8 +23,8 @@ const BaseLink = ({
 
   let classes;
   if (variant === 'nav') {
-    const activeClass = isActive ? 'text-purpleNR font-bold' : 'text-grayNR';
-    classes = `${activeClass} ${navBase} ${className}`.trim();
+    const activeClass = isActive ? 'text-purpleNR font-bold' : 'text-grayNR hover:text-purpleNR';
+    classes = `cursor-pointer ${activeClass} ${navBase} ${className}`.trim();
   } else {
     classes = `${variantClasses[variant] ?? ''} ${className}`.trim();
   }

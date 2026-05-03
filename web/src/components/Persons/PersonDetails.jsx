@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { BsFillCaretRightFill } from "react-icons/bs";
-import { FaFacebookSquare, FaInstagram, FaYoutube } from "react-icons/fa";
-import { FaSquareXTwitter, FaTiktok } from "react-icons/fa6";
-import { SiWikidata } from "react-icons/si";
-import Carousel from "../../utils/Carousel/Carousel";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import { NoImage, people } from "../../assets/image";
-import { getExternalId } from "../../../services/TMDB/services-tmdb";
-import { IoIosArrowBack } from "react-icons/io";
-import { useAuthContext } from "../../context/auth-context";
-import { getImdbPerson } from "../../../services/IMDB/services-imdb";
-import PageTitle from "../PageTitle";
-import ShowPlaylistMenu from "../../utils/Playlists/ShowPlaylistMenu";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { BsFillCaretRightFill } from 'react-icons/bs';
+import { FaFacebookSquare, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { FaSquareXTwitter, FaTiktok } from 'react-icons/fa6';
+import { SiWikidata } from 'react-icons/si';
+import Carousel from '../../utils/Carousel/Carousel';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import { NoImage, people } from '../../assets/image';
+import { getExternalId } from '../../../services/TMDB/services-tmdb';
+import { IoIosArrowBack } from 'react-icons/io';
+import { useAuthContext } from '../../context/auth-context';
+import { getImdbPerson } from '../../../services/IMDB/services-imdb';
+import PageTitle from '../PageTitle';
+import ShowPlaylistMenu from '../../utils/Playlists/ShowPlaylistMenu';
 
 export const PersonDetails = ({
   info,
@@ -24,7 +24,7 @@ export const PersonDetails = ({
   idMedia,
   titleMedia,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { user, onReload } = useAuthContext();
   const userExist = !!user;
   const {
@@ -47,7 +47,7 @@ export const PersonDetails = ({
   useEffect(() => {
     // eslint-disable-next-line no-unused-vars
     const imdbAPI = async () => {
-      const result = await getImdbPerson(imdb_id, t("es-ES"));
+      const result = await getImdbPerson(imdb_id, t('es-ES'));
       if (result) {
         setImdbPerson(result);
       }
@@ -60,7 +60,7 @@ export const PersonDetails = ({
   const [externalId, setExternalId] = useState([]);
   useEffect(() => {
     const externalIdAPI = async () => {
-      const result = await getExternalId("person", id, t("es-ES"));
+      const result = await getExternalId('person', id, t('es-ES'));
       if (result) {
         setExternalId(result);
       }
@@ -70,27 +70,27 @@ export const PersonDetails = ({
     }
   }, [id, t]);
   const facebookId =
-    externalId && externalId.facebook_id !== "" && externalId.facebook_id
+    externalId && externalId.facebook_id !== '' && externalId.facebook_id
       ? externalId.facebook_id
       : null;
   const instagramId =
-    externalId && externalId.instagram_id !== "" && externalId.instagram_id
+    externalId && externalId.instagram_id !== '' && externalId.instagram_id
       ? externalId.instagram_id
       : null;
   const twitterId =
-    externalId && externalId.twitter_id !== "" && externalId.twitter_id
+    externalId && externalId.twitter_id !== '' && externalId.twitter_id
       ? externalId.twitter_id
       : null;
   const tiktokId =
-    externalId && externalId.tiktok_id !== "" && externalId.tiktok_id
+    externalId && externalId.tiktok_id !== '' && externalId.tiktok_id
       ? externalId.tiktok_id
       : null;
   const wikipediaId =
-    externalId && externalId.wikidata_id !== "" && externalId.wikidata_id
+    externalId && externalId.wikidata_id !== '' && externalId.wikidata_id
       ? externalId.wikidata_id
       : null;
   const youtubeId =
-    externalId && externalId.youtube_id !== "" && externalId.youtube_id
+    externalId && externalId.youtube_id !== '' && externalId.youtube_id
       ? externalId.youtube_id
       : null;
   const imdbClean =
@@ -102,7 +102,7 @@ export const PersonDetails = ({
   const photo = profile_path ? urlPerson : NoImage;
   const height = imdbClean ? imdbClean.height : null;
   const biographyInfo =
-    biography !== "" ? biography : infoEN ? infoEN.biography : null;
+    biography !== '' ? biography : infoEN ? infoEN.biography : null;
   const birthdayDate = birthday
     ? new DateAndTimeConvert(
         birthday,
@@ -110,7 +110,7 @@ export const PersonDetails = ({
         false,
         false,
         false,
-        true
+        true,
       ).DateTimeConvert()
     : null;
   const deathdayDate = deathday
@@ -120,14 +120,23 @@ export const PersonDetails = ({
         false,
         false,
         false,
-        true
+        true,
       ).DateTimeConvert()
     : null;
-  const age = !deathdayDate
-    ? birthday
-      ? new Date().getFullYear() - new Date(birthday).getFullYear()
-      : null
-    : new Date(deathday).getFullYear() - new Date(birthday).getFullYear();
+  const computeAge = (fromDate, toDate) => {
+    if (!fromDate) return null;
+    const from = new Date(fromDate);
+    const to = toDate ? new Date(toDate) : new Date();
+    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return null;
+    let years = to.getFullYear() - from.getFullYear();
+    const monthDiff = to.getMonth() - from.getMonth();
+    const dayDiff = to.getDate() - from.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      years -= 1;
+    }
+    return years >= 0 ? years : null;
+  };
+  const age = computeAge(birthday, deathday);
   const department = imdbClean ? imdbClean.role : null;
   // const knownFor = imdbClean ? imdbClean.knownFor : null;
   const departmentKnown = known_for_department;
@@ -161,20 +170,20 @@ export const PersonDetails = ({
     knownFor &&
     knownFor.filter(
       (movieData) =>
-        movieData.release_date === "" || movieData.release_date === undefined
+        movieData.release_date === '' || movieData.release_date === undefined,
     );
   const knownMovieNoDate =
     knownNoDate &&
-    knownNoDate.filter((movieData) => movieData.media_type === "movie");
+    knownNoDate.filter((movieData) => movieData.media_type === 'movie');
   const knownDate =
     knownFor &&
     knownFor.filter(
-      (movieData) => movieData.release_date !== "" && movieData.release_date
+      (movieData) => movieData.release_date !== '' && movieData.release_date,
     );
 
   const knownMovie =
     knownDate &&
-    knownDate.filter((movieData) => movieData.media_type === "movie");
+    knownDate.filter((movieData) => movieData.media_type === 'movie');
   knownMovie &&
     knownMovie.sort(function (a, b) {
       if (
@@ -191,20 +200,20 @@ export const PersonDetails = ({
     });
 
   const knownNoDateT =
-    knownFor && knownFor.filter((movieData) => movieData.media_type === "tv");
+    knownFor && knownFor.filter((movieData) => movieData.media_type === 'tv');
   const knownNoDateTv =
     knownNoDateT &&
     knownNoDateT.filter(
       (tvData) =>
-        tvData.first_air_date === "" || tvData.first_air_date === undefined
+        tvData.first_air_date === '' || tvData.first_air_date === undefined,
     );
 
   const knownDateTv =
-    knownFor && knownFor.filter((tvData) => tvData.media_type === "tv");
+    knownFor && knownFor.filter((tvData) => tvData.media_type === 'tv');
   const knownTV =
     knownDateTv &&
     knownDateTv.filter(
-      (tvData) => tvData.first_air_date !== "" || tvData.release_date
+      (tvData) => tvData.first_air_date !== '' || tvData.release_date,
     );
 
   knownTV &&
@@ -251,6 +260,7 @@ export const PersonDetails = ({
   // - PLAYLIST
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
   const [isTimeout, setIsTimeout] = useState(true);
+  const [biographyExpanded, setBiographyExpanded] = useState(false);
   useEffect(() => {
     let timerId;
 
@@ -267,10 +277,10 @@ export const PersonDetails = ({
     };
   }, [isTimeout, errorAddPlaylists]);
   return (
-    <div>
+    <div className="text-gray-200 w-auto bg-local object-cover backdrop-blur-md bg-transparent/30 rounded-3xl p-2 md:p-4">
       <PageTitle title={`${name}`} />
       {/* //.BACK TO MOVIE/TV SHOW */}
-      {idMedia !== "" ? (
+      {idMedia !== '' ? (
         <Link
           className="ml-5 pt-5 hover:text-[#6676a7]"
           to={`/${media}/${idMedia}`}
@@ -282,7 +292,7 @@ export const PersonDetails = ({
       ) : null}
       <div className="h-full w-full grid md:grid-flow-col gap-4 py-2 md:py-4 ">
         {/* //-PHOTO Y ADD PLAYLIST */}
-        <div className="md:row-span-1 rounded-xl justify-center">
+        <div className="md:row-span-1 rounded-xl justify-center flex flex-col items-center gap-2 ">
           <div className="flex justify-around">
             {urlPerson ? (
               <img
@@ -295,12 +305,12 @@ export const PersonDetails = ({
                 <img
                   className="absolute h-36 opacity-10"
                   src={people}
-                  alt={t("Icon people")}
+                  alt={t('Icon people')}
                 />
                 <img
                   className="rounded-xl object-cover h-96"
                   src={photo}
-                  alt={t("No photo")}
+                  alt={t('No photo')}
                 />
               </div>
             )}
@@ -310,17 +320,18 @@ export const PersonDetails = ({
             <ShowPlaylistMenu
               userId={user.id}
               id={Number(id)}
-              type={"person"}
+              type={'person'}
               runTime={0}
               onReload={onReload}
-              />            
+              labelVisibility={'always'}
+            />
           ) : null}
         </div>
         <div className="md:col-span-2">
-          <div className="mt-6 px-2">
+          <div className="md:mt-6 px-2">
             {/* //-NAME Y DEPARTMENT */}
             <div className="flex justify-between items-stretch mb-2">
-              <h1 className="font-semibold text-4xl">{name}</h1>
+              <h1 className="font-semibold text-xl md:text-4xl">{name}</h1>
               {departmentKnown ? (
                 <div>
                   <div className="text-xs">{departmentKnown}</div>
@@ -332,7 +343,7 @@ export const PersonDetails = ({
                 className="text-3xl inline-block hover:text-purpleNR cursor-pointer mr-1"
                 onClick={() => (
                   window.open(`https://www.facebook.com/${facebookId}`),
-                  "_blank"
+                  '_blank'
                 )}
               />
             ) : null}
@@ -340,7 +351,8 @@ export const PersonDetails = ({
               <FaSquareXTwitter
                 className="text-3xl inline-block hover:text-purpleNR cursor-pointer mr-1"
                 onClick={() => (
-                  window.open(`https://twitter.com/${twitterId}`), "_blank"
+                  window.open(`https://twitter.com/${twitterId}`),
+                  '_blank'
                 )}
               />
             ) : null}
@@ -349,7 +361,7 @@ export const PersonDetails = ({
                 className="text-3xl inline-block hover:text-purpleNR cursor-pointer"
                 onClick={() => (
                   window.open(`https://www.instagram.com/${instagramId}`),
-                  "_blank"
+                  '_blank'
                 )}
               />
             ) : null}
@@ -357,7 +369,8 @@ export const PersonDetails = ({
               <FaTiktok
                 className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
                 onClick={() => (
-                  window.open(`https://www.tiktok.com/@${tiktokId}`), "_blank"
+                  window.open(`https://www.tiktok.com/@${tiktokId}`),
+                  '_blank'
                 )}
               />
             ) : null}
@@ -365,7 +378,8 @@ export const PersonDetails = ({
               <FaYoutube
                 className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
                 onClick={() => (
-                  window.open(`https://www.youtube.com/@${youtubeId}`), "_blank"
+                  window.open(`https://www.youtube.com/@${youtubeId}`),
+                  '_blank'
                 )}
               />
             ) : null}
@@ -374,7 +388,7 @@ export const PersonDetails = ({
                 className="text-3xl ml-1 inline-block hover:text-purpleNR cursor-pointer"
                 onClick={() => (
                   window.open(`https://www.wikidata.org/wiki/${wikipediaId}`),
-                  "_blank"
+                  '_blank'
                 )}
               />
             ) : null}
@@ -393,39 +407,54 @@ export const PersonDetails = ({
             {biographyInfo || age || placeBirth || height ? (
               <div className="row-span-2 mt-8">
                 {biographyInfo ? (
-                  <div className="pb-9">{biographyInfo}</div>
+                  <div className="pb-9">
+                    <div
+                      className={`${
+                        biographyExpanded ? '' : 'line-clamp-3'
+                      } md:line-clamp-none font-extralight text-sm`}
+                    >
+                      {biographyInfo}
+                    </div>
+                    <button
+                      type="button"
+                      className="md:hidden mt-1 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                      onClick={() => setBiographyExpanded((v) => !v)}
+                    >
+                      {biographyExpanded ? t('Read less') : t('Read more')}
+                    </button>
+                  </div>
                 ) : null}
                 {age || placeBirth || height ? (
-                  <div className="grid grid-rows-3 grid-flow-col gap-4 justify-between text-sm">
+                  <div className="flex flex-col gap-4 justify-between text-sm">
                     {age ? (
-                      <div>
-                        <div className="inline-block text-gray-400">
+                      <div className="flex flex-row gap-1">
+                        <div className="text-gray-400 text-xs">
                           {deathdayDate !== null
-                            ? `${t("DATES")}: `
-                            : `${t("DATE OF BIRTH")}: `}
+                            ? `${t('DATES')}: `
+                            : `${t('DATE OF BIRTH')}: `}
                         </div>
-                        <div className="inline-block pl-2">
+                        <div className="text-xs">
                           {birthdayDate}
-                          {deathdayDate && " - "}
+                          {deathdayDate && ' - '}
                           {deathdayDate ? deathdayDate : null}
-                          {` (${age} ${t("years")})`}
+                          {` (${age} ${t('years')})`}
                         </div>
                       </div>
                     ) : null}
                     {placeBirth ? (
-                      <div>
-                        <div className="inline-block text-gray-400 uppercase">
-                          {t("Place of Birth")}:
+                      <div className="flex flex-row gap-1">
+                        <div className="text-gray-400 text-xs uppercase">
+                          {t('Place of Birth')}:
                         </div>
-                        <p className="inline-block pl-2">{placeBirth}</p>
+                        <p className="text-xs">{placeBirth}</p>
                       </div>
                     ) : null}
                     {height ? (
-                      <div>
-                        <div className="inline-block text-gray-400">
-                          {height ? `${t("Height")}:` : null}
+                      <div className="flex flex-row gap-1">
+                        <div className="text-gray-400 text-xs">
+                          {height ? `${t('Height')}:` : null}
                         </div>
-                        <p className="inline-block pl-2">{height}</p>
+                        <p className="text-xs">{height}</p>
                       </div>
                     ) : null}
                   </div>
@@ -441,7 +470,7 @@ export const PersonDetails = ({
           {items && items.length > 0 ? (
             <Link to={`/person/${id}/bestRated`} className="flex justify-end">
               <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
-                {t("Complete list")}
+                {t('Complete list')}
                 <BsFillCaretRightFill className="align-middle" size={16} />
               </button>
             </Link>
@@ -449,7 +478,7 @@ export const PersonDetails = ({
           <>
             {items && items.length !== 0 ? (
               <Carousel
-                title={t("BEST RATED")}
+                title={t('BEST RATED')}
                 info={JSON.parse(JSON.stringify(items))}
                 playlistCurrentUser={user && user.playlists}
               />
@@ -461,7 +490,7 @@ export const PersonDetails = ({
           <div className="bg-local backdrop-blur-3xl bg-[#2c3349]/80 pb-1 pt-4 mt-4 rounded-3xl">
             <Link to={`/person/${id}/listMovies`} className="flex justify-end">
               <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
-                {t("Complete list")}
+                {t('Complete list')}
                 <BsFillCaretRightFill
                   className="inline-block align-middle"
                   size={16}
@@ -471,7 +500,7 @@ export const PersonDetails = ({
             <>
               {knownMovie && (
                 <Carousel
-                  title={t("MOVIES")}
+                  title={t('MOVIES')}
                   info={JSON.parse(JSON.stringify(knownMovie.slice(0, 20)))}
                 />
               )}
@@ -488,7 +517,7 @@ export const PersonDetails = ({
               >
                 {items && items.length > 0 ? (
                   <button className="flex items-center text-base text-[#b1a9fa] text-right hover:text-gray-200 mx-4 transition duration-300">
-                    {t("Complete list")}
+                    {t('Complete list')}
                     <BsFillCaretRightFill
                       className="inline-block align-middle"
                       size={16}
@@ -499,7 +528,7 @@ export const PersonDetails = ({
               <>
                 {knownTV && (
                   <Carousel
-                    title={t("TV SHOWS")}
+                    title={t('TV SHOWS')}
                     info={JSON.parse(JSON.stringify(knownTV.slice(0, 20)))}
                   />
                 )}
@@ -514,7 +543,7 @@ export const PersonDetails = ({
               <div>
                 {knownMovieNoDate && (
                   <Carousel
-                    title={t("OTHER MOVIES")}
+                    title={t('OTHER MOVIES')}
                     info={JSON.parse(JSON.stringify(knownMovieNoDate))}
                   />
                 )}
@@ -528,7 +557,7 @@ export const PersonDetails = ({
               <div>
                 {knownNoDateTv && (
                   <Carousel
-                    title={t("OTHER TV SHOWS")}
+                    title={t('OTHER TV SHOWS')}
                     info={JSON.parse(JSON.stringify(knownNoDateTv))}
                   />
                 )}
@@ -547,9 +576,9 @@ PersonDetails.defaultProps = {
   info: {},
   infoEN: {},
   films: {},
-  media: "",
-  idMedia: "",
-  titleMedia: "",
+  media: '',
+  idMedia: '',
+  titleMedia: '',
 };
 
 PersonDetails.propTypes = {

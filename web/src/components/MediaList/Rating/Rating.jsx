@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { BiCaretDown, BiCaretUp } from "react-icons/bi";
+import { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { BiCaretDown, BiCaretUp } from 'react-icons/bi';
 import {
   EmptyStar,
   RightHalfStar,
@@ -10,9 +10,9 @@ import {
   HoverNoStar,
   HoverRightHalfStar,
   HoverLeftHalfStar,
-} from "../../../assets/image";
-import { patchMedia, postMedia } from "../../../../services/DB/services-db";
-import "./Rating.css";
+} from '../../../assets/image';
+import { patchMedia, postMedia } from '../../../../services/DB/services-db';
+import './Rating.css';
 
 const Rating = ({
   dataMediaUser,
@@ -22,68 +22,83 @@ const Rating = ({
   media_type,
   runtime,
 }) => {
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation('translation');
   const { vote } = dataMediaUser;
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
-  const [modalRating, setModalRating] = useState(false);
+  const [dropDownRating, setdropDownRating] = useState(false);
   const [hover0, setHover0] = useState(null);
+  const containerRef = useRef(null);
+
+  // Close the rating selector when clicking outside of it
+  useEffect(() => {
+    if (!dropDownRating) return undefined;
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setdropDownRating(false);
+        setHover(null);
+        setHover0(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropDownRating]);
 
   // Reset Rating when media changes
   useEffect(() => {
     setRating(null);
   }, [mediaId]);
 
-  // Update Rating when there's a new vote
+  // Sync local rating from incoming vote, but only when it's a valid number.
+  // Avoids wiping the user's selection while the parent is refetching and
+  // dataMediaUser temporarily lacks `vote`.
   useEffect(() => {
-    setRating(vote >= 0 ? vote : null);
+    if (typeof vote === 'number' && vote >= 0) {
+      setRating(vote);
+    }
   }, [vote]);
 
-  useEffect(() => {
-    // Function to update media vote on change
-    const updateMediaVote = () => {
-      if (
-        Object.keys(dataMediaUser).length &&
-        rating !== null &&
-        rating !== vote
-      ) {
-        // PREGUNTAR SI LA VISTO ENTERA?
-        patchMedia(mediaId, { seen: true, vote: rating }).then(() => {
+  const persistVote = (value) => {
+    const hasRecord =
+      Object.keys(dataMediaUser).length > 0 && vote !== undefined;
+    if (hasRecord) {
+      patchMedia(mediaId, media_type, { seen: true, vote: value }).then(() => {
+        setPendingSeen(!pendingSeen);
+        setHover0(null);
+      });
+    } else {
+      postMedia(media_type, {
+        mediaId,
+        media_type,
+        runtime,
+        like: false,
+        pending: false,
+        seen: true,
+        vote: value,
+      }).then((data) => {
+        if (data) {
           setPendingSeen(!pendingSeen);
           setHover0(null);
-        });
-      } else if (rating !== null && !vote) {
-        postMedia({
-          mediaId,
-          media_type,
-          runtime,
-          like: false,
-          pending: false,
-          seen: true,
-          vote: rating,
-        }).then((data) => {
-          if (data) {
-            setPendingSeen(!pendingSeen);
-            setHover0(null);
-          }
-        });
-      }
-    };
-
-    updateMediaVote();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rating, vote]);
+        }
+      });
+    }
+  };
 
   const handleStarClick = (value) => {
+    if (value === rating) return;
     setRating(value);
+    persistVote(value);
   };
 
   const handleRating = () => {
-    setModalRating(!modalRating);
+    setdropDownRating(!dropDownRating);
   };
 
   const handleRating0 = () => {
-    patchMedia(mediaId, { vote: -1 }).then(() => {
+    patchMedia(mediaId, media_type, { vote: -1 }).then(() => {
       setPendingSeen(!pendingSeen);
       setRating(null);
       setHover0(null);
@@ -104,7 +119,7 @@ const Rating = ({
           <img
             className="cursor-pointer object-cover h-7"
             src={isHovered ? HoverRightHalfStar : RightHalfStar}
-            alt={isHovered ? t("Right Half Star Hover") : t("Right Half Star")}
+            alt={isHovered ? t('Right Half Star Hover') : t('Right Half Star')}
             onMouseEnter={() => handleStarHover(ratingValue.toFixed(1))}
             onMouseLeave={() => handleStarHover(null)}
           />
@@ -112,7 +127,7 @@ const Rating = ({
           <img
             className="cursor-pointer object-cover h-7"
             src={isHovered ? HoverLeftHalfStar : LeftHalfStar}
-            alt={isHovered ? t("Left Half Star Hover") : t("Left Half Star")}
+            alt={isHovered ? t('Left Half Star Hover') : t('Left Half Star')}
             onMouseEnter={() => handleStarHover(ratingValue.toFixed(1))}
             onMouseLeave={() => handleStarHover(null)}
           />
@@ -127,7 +142,7 @@ const Rating = ({
             onClick={() => handleStarClick(Number(ratingValue.toFixed(1)))}
           />
           {starComponent}
-        </label>
+        </label>,
       );
     }
     return stars;
@@ -136,27 +151,27 @@ const Rating = ({
   const finalRating = rating < 0 ? null : rating;
 
   return (
-    <div>
-      {!modalRating ? (
+    <div ref={containerRef}>
+      {!dropDownRating ? (
         <button
-          className="pt-2 cursor-pointer text-left text-sm px:center text-[#FFCA28] transition ease-in-out md:hover:text-gray-200 duration-300"
+          className="cursor-pointer text-left text-sm px:center text-[#FFCA28] transition ease-in-out md:hover:text-gray-200 duration-300"
           onClick={handleRating}
         >
           {finalRating ? (
             <FaStar
               className="inline-block align-middle mr-1"
               size={18}
-              alt={t("Star Full")}
+              alt={t('Star Full')}
             />
           ) : (
             <FaRegStar
               className="inline-block align-middle mr-1"
               size={18}
-              alt={t("Star Empty")}
+              alt={t('Star Empty')}
             />
           )}
-          <div className="inline-block align-middle text-base">
-            {!finalRating ? t("Your Rating") : finalRating}
+          <div className="inline-block align-middle text-sm md:text-base">
+            {!finalRating ? t('Your Rating') : finalRating}
           </div>
           <BiCaretDown className="inline-block align-middle" size={18} />
         </button>
@@ -167,45 +182,44 @@ const Rating = ({
             onClick={handleRating}
           >
             <FaRegStar className="inline-block align-middle mr-1" size={18} />
-            <div className="inline-block align-middle text-base">
-              {!finalRating ? t("Your Rating") : finalRating}
+            <div className="inline-block align-middle text-sm md:text-base">
+              {!finalRating ? t('Your Rating') : finalRating}
             </div>
             <BiCaretUp className="inline-block align-middle" size={18} />
           </button>
         </div>
       )}
-      {modalRating && (
-        <div className="flex flex-row">
-          <div className="basis-10/12">
+      {dropDownRating && (
+        <div className="flex flex-row w-full">
+          <div className="flex flex-row items-center">
             {renderStars(20)}
-            <p className="inline-block align-middle ml-2 text-amber-400">
-              {(hover || finalRating) === null ? "" : hover || finalRating}
-            </p>
-            <div className="inline-block align-middle">
-              {finalRating !== null ? (
-                <button
-                  className="inline-block align-middle"
-                  onClick={handleRating0}
-                >
-                  {hover0 !== null || !(finalRating >= 0) ? (
-                    <img
-                      className="cursor-pointer object-cover h-8 mt-1"
-                      src={EmptyStar}
-                      alt={t("Empty No Star")}
-                      onMouseEnter={() => setHover0(0)}
-                      onMouseLeave={() => setHover0(null)}
-                    />
-                  ) : (
-                    <img
-                      className="cursor-pointer object-cover h-8 mt-1"
-                      src={HoverNoStar}
-                      alt={t("Hover No Star")}
-                      onMouseEnter={() => setHover0(0)}
-                      onMouseLeave={() => setHover0(null)}
-                    />
-                  )}
-                </button>
-              ) : null}
+            <div className="flex flex-row items-center gap-1 ml-2 align-middle">
+              <p className="align-middle  text-amber-400">
+                {(hover || finalRating) === null ? '' : hover || finalRating}
+              </p>
+              <div className="align-middle">
+                {finalRating !== null ? (
+                  <button className="align-middle" onClick={handleRating0}>
+                    {hover0 !== null || !(finalRating >= 0) ? (
+                      <img
+                        className="cursor-pointer object-cover h-8 mt-1"
+                        src={EmptyStar}
+                        alt={t('Empty No Star')}
+                        onMouseEnter={() => setHover0(0)}
+                        onMouseLeave={() => setHover0(null)}
+                      />
+                    ) : (
+                      <img
+                        className="cursor-pointer object-cover h-8 mt-1"
+                        src={HoverNoStar}
+                        alt={t('Hover No Star')}
+                        onMouseEnter={() => setHover0(0)}
+                        onMouseLeave={() => setHover0(null)}
+                      />
+                    )}
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
@@ -221,7 +235,7 @@ Rating.defaultProps = {
   setPendingSeen: () => {},
   pendingSeen: false,
   mediaId: 0,
-  media_type: "",
+  media_type: '',
   runtime: 0,
 };
 

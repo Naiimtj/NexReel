@@ -39,7 +39,6 @@ const Persons = () => {
 
   return (
     <div className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6">
-      <div className="text-gray-200 w-auto bg-local object-cover backdrop-blur-md bg-transparent/30 rounded-3xl px-4 pb-4">
         <PersonDetails
           info={persona}
           infoEN={personaEN}
@@ -48,7 +47,6 @@ const Persons = () => {
           idMedia={idMedia}
           titleMedia={detailsMedia.title ?? detailsMedia.name}
         />
-      </div>
     </div>
   );
 };

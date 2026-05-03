@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
-import { NoImage, tv } from "../../assets/image";
-import { useTranslation } from "react-i18next";
-import { getDetailSeasons } from "../../../services/DB/services-db";
-import { useAuthContext } from "../../context/auth-context";
-import SeenPendingSeason from "../MediaList/SeenPendingMedia/SeenPendingSeason";
-import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { NoImage, tv } from '../../assets/image';
+import { useTranslation } from 'react-i18next';
+import { getDetailSeasons } from '../../../services/DB/services-db';
+import { useAuthContext } from '../../context/auth-context';
+import SeenPendingSeason from '../MediaList/SeenPendingMedia/SeenPendingSeason';
+import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 
 export const SeasonSingle = ({
   season,
@@ -21,7 +21,7 @@ export const SeasonSingle = ({
   runtime_seen,
   runTimeSeasons,
 }) => {
-  const [t] = useTranslation("translation");
+  const [t] = useTranslation('translation');
   const { onReload } = useAuthContext();
   const navigate = useNavigate();
   const {
@@ -31,47 +31,50 @@ export const SeasonSingle = ({
     season_number,
     episode_count,
     air_date,
-    //.Default
-    id,
   } = season;
   const url = poster_path
     ? `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${poster_path}`
     : null;
   const poster = poster_path ? url : NoImage;
   const date =
-    air_date === ""
+    air_date === ''
       ? null
       : air_date === undefined
-      ? ""
-      : air_date === null
-      ? ""
-      : new Date(air_date).getFullYear();
+        ? ''
+        : air_date === null
+          ? ''
+          : new Date(air_date).getFullYear();
   const numEpis = episode_count;
-  const idInfo = id;
-  const idSeason = idInfo;
 
   const [pendingSeen, setPendingSeen] = useState(false);
   const [dataMediaUser, setDataMediaUser] = useState({});
   useEffect(() => {
-    if (!mediaIsSeen && mediaIsPending) {
-      getDetailSeasons(idTvShow, season_number).then((d) => {
+    let cancelled = false;
+    getDetailSeasons(idTvShow, season_number).then((d) => {
+      if (cancelled) return;
+      // Backend returns `{ result: false }` when the season row does not
+      // exist for the current user, and a serialized row (with `id`) when
+      // it does. Only treat the row as existing when it has an `id`, so
+      // the seen/unseen toggle correctly chooses between POST and PATCH.
+      if (d?.id) {
         setDataMediaUser(d);
-      });
-    } else {
-      setDataMediaUser({});
-    }
+      } else {
+        setDataMediaUser({});
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [
-    mediaIsPending,
-    pendingSeen,
-    mediaIsSeen,
     idTvShow,
     season_number,
+    pendingSeen,
+    changeSeenPending,
+    mediaIsPending,
+    mediaIsSeen,
   ]);
 
-  const seasonSeen =
-    (mediaIsPending && dataMediaUser && dataMediaUser.seen) || mediaIsSeen;
-  // console.log(mediaIsSeen);
-  // console.log(dataMediaUser);
+  const seasonSeen = Boolean(dataMediaUser?.seen) || mediaIsSeen;
   const runTimeSeason = runTime * season.episode_count;
   //- SEEN/NO SEEN
   const handleSeenMedia = (event) => {
@@ -79,7 +82,7 @@ export const SeasonSingle = ({
     SeenPendingSeason(
       dataMediaUser,
       idTvShow,
-      "tv",
+      'tv',
       runTimeSeason,
       runTime,
       seasonSeen,
@@ -87,13 +90,13 @@ export const SeasonSingle = ({
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      "seen",
+      'seen',
       onReload,
       season_number,
       numberEpisodes,
       numberSeasons,
       runtime_seen,
-      runTimeSeasons
+      runTimeSeasons,
     );
   };
 
@@ -101,7 +104,7 @@ export const SeasonSingle = ({
     <div className="static text-gray-200 rounded-xl bg-cover w-full">
       <div className="cursor-pointer p-2 backdrop-blur-md rounded-xl h-full">
         <div className="flex justify-center">
-          {/* //-POSTER*/}
+          {/* //- POSTER*/}
           <div className="transition ease-in-out md:hover:scale-105 duration-100 ">
             {poster_path ? (
               <img
@@ -117,7 +120,7 @@ export const SeasonSingle = ({
                 <img
                   className="absolute h-24 opacity-10"
                   src={tv}
-                  alt={t("Icon people")}
+                  alt={t('Icon people')}
                 />
                 <img
                   className="static aspect-auto rounded-xl justify-center"
@@ -131,11 +134,11 @@ export const SeasonSingle = ({
             )}
           </div>
         </div>
-        {/* //-DATA OF SEASON */}
-        <div className="mt-4 px-2 ">
+        {/* //- DATA OF SEASON */}
+        <div className="mt-4">
           <div className="flex justify-between items-center pb-2">
             <h2
-              className="cursor-pointer font-semibold text-base"
+              className="cursor-pointer font-semibold text-xs md:text-base"
               onClick={() =>
                 season && navigate(`/tv/${idTvShow}/${season_number}`)
               }
@@ -146,25 +149,24 @@ export const SeasonSingle = ({
               {date !== null ? date : null}
             </div>
           </div>
-          <div className="text-xs text-left col-span-2 w-full inset-x-0 px:center text-[#7B6EF6] flex justify-between">
+          <div className="text-xs text-left col-span-2 w-full text-[#7B6EF6] flex justify-between items-center">
             {/* //-EPISODES */}
             <div
               className="cursor-pointer"
               onClick={() =>
-                season &&
-                navigate(`/tv/${idTvShow}/${season_number}/${idSeason}`)
+                season && navigate(`/tv/${idTvShow}/${season_number}`)
               }
             >
-              {`${t("Episodes")}: ${numEpis}`}
+              {`${t('Episodes')}: ${numEpis}`}
             </div>
 
             {/* //-SEEN/UNSEEN */}
             <div className="inline-block">
-              <div className="text-right align-middle">
+              <div className="z-50 text-right align-middle">
                 <SeenPendingButton
                   condition={seasonSeen}
                   size={20}
-                  text={"Seen"}
+                  text={'Seen'}
                   handle={handleSeenMedia}
                 />
               </div>

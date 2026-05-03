@@ -21,6 +21,7 @@ export const Credits = ({
   setIdDelete,
   basicForum,
   size,
+  playlistLabelVisibility,
 }) => {
   const [t, i18next] = useTranslation('translation');
   const { user } = useAuthContext();
@@ -209,6 +210,7 @@ export const Credits = ({
                   changeSeenPending={changeSeenPending}
                   setChangeSeenPending={setChangeSeenPending}
                   size={size}
+                  labelVisibility={playlistLabelVisibility}
                 />
               ) : null}
               {isForum ? (
@@ -243,6 +245,7 @@ Credits.defaultProps = {
   setPopSureDel: () => {},
   setIdDelete: () => {},
   size: 'normal',
+  playlistLabelVisibility: 'responsive',
 };
 
 Credits.propTypes = {
@@ -257,4 +260,5 @@ Credits.propTypes = {
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
   size: PropTypes.oneOf(['small', 'normal']),
+  playlistLabelVisibility: PropTypes.oneOf(['responsive', 'always', 'hidden']),
 };

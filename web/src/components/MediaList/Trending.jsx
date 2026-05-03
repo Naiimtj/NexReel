@@ -16,7 +16,7 @@ const Trending = () => {
   if (!data.length) return null;
 
   return (
-    <div className="mb-20">
+    <div className="md:mb-[12rem] ">
       <Carousel
         title={t('Trending')}
         info={data}

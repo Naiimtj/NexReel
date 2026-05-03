@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 // service
-import { getRelease } from "../../../../services/TMDB/services-tmdb";
+import { getRelease } from '../../../../services/TMDB/services-tmdb';
 // components/utils
-import ConvertCertifEx from "./ConvertCertifEx";
+import ConvertCertifEx from './ConvertCertifEx';
 
 function Certification({ media, id, info, lang }) {
   const [loading, setLoading] = useState(true);
   const [ReleaseData, setReleaseData] = useState([]);
   useEffect(() => {
-    if ((lang, media)) {
+    if (lang && media) {
+      setReleaseData([]);
+      setLoading(true);
       getRelease(media, id, lang).then((data) => {
-        setReleaseData(data.results);
+        setReleaseData(Array.isArray(data?.results) ? data.results : []);
         setLoading(false);
       });
     }
   }, [lang, id, media]);
   const releaseFiltnullos =
-    media === "tv"
+    media === 'tv'
       ? ReleaseData &&
         ReleaseData.map((relea) => [
           {
@@ -29,7 +31,9 @@ function Certification({ media, id, info, lang }) {
         ReleaseData.map((relea) => [
           {
             iso: relea.iso_3166_1,
-            release: relea.release_dates.filter((i) => i.certification !== ""),
+            release: (relea.release_dates || []).filter(
+              (i) => i.certification !== '',
+            ),
           },
         ]).reduce((acc, cur) => [...acc, ...Object.values(cur)], []);
   // -FILTER 2 (If it was produced by more than one country)
@@ -37,7 +41,7 @@ function Certification({ media, id, info, lang }) {
     info && info.length > 0
       ? releaseFiltnullos &&
         releaseFiltnullos.filter(
-          (relea) => relea.release && relea.release.length > 0
+          (relea) => relea.release && relea.release.length > 0,
         )
       : null;
 
@@ -49,7 +53,7 @@ function Certification({ media, id, info, lang }) {
             relea.release && relea.release.length > 0
               ? info.find((inf) => {
                   return (
-                    (media === "movie" ? inf.iso_3166_1 : inf) === relea.iso
+                    (media === 'movie' ? inf.iso_3166_1 : inf) === relea.iso
                   );
                 })
               : null;
@@ -57,12 +61,13 @@ function Certification({ media, id, info, lang }) {
         }).filter((f) => f !== null)
       : null;
   const CountryFinal =
-  listCountry && listCountry.length && listCountry.length > 0
+    listCountry && listCountry.length && listCountry.length > 0
       ? listCountry[0] && {
           iso_3166_1: listCountry[0].iso,
           release_dates: listCountry[0].release,
         }
-      : CountriesWithRelease && CountriesWithRelease[0] && {
+      : CountriesWithRelease &&
+        CountriesWithRelease[0] && {
           iso_3166_1: CountriesWithRelease[0].iso,
           release_dates: CountriesWithRelease[0].release,
         };
@@ -91,8 +96,8 @@ export default Certification;
 Certification.defaultProps = {
   id: 0,
   info: [],
-  media: "",
-  lang: "",
+  media: '',
+  lang: '',
 };
 
 Certification.propTypes = {

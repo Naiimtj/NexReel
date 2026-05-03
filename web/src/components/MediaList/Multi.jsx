@@ -168,7 +168,7 @@ export const Multi = ({
         backgroundImage: `url(${processInfo.bgPoster})`,
       }}
     >
-      <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-2 rounded-xl h-full">
+      <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-1 sm:p-2 rounded-xl h-full">
         <button
           type="button"
           className="relative block w-full text-left"
@@ -186,34 +186,16 @@ export const Multi = ({
                 <img
                   src={PlexTile}
                   alt="Plex Icon"
-                  className="absolute z-10 top-2 right-2 w-6 h-6 blur-[0.5px] pointer-events-none border border-yellow-600 rounded-md bg-black/50 p-0.5"
+                  className="absolute z-10 top-1 right-1 w-6 h-6 pointer-events-none rounded-md bg-black/50 p-0.5"
                 />
               )}
               {/* //-AVERAGE RATINGS */}
               {processInfo.voteAverage > 0 && (
-                <div className="absolute z-10 bottom-auto right-auto left-0 px-2 ml-2 inset-y-2 inset-x-8 backdrop-blur-md bg-black/50 rounded-lg">
-                  <img
-                    alt="Star Icon"
-                    className="inline-block pr-1 py-2 w-4"
-                    src={star}
-                  />
-                  <div className="inline-block inset-y-2 inset-x-5 text-amber-400 text-xs text-left leading-4">
+                <div className="z-10 absolute left-1 top-1 px-1 py-1 max-xs:hidden flex flex-row gap-1 items-center align-middle backdrop-blur-md bg-black/60 rounded-lg">
+                  <img alt="Star Icon" className="w-3" src={star} />
+                  <div className="text-amber-400 text-xs text-left">
                     {processInfo.voteAverage}
                   </div>
-                  {/* // * User Vote */}
-                  {userExist && vote >= 0 && (
-                    <div className="flex items-start">
-                      <FaStar
-                        size={12}
-                        color="#FFCA28"
-                        alt={t('Seen')}
-                        className="mr-1"
-                      />
-                      <div className="inset-b-2 inset-x-5 mb-1 text-amber-400 text-xs text-left leading-4">
-                        {vote}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
               {url ? (
@@ -242,11 +224,26 @@ export const Multi = ({
           </div>
           {/* //.ICONS AND TITLE */}
           <div className="mt-4 px-2 cursor-pointer">
-            <div className="mb-1 grid grid-cols-2 gap-4 ">
+            <div className="mb-1 flex flex-row items-center justify-between gap-4 ">
               {/* //-ICON BY TYPE */}
-              <div className="text-xs align-middle">
-                {typeIcon && <img className="w-4" src={typeIcon} alt="" />}
+              <div className="sm:text-xs">
+                {typeIcon && (
+                  <img
+                    className="w-3 sm:w-4"
+                    src={typeIcon}
+                    alt={t('Type Icon')}
+                  />
+                )}
               </div>
+              {/* // * User Vote */}
+              {userExist && vote >= 0 && (
+                <div className="flex flex-row gap-1">
+                  <FaStar size={12} color="#FFCA28" alt={t('Seen')} />
+                  <div className="text-amber-400 text-xs text-left leading-4">
+                    {vote}
+                  </div>
+                </div>
+              )}
               <div className="text-right flex items-center justify-end text-xs">
                 {processInfo.date}
                 {/* // ! Delete Button */}
@@ -275,7 +272,7 @@ export const Multi = ({
         </button>
         {/* //.BUTTON AND SEEN/UNSEEN */}
         {userExist && (
-          <div className="mb-1 grid grid-cols-5 gap-2 bottom-0 absolute w-full pr-4">
+          <div className="mb-1 flex flex-row justify-between items-center gap-2 bottom-0 absolute w-full right-0 px-2">
             {/* //-ADD BUTTON PLAYLIST */}
             {!isForum && (
               <ShowPlaylistMenu
@@ -285,7 +282,7 @@ export const Multi = ({
                 runTime={processInfo.runTime}
                 setChangeSeenPending={setChangeSeenPending}
                 changeSeenPending={changeSeenPending}
-                size={size}
+                size={'small'}
               />
             )}
             {isForum && (
@@ -299,7 +296,7 @@ export const Multi = ({
               />
             )}
             {/* //-SEEN/UNSEEN */}
-            <div className="text-right align-middle">
+            <div className="text-right flex flex-row items-center justify-end gap-2">
               {mediaType !== 'person' && (
                 <SeenPendingButton
                   condition={seen}
@@ -308,9 +305,7 @@ export const Multi = ({
                   handle={handleSeenMedia}
                 />
               )}
-            </div>
-            {/* //-PENDING/NO PENDING */}
-            <div className="text-right align-middle">
+              {/* //-PENDING/NO PENDING */}
               {mediaType !== 'person' && (
                 <SeenPendingButton
                   condition={pending}

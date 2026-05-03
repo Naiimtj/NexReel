@@ -127,7 +127,7 @@ const TVSeason = () => {
       }}
     >
       <PageTitle title={`${season.name}`} />
-      <div className="text-gray-200 pt-5 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
+      <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
         {/* // * BACK TV SHOW */}
         <button
           className="ml-5 pt-5 hover:text-purpleNR"

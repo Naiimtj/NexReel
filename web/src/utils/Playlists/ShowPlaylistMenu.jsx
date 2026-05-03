@@ -18,8 +18,17 @@ const ShowPlaylistMenu = ({
   changeSeenPending,
   setChangeSeenPending,
   size,
+  labelVisibility,
 }) => {
   const isSmall = size === 'small';
+  const LABEL_VISIBILITY_CLASS = {
+    always: 'inline',
+    hidden: 'hidden',
+    responsive: 'hidden md:inline',
+  };
+  const labelVisibilityClass =
+    LABEL_VISIBILITY_CLASS[labelVisibility] ||
+    LABEL_VISIBILITY_CLASS.responsive;
   const triggerTextClass = isSmall ? 'text-sm' : 'text-base';
   const iconSize = isSmall ? 14 : 20;
   const menuTextClass = isSmall ? 'text-sm' : 'text-base';
@@ -123,9 +132,9 @@ const ShowPlaylistMenu = ({
   return (
     <div className={`relative ${triggerTextClass} align-middle col-span-3`}>
       <button
-        className={`cursor-pointer text-left font-semibold px:center ${
+        className={`flex flex-row items-center cursor-pointer text-left px:center ${
           !openPlaylistsList ? 'text-[#7B6EF6]' : 'text-gray-600'
-        } transition ease-in-out md:hover:scale-105 duration-300`}
+        } transition ease-in-out md:hover:scale-105 duration-300 xs:text-xs sm:text-base`}
         onClick={(event) => {
           (event.stopPropagation(), setOpenPlaylistsList(!openPlaylistsList));
         }}
@@ -143,11 +152,11 @@ const ShowPlaylistMenu = ({
             alt={t('Add to one list')}
           />
         )}
-        {t('Playlists')}
+        <span className={labelVisibilityClass}>{t('Playlists')}</span>
       </button>
       {openPlaylistsList ? (
         <div
-          className={`absolute z-50 flex flex-col ${menuTextClass} bg-grayNR/60 rounded-md ${menuWidthClass}`}
+          className={`absolute z-50 flex flex-col ${menuTextClass} bg-grayNR/90 rounded-md ${menuWidthClass}`}
         >
           {errorAddPlaylists ? (
             <div className="text-white bg-gray-50/20 px-1 font-bold">
@@ -217,6 +226,7 @@ ShowPlaylistMenu.defaultProps = {
   changeSeenPending: false,
   setChangeSeenPending: () => {},
   size: 'normal',
+  labelVisibility: 'responsive',
 };
 
 ShowPlaylistMenu.propTypes = {
@@ -228,4 +238,5 @@ ShowPlaylistMenu.propTypes = {
   changeSeenPending: PropTypes.bool,
   setChangeSeenPending: PropTypes.func,
   size: PropTypes.oneOf(['small', 'normal']),
+  labelVisibility: PropTypes.oneOf(['responsive', 'always', 'hidden']),
 };

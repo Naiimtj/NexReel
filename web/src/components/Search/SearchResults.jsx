@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-// import { Link } from "react-router-dom";
 import CarouselPersons from './CarouselPersons';
-import { IoClose } from 'react-icons/io5';
 import PlaylistsList from '../Users/Playlist/PlaylistsList';
 import Carousel from '../../utils/Carousel/Carousel';
 
@@ -31,12 +29,6 @@ const SearchResults = ({
           : 'w-full'
       }
     >
-      <div
-        className="absolute z-50 my-2 mx-2 top-0 right-0 cursor-pointer"
-        onClick={hideSearch}
-      >
-        <IoClose size={30} alt={t('Close')} />
-      </div>
       <div className="w-full px-4">
         {/* // - MOVIES & TV SHOWS */}
         {mediaMovie || mediaTv ? (

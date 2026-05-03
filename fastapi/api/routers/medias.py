@@ -52,7 +52,10 @@ def media_detail(media_type: str, media_id: str, current_user: dict = Depends(ge
 
 @router.post("/medias/{media_type}")
 def media_create(media_type: str, payload: dict = Body(...), current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    media_id = payload.get("mediaId")
+    raw_media_id = payload.get("mediaId")
+    if raw_media_id is None:
+        raise HTTPException(status_code=400, detail="mediaId is required")
+    media_id = str(raw_media_id)
     existing = get_media_for_user(db, current_user["id"], media_id)
     if existing:
         raise HTTPException(status_code=404, detail="Media already exists")
