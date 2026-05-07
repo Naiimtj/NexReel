@@ -66,7 +66,7 @@ export const ForumList = ({
   return (
     // BACKGROUND
     <div
-      className="relative text-gray-200 rounded-2xl bg-cover w-full"
+      className="relative text-gray-200 rounded-2xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
       style={{
         backgroundImage: `url(${imgForum})`,
       }}

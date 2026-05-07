@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   deleteFollowPlaylist,
@@ -8,8 +8,6 @@ import {
   postFollowPlaylist,
 } from '../../../../services/DB/services-db';
 import { useAuthContext } from '../../../context/auth-context';
-import { MdOutlinePlaylistAdd, MdOutlinePlaylistRemove } from 'react-icons/md';
-import { HiUserGroup } from 'react-icons/hi';
 import { BaseIcon } from '../../base';
 
 export const PlaylistsList = ({
@@ -18,19 +16,9 @@ export const PlaylistsList = ({
   isOtherUser,
   setPopSureDel,
   setIdDelete,
-  size,
 }) => {
-  const isSmall = size === 'small';
-  const posterClass = isSmall
-    ? 'static object-cover cursor-pointer rounded-lg w-[70px] h-[40px]'
-    : 'static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]';
-  const titleClass = isSmall
-    ? 'pl-2 text-sm line-clamp-1'
-    : 'pl-4 text-xl line-clamp-3';
-  const infoWrapperClass = isSmall
-    ? 'min-w-0 flex-auto px-1'
-    : 'min-w-0 flex-auto mt-4 px-2';
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const userExist = !!user;
   const {
@@ -69,27 +57,24 @@ export const PlaylistsList = ({
     deleteFollowPlaylist(id).then(() => setChangeDataUser(!changeDataUser));
   };
 
-  const isFollowing =
-    playlistFollow === '' ? (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-        <MdOutlinePlaylistAdd
-          className="inline-block"
-          size={25}
-          color="#FFCA28"
-          alt={t('Follow Playlist')}
-          onClick={handleFollow}
-        />
-      </button>
-    ) : (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR">
-        <MdOutlinePlaylistRemove
-          className="inline-block"
-          size={25}
-          alt={t('UnFollow Playlist')}
-          onClick={handleUnFollow}
-        />
-      </button>
-    );
+  const isFollowing = !playlistFollow?.id ? (
+    <BaseIcon
+      icon="playlistAdd"
+      size={25}
+      color="#FFCA28"
+      className="inline-block transition ease-in-out md:hover:scale-110 duration-300"
+      onClick={handleFollow}
+      tooltip={t('Follow Playlist')}
+    />
+  ) : (
+    <BaseIcon
+      icon="playlistRemove"
+      size={25}
+      className="inline-block transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR"
+      onClick={handleUnFollow}
+      tooltip={t('UnFollow Playlist')}
+    />
+  );
 
   const handleDeletePlaylist = (event) => {
     event.stopPropagation();
@@ -98,70 +83,77 @@ export const PlaylistsList = ({
   };
 
   return (
-    // BACKGROUND
     <div
-      className="relative text-gray-200 rounded-2xl bg-cover w-full"
-      style={{
-        backgroundImage: `url(${imgPlaylist})`,
-      }}
+      className="relative text-gray-200 rounded-xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
+      style={{ backgroundImage: `url(${imgPlaylist})` }}
     >
-      <Link to={`/playlists/${userId}/${id}`}>
-        <div className="grid grid-cols-5 justify-between gap-x-6 py-2 static bg-local backdrop-blur-md bg-[#20283E]/80 p-2 rounded-xl h-full">
-          {/* // - POSTER AND RATINGS */}
-          <div className="col-span-2 flex min-w-0 gap-x-4">
-            <div className="h-full">
-              {/* // . POSTER*/}
-              <div className="transition ease-in-out md:hover:scale-105 duration-300">
-                <img className={posterClass} src={imgPlaylist} alt={title} />
-              </div>
-            </div>
-            <div className={infoWrapperClass}>
-              {/* // . TITLE */}
-              <div className="flex font-semibold text-sm md:text-base cursor-pointer">
-                <h1 className={titleClass}>{title}</h1>
-                <p className="ml-1 text-xs">{`( ${
-                  medias && medias.length
-                } )`}</p>
-              </div>
-              {/* // . TAGS */}
-              <div className="pl-4 text-xs text-gray-500">
-                {tags && tags.join(', ')}
-              </div>
-            </div>
-          </div>
-          {/* // - DESCRIPTION */}
-          <div className="col-span-3">
-            <p className="font-light">{description}</p>
-          </div>
-        </div>
-      </Link>
-      {/* // - BUTTON AND SEEN/UNSEEN / DELETE */}
-      {userExist ? (
-        <div className="absolute bottom-0 mb-1 flex items-center justify-end gap-6 w-full pr-4">
-          {/* // ! Delete Button */}
-          {isPlaylist !== '' ? (
-            <BaseIcon
-              icon="trash"
-              size="x-small"
-              color="currentColor"
-              onClick={handleDeletePlaylist}
-              aria-label={t('Delete Playlist Icon')}
-              className="z-50 text-red-500 md:hover:text-gray-500 duration-200"
-              tooltip={t('Delete')}
+      <div className="relative bg-local hover:bg-[#1a1f35]/70 backdrop-blur-md bg-[#1a1f35]/85 p-2 rounded-xl h-full">
+        <div
+          className="flex gap-4 items-start"
+          onClick={() => navigate(`/playlists/${userId}/${id}`)}
+        >
+          {/* // . POSTER */}
+          <div className="transition ease-in-out md:hover:scale-105 duration-300">
+            <img
+              className="md:w-full w-20 h-20 object-cover cursor-pointer rounded-lg"
+              src={imgPlaylist}
+              alt={title}
             />
-          ) : null}
-          {/* // . FOLLOW/UNFOLLOW or NUM FOLLOWERS */}
-          <div className="flex justify-end">
+          </div>
+
+          {/* // . INFO */}
+          <Link
+            to={`/playlists/${userId}/${id}`}
+            className="min-w-0 flex-1 flex flex-col gap-1 pb-6"
+          >
+            <div className="flex flex-row gap-1 items-start flex-wrap">
+              <p className="font-semibold text-sm leading-tight line-clamp-2 cursor-pointer">
+                {title}
+              </p>
+              <span className="text-xs text-gray-400 bg-[#20283E]/60 px-2 py-0.5 rounded-full whitespace-nowrap">
+                {medias && medias.length} {t('items')}
+              </span>
+            </div>
+            {description && description !== 'null' && (
+              <p className="text-xs text-gray-400 line-clamp-1 mt-0.5">
+                {description}
+              </p>
+            )}
+            {tags && tags.length > 0 && (
+              <p className="text-xs text-gray-500 line-clamp-1">
+                {tags.join(', ')}
+              </p>
+            )}
+          </Link>
+        </div>
+
+        {/* // . ACTIONS — esquina inferior derecha */}
+        {userExist ? (
+          <div className="absolute bottom-2 right-3 flex items-center gap-3">
+            {/* // . FOLLOW/UNFOLLOW */}
             {info && followersPlaylist && isOtherUser ? isFollowing : null}
+            {/* // . NUM FOLLOWERS */}
             {info && followersPlaylist && !isOtherUser ? (
-              <div className="flex justify-end gap-1">
-                <HiUserGroup size={20} alt={t('Followers')} />
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <BaseIcon icon="userGroup" size={14} tooltip={t('Followers')} />
                 {followersPlaylist.length}
               </div>
             ) : null}
+            {/* // ! DELETE */}
+            {isPlaylist !== '' ? (
+              <BaseIcon
+                icon="trash"
+                size="x-small"
+                color="currentColor"
+                onClick={handleDeletePlaylist}
+                aria-label={t('Delete Playlist Icon')}
+                className="text-red-500 md:hover:text-gray-500 duration-200"
+                tooltip={t('Delete')}
+              />
+            ) : null}
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };
@@ -174,7 +166,6 @@ PlaylistsList.defaultProps = {
   isOtherUser: false,
   setPopSureDel: () => {},
   setIdDelete: () => {},
-  size: 'normal',
 };
 
 PlaylistsList.propTypes = {
@@ -183,5 +174,4 @@ PlaylistsList.propTypes = {
   isOtherUser: PropTypes.bool,
   setPopSureDel: PropTypes.func,
   setIdDelete: PropTypes.func,
-  size: PropTypes.oneOf(['small', 'normal']),
 };

@@ -125,11 +125,25 @@ def list_users(current_user: dict = Depends(get_current_user), db: Session = Dep
 
 @router.get("/users/search")
 def search_users(username: str = "", current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+    def _serialize(row):
+        result = serialize_user(row)
+        result["isFollowing"] = bool(row.get("is_following"))
+        return result
+
     users = fetch_all(
         db,
-        "SELECT * FROM users WHERE username ILIKE :username AND id <> :user_id ORDER BY username ASC",
-        {"username": f"%{username}%", "user_id": current_user["id"]},
-        serialize_user,
+        """
+        SELECT u.*,
+          EXISTS(
+            SELECT 1 FROM user_followers uf
+            WHERE uf.follower_id = :current_user_id AND uf.following_id = u.id
+          ) AS is_following
+        FROM users u
+        WHERE u.username ILIKE :username AND u.id <> :user_id
+        ORDER BY u.username ASC
+        """,
+        {"username": f"%{username}%", "user_id": current_user["id"], "current_user_id": current_user["id"]},
+        _serialize,
     )
     return {"results": users}
 

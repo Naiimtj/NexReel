@@ -94,7 +94,6 @@ const SearchResults = ({
                     isOtherUser={true}
                     userId={playlist.author}
                     isForum={isForum}
-                    size="small"
                   />
                 ))
               : null}

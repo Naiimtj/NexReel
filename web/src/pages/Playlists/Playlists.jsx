@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../context/auth-context';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,16 +7,16 @@ import {
   getDetailUser,
   getUser,
 } from '../../../services/DB/services-db';
-import { IoIosArrowBack } from 'react-icons/io';
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
 import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
 import Playlist from '../../components/Users/Playlist/Playlist';
 import NewPlaylist from '../../components/Users/Playlist/NewPlaylist';
 import { NoImageMore } from '../../assets/image';
 import PlaylistsList from '../../components/Users/Playlist/PlaylistsList';
-import { DeleteConfirmModal } from '../../components/base';
+import { BaseButton, DeleteConfirmModal } from '../../components/base';
 import SearchPlaylists from '../../components/Users/Playlist/SearchPlaylists';
 import PageTitle from '../../components/PageTitle';
+import NavArrowButton from '../../utils/Buttons/NavArrowButton';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -29,6 +29,7 @@ function DataOrder(check, data, state) {
 
 const Playlists = () => {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const { userId } = useParams();
   const isOtherUser = user.id !== userId;
@@ -154,22 +155,22 @@ const Playlists = () => {
     <div className="w-full h-full text-gray-200">
       <PageTitle title={`${Object.keys(dataUser).length && title}`} />
       <div className="relative text-gray-200 mb-20 mt-6">
-        <div className="text-gray-200">
+        <div className="text-gray-200 mb-4">
           {/* // . BACK USER */}
-          <Link
-            to={!isOtherUser ? '/me' : `/users/${dataUser.id}`}
-            className="ml-5 pt-5 text-[#b1a9fa] md:hover:text-gray-500 capitalize"
-          >
-            <IoIosArrowBack
-              className="inline-block mr-1"
-              size={25}
-              alt="Left arrow icon"
-            />
-            {dataUser.username}
-          </Link>
+          <NavArrowButton
+            direction="back"
+            label={dataUser.username}
+            onClick={() =>
+              navigate(!isOtherUser ? '/me' : `/users/${dataUser.id}`)
+            }
+            className="capitalize"
+          />
         </div>
         {/* // - SEARCH USERS */}
-        <div className="flex justify-end mb-4" ref={searchRef}>
+        <div
+          className="flex md:justify-end justify-center mb-4"
+          ref={searchRef}
+        >
           <SearchPlaylists hiden={hiden} />
         </div>
         {/* // - POP DELETE */}
@@ -185,9 +186,9 @@ const Playlists = () => {
           }}
         />
         <>
-          <div className="grid grid-cols-3 pr-2 ">
+          <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-4 px-4">
             {/* // . Asc/Desc */}
-            <div className="col-start-2 flex items-center justify-center">
+            <div className="flex items-center justify-center">
               {isAsc ? (
                 <div
                   className="transition ease-in-out text-[#b1a9fa] fill-[#b1a9fa] md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide"
@@ -259,31 +260,13 @@ const Playlists = () => {
           {isSquare ? (
             <div className="relative my-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
               {/* // . CREATE A PLAYLIST */}
-              {!isOtherUser ? (
-                <div className="flex justify-end gap-1">
-                  {!createPlaylist ? (
-                    <button
-                      className="static text-gray-200 rounded-xl bg-cover w-full mb-2 mt-4"
-                      onClick={() => setCreatePlaylist(true)}
-                    >
-                      <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-1 rounded-xl h-full">
-                        <div className="relative transition ease-in-out md:hover:scale-105 duration-300">
-                          {/* //-PORTADA*/}
-                          <div>
-                            <img
-                              className="rounded-lg object-cover object-center w-[500px] h-[150px]"
-                              src={NoImageMore}
-                              alt={'New Playlist'}
-                            />
-                          </div>
-                        </div>
-                        <div className="text-gray-200 mt-2">
-                          <h3 className="pl-4 text-xl">{t('Add Playlist')}</h3>
-                        </div>
-                      </div>
-                    </button>
-                  ) : null}
-                </div>
+              {!isOtherUser && !createPlaylist ? (
+                <BaseButton
+                  onClick={() => setCreatePlaylist(true)}
+                  className="w-full rounded-xl backdrop-blur-md bg-[#20283E]/80 hover:ring-2 ring-inset hover:ring-gray-500"
+                >
+                  <h3 className="text-xl">+ {t('Playlist')}</h3>
+                </BaseButton>
               ) : null}
               {checkPlaylists &&
                 dataMedias.map((playlist, index) => (
@@ -344,39 +327,13 @@ const Playlists = () => {
           {isList ? (
             <div className="relative flex flex-col gap-1">
               {/* // . CREATE A PLAYLIST */}
-              {!isOtherUser ? (
-                <div className="flex justify-end gap-1">
-                  {!createPlaylist ? (
-                    <button
-                      className="static text-gray-200 hover:text-purpleNR rounded-xl bg-cover w-full mb-2 mt-4"
-                      onClick={() => setCreatePlaylist(true)}
-                    >
-                      <div className="grid grid-cols-5 justify-between gap-x-6 py-2 static bg-local backdrop-blur-md bg-[#20283E]/80 p-2 rounded-xl h-full">
-                        {/* // - POSTER AND RATINGS */}
-                        <div className="col-span-2 flex min-w-0 gap-x-4">
-                          <div className="h-full">
-                            {/* // . POSTER*/}
-                            <div className="transition ease-in-out md:hover:scale-105 duration-300">
-                              <img
-                                className=" static object-cover cursor-pointer rounded-xl w-[150px] h-[84px]"
-                                src={NoImageMore}
-                                alt={t('New Playlist')}
-                              />
-                            </div>
-                          </div>
-                          <div className="min-w-0 flex-auto mt-4 px-2">
-                            {/* // . TITLE */}
-                            <div className="flex  font-semibold text-sm md:text-base cursor-pointer">
-                              <h3 className="pl-4 text-xl">
-                                {t('Add Playlist')}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                  ) : null}
-                </div>
+              {!isOtherUser && !createPlaylist ? (
+                <BaseButton
+                  onClick={() => setCreatePlaylist(true)}
+                  className="w-full rounded-xl backdrop-blur-md bg-[#20283E]/80 hover:ring-2 ring-inset hover:ring-gray-500"
+                >
+                  <h3 className="text-xl">+ {t('Playlist')}</h3>
+                </BaseButton>
               ) : null}
               {/* // . LIST PLAYLISTS */}
               {checkPlaylists &&

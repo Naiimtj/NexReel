@@ -249,7 +249,7 @@ const ForumSingle = () => {
               <div className="text-gray-200 rounded-xl">
                 <div className="bg-local backdrop-blur-md bg-[#20283E]/80 rounded-xl h-full">
                   <div
-                    className="text-gray-200 rounded-t-xl bg-cover w-full"
+                    className="text-gray-200 rounded-t-xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
                     style={{
                       backgroundImage: `url(${imgForum})`,
                     }}

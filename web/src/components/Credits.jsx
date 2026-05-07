@@ -37,6 +37,7 @@ export const Credits = ({
     roles,
     username,
     avatarURL,
+    isFollowing,
   } = repInfo;
   // - ALL INFO MEDIA
   const [dataMedia, setDataMedia] = useState({});
@@ -160,7 +161,7 @@ export const Credits = ({
               alt={t('Icon people')}
             />
             <img
-              className={`rounded-full object-cover ${posterSizeClass} `}
+              className={`rounded-full object-cover ${posterSizeClass} ring-2 ring-inset`}
               src={processInfo.repPoster}
               alt={t('No photo')}
             />
@@ -179,8 +180,18 @@ export const Credits = ({
         className=" cursor-pointer text-center mt-4 w-full"
         onClick={() => navigate(processInfo.urlNavigation)}
       >
-        <h2 className={`font-semibold ${nameTextClass} break-words`}>
+        <h2
+          className={`font-semibold ${nameTextClass} break-words flex items-center justify-center gap-1`}
+        >
           {processInfo.repName}
+          {media === 'user' && isFollowing ? (
+            <BaseIcon
+              icon="checkmarkCircleFill"
+              size="x-small"
+              className="text-green-400 shrink-0"
+              tooltip={t('Following')}
+            />
+          ) : null}
         </h2>
 
         <div className={characterTextClass}>

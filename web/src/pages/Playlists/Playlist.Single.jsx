@@ -50,6 +50,7 @@ const PlaylistSingle = () => {
   const [dataUser, setDataUser] = useState({});
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [visualDesign, setVisualDesign] = useState(0);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   useEffect(() => {
     const playlistData = async () => {
       getDetailPlaylist(id).then((data) => {
@@ -278,12 +279,12 @@ const PlaylistSingle = () => {
             </div>
             {!editPlaylist ? (
               <div
-                className="text-gray-200 rounded-xl bg-cover w-full"
+                className="text-gray-200 rounded-xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
                 style={{
                   backgroundImage: `url(${imgPlaylist})`,
                 }}
               >
-                <div className="bg-local backdrop-blur-md bg-[#20283E]/80 rounded-xl h-full py-10 px-3">
+                <div className="bg-local backdrop-blur-md bg-[#20283E]/80 rounded-xl h-full md:py-10 py-4 px-4">
                   <div className="relative">
                     {/* // - POP DELETE */}
                     <DeleteConfirmModal
@@ -298,14 +299,14 @@ const PlaylistSingle = () => {
                       }}
                     />
                     {/* // - TOP */}
-                    <h1 className="text-sm md:text-3xl uppercase text-gray-200 text-center mb-1">
+                    <h1 className="text-lg md:text-3xl uppercase text-gray-200 text-center mb-1">
                       {t(title)}
                     </h1>
                     {/* // . TAGS */}
                     <div className="text-xs text-gray-500 text-center mb-4">
                       {tags && tags.join(', ')}
                     </div>
-                    <div className="grid grid-cols-6 border-b border-gray-700 mb-2 pb-2">
+                    <div className="md:grid md:grid-cols-6 flex flex-col border-b border-gray-700 mb-2 pb-2">
                       {/* //-POSTER*/}
                       <div className="col-start-1 col-span-2 flex justify-center">
                         <img
@@ -315,38 +316,54 @@ const PlaylistSingle = () => {
                         />
                       </div>
                       {/* // - INFO PLAYLIST */}
-                      <div className="col-span-4 ml-10 grid grid-cols-4">
-                        <div className="col-span-2">
-                          <div className="flex gap-2">
-                            <p className="text-gray-400">{`${t(
-                              'Create by',
-                            )}:`}</p>
-                            <Link
-                              to={
-                                isOtherUser
-                                  ? `/users/${dataPlaylist.user?.id}`
-                                  : '/me'
-                              }
-                              className="capitalize text-purpleNR hover:text-gray-600 transition duration-300"
-                            >
-                              {dataPlaylist?.user?.username}
-                            </Link>
-                          </div>
+                      <div className="col-span-4 md:ml-10">
+                        <div className="flex gap-2">
+                          <p className="text-gray-400">{`${t(
+                            'Create by',
+                          )}:`}</p>
+                          <Link
+                            to={
+                              isOtherUser
+                                ? `/users/${dataPlaylist.user?.id}`
+                                : '/me'
+                            }
+                            className="capitalize text-purpleNR hover:text-gray-600 transition duration-300"
+                          >
+                            {dataPlaylist?.user?.username}
+                          </Link>
                         </div>
-                        {
-                          <div className="col-span-4 flex gap-2">
-                            <div className="text-gray-400">{`${t(
-                              'Description',
-                            )}:`}</div>
-                            <p className="font-normal">
-                              {description && description !== 'null'
-                                ? description
-                                : ''}
-                            </p>
+
+                        <>
+                          <div className="text-gray-400">{`${t(
+                            'Description',
+                          )}:`}</div>
+                          <div
+                            className={`${
+                              descriptionExpanded ? '' : 'line-clamp-2'
+                            } md:line-clamp-none font-extralight text-sm`}
+                          >
+                            {description && description !== 'null'
+                              ? description
+                              : ''}
                           </div>
-                        }
-                        <div className="col-span-2">
-                          <div className="flex gap-2 mb-4">
+                          {description && description !== 'null'
+                            ? description
+                            : '' && (
+                                <button
+                                  type="button"
+                                  className="md:hidden mt-1 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                                  onClick={() =>
+                                    setDescriptionExpanded((v) => !v)
+                                  }
+                                >
+                                  {descriptionExpanded
+                                    ? t('Read less')
+                                    : t('Read more')}
+                                </button>
+                              )}
+                        </>
+                        <div className="md:col-span-2 col-span-4">
+                          <div className="flex gap-2">
                             {dataMediasPersons &&
                               dataMediasPersons.length > 0 && (
                                 <>
@@ -361,7 +378,7 @@ const PlaylistSingle = () => {
                                 </>
                               )}
                           </div>
-                          <div className="flex gap-2 mb-4">
+                          <div className="flex gap-2">
                             <p className="text-gray-400">{`${t(
                               'Quantity',
                             )}:`}</p>
@@ -498,7 +515,7 @@ const PlaylistSingle = () => {
                       />
                     ) : null}
                     {/* // . ORDER & VISUALIZATION */}
-                    <div className="grid grid-cols-3">
+                    <div className="flex md:flex-row flex-col justify-between items-center px-4">
                       {/* // Asc/Desc */}
                       <div className="flex items-center justify-start">
                         {isAsc ? (

@@ -51,7 +51,9 @@ const TooltipWrapper = ({
     };
   }, [showTimeout, hideTimeout]);
 
-  if (!tooltip) {
+  const isTouchDevice = globalThis.window?.matchMedia('(hover: none)').matches ?? false;
+
+  if (!tooltip || isTouchDevice) {
     return <div className={wrapperClassName}>{children}</div>;
   }
 

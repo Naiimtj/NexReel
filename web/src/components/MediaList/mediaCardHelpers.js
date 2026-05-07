@@ -82,13 +82,15 @@ export const useMediaData = (mediaType, id, language) => {
   return { dataMedia, imdbID, imdbData };
 };
 
+const EMPTY_MEDIA_USER = {};
+
 export const useMediaUserEntry = (mediasUser, id, mediaType, deps = []) => {
-  const [dataMediaUser, setDataMediaUser] = useState({});
+  const [dataMediaUser, setDataMediaUser] = useState(EMPTY_MEDIA_USER);
   useEffect(() => {
     const found = mediasUser?.find(
       (f) => Number(f.mediaId) === Number(id) && mediaType === f.media_type,
     );
-    setDataMediaUser(found ?? {});
+    setDataMediaUser(found ?? EMPTY_MEDIA_USER);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, mediaType, mediasUser, ...deps]);
   return [dataMediaUser, setDataMediaUser];

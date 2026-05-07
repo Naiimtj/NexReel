@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -35,6 +35,7 @@ export const MultiList = ({
   setIdDelete = () => {},
   setAnswerDel,
   mediasUser = [],
+  showActions = true,
 }) => {
   const [t, i18next] = useTranslation('translation');
   const navigate = useNavigate();
@@ -84,7 +85,12 @@ export const MultiList = ({
   const inPlex = isMediaInPlex(mediaType, id, imdbID, plex);
   const typeIcon = resolveTypeIcon(processInfo.type);
 
-  const [dataMediaUser] = useMediaUserEntry(mediasUser, id, mediaType, [
+  const stableMediasUser = useMemo(
+    () => mediasUser, // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mediasUser.length],
+  );
+
+  const [dataMediaUser] = useMediaUserEntry(stableMediasUser, id, mediaType, [
     changeSeenPending,
     pendingSeen,
     userExist,
@@ -156,7 +162,7 @@ export const MultiList = ({
 
   return (
     <div
-      className="relative text-gray-200 rounded-2xl bg-cover w-full"
+      className="relative text-gray-200 rounded-2xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
       style={{ backgroundImage: `url(${processInfo.bgPoster})` }}
     >
       <div className="grid grid-row-2 static bg-local backdrop-blur-md bg-[#20283E]/80 p-2 rounded-xl h-full">
@@ -181,7 +187,7 @@ export const MultiList = ({
                   className="w-7 h-7 rounded-md bg-black/50 p-0.5"
                 />
               )}
-              {processInfo.voteAverage > 0 && (
+              {processInfo.voteAverage > 0 && showActions && (
                 <div className="px-2 mr-2 backdrop-blur-md bg-black/50 rounded-lg">
                   <img
                     className="inline-block pr-1 py-2 w-4"
@@ -209,7 +215,7 @@ export const MultiList = ({
             </div>
 
             <div className="col-span-6 flex min-w-0 gap-x-4 mb-2 md:mb-0">
-              <div className="h-full w-14">
+              <div className="h-full w-14 shrink-0">
                 <div className="transition ease-in-out md:hover:scale-105 duration-300">
                   {url ? (
                     <img
@@ -235,7 +241,7 @@ export const MultiList = ({
                   )}
                 </div>
               </div>
-              <div className="min-w-0 flex-auto mt-4 px-2">
+              <div className="min-w-0 flex-auto mt-2 px-2">
                 <div className="mb-1 flex flex-row items-center gap-4">
                   {typeIcon && (
                     <img
@@ -259,7 +265,7 @@ export const MultiList = ({
                     )}
                   </div>
                 </div>
-                <div className="font-semibold text-sm md:text-base cursor-pointer">
+                <div className="font-semibold text-sm md:text-base cursor-pointer w-full overflow-hidden">
                   <p className="line-clamp-3">{processInfo.title}</p>
                 </div>
               </div>
@@ -268,7 +274,7 @@ export const MultiList = ({
         </div>
       </div>
 
-      {userExist && (
+      {userExist && showActions && (
         <div className="absolute bottom-0 mb-1 flex justify-end gap-6 w-full pr-4 z-40">
           <ShowPlaylistMenu
             userId={user.id}
@@ -321,6 +327,7 @@ MultiList.propTypes = {
   setIdDelete: PropTypes.func,
   setAnswerDel: PropTypes.func,
   mediasUser: PropTypes.array,
+  showActions: PropTypes.bool,
 };
 
 export default MultiList;

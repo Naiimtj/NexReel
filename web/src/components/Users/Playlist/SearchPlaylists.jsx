@@ -35,9 +35,9 @@ const SearchPlaylists = ({ hiden }) => {
   }, [hiden]);
   return (
     <div className="flex flex-col justify-end">
-      <div className="grid grid-flow-col justify-end auto-cols-max">
+      <div className="flex flex-row auto-cols-max">
         <div className="border-2 rounded-xl border-gray-600 flex flex-row p-1">
-          <div className="relative w-1/6 md:w-auto">
+          <div className="relative md:w-auto">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400">
               <BsSearch />
             </span>

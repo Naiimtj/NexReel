@@ -23,6 +23,11 @@ up-local:
         sleep 1
     done
     docker exec nexreel-postgres psql -U ${POSTGRES_USER:-nexreel} -d ${POSTGRES_DB:-nexreel} -tAc "SELECT 1" >/dev/null
+    docker exec nexreel-postgres psql \
+        -U ${POSTGRES_USER:-nexreel} \
+        -d ${POSTGRES_DB:-nexreel} \
+        -v ON_ERROR_STOP=1 \
+        -c "ALTER USER \"${POSTGRES_USER:-nexreel}\" WITH PASSWORD '${POSTGRES_PASSWORD:-nexreel}';" >/dev/null
 
 # Para el entorno local en contenedores
 down-local:

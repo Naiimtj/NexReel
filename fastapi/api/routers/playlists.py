@@ -118,7 +118,7 @@ async def playlist_update(playlist_id: str, request: Request, current_user: dict
         {
             "playlist_id": playlist_id,
             "title": data.get("title") or playlist["title"],
-            "description": data.get("description") or playlist["description"],
+            "description": data.get("description") if data.get("description") is not None else playlist["description"],
             "tags": json.dumps(tags),
             "img_playlist": image_url,
         },

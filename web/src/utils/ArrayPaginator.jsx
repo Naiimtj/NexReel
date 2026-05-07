@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -11,6 +12,9 @@ const ArrayPaginator = ({
   setCurrentPageIndex = () => {},
 }) => {
   const [t] = useTranslation('translation');
+  const [jumpOpen, setJumpOpen] = useState(false);
+  const [jumpValue, setJumpValue] = useState('');
+
   const totalPagesFinal = totalPages || data.length;
   const isFirst = currentPageIndex === 0;
   const isLast =
@@ -20,10 +24,19 @@ const ArrayPaginator = ({
   const goToPrev = () => setCurrentPageIndex((i) => i - 1);
   const goToNext = () => setCurrentPageIndex((i) => i + 1);
 
+  const handleJump = () => {
+    const page = parseInt(jumpValue, 10);
+    if (!isNaN(page) && page >= 1 && page <= totalPagesFinal) {
+      setCurrentPageIndex(page - 1);
+    }
+    setJumpOpen(false);
+    setJumpValue('');
+  };
+
   const pageBtn =
     'cursor-pointer relative inline-flex items-center px-4 py-2 text-sm font-semibold text-purpleNR ring-1 ring-inset ring-gray-700 hover:bg-gray-500 hover:text-white focus:z-20 focus:outline-offset-0';
-  const dots =
-    'relative hidden items-center px-2 py-2 text-sm font-semibold text-purpleNR ring-1 ring-inset ring-gray-700 focus:z-20 focus:outline-offset-0 md:inline-flex';
+  const dotsBtn =
+    'cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-semibold text-purpleNR ring-1 ring-inset ring-gray-700 hover:bg-gray-500 hover:text-white focus:z-20 focus:outline-offset-0';
 
   const fromItem =
     (currentPageIndex + 1) * groupSize - groupSize === 0
@@ -33,6 +46,37 @@ const ArrayPaginator = ({
     (currentPageIndex + 1) * groupSize > totalResult
       ? totalResult
       : (currentPageIndex + 1) * groupSize;
+
+  const jumpInput = (
+    <input
+      autoFocus
+      type="number"
+      min={1}
+      max={totalPagesFinal}
+      value={jumpValue}
+      onChange={(e) => setJumpValue(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') handleJump();
+        if (e.key === 'Escape') {
+          setJumpOpen(false);
+          setJumpValue('');
+        }
+      }}
+      onBlur={handleJump}
+      className="relative w-14 px-2 py-2 text-sm font-semibold text-purpleNR ring-1 ring-inset ring-gray-700 bg-transparent text-center focus:outline-none"
+    />
+  );
+
+  const dotsButton = (
+    <button
+      type="button"
+      onClick={() => setJumpOpen(true)}
+      className={dotsBtn}
+      title={t('Go to page')}
+    >
+      ...
+    </button>
+  );
 
   return (
     <div className="flex justify-center md:items-center md:justify-between px-4 py-3 sm:px-6">
@@ -54,14 +98,25 @@ const ArrayPaginator = ({
             <IoIosArrowBack className="h-5 w-5" aria-hidden="true" />
           </button>
 
+          {/* Page 1 — desktop only */}
           {currentPageIndex + 1 > 1 && (
-            <button type="button" className={pageBtn} onClick={goToPage(0)}>
+            <button
+              type="button"
+              className={`${pageBtn} hidden md:inline-flex`}
+              onClick={goToPage(0)}
+            >
               1
             </button>
           )}
 
-          {currentPageIndex + 1 >= 3 && <span className={dots}>...</span>}
+          {/* Left dots — desktop only, not clickable */}
+          {currentPageIndex + 1 >= 3 && (
+            <span className="relative hidden items-center px-2 py-2 text-sm font-semibold text-purpleNR ring-1 ring-inset ring-gray-700 focus:z-20 focus:outline-offset-0 md:inline-flex">
+              ...
+            </span>
+          )}
 
+          {/* Current page */}
           <button
             type="button"
             aria-current="page"
@@ -70,6 +125,7 @@ const ArrayPaginator = ({
             {currentPageIndex + 1}
           </button>
 
+          {/* Current + 1 */}
           {totalPagesFinal >= currentPageIndex + 2 && (
             <button
               type="button"
@@ -80,6 +136,7 @@ const ArrayPaginator = ({
             </button>
           )}
 
+          {/* Current + 2 — desktop only */}
           {totalPagesFinal >= currentPageIndex + 3 && (
             <button
               type="button"
@@ -90,9 +147,12 @@ const ArrayPaginator = ({
             </button>
           )}
 
+          {/* Right dots + last — desktop only */}
           {totalPagesFinal > currentPageIndex + 3 && (
             <>
-              <span className={dots}>...</span>
+              <span className="hidden md:inline-flex">
+                {jumpOpen ? jumpInput : dotsButton}
+              </span>
               <button
                 type="button"
                 className={`${pageBtn} hidden md:inline-flex`}
@@ -101,6 +161,24 @@ const ArrayPaginator = ({
                 {totalPagesFinal}
               </button>
             </>
+          )}
+
+          {/* Right dots — mobile only, shown when last page is not current+1 */}
+          {totalPagesFinal > currentPageIndex + 3 && (
+            <span className="inline-flex md:hidden">
+              {jumpOpen ? jumpInput : dotsButton}
+            </span>
+          )}
+
+          {/* Last page — mobile only */}
+          {totalPagesFinal > currentPageIndex + 2 && (
+            <button
+              type="button"
+              className={`${pageBtn} inline-flex md:hidden`}
+              onClick={goToPage(totalPagesFinal - 1)}
+            >
+              {totalPagesFinal}
+            </button>
           )}
 
           <button

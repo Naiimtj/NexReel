@@ -1,20 +1,48 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import DateAndTimeConvert from "../../utils/DateAndTimeConvert";
-import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/auth-context';
+import { getDetailEpisode } from '../../../services/DB/services-db';
+import { SeenPendingEpisode } from '../MediaList/SeenPendingMedia/seenPendingActions';
+import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
+import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 
-const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
-  const [t] = useTranslation("translation");
+const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
+  const { onReload } = useAuthContext();
+  const [t] = useTranslation('translation');
   const navigate = useNavigate();
+  const [dataEpisodeUser, setDataEpisodeUser] = useState({});
+  const [changeSeenPending, setChangeSeenPending] = useState(false);
+  const [pendingSeen, setPendingSeen] = useState(false);
+
   const { name, runtime, air_date, episode_number, id } = info;
-  const TotalTime =
-    runtime > 0 ? new DateAndTimeConvert(runtime, t, false).TimeConvert() : 0;
+  const { seen, pending } = dataEpisodeUser;
+
+  useEffect(() => {
+    if (userExist) {
+      getDetailEpisode(idTvShow, numSeason, episode_number).then((d) => {
+        setDataEpisodeUser(d);
+      });
+    }
+  }, [
+    changeSeenPending,
+    pendingSeen,
+    idTvShow,
+    userExist,
+    numSeason,
+    episode_number,
+  ]);
+
   //-SCROLL UP
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  const TotalTime =
+    runtime > 0
+      ? new DateAndTimeConvert(runtime, t, false).TimeConvert()
+      : null;
 
   const dateComplete =
     air_date &&
@@ -25,51 +53,88 @@ const Episodes = ({ info, seen, pending, idTvShow, numSeason, userExist }) => {
       false,
       false,
       true,
-      false
+      false,
     ).DateTimeConvert();
 
+  const handleSeenMedia = (event) => {
+    event.stopPropagation();
+    SeenPendingEpisode(
+      dataEpisodeUser,
+      idTvShow,
+      'tv',
+      runtime || 0,
+      seen,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen,
+      'seen',
+      onReload,
+      numSeason,
+      episode_number,
+      numberEpisodes,
+    );
+  };
+
+  const handlePendingMedia = (event) => {
+    event.stopPropagation();
+    SeenPendingEpisode(
+      dataEpisodeUser,
+      idTvShow,
+      'tv',
+      runtime || 0,
+      pending,
+      setChangeSeenPending,
+      changeSeenPending,
+      setPendingSeen,
+      pendingSeen,
+      'pending',
+      onReload,
+      numSeason,
+      episode_number,
+      numberEpisodes,
+    );
+  };
+
   return (
-    <div className="grid grid-cols-6 justify-items-stretch hover:bg-white/10 rounded-xl py-2">
+    <div className="flex flex-row justify-between hover:bg-white/10 rounded-xl p-1">
       <div
-        className="cursor-pointer grid grid-cols-8 col-span-5 grid-flow-col content-center"
+        className="cursor-pointer flex flex-row items-center gap-4 justify-items-stretch w-full"
         onClick={() =>
           info && navigate(`/tv/${idTvShow}/${numSeason}/${episode_number}`)
         }
       >
         {/* //-NUMBER EPISODE */}
-        <h1 className="text-md text-center text-[#7B6EF6]">{episode_number}</h1>
-        {/* //-NAME Y DATE */}
-        <div className="px-2 col-span-5 content-center">
-          {/* //-NAME */}
-          <div className="flex justify-start">
-            <h1 className="font-semibold text-sm">{name}</h1>
-          </div>
-        </div>
-        <div className="col-span-2 flex justify-end items-center gap-1 text-xs text-right px-2 content-center">
+        <h1 className="text-md text-center text-[#7B6EF6] px-2">
+          {episode_number}
+        </h1>
+        {/* //- NAME Y DATE */}
+        {/* //-NAME */}
+        <div className="flex flex-col justify-start">
+          <h1 className="font-semibold text-sm">{name}</h1>
           {/* //-DATE */}
-
-          <div className="">
+          <div className="flex flex-row items-center gap-2">
             <p className="text-[10px] text-gray-400">({TotalTime})</p>
-            {dateComplete}
+            <div className="text-xs text-gray-400">{dateComplete}</div>
           </div>
         </div>
       </div>
-      {/* //.BUTTON AND SEEN/UNSEEN */}
+      {/* //.BUTTON SEEN/UNSEEN & PENDING/UNPENDING */}
       {userExist ? (
         <div className="flex justify-center gap-8 items-center">
           {/* //-SEEN/UNSEEN */}
           <SeenPendingButton
             condition={seen}
             size={20}
-            text={"Seen"}
-            // handle={handleSeenMedia}
+            text={'Seen'}
+            handle={handleSeenMedia}
           />
           {/* //-PENDING/NO PENDING */}
           <SeenPendingButton
             condition={pending}
             size={17}
-            text={"Pending"}
-            // handle={handlePending}
+            text={'Pending'}
+            handle={handlePendingMedia}
           />
         </div>
       ) : null}
@@ -81,17 +146,15 @@ export default Episodes;
 
 Episodes.defaultProps = {
   info: {},
-  seen: false,
-  pending: false,
-  idTvShow: "",
-  numSeason: "",
+  idTvShow: '',
+  numSeason: '',
   userExist: false,
+  numberEpisodes: 0,
 };
 Episodes.propTypes = {
   info: PropTypes.object,
-  seen: PropTypes.bool,
-  pending: PropTypes.bool,
   idTvShow: PropTypes.string,
   numSeason: PropTypes.string,
   userExist: PropTypes.bool,
+  numberEpisodes: PropTypes.number,
 };

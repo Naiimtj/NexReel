@@ -519,7 +519,6 @@ function DetailsMedia({
   return (
     <>
       <PageTitle title={`${processInfo.title} (${processInfo.date})`} />
-
       <div className="static content-center shadow-md">
         <div className=" static h-full w-full flex flex-col md:flex-row md:gap-4 p-2 md:pt-4 md:px-4 items-start">
           {/* -VOTE AVERAGE, POSTER, BUTTONS, PLAYLISTS Y WHERE SEE */}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IoIosArrowBack } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import Multi from '../../components/MediaList/Multi';
 import {
@@ -13,6 +12,7 @@ import { useMediaContext } from '../../context/media-context';
 import { getUser } from '../../../services/DB/services-db';
 import ArrayPaginator from '../../utils/ArrayPaginator';
 import GenreMapper from '../Genres/GenreMapper';
+import NavArrowButton from '../../utils/Buttons/NavArrowButton';
 
 const ListMediasGenres = () => {
   const [t] = useTranslation('translation');
@@ -68,31 +68,17 @@ const ListMediasGenres = () => {
   return (
     <div className="w-full h-full text-gray-200 bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
       <div className="text-gray-200 mb-20 mt-6">
-        <div className="text-gray-200 mb-4">
-          <button
-            type="button"
-            className="ml-5 pt-5 hover:text-[#6676a7]"
+        <div className="text-gray-200 p-4 flex flex-row gap-4 items-center">
+          <NavArrowButton
+            direction="back"
+            label={backMedia.title}
             onClick={() => navigate(`/${media}/${id}`)}
-          >
-            <IoIosArrowBack
-              className="inline-block mr-1"
-              size={25}
-              alt={t('Back Icon')}
-            />
-            {backMedia.title}
-          </button>
-          <button
-            type="button"
-            className="ml-5 pt-5 hover:text-[#6676a7]"
+          />
+          <NavArrowButton
+            direction="back"
+            label={t(nameGenre)}
             onClick={() => navigate(`/${media}/${id}/genre/${idGenre}`)}
-          >
-            <IoIosArrowBack
-              className="inline-block mr-1"
-              size={25}
-              alt={t('Back Icon')}
-            />
-            {t(nameGenre)}
-          </button>
+          />
         </div>
         <h1 className="text-gray-200 text-3xl text-center">
           {mediaType === 'movie' ? t('MOVIES') : t('TV SHOWS')}

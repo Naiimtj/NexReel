@@ -54,7 +54,7 @@ const NewPlaylist = ({
         isAbsolute ? 'absolute w-full h-full ' : 'relative w-full h-full'
       }
     >
-      <div className="relative backdrop-blur-3xl bg-white/10 rounded-3xl grid sm:grid-cols-1 md:grid-cols-3 gap-1">
+      <div className="relative backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl grid sm:grid-cols-1 md:grid-cols-3 gap-1">
         <div className="text-gray-300 text-center md:col-start-2 rounded-md flex flex-col justify-center py-6 px-4 md:px-0">
           {/* // CLOSE BUTTON */}
           <div

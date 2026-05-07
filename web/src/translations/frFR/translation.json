@@ -1,5 +1,23 @@
 {
   "name": "nom",
   "Sign in": "S'identifier",
-  "Logout": "Se déconnecter"
+  "Follow Playlist": "Suivre la Playlist",
+  "UnFollow Playlist": "Ne plus suivre la Playlist",
+  "Delete Playlist Icon": "Supprimer la Playlist",
+  "Followers": "Abonnés",
+  "Not follow playlists": "Vous ne suivez aucune Playlist",
+  "Not follow any playlist": "Ne suit aucune Playlist",
+  "Logout": "Se déconnecter",
+  "Log In": "Connexion",
+  "Sign in to your account": "Connectez-vous à votre compte",
+  "Your email": "Votre email",
+  "Email is required": "L'email est obligatoire",
+  "Invalid email address": "Adresse email invalide",
+  "Password": "Mot de passe",
+  "Password is required": "Le mot de passe est obligatoire",
+  "Password must be at least 8 characters": "Le mot de passe doit comporter au moins 8 caractères",
+  "Toggle password visibility": "Afficher/masquer le mot de passe",
+  "Oops! something in your credentials is not correct": "Oups ! quelque chose dans vos identifiants n'est pas correct",
+  "Don't have an account yet?": "Vous n'avez pas encore de compte ?",
+  "Sign up": "S'inscrire"
 }

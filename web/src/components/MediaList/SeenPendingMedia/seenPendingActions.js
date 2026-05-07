@@ -3,6 +3,8 @@ import {
   postMedia,
   patchSeasons,
   postSeasons,
+  patchEpisode,
+  postEpisode,
 } from '../../../../services/DB/services-db';
 
 const applyAndRefresh = (
@@ -107,9 +109,12 @@ export function SeenPendingSeason(
 
   if (updateType === 'seen') {
     updateData.seen = !seenOrPending;
+    const seasonRuntime = (runTimeSeasons && runTimeSeasons[NumberSeason]) || 0;
     updateData.runtime_seen = !seenOrPending
-      ? runtime_seen + runTimeSeasons[NumberSeason]
-      : runtime_seen - runTimeSeasons[NumberSeason];
+      ? (runtime_seen || 0) + seasonRuntime
+      : (runtime_seen || 0) - seasonRuntime;
+  } else if (updateType === 'pending') {
+    updateData.pending = !seenOrPending;
   }
 
   const promise = exists
@@ -138,24 +143,27 @@ export function SeenPendingEpisode(
   updateType,
   onReload,
   NumberSeason,
+  NumberEpisode,
   numberEpisodes,
 ) {
   const updateData = {
     mediaId: id.toString(),
     media_type: mediaType,
     season: NumberSeason,
+    episode: NumberEpisode,
     runtime: runTime,
-    vote: dataMediaUser.vote,
+    vote: dataMediaUser.vote ?? -1,
     number_of_episodes: numberEpisodes,
   };
 
   if (updateType === 'seen') updateData.seen = !seenOrPending;
   else if (updateType === 'pending') updateData.pending = !seenOrPending;
 
-  const exists = Object.keys(dataMediaUser).length > 0;
+  const exists =
+    Object.keys(dataMediaUser).length > 0 && dataMediaUser.result !== false;
   const promise = exists
-    ? patchSeasons(id, NumberSeason, updateData)
-    : postSeasons(id, updateData);
+    ? patchEpisode(id, NumberSeason, NumberEpisode, updateData)
+    : postEpisode(id, NumberSeason, NumberEpisode, updateData);
 
   return applyAndRefresh(promise, {
     setPendingSeen,

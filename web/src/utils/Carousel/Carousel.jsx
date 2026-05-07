@@ -16,8 +16,8 @@ const SIZE_CONFIG = {
     gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
   },
   normal: {
-    cardsPerPage: { sm: 2, md: 3, lg: 4, xl: 6 },
-    gridClass: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
+    cardsPerPage: { sm: 2, md: 4, lg: 5, xl: 6 },
+    gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
   },
 };
 

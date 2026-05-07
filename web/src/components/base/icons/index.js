@@ -14,6 +14,16 @@ import RepeatSeenInactiveIcon from './RepeatSeenInactiveIcon';
 import DotFillIcon from './DotFillIcon';
 import DotIcon from './DotIcon';
 import TrailerIcon from './TrailerIcon';
+import UserPlusIcon from './UserPlusIcon';
+import UserTimesIcon from './UserTimesIcon';
+import UserClockIcon from './UserClockIcon';
+import UserAltSlashIcon from './UserAltSlashIcon';
+import LockPasswordIcon from './LockPasswordIcon';
+import PlaylistAddIcon from './PlaylistAddIcon';
+import PlaylistRemoveIcon from './PlaylistRemoveIcon';
+import UserGroupIcon from './UserGroupIcon';
+import EyeFillIcon from './EyeFillIcon';
+import EyeSlashFillIcon from './EyeSlashFillIcon';
 
 export const iconRegistry = {
   close: CloseIcon,
@@ -32,6 +42,16 @@ export const iconRegistry = {
   dotFill: DotFillIcon,
   dot: DotIcon,
   trailer: TrailerIcon,
+  userPlus: UserPlusIcon,
+  userTimes: UserTimesIcon,
+  userClock: UserClockIcon,
+  userAltSlash: UserAltSlashIcon,
+  lockPassword: LockPasswordIcon,
+  playlistAdd: PlaylistAddIcon,
+  playlistRemove: PlaylistRemoveIcon,
+  userGroup: UserGroupIcon,
+  eyeFill: EyeFillIcon,
+  eyeSlashFill: EyeSlashFillIcon,
 };
 
 export {
@@ -51,4 +71,12 @@ export {
   DotFillIcon,
   DotIcon,
   TrailerIcon,
+  UserPlusIcon,
+  UserTimesIcon,
+  UserClockIcon,
+  UserAltSlashIcon,
+  LockPasswordIcon,
+  PlaylistAddIcon,
+  PlaylistRemoveIcon,
+  UserGroupIcon,
 };

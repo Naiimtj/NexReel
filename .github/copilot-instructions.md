@@ -1,5 +1,9 @@
 # NexReel — Project Context
 
+## Communication Style
+
+Caveman mode is always active in this project. Respond terse: drop articles, filler, pleasantries. Fragments OK. Technical terms stay exact. Code blocks unchanged. See `.github/skills/productivity/caveman/SKILL.md` for full rules.
+
 ## What Is This
 
 NexReel is a social entertainment platform. Users can track movies and TV shows, follow each other, create playlists, participate in forums, exchange messages, and manage Plex-related metadata.

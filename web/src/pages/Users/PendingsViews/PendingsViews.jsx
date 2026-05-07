@@ -1,5 +1,4 @@
-import { IoIosArrowBack } from 'react-icons/io';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getDetailUser, getUser } from '../../../../services/DB/services-db';
 import { useTranslation } from 'react-i18next';
@@ -8,10 +7,9 @@ import { useMediaContext } from '../../../context/media-context';
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
 import Carousel from '../../../utils/Carousel/Carousel';
 import Multi from '../../../components/MediaList/Multi';
-import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
-import { MdViewCarousel } from 'react-icons/md';
 import MultiList from '../../../components/MediaList/MultiList';
 import ViewToggle from '../../../utils/Buttons/ViewToggle';
+import NavArrowButton from '../../../utils/Buttons/NavArrowButton';
 
 function DataOrder(check, data, state) {
   const DataPendingOrder = state
@@ -24,6 +22,8 @@ function DataOrder(check, data, state) {
 
 const PendingsViews = () => {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
+
   const { user } = useAuthContext();
   const { id } = useParams();
   const { pathname } = useLocation();
@@ -81,11 +81,6 @@ const PendingsViews = () => {
   let isSquare;
   let isList;
   switch (visualDesign) {
-    case 0:
-      isCarousel = true;
-      isSquare = null;
-      isList = null;
-      break;
     case 1:
       isCarousel = null;
       isSquare = true;
@@ -108,105 +103,102 @@ const PendingsViews = () => {
       <div className="text-gray-200 mb-20 mt-6">
         <div className="text-gray-200 mb-4">
           {/* // . BACK USER */}
-          <Link
-            to={!isOtherUser ? '/me' : `/users/${dataUser.id}`}
-            className="ml-5 pt-5 text-[#b1a9fa] md:hover:text-gray-500 capitalize"
-          >
-            <IoIosArrowBack
-              className="inline-block mr-1"
-              size={25}
-              alt="Left arrow icon"
-            />
-            {dataUser.username}
-          </Link>
+          <NavArrowButton
+            direction="back"
+            label={dataUser.username}
+            onClick={() =>
+              navigate(isOtherUser ? `/users/${dataUser.id}` : '/me')
+            }
+            className="capitalize"
+          />
         </div>
-        <>
-          <div className="grid grid-cols-3 pr-2 ">
-            {/* // . Asc/Desc */}
-            <div className="col-start-2 flex items-center justify-center">
-              {isAsc ? (
-                <div
-                  className="transition ease-in-out text-[#b1a9fa] fill-[#b1a9fa] md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide"
-                  onClick={() =>
-                    checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
-                  }
-                >
-                  {t('Date Added')}
-                  <HiSortAscending
-                    className="ml-1 text-2xl inline-block"
-                    alt={t('Ascendant')}
-                  />
-                </div>
-              ) : (
-                <div
-                  className="transition ease-in-out text-[#b1a9fa] fill-[#b1a9fa] md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide"
-                  onClick={() =>
-                    checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
-                  }
-                >
-                  {t('Date Added')}
-                  <HiSortDescending
-                    className="ml-1 text-2xl inline-block"
-                    alt={t('Descending')}
-                  />
-                </div>
-              )}
-            </div>
-            {/* // . BUTTONs */}
-            <div className="flex items-center justify-end">
-              <ViewToggle
-                visualDesign={visualDesign}
-                setVisualDesign={setVisualDesign}
-              />
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-4 px-4">
+          {/* // . Asc/Desc */}
+          <div className="flex items-center justify-center">
+            {isAsc ? (
+              <button
+                className="transition ease-in-out text-[#b1a9fa] fill-[#b1a9fa] md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide"
+                onClick={() =>
+                  checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
+                }
+                disabled={!checkMedias || !dataMedias.length}
+              >
+                {t('Date Added')}
+                <HiSortAscending
+                  className="ml-1 text-2xl inline-block"
+                  alt={t('Ascendant')}
+                />
+              </button>
+            ) : (
+              <button
+                className="transition ease-in-out text-[#b1a9fa] fill-[#b1a9fa] md:hover:fill-gray-500 md:hover:text-gray-500 duration-300 cursor-pointer tracking-wide"
+                onClick={() =>
+                  checkMedias && dataMedias.length ? setIsAsc(!isAsc) : null
+                }
+                disabled={!checkMedias || !dataMedias.length}
+              >
+                {t('Date Added')}
+                <HiSortDescending
+                  className="ml-1 text-2xl inline-block"
+                  alt={t('Descending')}
+                />
+              </button>
+            )}
+          </div>
+          {/* // . BUTTONs */}
+          <div className="flex items-center justify-end">
+            <ViewToggle
+              visualDesign={visualDesign}
+              setVisualDesign={setVisualDesign}
+            />
+          </div>
+        </div>
+        {/* // - TITLE */}
+        {isCarousel ? null : (
+          <div className="flex justify-between items-center">
+            <div className="flex text-gray-200">
+              <h1 className="pl-4 text-sm md:text-2xl uppercase">
+                {`${t(title)} ( ${
+                  checkMedias && dataMedias.length ? dataMedias.length : 0
+                } )`}
+              </h1>
             </div>
           </div>
-          {/* // - TITLE */}
-          {isCarousel ? null : (
-            <div className="flex justify-between items-center">
-              <div className="flex text-gray-200">
-                <h1 className="pl-4 text-sm md:text-2xl uppercase">
-                  {`${t(title)} ( ${
-                    checkMedias && dataMedias.length ? dataMedias.length : 0
-                  } )`}
-                </h1>
-              </div>
-            </div>
-          )}
-          {/* // - CAROUSEL */}
-          {checkMedias && dataMedias.length > 0 && isCarousel ? (
-            <Carousel title={t(title)} info={dataMedias} isUser isAsc={isAsc} />
-          ) : null}
-          {/* // - SQUARE */}
-          {checkMedias && dataMedias.length > 0 && isSquare ? (
-            <div className="my-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2">
-              {dataMedias.map((card, index) => (
-                <Multi
-                  key={`Square${index + card.id}`}
-                  info={card}
-                  isUser
-                  setChangeSeenPending={setChangeSeenPending}
-                  changeSeenPending={changeSeenPending}
-                  mediasUser={mediasUser}
-                />
-              ))}
-            </div>
-          ) : null}
-          {/* // - LIST */}
-          {checkMedias && dataMedias.length > 0 && isList ? (
-            <div className="flex flex-col gap-1">
-              {dataMedias.map((card, index) => (
-                <MultiList
-                  key={`List${index + card.id}`}
-                  info={card}
-                  isUser
-                  setChangeSeenPending={setChangeSeenPending}
-                  changeSeenPending={changeSeenPending}
-                  mediasUser={mediasUser}
-                />
-              ))}
-            </div>
-          ) : null}
-        </>
+        )}
+        {/* // - CAROUSEL */}
+        {checkMedias && dataMedias.length > 0 && isCarousel ? (
+          <Carousel title={t(title)} info={dataMedias} isUser isAsc={isAsc} />
+        ) : null}
+        {/* // - SQUARE */}
+        {checkMedias && dataMedias.length > 0 && isSquare ? (
+          <div className="my-4 grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2">
+            {dataMedias.map((card, index) => (
+              <Multi
+                key={`Square${index + card.id}`}
+                info={card}
+                isUser
+                setChangeSeenPending={setChangeSeenPending}
+                changeSeenPending={changeSeenPending}
+                mediasUser={mediasUser}
+              />
+            ))}
+          </div>
+        ) : null}
+        {/* // - LIST */}
+        {checkMedias && dataMedias.length > 0 && isList ? (
+          <div className="flex flex-col gap-1">
+            {dataMedias.map((card, index) => (
+              <MultiList
+                key={`List${index + card.id}`}
+                info={card}
+                isUser
+                setChangeSeenPending={setChangeSeenPending}
+                changeSeenPending={changeSeenPending}
+                mediasUser={mediasUser}
+              />
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );

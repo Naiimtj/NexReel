@@ -55,7 +55,7 @@ const Media = () => {
 
   return (
     <div
-      className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6"
+      className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6 ring-2 ring-inset ring-[#20283E]"
       style={{ backgroundImage: backdrop }}
     >
       <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">

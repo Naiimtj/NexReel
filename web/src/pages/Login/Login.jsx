@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
+import { BaseIcon } from '../../components/base';
 import Singup from '../SingUp/Singup';
 import { useAuthContext } from '../../context/auth-context';
 import { getUser, login } from '../../../services/DB/services-db';
@@ -33,9 +33,9 @@ const Login = () => {
       .catch(() => setErrorLogin(true));
   };
 
-  if (modalForm) return <Singup setModalForm={setModalForm} />;
+  const eyeIconMap = { true: 'eyeFill', false: 'eyeSlashFill' };
 
-  const EyeIcon = showPassword ? BsFillEyeFill : BsFillEyeSlashFill;
+  if (modalForm) return <Singup setModalForm={setModalForm} />;
 
   return (
     <div className="text-gray-300 font-bold pt-8 h-full w-full p-2 md:p-4">
@@ -97,14 +97,13 @@ const Login = () => {
                       })}
                     />
                   </div>
-                  <button
-                    type="button"
-                    aria-label={t('Toggle password visibility')}
-                    className="cursor-pointer text-grayNR md:hover:text-gray-500"
+                  <BaseIcon
+                    icon={eyeIconMap[showPassword]}
+                    size="md"
                     onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <EyeIcon className="h-14 w-14 md:h-6 md:w-6" />
-                  </button>
+                    tooltip={t('Toggle password visibility')}
+                    className='hover:fill-purpleNR'
+                  />
                 </div>
                 {errors.password && (
                   <span className="text-red-600">

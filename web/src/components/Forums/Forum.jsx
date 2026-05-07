@@ -43,27 +43,26 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
     deleteFollowPlaylist(id).then(() => setChangeDataUser(!changeDataUser));
   };
 
-  const isFollowing =
-    playlistFollow === '' ? (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
-        <MdOutlinePlaylistAdd
-          className="inline-block"
-          size={25}
-          color="#FFCA28"
-          alt={t('Follow Playlist')}
-          onClick={handleFollow}
-        />
-      </button>
-    ) : (
-      <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR">
-        <MdOutlinePlaylistRemove
-          className="inline-block"
-          size={25}
-          alt={t('UnFollow Playlist')}
-          onClick={handleUnFollow}
-        />
-      </button>
-    );
+  const isFollowing = !playlistFollow?.id ? (
+    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300">
+      <MdOutlinePlaylistAdd
+        className="inline-block"
+        size={25}
+        color="#FFCA28"
+        alt={t('Follow Playlist')}
+        onClick={handleFollow}
+      />
+    </button>
+  ) : (
+    <button className="cursor-pointer transition ease-in-out md:hover:scale-110 duration-300 text-purpleNR">
+      <MdOutlinePlaylistRemove
+        className="inline-block"
+        size={25}
+        alt={t('UnFollow Playlist')}
+        onClick={handleUnFollow}
+      />
+    </button>
+  );
 
   const handleDeletePlaylist = (event) => {
     event.stopPropagation();
@@ -77,7 +76,7 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
         <Spinner result />
       ) : (
         <div
-          className="static text-gray-200 rounded-xl bg-cover w-full"
+          className="static text-gray-200 rounded-xl bg-cover w-full ring-2 ring-inset ring-[#20283E]"
           style={{
             backgroundImage: `url(${imgPlaylist})`,
           }}

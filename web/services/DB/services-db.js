@@ -243,6 +243,34 @@ export const patchSeasons = (mediaId, season, data) =>
     service.patch(`seasons/${mediaId}/${season}`, data),
   );
 
+// < EPISODES
+export const postEpisode = (mediaId, season, episode, data) =>
+  safe('Post Episode', () =>
+    service.post(`episodes/${mediaId}/${season}/${episode}`, data),
+  );
+
+export const getDetailEpisode = async (mediaId, season, episode) => {
+  const response = await service.get(
+    `episodes/${mediaId}/${season}/${episode}`,
+  );
+  return response || {};
+};
+
+export const getEpisodesForSeason = async (mediaId, season) => {
+  const response = await service.get(`episodes/${mediaId}/${season}`);
+  return response || [];
+};
+
+export const patchEpisode = (mediaId, season, episode, data) =>
+  safe('update episode', () =>
+    service.patch(`episodes/${mediaId}/${season}/${episode}`, data),
+  );
+
+export const deleteEpisode = (mediaId, season, episode) =>
+  safe('Delete Episode', () =>
+    service.delete(`episodes/${mediaId}/${season}/${episode}`),
+  );
+
 // < FORUMS
 export const postForum = (data) =>
   service.post('forums', buildForumFormData(data));

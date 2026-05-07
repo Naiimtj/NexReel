@@ -1,5 +1,24 @@
 {
   "name": "Name",
   "Sign In": "Sign In",
-  "Logout": "Logout"
+  "Follow Playlist": "Follow Playlist",
+  "UnFollow Playlist": "Unfollow Playlist",
+  "Delete Playlist Icon": "Delete Playlist",
+  "Followers": "Followers",
+  "Not follow playlists": "You don't follow any Playlist",
+  "Not follow any playlist": "Doesn't follow any Playlist",
+  "Logout": "Logout",
+  "Log In": "Log In",
+  "Sign in to your account": "Sign in to your account",
+  "Your email": "Your email",
+  "Email is required": "Email is required",
+  "Invalid email address": "Invalid email address",
+  "Password": "Password",
+  "Password is required": "Password is required",
+  "Password must be at least 8 characters": "Password must be at least 8 characters",
+  "Toggle password visibility": "Toggle password visibility",
+  "Oops! something in your credentials is not correct": "Oops! something in your credentials is not correct",
+  "Sign in": "Sign in",
+  "Don't have an account yet?": "Don't have an account yet?",
+  "Sign up": "Sign up"
 }
