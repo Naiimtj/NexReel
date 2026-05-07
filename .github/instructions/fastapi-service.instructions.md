@@ -11,7 +11,8 @@ applyTo: 'fastapi/**'
 fastapi/
 ├── alembic/
 │   └── versions/
-│       └── 001_nexreel_initial.py   ← single migration, all schema
+│       ├── 001_nexreel_initial.py   ← single migration, all schema
+│       └── 002_drop_pending_tv.py   ← removes pending from seasons/episodes
 ├── api/
 │   ├── main.py
 │   ├── dependencies.py
@@ -19,7 +20,10 @@ fastapi/
 │   ├── routers/
 │   │   ├── health.py
 │   │   ├── backup.py
-│   │   └── nexreel.py
+│   │   ├── nexreel.py
+│   │   ├── medias.py                ← media CRUD (movies + TV parent)
+│   │   ├── tv.py                    ← TV seasons/episodes endpoints
+│   │   └── _helpers.py              ← shared router helpers
 │   ├── core/
 │   │   ├── auth.py
 │   │   ├── constants.py
@@ -46,9 +50,12 @@ fastapi/
 
 - `health.py`: readiness and liveness only.
 - `backup.py`: operational endpoints under `/db`, protected by the admin password header.
-- `nexreel.py`: user-facing product/domain endpoints under `/v1`.
+- `nexreel.py`: user-facing product/domain endpoints under `/v1` (users, playlists, forums, messages, plex).
+- `medias.py`: media CRUD under `/v1` (movies + TV parent `media_tv`).
+- `tv.py`: TV seasons and episodes under `/v1` (season/episode CRUD with automatic parent consistency).
+- `_helpers.py`: shared utilities (`parse_form`, `get_media_for_user`, constants).
 
-Prefer extending `nexreel.py` for user, media, playlist, forum, message, and Plex features unless a new operational boundary is clearly justified.
+TV tracking logic lives in `tv.py` (helpers: `_ensure_parent_tv`, `_sync_parent_after_season_change`, `_check_season_complete`). Media-level logic lives in `medias.py` (`_create_all_season_rows`, `_delete_all_children`).
 
 ## Request Handling Patterns
 

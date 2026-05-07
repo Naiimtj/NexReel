@@ -23,6 +23,11 @@ const applyAndRefresh = (
     setChangeSeenPending(!changeSeenPending);
   });
 
+/**
+ * Toggle seen/pending on a media (movie or TV show parent).
+ * For TV: seen=true creates all season rows, pending=true removes them,
+ * neither deletes the media_tv entry.
+ */
 export function SeenPending(
   dataMediaUser,
   id,
@@ -56,7 +61,7 @@ export function SeenPending(
 
   if (updateType === 'seen') {
     updateData.seen = !seenOrPending;
-    updateData.runtime_seen = totalRunTime;
+    updateData.runtime_seen = !seenOrPending ? totalRunTime : 0;
   } else if (updateType === 'pending') {
     updateData.pending = !seenOrPending;
     updateData.runtime_seen = 0;
@@ -76,23 +81,26 @@ export function SeenPending(
   });
 }
 
+/**
+ * Toggle a season as seen/unseen.
+ * Row in media_tv_seasons = seen. No row = not seen.
+ * Backend handles parent state sync automatically.
+ */
 export function SeenPendingSeason(
   dataMediaUser,
   id,
   mediaType,
   runTimeSeason,
   runTime,
-  seenOrPending,
+  isSeen,
   setChangeSeenPending,
   changeSeenPending,
   setPendingSeen,
   pendingSeen,
-  updateType,
   onReload,
   NumberSeason,
   numberEpisodes,
   numberSeasons,
-  runtime_seen,
   runTimeSeasons,
 ) {
   const exists = Object.keys(dataMediaUser).length > 0;
@@ -105,17 +113,8 @@ export function SeenPendingSeason(
     number_seasons: numberSeasons,
     number_of_episodes: numberEpisodes,
     runtime_seasons: runTimeSeasons,
+    seen: !isSeen,
   };
-
-  if (updateType === 'seen') {
-    updateData.seen = !seenOrPending;
-    const seasonRuntime = (runTimeSeasons && runTimeSeasons[NumberSeason]) || 0;
-    updateData.runtime_seen = !seenOrPending
-      ? (runtime_seen || 0) + seasonRuntime
-      : (runtime_seen || 0) - seasonRuntime;
-  } else if (updateType === 'pending') {
-    updateData.pending = !seenOrPending;
-  }
 
   const promise = exists
     ? patchSeasons(id, NumberSeason, updateData)
@@ -130,17 +129,21 @@ export function SeenPendingSeason(
   });
 }
 
+/**
+ * Toggle an episode as seen/unseen.
+ * Row in media_tv_episodes = seen. No row = not seen.
+ * Backend handles season completeness and parent state sync.
+ */
 export function SeenPendingEpisode(
   dataMediaUser,
   id,
   mediaType,
   runTime,
-  seenOrPending,
+  isSeen,
   setChangeSeenPending,
   changeSeenPending,
   setPendingSeen,
   pendingSeen,
-  updateType,
   onReload,
   NumberSeason,
   NumberEpisode,
@@ -154,10 +157,8 @@ export function SeenPendingEpisode(
     runtime: runTime,
     vote: dataMediaUser.vote ?? -1,
     number_of_episodes: numberEpisodes,
+    seen: !isSeen,
   };
-
-  if (updateType === 'seen') updateData.seen = !seenOrPending;
-  else if (updateType === 'pending') updateData.pending = !seenOrPending;
 
   const exists =
     Object.keys(dataMediaUser).length > 0 && dataMediaUser.result !== false;

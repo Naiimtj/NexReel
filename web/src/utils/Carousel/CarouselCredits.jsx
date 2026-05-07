@@ -19,7 +19,7 @@ const CarouselCredits = ({
   setPopSureDel,
   setIdDelete,
   isAllCards,
-  size
+  size,
 }) => {
   const [isChange, setIsChange] = useState(false);
 
@@ -38,7 +38,6 @@ const CarouselCredits = ({
     items: info,
     breakpoints: BREAKPOINTS,
     trimTrailing: !isAllCards && !isUser,
-    resetKey: info,
   });
 
   const swipeHandlers = useSwipe({

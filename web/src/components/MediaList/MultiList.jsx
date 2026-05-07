@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -85,12 +85,7 @@ export const MultiList = ({
   const inPlex = isMediaInPlex(mediaType, id, imdbID, plex);
   const typeIcon = resolveTypeIcon(processInfo.type);
 
-  const stableMediasUser = useMemo(
-    () => mediasUser, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mediasUser.length],
-  );
-
-  const [dataMediaUser] = useMediaUserEntry(stableMediasUser, id, mediaType, [
+  const [dataMediaUser] = useMediaUserEntry(mediasUser, id, mediaType, [
     changeSeenPending,
     pendingSeen,
     userExist,

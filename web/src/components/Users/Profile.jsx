@@ -38,7 +38,12 @@ function getConfirmedRelations(relations = []) {
 }
 
 function getTotalRuntime(medias = []) {
-  return medias.reduce((total, media) => total + (media?.runtime ?? 0), 0);
+  return medias.reduce((total, media) => {
+    if (media?.media_type === 'tv') {
+      return total + (media?.runtime_seen ?? 0);
+    }
+    return total + (media?.runtime ?? 0);
+  }, 0);
 }
 
 const Profile = ({

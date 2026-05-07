@@ -61,8 +61,15 @@ applyTo: '{fastapi,database}/**'
 ### Media tracking
 
 - `media` stores movie-like items per user.
-- `media_tv` stores show-level state.
-- `media_tv_seasons` and `media_tv_episodes` store progress detail and must remain consistent with show-level data.
+- `media_tv` stores show-level state (`seen`, `pending`, `repeat`, `runtime_seen`, `seen_complete`, `runtime_seasons` JSONB).
+  - `runtime_seasons`: JSONB array indexed by season number. Each value = `episode_count × per_episode_runtime` in minutes. Index 0 may be "Specials" (season 0).
+  - `runtime_seen`: total minutes the user has watched. Computed as sum of `runtime_seasons[i]` for seen seasons + sum of individual episode runtimes for loose episode rows. Updated on every season/episode state change.
+  - `runtime`: per-episode runtime in minutes (used as fallback for calculation).
+- `media_tv_seasons` tracks per-season progress. **Row existence = seen.** No `pending` column.
+  - `runtime`: stores the per-episode runtime (NOT the total season time). Use `runtime_seasons` from parent for season totals.
+- `media_tv_episodes` tracks per-episode progress. **Row existence = seen.** No `pending` column.
+  - `runtime`: per-episode runtime in minutes.
+- Consistency invariant: when all seasons are seen, parent becomes `seen=true` and season/episode rows are deleted. When a season is seen, its episode rows are deleted. The backend manages this automatically.
 
 ### Social tables
 

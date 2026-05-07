@@ -54,7 +54,9 @@ const MediaPreviewSection = ({
   return (
     <div
       className={
-        withDivider ? 'md:border-r-4 md:border-gray-900 w-full md:px-2' : 'w-full md:px-2'
+        withDivider
+          ? 'md:border-r-4 md:border-gray-900 w-full md:px-2'
+          : 'w-full md:px-2'
       }
     >
       <MediaSectionHeader title={title} to={to} count={count} />
@@ -134,13 +136,23 @@ const ProfileMediaSections = ({
 }) => {
   const { mediasUser } = useMediaContext();
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
   return (
     <div className="mt-4 border-t border-gray-800">
       {allMedias.length ? (
         <div className="text-gray-200 pt-4">
           <div className="text-gray-200 px-4 md:px-6">
+            <div className="flex justify-end mb-2">
+              <BaseButton
+                variant="primary"
+                onClick={() => navigate(`/all-medias/${userId}`)}
+                className={sectionLinkClass}
+              >
+                {t('See all')}
+              </BaseButton>
+            </div>
             <Carousel
-              title={t("All")}
+              title={t('All')}
               info={allMedias}
               isUser
               isSetChange={setChangeSeenPending}
@@ -152,7 +164,7 @@ const ProfileMediaSections = ({
 
       <div className="bg-local rounded-xl backdrop-blur-3xl bg-[#2c3349]/80 py-4 flex flex-col md:flex-row w-full mt-4 px-2">
         <MediaPreviewSection
-          title={t("PENDINGS")}
+          title={t('PENDINGS')}
           to={`/pending/${userId}`}
           items={pendingData}
           withDivider
@@ -162,7 +174,7 @@ const ProfileMediaSections = ({
           setChangeSeenPending={setChangeSeenPending}
         />
         <MediaPreviewSection
-          title={t("VIEWS")}
+          title={t('VIEWS')}
           to={`/view/${userId}`}
           items={seenData}
           isOtherUser={isOtherUser}

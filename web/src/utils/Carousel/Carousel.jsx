@@ -98,7 +98,6 @@ const Carousel = ({
     items: info,
     breakpoints: sizeConfig.cardsPerPage,
     trimTrailing: !isAllCards && !isUser,
-    resetKey: info,
   });
 
   const swipeHandlers = useSwipe({

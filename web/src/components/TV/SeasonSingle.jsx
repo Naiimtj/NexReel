@@ -11,14 +11,12 @@ import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 export const SeasonSingle = ({
   season,
   idTvShow,
-  mediaIsPending,
   mediaIsSeen,
   runTime,
   setChangeSeenPending,
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
-  runtime_seen,
   runTimeSeasons,
 }) => {
   const [t] = useTranslation('translation');
@@ -65,14 +63,7 @@ export const SeasonSingle = ({
     return () => {
       cancelled = true;
     };
-  }, [
-    idTvShow,
-    season_number,
-    pendingSeen,
-    changeSeenPending,
-    mediaIsPending,
-    mediaIsSeen,
-  ]);
+  }, [idTvShow, season_number, pendingSeen, changeSeenPending, mediaIsSeen]);
 
   const seasonSeen = Boolean(dataMediaUser?.seen) || mediaIsSeen;
   const runTimeSeason = runTime * season.episode_count;
@@ -90,20 +81,18 @@ export const SeasonSingle = ({
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      'seen',
       onReload,
       season_number,
       numberEpisodes,
       numberSeasons,
-      runtime_seen,
       runTimeSeasons,
     );
   };
 
   return (
     <div className="static text-gray-200 rounded-xl bg-cover w-full">
-      <div className="cursor-pointer p-2 backdrop-blur-md rounded-xl h-full">
-        <div className="flex justify-center">
+      <div className="cursor-pointer p-2 backdrop-blur-md rounded-xl h-full flex flex-col justify-between">
+        <div className="flex flex-col justify-center">
           {/* //- POSTER*/}
           <div className="transition ease-in-out md:hover:scale-105 duration-100 ">
             {poster_path ? (
@@ -133,10 +122,8 @@ export const SeasonSingle = ({
               </div>
             )}
           </div>
-        </div>
-        {/* //- DATA OF SEASON */}
-        <div className="mt-4">
-          <div className="flex justify-between items-center pb-2">
+          {/* //- DATA OF SEASON */}
+          <div className="mt-4 flex justify-between items-center pb-2">
             <h2
               className="cursor-pointer font-semibold text-xs md:text-base"
               onClick={() =>
@@ -149,27 +136,28 @@ export const SeasonSingle = ({
               {date !== null ? date : null}
             </div>
           </div>
-          <div className="text-xs text-left col-span-2 w-full text-[#7B6EF6] flex justify-between items-center">
-            {/* //-EPISODES */}
-            <div
-              className="cursor-pointer"
-              onClick={() =>
-                season && navigate(`/tv/${idTvShow}/${season_number}`)
-              }
-            >
-              {`${t('Episodes')}: ${numEpis}`}
-            </div>
+        </div>
 
-            {/* //-SEEN/UNSEEN */}
-            <div className="inline-block">
-              <div className="z-50 text-right align-middle">
-                <SeenPendingButton
-                  condition={seasonSeen}
-                  size={20}
-                  text={'Seen'}
-                  handle={handleSeenMedia}
-                />
-              </div>
+        <div className="text-xs text-left w-full text-[#7B6EF6] flex justify-between items-center">
+          {/* //-EPISODES */}
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              season && navigate(`/tv/${idTvShow}/${season_number}`)
+            }
+          >
+            {`${t('Episodes')}: ${numEpis}`}
+          </div>
+
+          {/* //-SEEN/UNSEEN */}
+          <div className="inline-block">
+            <div className="z-50 text-right align-middle">
+              <SeenPendingButton
+                condition={seasonSeen}
+                size={20}
+                text={'Seen'}
+                handle={handleSeenMedia}
+              />
             </div>
           </div>
         </div>
@@ -183,27 +171,23 @@ export default SeasonSingle;
 SeasonSingle.defaultProps = {
   season: {},
   idTvShow: 0,
-  mediaIsPending: false,
   mediaIsSeen: false,
   runTime: 0,
   setChangeSeenPending: () => {},
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
-  runtime_seen: 0,
   runTimeSeasons: [],
 };
 
 SeasonSingle.propTypes = {
   season: PropTypes.object,
   idTvShow: PropTypes.number,
-  mediaIsPending: PropTypes.bool,
   mediaIsSeen: PropTypes.bool,
   runTime: PropTypes.number,
   setChangeSeenPending: PropTypes.func,
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
-  runtime_seen: PropTypes.number,
   runTimeSeasons: PropTypes.array,
 };

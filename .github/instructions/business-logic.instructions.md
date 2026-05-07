@@ -66,8 +66,51 @@ Only admin-level users should access destructive or operational flows such as ba
 ### Movies and TV
 
 - `media` is for one-shot items like movies.
-- `media_tv` stores show-level state.
-- `media_tv_seasons` and `media_tv_episodes` store progress detail and should remain consistent with show-level data.
+- `media_tv` stores show-level state (seen, pending, repeat, runtime_seen).
+- `media_tv_seasons` and `media_tv_episodes` track granular progress.
+
+#### TV Tracking State Model
+
+Row existence IS the state for seasons and episodes:
+
+- **Season row exists** = that season is seen.
+- **Episode row exists** = that episode is seen.
+- **No row** = not seen.
+
+Only `media_tv` (parent) retains explicit `seen` and `pending` boolean columns.
+Seasons and episodes do NOT have a `pending` column.
+
+#### Hierarchy and Consistency Rules
+
+1. **Marking a season as seen**: creates a season row, deletes all episode rows for that season (they become redundant).
+2. **Marking the series as seen**: sets parent `seen=true`, creates all season rows, deletes all episode rows.
+3. **All episodes of a season marked individually**: backend auto-creates the season row and deletes the episode rows (`_check_season_complete`).
+4. **All seasons seen**: backend sets parent `seen=true`, `pending=false`, deletes season and episode rows (`_sync_parent_after_season_change`).
+5. **Unmarking one episode** (when season or parent was seen): "explodes" into individual episode rows for every OTHER episode of that season, deletes the season row. If the parent was fully seen, also creates season rows for all OTHER seasons.
+6. **Unmarking a season**: deletes season row + its episode rows, then syncs parent.
+
+#### `runtime_seen` Calculation
+
+`media_tv.runtime_seen` is recalculated on every season/episode state change via `_sync_parent_after_season_change`:
+
+- **Fully-seen seasons**: uses `runtime_seasons[season_number]` from the parent JSONB array (which stores `episode_count × per_episode_runtime` for each season index).
+- **Individual episode rows** (loose, not yet rolled up into a season): sums each episode's `runtime` field (the per-episode duration, e.g. 23 min).
+- **Total**: `sum(runtime_seasons[i] for each seen season) + sum(episode.runtime for each episode row)`.
+- **When ALL seasons are seen**: the total is computed from `runtime_seasons` before deleting child rows and marking parent `seen=true`.
+
+This value is returned as `runtime_seen` in the serialized `media_tv` response and used by the frontend to display "Time seen".
+
+#### Read Logic (GET endpoints)
+
+- `GET /episodes/{id}/{season}/{episode}`: checks episode row → season row `seen` → parent `seen`. Returns `{seen: true}` if any level covers it.
+- `GET /seasons/{id}/{season}`: checks season row → parent `seen`. Returns synthetic data from parent if parent is fully seen.
+
+#### Seen/Pending Mutual Exclusion (media_update)
+
+- If payload explicitly sends `seen: true` → force `pending = false`.
+- If payload explicitly sends `pending: true` → force `seen = false`.
+- Only the explicitly sent field wins; the other is derived.
+- `vote >= 0` always forces `seen=true, pending=false`.
 
 ### Playlists and Forums
 

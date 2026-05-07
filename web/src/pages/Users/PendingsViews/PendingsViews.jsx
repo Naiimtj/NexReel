@@ -52,11 +52,11 @@ const PendingsViews = () => {
     }
   }, [changeSeenPending, id, isOtherUser]);
   const { mediasUser } = useMediaContext();
-  const checkMedias = !!(
-    dataUser &&
-    dataUser.medias &&
-    dataUser.medias.length > 0
-  );
+  const combinedMedias = [
+    ...(dataUser?.medias || []),
+    ...(dataUser?.mediasTv || []),
+  ];
+  const checkMedias = combinedMedias.length > 0;
   let actualPage;
   let title;
   if (pathname.startsWith('/pending')) {
@@ -73,7 +73,7 @@ const PendingsViews = () => {
   const dataMedias = checkMedias
     ? DataOrder(
         checkMedias,
-        dataUser.medias.filter((i) => i[actualPage] !== false),
+        combinedMedias.filter((i) => i[actualPage] !== false),
         isAsc,
       )
     : null;

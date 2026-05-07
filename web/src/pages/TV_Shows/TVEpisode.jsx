@@ -74,7 +74,7 @@ const TVEpisode = () => {
       });
     }
   }, [changeSeenPending, pendingSeen, idTv, NSeason, idEpisode, userExist]);
-  const { seen, pending } = dataMediaUser;
+  const { seen } = dataMediaUser;
   //- SEEN/NO SEEN
   const handleSeenMedia = () => {
     SeenPendingEpisode(
@@ -87,29 +87,10 @@ const TVEpisode = () => {
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      'seen',
       onReload,
       NSeason,
       idEpisode,
-      tvDetails.number_of_episodes,
-    );
-  };
-  const handlePendingMedia = () => {
-    SeenPendingEpisode(
-      dataMediaUser,
-      idTv,
-      'tv',
-      episode.runtime || tvDetails.episode_run_time?.[0] || 0,
-      pending,
-      setChangeSeenPending,
-      changeSeenPending,
-      setPendingSeen,
-      pendingSeen,
-      'pending',
-      onReload,
-      NSeason,
-      idEpisode,
-      tvDetails.number_of_episodes,
+      season.episodes?.length || 0,
     );
   };
   const url = episode.still_path
@@ -230,25 +211,15 @@ const TVEpisode = () => {
                 src={url === null ? NoImageEpis : url}
                 alt={season.name}
               />
-              {/* // . BUTTON SEEN/UNSEEN & PENDING/UNPENDING */}
+              {/* // . BUTTON SEEN/UNSEEN */}
               {userExist ? (
                 <div className="flex flex-row gap-10 items-center justify-around mt-2">
-                  {/* //-SEEN/UNSEEN */}
                   <div className="text-center align-middle">
                     <SeenPendingButton
                       condition={seen}
                       size={20}
                       text="Seen"
                       handle={handleSeenMedia}
-                    />
-                  </div>
-                  {/* //-PENDING/NO PENDING */}
-                  <div className="text-center align-middle">
-                    <SeenPendingButton
-                      condition={pending}
-                      size={17}
-                      text="Pending"
-                      handle={handlePendingMedia}
                     />
                   </div>
                 </div>

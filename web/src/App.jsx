@@ -16,6 +16,7 @@ import Profile from './components/Users/Profile';
 import User from './pages/Users/User';
 import Users from './pages/Users/Users';
 import PendingViews from './pages/Users/PendingsViews/PendingsViews';
+import AllMedias from './pages/Users/AllMedias/AllMedias';
 import Playlists from './pages/Playlists/Playlists';
 import PlaylistSingle from './pages/Playlists/Playlist.Single';
 import Forums from './pages/Forum/Forums';
@@ -113,6 +114,14 @@ function App() {
             element={
               <Authenticated>
                 <PendingViews />
+              </Authenticated>
+            }
+          />
+          <Route
+            path="/all-medias/:id"
+            element={
+              <Authenticated>
+                <AllMedias />
               </Authenticated>
             }
           />

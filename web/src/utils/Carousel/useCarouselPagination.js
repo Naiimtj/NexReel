@@ -20,7 +20,6 @@ export const useCarouselPagination = ({
   items,
   breakpoints = DEFAULT_BREAKPOINTS,
   trimTrailing = true,
-  resetKey,
 } = {}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(() =>
@@ -34,10 +33,6 @@ export const useCarouselPagination = ({
     return () => window.removeEventListener('resize', handleResize);
   }, [breakpoints]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [resetKey]);
-
   const allCards = useMemo(() => {
     if (trimTrailing && items.length > cardsPerPage && cardsPerPage % 2 === 0) {
       return items.slice(0, -2);
@@ -45,7 +40,16 @@ export const useCarouselPagination = ({
     return items;
   }, [items, trimTrailing, cardsPerPage]);
 
-  const totalPages = Math.ceil(allCards.length / cardsPerPage);
+  const totalPages = Math.max(1, Math.ceil(allCards.length / cardsPerPage));
+
+  // Clamp current page when data shrinks (e.g. items removed) instead of
+  // resetting to 1 on every parent re-render that produces a new array ref.
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   const startCardIndex = (currentPage - 1) * cardsPerPage;
   const visibleCards = allCards.slice(
     startCardIndex,

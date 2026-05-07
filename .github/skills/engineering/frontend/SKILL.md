@@ -172,6 +172,27 @@ Key functions:
 - `getPlexTv()` → `GET /v1/plex/tv`
 - `getUser()` → fresh user data from API (use when `user` from localStorage may be stale)
 
+## TV Tracking (Frontend Rules)
+
+### State Model
+
+- **Seasons/episodes have no `pending` state.** Only the parent `media_tv` has `seen` and `pending`.
+- A season/episode is "seen" if its backend row exists. Toggle = create/delete row.
+- `SeenPendingSeason` and `SeenPendingEpisode` always send `{ seen: !isSeen }`. No `updateType` param.
+- `SeenPending` (parent) still receives `updateType` ('seen' or 'pending').
+
+### Episode Count
+
+When passing `numberEpisodes` to season/episode toggle components, use `season.episodes?.length` (TMDB season detail, the count for THAT season), NOT `tvDetails.number_of_episodes` (total across all seasons).
+
+### Backend Handles Consistency
+
+The frontend does NOT need to manually sync seasons/parent after toggling an episode. The backend `tv.py` handles:
+
+- Auto-promoting season when all episodes are seen.
+- Auto-promoting parent when all seasons are seen.
+- "Exploding" rows when un-marking an episode within a fully-seen season.
+
 ## SonarQube / React Code Quality
 
 These rules are enforced by SonarQube for IDE. Violations appear as Problems in VS Code.

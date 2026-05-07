@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { IoIosArrowBack } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import Multi from '../../components/MediaList/Multi';
@@ -32,6 +33,14 @@ const TabButton = ({ active, onSelect, iconOn, iconOff, label }) => (
     {label}
   </button>
 );
+
+TabButton.propTypes = {
+  active: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  iconOn: PropTypes.string.isRequired,
+  iconOff: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};
 
 const BestRated = () => {
   const [t] = useTranslation('translation');

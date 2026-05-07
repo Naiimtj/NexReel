@@ -12,14 +12,12 @@ const CarouselSeasons = ({
   title,
   info,
   idTvShow,
-  mediaIsPending,
   mediaIsSeen,
   runTime,
   setChangeSeenPending,
   changeSeenPending,
   numberEpisodes,
   numberSeasons,
-  runtime_seen,
   runTimeSeasons,
 }) => {
   const {
@@ -37,7 +35,6 @@ const CarouselSeasons = ({
     items: info,
     breakpoints: BREAKPOINTS,
     trimTrailing: false,
-    resetKey: info,
   });
 
   const swipeHandlers = useSwipe({
@@ -68,14 +65,12 @@ const CarouselSeasons = ({
             key={season.id}
             season={season}
             idTvShow={idTvShow}
-            mediaIsPending={mediaIsPending}
             mediaIsSeen={mediaIsSeen}
             runTime={runTime}
             setChangeSeenPending={setChangeSeenPending}
             changeSeenPending={changeSeenPending}
             numberEpisodes={numberEpisodes}
             numberSeasons={numberSeasons}
-            runtime_seen={runtime_seen}
             runTimeSeasons={runTimeSeasons}
           />
         ))}
@@ -98,14 +93,12 @@ CarouselSeasons.defaultProps = {
   title: '',
   info: [],
   idTvShow: 0,
-  mediaIsPending: false,
   mediaIsSeen: false,
   runTime: 0,
   setChangeSeenPending: () => {},
   changeSeenPending: false,
   numberEpisodes: 0,
   numberSeasons: 0,
-  runtime_seen: 0,
   runTimeSeasons: [],
 };
 
@@ -113,13 +106,11 @@ CarouselSeasons.propTypes = {
   title: PropTypes.string,
   info: PropTypes.array,
   idTvShow: PropTypes.number,
-  mediaIsPending: PropTypes.bool,
   mediaIsSeen: PropTypes.bool,
   runTime: PropTypes.number,
   setChangeSeenPending: PropTypes.func,
   changeSeenPending: PropTypes.bool,
   numberEpisodes: PropTypes.number,
   numberSeasons: PropTypes.number,
-  runtime_seen: PropTypes.number,
   runTimeSeasons: PropTypes.array,
 };

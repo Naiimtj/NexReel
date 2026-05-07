@@ -17,7 +17,7 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
   const [pendingSeen, setPendingSeen] = useState(false);
 
   const { name, runtime, air_date, episode_number, id } = info;
-  const { seen, pending } = dataEpisodeUser;
+  const { seen } = dataEpisodeUser;
 
   useEffect(() => {
     if (userExist) {
@@ -68,27 +68,6 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      'seen',
-      onReload,
-      numSeason,
-      episode_number,
-      numberEpisodes,
-    );
-  };
-
-  const handlePendingMedia = (event) => {
-    event.stopPropagation();
-    SeenPendingEpisode(
-      dataEpisodeUser,
-      idTvShow,
-      'tv',
-      runtime || 0,
-      pending,
-      setChangeSeenPending,
-      changeSeenPending,
-      setPendingSeen,
-      pendingSeen,
-      'pending',
       onReload,
       numSeason,
       episode_number,
@@ -119,22 +98,14 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
           </div>
         </div>
       </div>
-      {/* //.BUTTON SEEN/UNSEEN & PENDING/UNPENDING */}
+      {/* //.BUTTON SEEN/UNSEEN */}
       {userExist ? (
         <div className="flex justify-center gap-8 items-center">
-          {/* //-SEEN/UNSEEN */}
           <SeenPendingButton
             condition={seen}
             size={20}
             text={'Seen'}
             handle={handleSeenMedia}
-          />
-          {/* //-PENDING/NO PENDING */}
-          <SeenPendingButton
-            condition={pending}
-            size={17}
-            text={'Pending'}
-            handle={handlePendingMedia}
           />
         </div>
       ) : null}

@@ -59,6 +59,20 @@ const uniqueById = (list, limit) => {
   return Array.from(seen.values()).slice(0, limit);
 };
 
+const pickEpisodeRuntime = (ep) => ep?.runtime;
+const isPositiveRuntime = (r) => Number.isFinite(r) && r > 0;
+const sumRuntimes = (a, b) => a + b;
+
+const computeSeasonAverageRuntime = (episodes) => {
+  const runtimes = (episodes || [])
+    .map(pickEpisodeRuntime)
+    .filter(isPositiveRuntime);
+  if (runtimes.length === 0) return 0;
+  const first = runtimes[0];
+  if (runtimes.every((r) => r === first)) return first;
+  return Math.round(runtimes.reduce(sumRuntimes, 0) / runtimes.length);
+};
+
 function DetailsMedia({
   info,
   crews,
@@ -107,7 +121,7 @@ function DetailsMedia({
     const DataSeason = async () => {
       getSeasonDetails(id, 1)
         .then((data) => {
-          setSeason({ 0: data.episodes[1].runtime });
+          setSeason({ 0: computeSeasonAverageRuntime(data?.episodes) });
         })
         .catch((err) => err);
     };
@@ -234,9 +248,7 @@ function DetailsMedia({
   processInfo.runTime =
     mediaType === 'movie'
       ? runtime
-      : episode_run_time && episode_run_time.length > 0
-        ? runtimeSeason[0]
-        : 0;
+      : (runtimeSeason[0] ?? episode_run_time?.[0] ?? 0);
   processInfo.TimeHM =
     runtime > 0 && !episode_run_time
       ? new DateAndTimeConvert(processInfo.runTime, t, false).TimeConvert()
@@ -332,6 +344,19 @@ function DetailsMedia({
   } else {
     processInfo.TotalTimeMarathon = 0;
   }
+
+  processInfo.TotalTimeSeen =
+    mediaType === 'tv' && Number.isFinite(runtime_seen) && runtime_seen > 0
+      ? new DateAndTimeConvert(
+          // Clamp to marathon total so a stale/over-accumulated value
+          // never displays more time seen than the series total.
+          processInfo.totalRunTime > 0
+            ? Math.min(runtime_seen, processInfo.totalRunTime)
+            : runtime_seen,
+          t,
+          false,
+        ).TimeConvert()
+      : 0;
 
   const watch = detailsWatchList?.ES || {};
   processInfo.watchingBuy = watch.buy || null;
@@ -515,6 +540,8 @@ function DetailsMedia({
       />
     </div>
   );
+
+  console.log(processInfo.TotalTimeMarathon, processInfo.TotalTimeSeen);
 
   return (
     <>
@@ -722,7 +749,25 @@ function DetailsMedia({
                     ? processInfo.TimeHM
                     : null}
                 </div>
-                {mediaType !== 'tv' ? (
+                {mediaType === 'tv' ? (
+                  <div className="flex flex-row gap-2">
+                    {/* // .  TIME EPISODE + Nº Seasons y Episodes & TRAILER */}
+                    {/* // SEASONS+EPISODES */}
+                    <div className="text-xs">
+                      {/* // SEASONS+EPISODES */}
+                      {processInfo.numEpis &&
+                        `(${processInfo.numSeason} ${t('S')}. ${
+                          processInfo.numEpis
+                        } ${t('Ep')})`}
+                    </div>
+                    {processInfo.TotalTimeMarathon ? (
+                      <div className="flex gap-1 text-xs text-gray-500">
+                        <p>{t('Binge-watch a series')}: </p>
+                        {processInfo.TotalTimeMarathon}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
                   <div
                     className={
                       processInfo.runTime !== 0
@@ -735,18 +780,6 @@ function DetailsMedia({
                       ? ` (${processInfo.runTime} min)`
                       : null}
                   </div>
-                ) : (
-                  <>
-                    {/* // .  TIME EPISODE + Nº Seasons y Episodes & TRAILER */}
-                    {/* // SEASONS+EPISODES */}
-                    <div className="text-xs">
-                      {/* // SEASONS+EPISODES */}
-                      {processInfo.numEpis &&
-                        `(${processInfo.numSeason} ${t('S')}. ${
-                          processInfo.numEpis
-                        } ${t('Ep')})`}
-                    </div>
-                  </>
                 )}
                 {/* //.TRAILER */}
                 {processInfo.trailer ? (
@@ -760,25 +793,25 @@ function DetailsMedia({
                   />
                 ) : null}
               </div>
-              {/* // . MARATHON */}
-              {processInfo.TotalTimeMarathon !== 0 ? (
-                <div className="text-xs ml-4 mt-0.5 pb-4 flex gap-1">
-                  <p>{t('Binge-watch a series')}: </p>
-                  {processInfo.TotalTimeMarathon}
+              {/* // . MARATHON + SEEN TIME (user) */}
+              {userExist && processInfo.TotalTimeSeen ? (
+                <div className="text-xs ml-4 mt-1 flex flex-row gap-1 items-center text-purpleNR">
+                  <p>{t('Time seen')}: </p>
+                  {processInfo.TotalTimeSeen}
                 </div>
               ) : null}
               {/* // ! INFORMATION */}
               <div className="mt-2 text-sm md:text-base flex flex-col">
                 {/* // - DESCRIPTION */}
-                <div className="pb-4">
-                  <div
-                    className={`${
-                      descriptionExpanded ? '' : 'line-clamp-2'
-                    } md:line-clamp-none font-extralight text-sm`}
-                  >
-                    {processInfo.description}
-                  </div>
-                  {processInfo.description && (
+                {processInfo.description && (
+                  <div className="pb-4">
+                    <div
+                      className={`${
+                        descriptionExpanded ? '' : 'line-clamp-2'
+                      } md:line-clamp-none font-extralight text-sm`}
+                    >
+                      {processInfo.description}
+                    </div>
                     <button
                       type="button"
                       className="md:hidden mt-1 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
@@ -786,8 +819,8 @@ function DetailsMedia({
                     >
                       {descriptionExpanded ? t('Read less') : t('Read more')}
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="flex flex-row justify-between items-center">
                   {/* //- PREMIERE & COUNTRY */}
                   <div className="flex flex-row gap-1 items-center text-sm">
@@ -914,14 +947,12 @@ function DetailsMedia({
               <Seasons
                 info={seasons && seasons}
                 idTvShow={id}
-                mediaIsPending={pending}
                 mediaIsSeen={seen}
                 runTime={processInfo.runTime}
                 setChangeSeenPending={setChangeSeenPending}
                 changeSeenPending={changeSeenPending}
                 numberEpisodes={number_of_episodes}
                 numberSeasons={number_of_seasons}
-                runtime_seen={runtime_seen}
                 runTimeSeasons={processInfo.runTimeSeasons}
               />
             )

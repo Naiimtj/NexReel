@@ -62,7 +62,6 @@ const TVSeason = () => {
   }, [changeSeenPending, pendingSeen, idTv, userExist, NSeason]);
   const {
     seen,
-    pending,
     runtime,
     number_seasons,
     number_of_episodes,
@@ -89,35 +88,10 @@ const TVSeason = () => {
       changeSeenPending,
       setPendingSeen,
       pendingSeen,
-      'seen',
       onReload,
       NSeason,
       number_of_episodes,
       number_seasons,
-      dataMediaUser.runtime_seen || 0,
-      runtime_seasons,
-    );
-  };
-
-  const handlePendingMedia = (event) => {
-    event.stopPropagation();
-    SeenPendingSeason(
-      dataMediaSeason,
-      idTv,
-      'tv',
-      runtime,
-      runtime,
-      pending,
-      setChangeSeenPending,
-      changeSeenPending,
-      setPendingSeen,
-      pendingSeen,
-      'pending',
-      onReload,
-      NSeason,
-      number_of_episodes,
-      number_seasons,
-      dataMediaUser.runtime_seen || 0,
       runtime_seasons,
     );
   };
@@ -232,44 +206,38 @@ const TVSeason = () => {
                   text={'Seen'}
                   handle={handleSeenMedia}
                 />
-                {/* //-PENDING/NO PENDING */}
-                <SeenPendingButton
-                  condition={pending}
-                  size={17}
-                  text={'Pending'}
-                  handle={handlePendingMedia}
-                />
               </div>
             ) : null}
           </div>
           {/* //-SEASON NAME AND DATE */}
           <div className="w-full">
             <div className="flex justify-between items-stretch pb-4">
-              <div className="flex text-lg md:text-4xl items-center">
+              <div className="flex md:flex-row flex-col text-lg md:text-4xl items-center">
+                {dateSeason ? (
+                  <div className="text-xs text-gray-500">{dateSeason}</div>
+                ) : null}
                 <h1 className="font-semibold pr-2">{season.name}</h1>
                 <p className="text-base md:text-xl">{`(${
-                  season.episodes && season.episodes.length
+                  season.episodes?.length
                 } ${t('episodes')})`}</p>
-                <p className="text-xs ml-1">{TotalTime}</p>
+                <p className="text-xs ml-1 text-gray-500">{TotalTime}</p>
               </div>
-              {dateSeason ? <div className="text-xs">{dateSeason}</div> : null}
             </div>
             {/* //-EPISODES */}
             <div className="text-gray-200 rounded-xl w-full">
               <div className="text-lg grid grid-rows-1 justify-items-stretch">
-                {season.episodes &&
-                  season.episodes.map((episode, key) => {
-                    return (
-                      <Episodes
-                        key={key}
-                        info={episode}
-                        idTvShow={idTv}
-                        numSeason={NSeason}
-                        userExist={userExist}
-                        numberEpisodes={number_of_episodes}
-                      />
-                    );
-                  })}
+                {season.episodes?.map((episode) => {
+                  return (
+                    <Episodes
+                      key={episode.id || episode.episode_number}
+                      info={episode}
+                      idTvShow={idTv}
+                      numSeason={NSeason}
+                      userExist={userExist}
+                      numberEpisodes={season.episodes?.length || 0}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>
