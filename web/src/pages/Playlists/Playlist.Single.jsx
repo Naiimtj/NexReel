@@ -399,7 +399,7 @@ const PlaylistSingle = () => {
                         </div>
                       </div>
                       {/* // - LIKES/FOLLOWS & BUTTONS */}
-                      <div className="col-start-1 col-span-2 mt-1 flex justify-between items-center">
+                      <div className="col-start-1 col-span-2 mt-2 flex justify-between items-center">
                         {/* // . DATA PLAYLIST */}
                         <div className="ml-4 flex items-center gap-4">
                           {!isOtherUser ? (

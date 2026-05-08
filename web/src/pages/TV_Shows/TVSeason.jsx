@@ -108,17 +108,13 @@ const TVSeason = () => {
       false,
     ).DateTimeConvert();
   //-ID EPISODE BEFORE
-  const SeasonBefore =
-    tvDetails.seasons &&
-    tvDetails.seasons.filter(
-      (seas) => seas.season_number === Number(NSeason) - 1,
-    );
+  const SeasonBefore = tvDetails.seasons?.filter(
+    (seas) => seas.season_number === Number(NSeason) - 1,
+  );
   //-ID EPISODE NEXT
-  const SeasonAfter =
-    tvDetails.seasons &&
-    tvDetails.seasons.filter(
-      (seas) => seas.season_number === Number(NSeason) + 1,
-    );
+  const SeasonAfter = tvDetails.seasons?.filter(
+    (seas) => seas.season_number === Number(NSeason) + 1,
+  );
 
   return (
     <div
@@ -127,23 +123,24 @@ const TVSeason = () => {
         backgroundImage: `url(${url})`,
       }}
     >
-      <PageTitle title={`${tvDetails.name}-S${NSeason}`} />
+      <PageTitle title={`${tvDetails.name}-${NSeason}`} />
       <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
-        <div className="ml-5 pt-5 flex flex-col md:flex-row md:gap-4">
+        <div className="md:ml-5 md:pt-5 pt-2 flex flex-col md:flex-row md:gap-4">
           {/* // * BACK TV SHOW */}
           <NavArrowButton
             direction="back"
             label={tvDetails.name}
             onClick={() => idTv && navigate(`/tv/${idTv}`)}
+            className="ml-2"
           />
-          <div className="md:inline-flex flex flex-row items-center">
+          <div className="md:inline-flex flex flex-row items-center justify-center md:justify-start mt-2 md:mt-0">
             {/* // * SEASON BEFORE */}
             <NavArrowButton
               direction="back"
               label={`${t('Season')} ${Number(NSeason) - 1}`}
               onClick={() => navigate(`/tv/${idTv}/${Number(NSeason) - 1}`)}
               hidden={!SeasonBefore || SeasonBefore.length === 0}
-              className="text-xs md:text-sm"
+              className="text-sm"
             />
             {/* // MIDDLE */}
             <div className="inline-block px-2 text-gray-500">
@@ -169,7 +166,7 @@ const TVSeason = () => {
               label={`${t('Season')} ${Number(NSeason) + 1}`}
               onClick={() => navigate(`/tv/${idTv}/${Number(NSeason) + 1}`)}
               hidden={!SeasonAfter || SeasonAfter.length === 0}
-              className="text-xs md:text-sm"
+              className="text-sm"
             />
           </div>
         </div>
@@ -202,7 +199,6 @@ const TVSeason = () => {
                 {/* //-SEEN/UNSEEN */}
                 <SeenPendingButton
                   condition={seen}
-                  size={20}
                   text={'Seen'}
                   handle={handleSeenMedia}
                 />
@@ -211,21 +207,23 @@ const TVSeason = () => {
           </div>
           {/* //-SEASON NAME AND DATE */}
           <div className="w-full">
-            <div className="flex justify-between items-stretch pb-4">
+            <div className="flex md:justify-between justify-center items-stretch pb-4">
               <div className="flex md:flex-row flex-col text-lg md:text-4xl items-center">
                 {dateSeason ? (
                   <div className="text-xs text-gray-500">{dateSeason}</div>
                 ) : null}
-                <h1 className="font-semibold pr-2">{season.name}</h1>
-                <p className="text-base md:text-xl">{`(${
-                  season.episodes?.length
-                } ${t('episodes')})`}</p>
-                <p className="text-xs ml-1 text-gray-500">{TotalTime}</p>
+                <div className="flex flex-row gap-2 items-center">
+                  <h1 className="font-semibold md:px-2">{season.name}</h1>
+                  <p className="text-base md:text-xl">{`(${
+                    season.episodes?.length
+                  } ${t('episodes')})`}</p>
+                  <p className="text-xs ml-1 text-gray-500">{TotalTime}</p>
+                </div>
               </div>
             </div>
             {/* //-EPISODES */}
             <div className="text-gray-200 rounded-xl w-full">
-              <div className="text-lg grid grid-rows-1 justify-items-stretch">
+              <div className="text-lg flex flex-col ">
                 {season.episodes?.map((episode) => {
                   return (
                     <Episodes

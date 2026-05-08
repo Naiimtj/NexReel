@@ -183,13 +183,13 @@ export const MultiList = ({
                 />
               )}
               {processInfo.voteAverage > 0 && showActions && (
-                <div className="px-2 mr-2 backdrop-blur-md bg-black/50 rounded-lg">
+                <div className="flex flex-row gap-1 items-center pl-1 pr-2 mr-2 backdrop-blur-md bg-black/50 rounded-lg">
                   <img
-                    className="inline-block pr-1 py-2 w-4"
+                    className="inline-block pl-1 py-2 w-4"
                     src={star}
                     alt=""
                   />
-                  <div className="inline-block inset-y-2 inset-x-5 text-amber-400 text-xs text-left leading-4">
+                  <div className=" text-amber-400 text-xs text-left leading-4">
                     {processInfo.voteAverage}
                   </div>
                   {userExist && vote >= 0 && (
@@ -198,9 +198,9 @@ export const MultiList = ({
                         size={12}
                         color="#FFCA28"
                         alt={t('Seen')}
-                        className="mr-1"
+                        className="mr-1 mt-0.5"
                       />
-                      <div className="inset-b-2 inset-x-5 mb-1 text-amber-400 text-xs text-left leading-4">
+                      <div className=" text-amber-400 text-xs text-left leading-4">
                         {vote}
                       </div>
                     </div>
@@ -209,7 +209,7 @@ export const MultiList = ({
               )}
             </div>
 
-            <div className="col-span-6 flex min-w-0 gap-x-4 mb-2 md:mb-0">
+            <div className="col-span-6 flex min-w-0 gap-x-4 md:mb-0">
               <div className="h-full w-14 shrink-0">
                 <div className="transition ease-in-out md:hover:scale-105 duration-300">
                   {url ? (
@@ -281,7 +281,6 @@ export const MultiList = ({
             {mediaType !== 'person' && (
               <SeenPendingButton
                 condition={seen}
-                size={20}
                 text="Seen"
                 handle={handleSeenMedia}
               />
@@ -291,9 +290,9 @@ export const MultiList = ({
             {mediaType !== 'person' && (
               <SeenPendingButton
                 condition={pending}
-                size={17}
                 text="Pending"
                 handle={handlePending}
+                className="pb-0.5"
               />
             )}
           </div>

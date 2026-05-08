@@ -76,8 +76,9 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
   };
 
   return (
-    <div className="flex flex-row justify-between hover:bg-white/10 rounded-xl p-1">
-      <div
+    <div className="flex flex-row justify-between hover:bg-white/10 rounded-xl p-1 ring-1 ring-purpleNR/10 transition duration-300">
+      <button
+        type="button"
         className="cursor-pointer flex flex-row items-center gap-4 justify-items-stretch w-full"
         onClick={() =>
           info && navigate(`/tv/${idTvShow}/${numSeason}/${episode_number}`)
@@ -97,13 +98,12 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
             <div className="text-xs text-gray-400">{dateComplete}</div>
           </div>
         </div>
-      </div>
+      </button>
       {/* //.BUTTON SEEN/UNSEEN */}
       {userExist ? (
-        <div className="flex justify-center gap-8 items-center">
+        <div className="flex items-center">
           <SeenPendingButton
             condition={seen}
-            size={20}
             text={'Seen'}
             handle={handleSeenMedia}
           />

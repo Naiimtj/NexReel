@@ -154,7 +154,6 @@ export const SeasonSingle = ({
             <div className="z-50 text-right align-middle">
               <SeenPendingButton
                 condition={seasonSeen}
-                size={20}
                 text={'Seen'}
                 handle={handleSeenMedia}
               />

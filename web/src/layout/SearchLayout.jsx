@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BsSearch } from 'react-icons/bs';
@@ -13,6 +13,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
   const [personsList, setPersons] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [searching, setSearching] = useState(false);
+  const inputRef = useRef(null);
 
   const reset = () => {
     setSearchValue('');
@@ -42,6 +43,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
 
   useEffect(() => {
     if (hiden) reset();
+    else inputRef.current?.focus();
   }, [hiden]);
 
   const onChangeInput = (e) => {
@@ -62,6 +64,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
               <BsSearch />
             </span>
             <input
+              ref={inputRef}
               className="placeholder:italic placeholder:text-slate-400 block bg-transparent w-full min-w-0 border border-transparent pl-9 pr-8 shadow-sm focus:outline-none sm:text-sm text-grayNR"
               placeholder={t('movie, tv, person...')}
               value={searchValue}

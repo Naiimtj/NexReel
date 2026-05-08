@@ -541,7 +541,72 @@ function DetailsMedia({
     </div>
   );
 
-  console.log(processInfo.TotalTimeMarathon, processInfo.TotalTimeSeen);
+  const streamingOrWatchProviders = (
+    <div className="flex flex-col">
+      {/* //-WHERE SEE OR BUY */}
+      <div className="text-left mt-2 text-xs md:text-base">
+        {processInfo.NoWatch === null ? t('Not Available') : null}
+        {/* // STREAM */}
+        {processInfo.streaming ? t('Stream') : null}
+        <div className="mt-1">
+          {isInPlex ? (
+            <img
+              className="inline-block h-8 md:h-8 justify-self-center mr-0.5 mb-1 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
+              src={PLEX}
+              alt={'Plex Icon'}
+            />
+          ) : null}
+          {processInfo.watching?.map((p, i) => (
+            <ProviderLogo
+              key={`flatrate-${p.provider_id ?? p.provider_name}-${i}`}
+              provider={p}
+            />
+          ))}
+          {processInfo.watchingAds?.map((p, i) => (
+            <ProviderLogo
+              key={`ads-${p.provider_id ?? p.provider_name}-${i}`}
+              provider={p}
+            />
+          ))}
+        </div>
+      </div>
+      <ProvidersSection label={t('Buy')} providers={processInfo.watchingBuy} />
+      <ProvidersSection
+        label={t('Free')}
+        providers={processInfo.watchingFree}
+      />
+    </div>
+  );
+
+  const mediaDate = processInfo.date ? (
+    <span className="absolute ml-1 text-xs md:text-sm font-normal">
+      {`(${processInfo.date})`}
+    </span>
+  ) : null;
+
+  const titleRating = (
+    <div className="w-full flex-row">
+      {/* //- NAME AND MEDIA */}
+      <div className="relative flex justify-between items-stretch">
+        <div className="justify-start font-semibold text-lg md:text-2xl">
+          {processInfo.title}
+          {mediaDate}
+        </div>
+        <div className="hidden md:block">{typeCountryStatusBlock}</div>
+      </div>
+      {/* //-RATING */}
+      {userExist ? (
+        <Rating
+          dataMediaUser={dataMediaUser}
+          mediaId={id}
+          media_type={mediaType}
+          runtime={processInfo.runTime}
+          setPendingSeen={setPendingSeen}
+          pendingSeen={pendingSeen}
+        />
+      ) : null}
+    </div>
+  );
 
   return (
     <>
@@ -563,13 +628,12 @@ function DetailsMedia({
                 {poster}
               </div>
               {userExist ? (
-                <div className="flex flex-row items-center gap-4 text-center mt-2 md:mt-5 justify-around md:justify-between">
+                <div className="flex flex-row items-center gap-4 text-center mt-2 justify-around md:justify-between">
                   {/* //-SEEN/UNSEEN */}
                   <div className="text-right align-middle">
                     {mediaType !== 'person' && (
                       <SeenPendingButton
                         condition={seen}
-                        size={20}
                         text={'Seen'}
                         handle={handleSeenMedia}
                       />
@@ -594,9 +658,9 @@ function DetailsMedia({
                     {mediaType !== 'person' && (
                       <SeenPendingButton
                         condition={pending}
-                        size={17}
                         text={'Pending'}
                         handle={handlePending}
+                        className="pb-0.5"
                       />
                     )}
                   </div>
@@ -607,74 +671,12 @@ function DetailsMedia({
             <div className="flex flex-col w-full">
               <div className="md:hidden w-full">{typeCountryStatusBlock}</div>
               {/* // ! STREAMING */}
-              <div className="flex flex-col">
-                {/* //-WHERE SEE OR BUY */}
-                <div className="text-left mt-2 text-xs md:text-base">
-                  {processInfo.NoWatch === null ? t('Not Available') : null}
-                  {/* // STREAM */}
-                  {processInfo.streaming ? t('Stream') : null}
-                  <div className="mt-1">
-                    {isInPlex ? (
-                      <img
-                        className="inline-block h-8 md:h-8 justify-self-center mr-0.5 mb-1 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
-                        src={PLEX}
-                        alt={'Plex Icon'}
-                      />
-                    ) : null}
-                    {processInfo.watching?.map((p, i) => (
-                      <ProviderLogo
-                        key={`flatrate-${p.provider_id ?? p.provider_name}-${i}`}
-                        provider={p}
-                      />
-                    ))}
-                    {processInfo.watchingAds?.map((p, i) => (
-                      <ProviderLogo
-                        key={`ads-${p.provider_id ?? p.provider_name}-${i}`}
-                        provider={p}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <ProvidersSection
-                  label={t('Buy')}
-                  providers={processInfo.watchingBuy}
-                />
-                <ProvidersSection
-                  label={t('Free')}
-                  providers={processInfo.watchingFree}
-                />
-              </div>
+              {streamingOrWatchProviders}
             </div>
           </div>
           <div className="col-span-2">
             <div className="mt-4 md:mt-6">
-              {/* //- NAME AND MEDIA */}
-              <div className="flex justify-between items-stretch">
-                <div className="flex flex-row justify-start font-semibold text-lg md:text-4xl pr-10">
-                  {processInfo.title}
-                  {processInfo.date ? (
-                    <p className="ml-1 inline-block text-xs md:text-sm">
-                      {`(${processInfo.date})`}
-                    </p>
-                  ) : null}
-                </div>
-                <div className="hidden md:block">{typeCountryStatusBlock}</div>
-              </div>
-              {/* //-RATING */}
-              {userExist ? (
-                <Rating
-                  dataMediaUser={dataMediaUser}
-                  mediaId={id}
-                  media_type={mediaType}
-                  runtime={
-                    mediaType === 'tv'
-                      ? processInfo.runTime
-                      : processInfo.runTime
-                  }
-                  setPendingSeen={setPendingSeen}
-                  pendingSeen={pendingSeen}
-                />
-              ) : null}
+              {titleRating}
               {/* //-ORIGINAL NAME, YEAR & RATING PLATFORMS */}
               <div className="flex flex-row justify-between items-stretch">
                 <div className="text-xs md:text-base mt-4 basis-9/12 md:basis-10/12">
@@ -742,15 +744,13 @@ function DetailsMedia({
                 </div>
               </div>
               {/* // - RUNTIME & TRAILER */}
-              <div className="flex items-center mt-4">
-                <div className={processInfo.runTime !== 0 ? 'pr-2' : ''}>
-                  {/* // . TIME MIN */}
-                  {processInfo.TimeHM && processInfo.TimeHM !== 0
-                    ? processInfo.TimeHM
-                    : null}
-                </div>
+              <div className="flex flex-row gap-2 items-center justify-between md:justify-start mt-4">
+                {/* // . TIME MIN */}
+                {processInfo.TimeHM && processInfo.TimeHM !== 0
+                  ? processInfo.TimeHM
+                  : null}
                 {mediaType === 'tv' ? (
-                  <div className="flex flex-row gap-2">
+                  <div className="flex flex-col md:flex-row gap-2 items-center">
                     {/* // .  TIME EPISODE + Nº Seasons y Episodes & TRAILER */}
                     {/* // SEASONS+EPISODES */}
                     <div className="text-xs">
@@ -814,7 +814,7 @@ function DetailsMedia({
                     </div>
                     <button
                       type="button"
-                      className="md:hidden mt-1 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                      className="md:hidden mt-1 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
                       onClick={() => setDescriptionExpanded((v) => !v)}
                     >
                       {descriptionExpanded ? t('Read less') : t('Read more')}
@@ -850,7 +850,7 @@ function DetailsMedia({
                 </div>
                 <button
                   type="button"
-                  className="md:hidden my-2 text-xs text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                  className="md:hidden my-2 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
                   onClick={() => setCrewExpanded((v) => !v)}
                 >
                   {crewExpanded ? t('Hide credits') : t('Show credits')}

@@ -168,7 +168,7 @@ export const Multi = ({
         backgroundImage: `url(${processInfo.bgPoster})`,
       }}
     >
-      <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-1 sm:p-2 rounded-xl h-full">
+      <div className="static bg-local backdrop-blur-md bg-[#20283E]/80 p-1 sm:p-2 rounded-xl h-full justify-between flex flex-col">
         <button
           type="button"
           className="relative block w-full text-left"
@@ -262,9 +262,7 @@ export const Multi = ({
             </div>
             {/* //-TITLE */}
             <div
-              className={`font-semibold ${titleSizeClass} ${
-                userExist ? 'pb-8' : 'pb-2'
-              } cursor-pointer`}
+              className={`font-semibold ${titleSizeClass} pb-2 cursor-pointer`}
             >
               <p className={titleClampClass}>{processInfo.title}</p>
             </div>
@@ -272,7 +270,7 @@ export const Multi = ({
         </button>
         {/* //.BUTTON AND SEEN/UNSEEN */}
         {userExist && (
-          <div className="mb-1 flex flex-row justify-between items-center gap-2 bottom-0 absolute w-full right-0 px-2">
+          <div className="flex flex-row justify-between items-center gap-2 px-2">
             {/* //-ADD BUTTON PLAYLIST */}
             {!isForum && (
               <ShowPlaylistMenu
@@ -296,25 +294,22 @@ export const Multi = ({
               />
             )}
             {/* //-SEEN/UNSEEN */}
-            <div className="text-right flex flex-row items-center justify-end gap-2">
-              {mediaType !== 'person' && (
-                <SeenPendingButton
-                  condition={seen}
-                  size={size === 'small' ? 18 : 20}
-                  text={'Seen'}
-                  handle={handleSeenMedia}
-                />
-              )}
-              {/* //-PENDING/NO PENDING */}
-              {mediaType !== 'person' && (
-                <SeenPendingButton
-                  condition={pending}
-                  size={size === 'small' ? 15 : 17}
-                  text={'Pending'}
-                  handle={handlePending}
-                />
-              )}
-            </div>
+            {mediaType !== 'person' && (
+              <SeenPendingButton
+                condition={seen}
+                text={'Seen'}
+                handle={handleSeenMedia}
+              />
+            )}
+            {/* //-PENDING/NO PENDING */}
+            {mediaType !== 'person' && (
+              <SeenPendingButton
+                condition={pending}
+                text={'Pending'}
+                handle={handlePending}
+                className="pb-0.5"
+              />
+            )}
           </div>
         )}
       </div>

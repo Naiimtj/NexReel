@@ -121,7 +121,7 @@ const TVEpisode = () => {
 
   return (
     <div>
-      <PageTitle title={`${episode.name}`} />
+      <PageTitle title={`${tvDetails.name}-${NSeason}x${episode.episode_number}-${episode.name}`} />
       <div
         className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6 mb-20 ring-2 ring-inset ring-[#20283E]"
         style={{
@@ -217,7 +217,6 @@ const TVEpisode = () => {
                   <div className="text-center align-middle">
                     <SeenPendingButton
                       condition={seen}
-                      size={20}
                       text="Seen"
                       handle={handleSeenMedia}
                     />

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ import {
   getUserListPlaylist,
   deletePlaylistMedia,
 } from '../../../services/DB/services-db';
-import { IoIosRemove, IoMdAdd } from 'react-icons/io';
+import { BaseButton, BaseIcon } from '../../components/base';
 
 const ShowPlaylistMenu = ({
   userId,
@@ -112,6 +113,33 @@ const ShowPlaylistMenu = ({
     }
   };
 
+  const triggerRef = useRef(null);
+  const menuRef = useRef(null);
+  const [menuCoords, setMenuCoords] = useState(null);
+
+  useEffect(() => {
+    if (openPlaylistsList && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setMenuCoords({ top: rect.bottom + 4, left: rect.left });
+    }
+  }, [openPlaylistsList]);
+
+  useEffect(() => {
+    if (!openPlaylistsList) return;
+    const handleClickOutside = (e) => {
+      if (
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target) &&
+        menuRef.current &&
+        !menuRef.current.contains(e.target)
+      ) {
+        setOpenPlaylistsList(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openPlaylistsList]);
+
   const [isTimeout, setIsTimeout] = useState(true);
   useEffect(() => {
     let timerId;
@@ -130,44 +158,86 @@ const ShowPlaylistMenu = ({
   }, [isTimeout, errorAddPlaylists]);
 
   return (
-    <div className={`relative ${triggerTextClass} align-middle col-span-3`}>
-      <button
-        className={`flex flex-row items-center cursor-pointer text-left px:center ${
+    <div
+      ref={triggerRef}
+      className={`relative ${triggerTextClass} align-middle`}
+    >
+      <BaseButton
+        variant="icon"
+        size="small"
+        className={`flex flex-row items-center text-left px:center ${
           !openPlaylistsList ? 'text-[#7B6EF6]' : 'text-gray-600'
-        } transition ease-in-out md:hover:scale-105 duration-300 xs:text-xs sm:text-base`}
+        } transition ease-in-out md:hover:scale-105 duration-300 xs:text-xs sm:text-base !p-0`}
         onClick={(event) => {
           (event.stopPropagation(), setOpenPlaylistsList(!openPlaylistsList));
         }}
       >
-        {!openPlaylistsList ? (
-          <IoMdAdd
-            className="inline-block"
-            size={iconSize}
-            alt={t('Add to one list')}
-          />
-        ) : (
-          <IoIosRemove
-            className="inline-block"
-            size={iconSize}
-            alt={t('Add to one list')}
-          />
-        )}
+        <BaseIcon
+          icon={openPlaylistsList ? 'remove' : 'add'}
+          size={iconSize}
+          className="inline-block size-8 md:size-6"
+        />
         <span className={labelVisibilityClass}>{t('Playlists')}</span>
-      </button>
-      {openPlaylistsList ? (
-        <div
-          className={`absolute z-50 flex flex-col ${menuTextClass} bg-grayNR/90 rounded-md ${menuWidthClass}`}
-        >
-          {errorAddPlaylists ? (
-            <div className="text-white bg-gray-50/20 px-1 font-bold">
-              {t(errorAddPlaylists)}
-            </div>
-          ) : null}
-          {dataUser.length === 0 ? (
-            <div className="flex flex-col items-center gap-1 px-2 py-2">
-              <span className="text-white text-center">
-                {t('No playlists')}
-              </span>
+      </BaseButton>
+      {openPlaylistsList && menuCoords
+        ? createPortal(
+            <div
+              ref={menuRef}
+              className={`fixed z-[9999] flex flex-col ${menuTextClass} bg-grayNR/90 rounded-md ${menuWidthClass}`}
+              style={{ top: menuCoords.top, left: menuCoords.left }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {errorAddPlaylists ? (
+                <div className="text-white bg-gray-50/20 px-1 font-bold">
+                  {t(errorAddPlaylists)}
+                </div>
+              ) : null}
+              {dataUser.length === 0 ? (
+                <div className="flex flex-col items-center gap-1 px-2 py-2">
+                  <span className="text-white text-center">
+                    {t('No playlists')}
+                  </span>
+                  <Link
+                    to={`/playlists/${userId}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="font-semibold text-[#7B6EF6] hover:text-white hover:bg-gray-50/20 p-2 rounded-md transition duration-200"
+                  >
+                    {t('Create playlist')}
+                  </Link>
+                </div>
+              ) : null}
+              {dataUser.map((i, index) => {
+                const roundedTopItem = index === 0 ? 'rounded-t-md' : null;
+                const roundedBottomItem =
+                  dataUser.length === index + 1 ? 'rounded-b-md' : null;
+                const isInPlaylist = i.medias.some(
+                  (media) => Number(media.mediaId) === id,
+                );
+                return (
+                  <div
+                    key={i.id}
+                    className={`hover:bg-gray-50 ${menuItemPaddingClass}  ${
+                      dataUser.length === 1 ? 'rounded-md' : null
+                    } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
+                    onClick={(event) => {
+                      (event.stopPropagation(),
+                        isInPlaylist
+                          ? handleRemovePlaylist(i.id)
+                          : handleAddPlaylist(i.id));
+                    }}
+                  >
+                    <div
+                      className={
+                        isInPlaylist
+                          ? 'text-green-700 text-left'
+                          : 'text-black text-left'
+                      }
+                    >
+                      {isInPlaylist ? `✓ ${i.title}` : `· ${i.title}`}
+                    </div>
+                  </div>
+                );
+              })}
               <Link
                 to={`/playlists/${userId}`}
                 onClick={(e) => e.stopPropagation()}
@@ -175,42 +245,10 @@ const ShowPlaylistMenu = ({
               >
                 {t('Create playlist')}
               </Link>
-            </div>
-          ) : null}
-          {dataUser.map((i, index) => {
-            const roundedTopItem = index === 0 ? 'rounded-t-md' : null;
-            const roundedBottomItem =
-              dataUser.length === index + 1 ? 'rounded-b-md' : null;
-            const isInPlaylist = i.medias.some(
-              (media) => Number(media.mediaId) === id,
-            );
-            return (
-              <div
-                key={i.id}
-                className={`hover:bg-gray-50 ${menuItemPaddingClass}  ${
-                  dataUser.length === 1 ? 'rounded-md' : null
-                } ${roundedTopItem} ${roundedBottomItem} cursor-pointer transition duration-200`}
-                onClick={(event) => {
-                  (event.stopPropagation(),
-                    isInPlaylist
-                      ? handleRemovePlaylist(i.id)
-                      : handleAddPlaylist(i.id));
-                }}
-              >
-                <div
-                  className={
-                    isInPlaylist
-                      ? 'text-green-700 text-left'
-                      : 'text-black text-left'
-                  }
-                >
-                  {isInPlaylist ? `✓ ${i.title}` : `· ${i.title}`}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 };

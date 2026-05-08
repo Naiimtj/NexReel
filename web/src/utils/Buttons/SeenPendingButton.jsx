@@ -12,9 +12,9 @@ const ICONS = {
 
 const SeenPendingButton = ({
   condition = false,
-  size = 0,
   text = '',
   handle = () => {},
+  className = '',
 }) => {
   const [t] = useTranslation('translation');
   const pair = ICONS[text];
@@ -26,9 +26,8 @@ const SeenPendingButton = ({
   return (
     <BaseIcon
       icon={iconName}
-      size={size}
       color="#FFCA28"
-      className="inline-block transition ease-in-out md:hover:scale-110 duration-300"
+      className={`inline-block transition ease-in-out md:hover:scale-110 duration-300 ${className} md:size-6 size-7 max-xs:size-6`}
       aria-label={label}
       onClick={handle}
       tooltip={label}
@@ -38,9 +37,9 @@ const SeenPendingButton = ({
 
 SeenPendingButton.propTypes = {
   condition: PropTypes.bool,
-  size: PropTypes.number,
   text: PropTypes.string,
   handle: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default SeenPendingButton;

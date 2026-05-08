@@ -132,7 +132,6 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
               <div className="text-right align-middle">
                 <SeenPendingButton
                   condition={seen}
-                  size={20}
                   text={"Seen"}
                   handle={handleSeenMedia}
                 />

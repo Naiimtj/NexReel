@@ -25,7 +25,7 @@ function CountryFlag({ code, className = '' }) {
     if (!wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     setCoords({
-      top: rect.top - 8,
+      top: rect.top - 10,
       left: rect.left + rect.width / 2,
     });
   };
@@ -55,7 +55,7 @@ function CountryFlag({ code, className = '' }) {
             style={{
               top: coords.top,
               left: coords.left,
-              transform: 'translate(-50%, -100%)',
+              transform: 'translate(-100%, -50%)',
             }}
           >
             {label}

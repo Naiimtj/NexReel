@@ -24,6 +24,8 @@ import PlaylistRemoveIcon from './PlaylistRemoveIcon';
 import UserGroupIcon from './UserGroupIcon';
 import EyeFillIcon from './EyeFillIcon';
 import EyeSlashFillIcon from './EyeSlashFillIcon';
+import AddIcon from './AddIcon';
+import RemoveIcon from './RemoveIcon';
 
 export const iconRegistry = {
   close: CloseIcon,
@@ -52,6 +54,8 @@ export const iconRegistry = {
   userGroup: UserGroupIcon,
   eyeFill: EyeFillIcon,
   eyeSlashFill: EyeSlashFillIcon,
+  add: AddIcon,
+  remove: RemoveIcon,
 };
 
 export {
@@ -79,4 +83,6 @@ export {
   PlaylistAddIcon,
   PlaylistRemoveIcon,
   UserGroupIcon,
+  AddIcon,
+  RemoveIcon,
 };
