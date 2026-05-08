@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 function ExternalRating({ icon, alt, value, iconClassName }) {
   if (!value || value <= 0) return null;
   return (
-    <div className="mb-1">
+    <div>
       <img className={iconClassName} src={icon} alt={alt} />
       <div className="inline-block text-amber-400 text-xs text-left pl-2">
         {value}

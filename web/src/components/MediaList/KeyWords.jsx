@@ -9,7 +9,7 @@ function KeyWords({ wordsKey, media = '', id = 0 }) {
           <div className="inline-block pr-1" key={Number(gen.id * id)}>
             <Link
               to={`/${media}/${id}/keyword/${gen.id}`}
-              className="inline-block capitalize cursor-pointer text-gray-200 hover:text-gray-400"
+              className="inline-block capitalize cursor-pointer text-purpleNR md:hover:text-gray-400"
             >
               {gen.name}
             </Link>

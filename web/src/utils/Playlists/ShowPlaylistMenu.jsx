@@ -166,7 +166,7 @@ const ShowPlaylistMenu = ({
         variant="icon"
         size="small"
         className={`flex flex-row items-center text-left px:center ${
-          !openPlaylistsList ? 'text-[#7B6EF6]' : 'text-gray-600'
+          !openPlaylistsList ? 'text-[#7B6EF6] md:hover:text-gray-400' : 'text-gray-400'
         } transition ease-in-out md:hover:scale-105 duration-300 xs:text-xs sm:text-base !p-0`}
         onClick={(event) => {
           (event.stopPropagation(), setOpenPlaylistsList(!openPlaylistsList));

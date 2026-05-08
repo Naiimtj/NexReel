@@ -26,6 +26,11 @@ import EyeFillIcon from './EyeFillIcon';
 import EyeSlashFillIcon from './EyeSlashFillIcon';
 import AddIcon from './AddIcon';
 import RemoveIcon from './RemoveIcon';
+import StarFillIcon from './StarFillIcon';
+import StarOutlineIcon from './StarOutlineIcon';
+import CaretDownSmallIcon from './CaretDownSmallIcon';
+import CaretUpSmallIcon from './CaretUpSmallIcon';
+import StarRatingIcon from './StarRatingIcon';
 
 export const iconRegistry = {
   close: CloseIcon,
@@ -56,6 +61,11 @@ export const iconRegistry = {
   eyeSlashFill: EyeSlashFillIcon,
   add: AddIcon,
   remove: RemoveIcon,
+  starFill: StarFillIcon,
+  starOutline: StarOutlineIcon,
+  caretDownSmall: CaretDownSmallIcon,
+  caretUpSmall: CaretUpSmallIcon,
+  starRating: StarRatingIcon,
 };
 
 export {
@@ -85,4 +95,9 @@ export {
   UserGroupIcon,
   AddIcon,
   RemoveIcon,
+  StarFillIcon,
+  StarOutlineIcon,
+  CaretDownSmallIcon,
+  CaretUpSmallIcon,
+  StarRatingIcon,
 };

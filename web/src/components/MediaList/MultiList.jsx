@@ -196,11 +196,10 @@ export const MultiList = ({
                     <div className="flex items-start">
                       <FaStar
                         size={12}
-                        color="#FFCA28"
                         alt={t('Seen')}
-                        className="mr-1 mt-0.5"
+                        className="mr-1 mt-0.5 fill-purpleNR"
                       />
-                      <div className=" text-amber-400 text-xs text-left leading-4">
+                      <div className=" text-purpleNR text-xs text-left leading-4">
                         {vote}
                       </div>
                     </div>

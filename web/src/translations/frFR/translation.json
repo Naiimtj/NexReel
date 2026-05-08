@@ -19,5 +19,12 @@
   "Toggle password visibility": "Afficher/masquer le mot de passe",
   "Oops! something in your credentials is not correct": "Oups ! quelque chose dans vos identifiants n'est pas correct",
   "Don't have an account yet?": "Vous n'avez pas encore de compte ?",
-  "Sign up": "S'inscrire"
+  "Sign up": "S'inscrire",
+  "Your Rating": "Votre note",
+  "Toggle rating": "Ouvrir/fermer la notation",
+  "Rate this": "Noter",
+  "Star rating": "Notation par étoiles",
+  "Star half": "{{value}} étoiles",
+  "Star full value": "{{value}} étoiles",
+  "Remove rating": "Supprimer la note"
 }

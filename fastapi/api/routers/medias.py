@@ -230,6 +230,11 @@ def media_update(media_type: str, media_id: str, payload: dict = Body(...), curr
 
         return updated_tv
 
+    # Movie (non-TV): if neither seen nor pending, the row has no tracking value → delete it
+    if not seen and not pending:
+        execute(db, "DELETE FROM media WHERE media_id = :media_id AND user_id = :user_id", {"media_id": media_id, "user_id": current_user["id"]})
+        return {"result": True}
+
     return save_one(
         db,
         'UPDATE media SET "like" = :like, seen = :seen, pending = :pending, "repeat" = :repeat, vote = :vote, updated_at = NOW() WHERE media_id = :media_id AND user_id = :user_id RETURNING *',

@@ -1,18 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { FaRegStar, FaStar } from 'react-icons/fa';
-import { BiCaretDown, BiCaretUp } from 'react-icons/bi';
-import {
-  EmptyStar,
-  RightHalfStar,
-  LeftHalfStar,
-  HoverNoStar,
-  HoverRightHalfStar,
-  HoverLeftHalfStar,
-} from '../../../assets/image';
+import { BaseIcon } from '../../base';
 import { patchMedia, postMedia } from '../../../../services/DB/services-db';
-import './Rating.css';
+
+const STAR_COUNT = 10;
+
+const getStarState = (starIndex, activeValue) => {
+  if (activeValue == null) return 'empty';
+  if (activeValue >= starIndex + 1) return 'full';
+  if (activeValue >= starIndex + 0.5) return 'half';
+  return 'empty';
+};
 
 const Rating = ({
   dataMediaUser,
@@ -27,10 +26,9 @@ const Rating = ({
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
   const [dropDownRating, setdropDownRating] = useState(false);
-  const [hover0, setHover0] = useState(null);
   const containerRef = useRef(null);
+  const starsRef = useRef(null);
 
-  // Close the rating selector when clicking outside of it
   useEffect(() => {
     if (!dropDownRating) return undefined;
     const handleClickOutside = (event) => {
@@ -40,188 +38,213 @@ const Rating = ({
       ) {
         setdropDownRating(false);
         setHover(null);
-        setHover0(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, [dropDownRating]);
 
-  // Reset Rating when media changes
   useEffect(() => {
     setRating(null);
   }, [mediaId]);
 
-  // Sync local rating from incoming vote, but only when it's a valid number.
-  // Avoids wiping the user's selection while the parent is refetching and
-  // dataMediaUser temporarily lacks `vote`.
   useEffect(() => {
     if (typeof vote === 'number' && vote >= 0) {
       setRating(vote);
     }
   }, [vote]);
 
-  const persistVote = (value) => {
-    const hasRecord =
-      Object.keys(dataMediaUser).length > 0 && vote !== undefined;
-    if (hasRecord) {
-      patchMedia(mediaId, media_type, { seen: true, vote: value }).then(() => {
-        setPendingSeen(!pendingSeen);
-        setHover0(null);
-      });
-    } else {
-      postMedia(media_type, {
-        mediaId,
-        media_type,
-        runtime,
-        like: false,
-        pending: false,
-        seen: true,
-        vote: value,
-      }).then((data) => {
-        if (data) {
-          setPendingSeen(!pendingSeen);
-          setHover0(null);
-        }
-      });
-    }
-  };
+  const persistVote = useCallback(
+    (value) => {
+      const hasRecord =
+        Object.keys(dataMediaUser).length > 0 && vote !== undefined;
+      if (hasRecord) {
+        patchMedia(mediaId, media_type, { seen: true, vote: value }).then(
+          () => {
+            setPendingSeen(!pendingSeen);
+          },
+        );
+      } else {
+        postMedia(media_type, {
+          mediaId,
+          media_type,
+          runtime,
+          like: false,
+          pending: false,
+          seen: true,
+          vote: value,
+        }).then((data) => {
+          if (data) {
+            setPendingSeen(!pendingSeen);
+          }
+        });
+      }
+    },
+    [
+      dataMediaUser,
+      vote,
+      mediaId,
+      media_type,
+      runtime,
+      setPendingSeen,
+      pendingSeen,
+    ],
+  );
 
-  const handleStarClick = (value) => {
-    if (value === rating) return;
-    setRating(value);
-    persistVote(value);
-  };
+  const handleStarClick = useCallback(
+    (value) => {
+      if (value === rating) return;
+      setRating(value);
+      persistVote(value);
+    },
+    [rating, persistVote],
+  );
 
-  const handleRating = () => {
-    setdropDownRating(!dropDownRating);
-  };
-
-  const handleRating0 = () => {
+  const handleRemoveRating = useCallback(() => {
     patchMedia(mediaId, media_type, { vote: -1 }).then(() => {
       setPendingSeen(!pendingSeen);
       setRating(null);
-      setHover0(null);
+      setHover(null);
     });
-  };
+  }, [mediaId, media_type, setPendingSeen, pendingSeen]);
 
-  const handleStarHover = (value) => {
-    setHover(value);
-  };
+  const resolveValueFromTouch = useCallback((touchX) => {
+    const el = starsRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    const x = touchX - rect.left;
+    const starWidth = rect.width / STAR_COUNT;
+    const starIndex = Math.floor(x / starWidth);
+    if (starIndex < 0 || starIndex >= STAR_COUNT) return null;
+    const isRightHalf = x % starWidth > starWidth / 2;
+    return starIndex + (isRightHalf ? 1 : 0.5);
+  }, []);
 
-  const renderStars = (count) => {
-    const stars = [];
-    for (let i = 0; i < count; i++) {
-      const ratingValue = i / 2 + 0.5;
-      const isHovered = ratingValue <= (hover || rating);
-      const starComponent =
-        ratingValue === Math.trunc(ratingValue + 0.4) ? (
-          <img
-            className="cursor-pointer object-cover h-7"
-            src={isHovered ? HoverRightHalfStar : RightHalfStar}
-            alt={isHovered ? t('Right Half Star Hover') : t('Right Half Star')}
-            onMouseEnter={() => handleStarHover(ratingValue.toFixed(1))}
-            onMouseLeave={() => handleStarHover(null)}
-          />
-        ) : (
-          <img
-            className="cursor-pointer object-cover h-7"
-            src={isHovered ? HoverLeftHalfStar : LeftHalfStar}
-            alt={isHovered ? t('Left Half Star Hover') : t('Left Half Star')}
-            onMouseEnter={() => handleStarHover(ratingValue.toFixed(1))}
-            onMouseLeave={() => handleStarHover(null)}
-          />
-        );
+  const handleTouchMove = useCallback(
+    (e) => {
+      e.preventDefault();
+      const val = resolveValueFromTouch(e.touches[0].clientX);
+      if (val != null) setHover(val);
+    },
+    [resolveValueFromTouch],
+  );
 
-      stars.push(
-        <label className="inline-block align-middle mt-1" key={i}>
-          <input
-            type="radio"
-            name="rating"
-            value={ratingValue.toFixed(1)}
-            onClick={() => handleStarClick(Number(ratingValue.toFixed(1)))}
-          />
-          {starComponent}
-        </label>,
-      );
+  const handleTouchEnd = useCallback(() => {
+    if (hover != null) {
+      handleStarClick(hover);
+      setHover(null);
     }
-    return stars;
-  };
+  }, [hover, handleStarClick]);
 
   const finalRating = rating < 0 ? null : rating;
+  const activeValue = hover ?? finalRating;
 
   return (
     <div ref={containerRef}>
-      {!dropDownRating ? (
-        <button
-          className="cursor-pointer text-left text-sm px:center text-[#FFCA28] transition ease-in-out md:hover:text-gray-200 duration-300"
-          onClick={handleRating}
-        >
-          {finalRating ? (
-            <FaStar
-              className="inline-block align-middle mr-1"
-              size={18}
-              alt={t('Star Full')}
-            />
-          ) : (
-            <FaRegStar
-              className="inline-block align-middle mr-1"
-              size={18}
-              alt={t('Star Empty')}
+      <button
+        className="cursor-pointer text-left text-purpleNR hover:text-gray-400 transition duration-300 ease-in-out flex items-center gap-0 leading-none"
+        onClick={() => setdropDownRating((prev) => !prev)}
+        aria-label={t('Toggle rating')}
+      >
+        <BaseIcon
+          icon={finalRating ? 'starFill' : 'starOutline'}
+          tooltip={finalRating ? t('Your Rating') : t('Rate this')}
+          className="group size-6 md:size-6"
+          wrapperClassName="flex"
+        />
+        <span className="ml-1">{finalRating}</span>
+        <BaseIcon
+          icon={dropDownRating ? 'caretUpSmall' : 'caretDownSmall'}
+          className="group size-6 md:size-6"
+          wrapperClassName="flex"
+        />
+      </button>
+
+      {dropDownRating && (
+        <div className="absolute md:left-auto left-0 flex items-center gap-1 bg-[#20283E]/90 backdrop-blur-2xl rounded-md p-1 z-10 mt-1">
+          <div
+            ref={starsRef}
+            role="radiogroup"
+            tabIndex={-1}
+            aria-label={t('Star rating')}
+            className="flex items-center touch-none select-none"
+            onMouseLeave={() => setHover(null)}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {Array.from({ length: STAR_COUNT }, (_, i) => {
+              const state = getStarState(i, activeValue);
+              return (
+                <div
+                  key={i}
+                  className="relative cursor-pointer size-6 md:size-6"
+                >
+                  <BaseIcon
+                    icon="starOutline"
+                    className="size-6 md:size-6 text-gray-400"
+                    wrapperClassName="absolute inset-0"
+                  />
+                  {state !== 'empty' && (
+                    <div
+                      className={`absolute inset-0 ${state === 'half' ? '[clip-path:inset(0_50%_0_0)]' : ''}`}
+                    >
+                      <BaseIcon
+                        icon="starFill"
+                        className="size-6 md:size-6 text-purpleNR"
+                      />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 z-10 flex">
+                    <div
+                      role="radio"
+                      tabIndex={0}
+                      aria-checked={finalRating === i + 0.5}
+                      aria-label={t('Star half', { value: i + 0.5 })}
+                      className="w-full h-full"
+                      onMouseEnter={() => setHover(i + 0.5)}
+                      onClick={() => handleStarClick(i + 0.5)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ')
+                          handleStarClick(i + 0.5);
+                      }}
+                      onTouchStart={() => setHover(i + 0.5)}
+                    />
+                    <div
+                      role="radio"
+                      tabIndex={0}
+                      aria-checked={finalRating === i + 1}
+                      aria-label={t('Star full value', { value: i + 1 })}
+                      className="w-full h-full"
+                      onMouseEnter={() => setHover(i + 1)}
+                      onClick={() => handleStarClick(i + 1)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ')
+                          handleStarClick(i + 1);
+                      }}
+                      onTouchStart={() => setHover(i + 1)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <span className="text-purpleNR text-xl font-medium">
+            {activeValue ?? ''}
+          </span>
+
+          {finalRating != null && (
+            <BaseIcon
+              icon="close"
+              className="size-6 md:size-6 text-gray-400 transition duration-200 hover:text-purpleNR"
+              onClick={handleRemoveRating}
+              tooltip={t('Remove rating')}
             />
           )}
-          <div className="inline-block align-middle text-sm md:text-base">
-            {!finalRating ? t('Your Rating') : finalRating}
-          </div>
-          <BiCaretDown className="inline-block align-middle" size={18} />
-        </button>
-      ) : (
-        <div>
-          <button
-            className="pt-2 cursor-pointer text-left text-sm px:center text-[#FFCA28] transition ease-in-out md:hover:text-gray-200 duration-300"
-            onClick={handleRating}
-          >
-            <FaRegStar className="inline-block align-middle mr-1" size={18} />
-            <div className="inline-block align-middle text-sm md:text-base">
-              {!finalRating ? t('Your Rating') : finalRating}
-            </div>
-            <BiCaretUp className="inline-block align-middle" size={18} />
-          </button>
-        </div>
-      )}
-      {dropDownRating && (
-        <div className="flex flex-row w-full">
-          <div className="flex flex-row items-center">
-            {renderStars(20)}
-            <div className="flex flex-row items-center gap-1 ml-2 align-middle">
-              <p className="align-middle  text-amber-400">
-                {(hover || finalRating) === null ? '' : hover || finalRating}
-              </p>
-              <div className="align-middle">
-                {finalRating !== null ? (
-                  <button className="align-middle" onClick={handleRating0}>
-                    {hover0 !== null || !(finalRating >= 0) ? (
-                      <img
-                        className="cursor-pointer object-cover h-8 mt-1"
-                        src={EmptyStar}
-                        alt={t('Empty No Star')}
-                        onMouseEnter={() => setHover0(0)}
-                        onMouseLeave={() => setHover0(null)}
-                      />
-                    ) : (
-                      <img
-                        className="cursor-pointer object-cover h-8 mt-1"
-                        src={HoverNoStar}
-                        alt={t('Hover No Star')}
-                        onMouseEnter={() => setHover0(0)}
-                        onMouseLeave={() => setHover0(null)}
-                      />
-                    )}
-                  </button>
-                ) : null}
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </div>

@@ -4,8 +4,8 @@ import { BaseIcon } from '../../components/base';
 
 const RepeatSeenButton = ({
   condition = false,
-  size = 24,
   handle = () => {},
+  className = '',
 }) => {
   const [t] = useTranslation('translation');
   const iconName = condition ? 'repeatSeenActive' : 'repeatSeenInactive';
@@ -14,9 +14,8 @@ const RepeatSeenButton = ({
   return (
     <BaseIcon
       icon={iconName}
-      size={size}
       color="#FFCA28"
-      className="inline-block transition ease-in-out md:hover:scale-110 duration-300"
+      className={`inline-block transition ease-in-out md:hover:scale-110 duration-300 ${className} md:size-7 size-8 max-xs:size-7 leading-none`}
       aria-label={label}
       onClick={handle}
       tooltip={label}
@@ -26,8 +25,8 @@ const RepeatSeenButton = ({
 
 RepeatSeenButton.propTypes = {
   condition: PropTypes.bool,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handle: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default RepeatSeenButton;

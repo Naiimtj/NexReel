@@ -153,7 +153,7 @@ const TooltipWrapper = ({
         createPortal(
           <div
             role="tooltip"
-            className="fixed z-[1000] p-1 text-sm text-white dark:text-black bg-gray-900 dark:bg-gray-300 rounded-md shadow-lg whitespace-nowrap pointer-events-none"
+            className=" hidden md:block fixed z-[1000] p-1 text-sm text-white dark:text-black bg-gray-900 dark:bg-gray-300 rounded-md shadow-lg whitespace-nowrap pointer-events-none"
             style={tooltipStyle}
           >
             {tooltip}

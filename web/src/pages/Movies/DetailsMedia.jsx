@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,6 @@ import {
   TMDB,
   IMDB,
   FILMA,
-  star,
   movie,
   tv,
   PLEX,
@@ -27,7 +26,7 @@ import {
 import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
 import { BiSolidRightArrow } from 'react-icons/bi';
 // components & utils
-import { BaseIcon } from '../../components/base';
+import { BaseButton, BaseIcon } from '../../components/base';
 import BaseModal from '../../components/base/BaseModal';
 import KeyWords from '../../components/MediaList/KeyWords';
 import Collections from '../../components/Movie/Collections';
@@ -220,6 +219,22 @@ function DetailsMedia({
   const [errorAddPlaylists, setErrorAddPlaylists] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [crewExpanded, setCrewExpanded] = useState(false);
+  const [showExternalRatings, setShowExternalRatings] = useState(false);
+  const externalRatingsRef = useRef(null);
+
+  useEffect(() => {
+    if (!showExternalRatings) return undefined;
+    const handleClickOutside = (event) => {
+      if (
+        externalRatingsRef.current &&
+        !externalRatingsRef.current.contains(event.target)
+      ) {
+        setShowExternalRatings(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showExternalRatings]);
 
   useEffect(() => {
     if (!errorAddPlaylists) return undefined;
@@ -386,7 +401,7 @@ function DetailsMedia({
   const createdByList = (created_by || []).slice(0, 5);
 
   const typeCountryStatusBlock = (
-    <div className="flex flex-col items-end">
+    <div className="flex md:flex-col gap-2 md:gap-0 items-end">
       {/* // . Type and Country */}
       <div className="flex flex-row items-center gap-1 text-xs capitalize text-right">
         {t(processInfo.mediaType)}
@@ -430,7 +445,7 @@ function DetailsMedia({
     <div>
       <button
         type="button"
-        className="pt-2 cursor-pointer text-left text-sm  px:center text-purpleNR transition ease-in-out md:hover:text-gray-200 duration-300"
+        className="pt-2 cursor-pointer text-left text-sm  px:center text-purpleNR transition ease-in-out md:hover:text-gray-400 duration-300"
         onClick={() => setModalKeywords(!modalKeywords)}
       >
         {t('Key Words')}
@@ -522,7 +537,7 @@ function DetailsMedia({
 
   const poster = poster_path ? (
     <img
-      className="rounded-xl w-32 md:w-full sm:w-auto justify-self-center"
+      className="rounded-xl w-52 md:w-full sm:w-auto justify-self-center"
       src={processInfo.poster}
       alt={name}
     />
@@ -534,7 +549,7 @@ function DetailsMedia({
         alt={t('Icon people')}
       />
       <img
-        className="rounded-xl w-32 md:w-full sm:w-auto justify-self-center"
+        className="rounded-xl w-52 md:w-full sm:w-auto justify-self-center"
         src={processInfo.poster}
         alt={name}
       />
@@ -542,16 +557,16 @@ function DetailsMedia({
   );
 
   const streamingOrWatchProviders = (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       {/* //-WHERE SEE OR BUY */}
-      <div className="text-left mt-2 text-xs md:text-base">
+      <div className="md:text-right text-xs md:text-base text-gray-400">
         {processInfo.NoWatch === null ? t('Not Available') : null}
         {/* // STREAM */}
         {processInfo.streaming ? t('Stream') : null}
         <div className="mt-1">
           {isInPlex ? (
             <img
-              className="inline-block h-8 md:h-8 justify-self-center mr-0.5 mb-1 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
+              className="inline-block h-5 md:h-7 justify-self-center mr-0.5 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
               src={PLEX}
               alt={'Plex Icon'}
             />
@@ -584,27 +599,87 @@ function DetailsMedia({
     </span>
   ) : null;
 
+  const isTmdbOnly = !processInfo.voteIMDB && !processInfo.voteFILMA;
+
   const titleRating = (
     <div className="w-full flex-row">
       {/* //- NAME AND MEDIA */}
       <div className="relative flex justify-between items-stretch">
-        <div className="justify-start font-semibold text-lg md:text-2xl">
+        <div className="justify-start font-semibold text-lg md:text-2xl w-[95%]">
           {processInfo.title}
           {mediaDate}
         </div>
         <div className="hidden md:block">{typeCountryStatusBlock}</div>
       </div>
-      {/* //-RATING */}
-      {userExist ? (
-        <Rating
-          dataMediaUser={dataMediaUser}
-          mediaId={id}
-          media_type={mediaType}
-          runtime={processInfo.runTime}
-          setPendingSeen={setPendingSeen}
-          pendingSeen={pendingSeen}
-        />
-      ) : null}
+      {/* //! RATING */}
+      <div className="relative flex items-center gap-2 justify-between">
+        <div className="flex items-center gap-2">
+          {processInfo.voteAverage > 0 ? (
+            <div className="relative" ref={externalRatingsRef}>
+              <button
+                type="button"
+                className="cursor-pointer flex flex-row gap-1 items-center leading-none"
+                onClick={() => setShowExternalRatings((v) => !v)}
+                aria-label={t('Show external ratings')}
+              >
+                <BaseIcon
+                  icon="starRating"
+                  className={`size-6 md:size-5 ${
+                    isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'
+                  }`}
+                />
+                <span
+                  className={isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'}
+                >
+                  {processInfo.voteAverage}
+                </span>
+                <BaseIcon
+                  icon={showExternalRatings ? 'caretUpSmall' : 'caretDownSmall'}
+                  className={`size-6 md:size-5 ${
+                    isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'
+                  }`}
+                />
+              </button>
+              {showExternalRatings && (
+                <div className="absolute flex flex-col gap-2 left-0 top-full mt-1 z-20 bg-[#20283E]/90 backdrop-blur-2xl rounded-md p-2 min-w-max shadow-lg">
+                  <ExternalRating
+                    icon={FILMA}
+                    alt={t('Filmaffinity Icon')}
+                    value={processInfo.voteFILMA}
+                    iconClassName="inline-block w-6 rounded-md"
+                  />
+                  <ExternalRating
+                    icon={IMDB}
+                    alt={t('IMDB Icon')}
+                    value={processInfo.voteIMDB}
+                  />
+                  <ExternalRating
+                    icon={TMDB}
+                    alt={t('TMDB Icon')}
+                    value={processInfo.voteTMDB}
+                  />
+                </div>
+              )}
+            </div>
+          ) : null}
+          {userExist ? (
+            <Rating
+              dataMediaUser={dataMediaUser}
+              mediaId={id}
+              media_type={mediaType}
+              runtime={processInfo.runTime}
+              setPendingSeen={setPendingSeen}
+              pendingSeen={pendingSeen}
+            />
+          ) : null}
+        </div>
+        <div className="md:hidden">{typeCountryStatusBlock}</div>
+
+        <div className="hidden lg:block absolute right-0 top-0">
+          {/* // ! STREAMING */}
+          {streamingOrWatchProviders}
+        </div>
+      </div>
     </div>
   );
 
@@ -612,21 +687,14 @@ function DetailsMedia({
     <>
       <PageTitle title={`${processInfo.title} (${processInfo.date})`} />
       <div className="static content-center shadow-md">
-        <div className=" static h-full w-full flex flex-col md:flex-row md:gap-4 p-2 md:pt-4 md:px-4 items-start">
-          {/* -VOTE AVERAGE, POSTER, BUTTONS, PLAYLISTS Y WHERE SEE */}
-          <div className="flex flex-row md:flex-col gap-2 rounded-xl justify-between md:w-auto w-full">
+        <div className="static h-full w-full flex flex-col md:flex-row justify-center md:gap-4 pt-4 px-2 md:px-4 items-center md:items-start">
+          {/* - POSTER & BUTTONS */}
+          <div className="flex flex-col gap-2 rounded-xl justify-between items-center w-auto">
             <div className="flex flex-col">
-              <div className="relative flex flex-row w-32 md:w-60">
-                {processInfo.voteAverage && processInfo.voteAverage > 0 ? (
-                  <div className="z-10 absolute left-1 top-1 px-1 py-1 max-xs:hidden flex flex-row gap-1 items-center align-middle backdrop-blur-md bg-black/60 rounded-lg">
-                    <img alt="Star Icon" className="w-3" src={star} />
-                    <div className="text-amber-400 text-xs text-left">
-                      {processInfo.voteAverage}
-                    </div>
-                  </div>
-                ) : null}
+              <div className="relative flex flex-row w-auto md:w-60 lg:w-72">
                 {poster}
               </div>
+              {/* BUTTONS ICONS POSTER */}
               {userExist ? (
                 <div className="flex flex-row items-center gap-4 text-center mt-2 justify-around md:justify-between">
                   {/* //-SEEN/UNSEEN */}
@@ -646,7 +714,7 @@ function DetailsMedia({
                     type={mediaType}
                     runTime={processInfo.runTime}
                   />
-                  <div className={`flex gap-4`}>
+                  <div className={`flex items-center gap-4`}>
                     {/* //-REPEAT/NO REPEAT */}
                     {mediaType !== 'person' && seen && (
                       <RepeatSeenButton
@@ -667,85 +735,60 @@ function DetailsMedia({
                 </div>
               ) : null}
             </div>
-            {/* // . Type/Country/Status (mobile only, before Streaming) */}
-            <div className="flex flex-col w-full">
-              <div className="md:hidden w-full">{typeCountryStatusBlock}</div>
-              {/* // ! STREAMING */}
-              {streamingOrWatchProviders}
-            </div>
           </div>
-          <div className="col-span-2">
-            <div className="mt-4 md:mt-6">
-              {titleRating}
-              {/* //-ORIGINAL NAME, YEAR & RATING PLATFORMS */}
-              <div className="flex flex-row justify-between items-stretch">
-                <div className="text-xs md:text-base mt-4 basis-9/12 md:basis-10/12">
-                  <div className="text-gray-400">
+          <div className="mt-4 md:mt-6">
+            {titleRating}
+            {/* //-ORIGINAL NAME, YEAR & KEYWORDS */}
+            <div className="flex flex-row justify-between items-stretch">
+              <div className="text-xs md:text-base mt-4">
+                <div className="text-gray-400">
+                  {processInfo.titleVOSE === null
+                    ? null
+                    : `${t('Original title')}:`}
+                  <div className="text-gray-200 inline-block pl-1">
                     {processInfo.titleVOSE === null
                       ? null
-                      : `${t('Original title')}:`}
-                    <div className="text-gray-200 inline-block pl-1">
-                      {processInfo.titleVOSE === null
-                        ? null
-                        : processInfo.titleVOSE}
-                    </div>
-                  </div>
-
-                  {/* // - GENRES & KEYWORDS */}
-                  <div className="text-left text-sm mt-4">
-                    {/* // . GENRES */}
-                    {processInfo.genre &&
-                      processInfo.genre.map((gen, index) => {
-                        const idGen = gen.id;
-                        return (
-                          <div
-                            className="inline-block pr-1"
-                            key={Math.floor(
-                              (1 + index + Math.random()) * 0x10000,
-                            )}
-                          >
-                            <Link
-                              to={`/${mediaType}/${id}/genre/${idGen}`}
-                              className="inline-block capitalize cursor-pointer text-gray-200 hover:text-gray-400"
-                            >
-                              {gen.name}
-                            </Link>
-                            {processInfo.genre &&
-                            index !== processInfo.genre.length - 1
-                              ? ' - '
-                              : ''}
-                          </div>
-                        );
-                      })}
-                    {/* // . KEYWORDS */}
-                    {wordsKey && Object.keys(wordsKey).length > 0
-                      ? keywordsGenre
-                      : null}
+                      : processInfo.titleVOSE}
                   </div>
                 </div>
-                {/* //-RATING OTHER PLATFORMS */}
-                <div className="text-right basis-3/12 md:basis-2/12">
-                  <ExternalRating
-                    icon={FILMA}
-                    alt={t('Filmaffinity Icon')}
-                    value={processInfo.voteFILMA}
-                    iconClassName="inline-block w-6 rounded-md"
-                  />
-                  <ExternalRating
-                    icon={IMDB}
-                    alt={t('IMDB Icon')}
-                    value={processInfo.voteIMDB}
-                  />
-                  <ExternalRating
-                    icon={TMDB}
-                    alt={t('TMDB Icon')}
-                    value={processInfo.voteTMDB}
-                  />
+
+                {/* // - GENRES & KEYWORDS */}
+                <div className="text-left text-sm mt-4">
+                  {/* // . GENRES */}
+                  {processInfo.genre &&
+                    processInfo.genre.map((gen, index) => {
+                      const idGen = gen.id;
+                      return (
+                        <div
+                          className="inline-block pr-1"
+                          key={Math.floor(
+                            (1 + index + Math.random()) * 0x10000,
+                          )}
+                        >
+                          <Link
+                            to={`/${mediaType}/${id}/genre/${idGen}`}
+                            className="inline-block capitalize cursor-pointer text-purpleNR md:hover:text-gray-400"
+                          >
+                            {gen.name}
+                          </Link>
+                          {processInfo.genre &&
+                          index !== processInfo.genre.length - 1
+                            ? ' - '
+                            : ''}
+                        </div>
+                      );
+                    })}
+                  {/* // . KEYWORDS */}
+                  {wordsKey && Object.keys(wordsKey).length > 0
+                    ? keywordsGenre
+                    : null}
                 </div>
               </div>
-              {/* // - RUNTIME & TRAILER */}
-              <div className="flex flex-row gap-2 items-center justify-between md:justify-start mt-4">
-                {/* // . TIME MIN */}
+            </div>
+            {/* // - RUNTIME & TRAILER */}
+            <div className="flex flex-row gap-2 items-center justify-between md:justify-start mt-4">
+              {/* // . TIME MIN */}
+              <div className="flex flex-row gap-2 items-center">
                 {processInfo.TimeHM && processInfo.TimeHM !== 0
                   ? processInfo.TimeHM
                   : null}
@@ -761,7 +804,7 @@ function DetailsMedia({
                         } ${t('Ep')})`}
                     </div>
                     {processInfo.TotalTimeMarathon ? (
-                      <div className="flex gap-1 text-xs text-gray-500">
+                      <div className="flex gap-1 text-xs text-gray-400">
                         <p>{t('Binge-watch a series')}: </p>
                         {processInfo.TotalTimeMarathon}
                       </div>
@@ -781,126 +824,129 @@ function DetailsMedia({
                       : null}
                   </div>
                 )}
-                {/* //.TRAILER */}
-                {processInfo.trailer ? (
-                  <BaseIcon
-                    icon="trailer"
-                    size="md"
-                    onClick={handleVerTrailer}
-                    tooltip={t('See Trailer')}
-                    className="text-purpleNR transition hover:text-grayNR duration-300"
-                    wrapperClassName="inline-block ml-4"
-                  />
+              </div>
+
+              {/* //.TRAILER */}
+              {processInfo.trailer ? (
+                <BaseButton
+                  variant="primary"
+                  size="small"
+                  onClick={handleVerTrailer}
+                  className="inline-flex items-center gap-1 ml-4 px-0 py-0 font-normal"
+                >
+                  <BaseIcon icon="trailer" size="sm" />
+                  {t('Trailer')}
+                </BaseButton>
+              ) : null}
+            </div>
+            {/* // . MARATHON + SEEN TIME (user) */}
+            {userExist && processInfo.TotalTimeSeen ? (
+              <div className="text-xs ml-4 mt-1 flex flex-row gap-1 items-center text-purpleNR">
+                <p>{t('Time seen')}: </p>
+                {processInfo.TotalTimeSeen}
+              </div>
+            ) : null}
+            {/* // ! INFORMATION */}
+            <div className="mt-2 text-sm md:text-base flex flex-col">
+              {/* // - DESCRIPTION */}
+              {processInfo.description && (
+                <div className="pb-4">
+                  <div
+                    className={`${
+                      descriptionExpanded ? '' : 'line-clamp-2'
+                    } md:line-clamp-none font-extralight text-sm`}
+                  >
+                    {processInfo.description}
+                  </div>
+                  <button
+                    type="button"
+                    className="md:hidden mt-1 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                    onClick={() => setDescriptionExpanded((v) => !v)}
+                  >
+                    {descriptionExpanded ? t('Read less') : t('Read more')}
+                  </button>
+                </div>
+              )}
+              <div className="flex flex-row justify-between items-center pb-2 md:pb-0">
+                {/* //- PREMIERE & COUNTRY */}
+                <div className="flex flex-row gap-1 items-center text-sm">
+                  <div className="text-gray-400 text-xs">
+                    {processInfo.yearRelease ? `${t('PREMIERE')}:` : null}
+                  </div>
+                  <div className="text-grayNR text-xs">
+                    {processInfo.yearRelease}
+                  </div>
+                </div>
+                {/* // ! STREAMING */}
+                <div className="md:hidden">{streamingOrWatchProviders}</div>
+              </div>
+              {/* // - LAST EPISODE & NEXT EPISODE */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                {processInfo.LastAirDate ? (
+                  <div className="flex flex-row gap-2 text-xs items-center">
+                    <div className="text-gray-400">{t('LAST EPISODE')}:</div>
+                    <span>{processInfo.LastAirDate}</span>
+                  </div>
+                ) : null}
+                {/* // NEXT EPISODE */}
+                {processInfo.NextEpAir ? (
+                  <div className="flex flex-row gap-2 text-xs items-center">
+                    <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
+                    <span>{processInfo.NextEpAir}</span>
+                  </div>
                 ) : null}
               </div>
-              {/* // . MARATHON + SEEN TIME (user) */}
-              {userExist && processInfo.TotalTimeSeen ? (
-                <div className="text-xs ml-4 mt-1 flex flex-row gap-1 items-center text-purpleNR">
-                  <p>{t('Time seen')}: </p>
-                  {processInfo.TotalTimeSeen}
-                </div>
-              ) : null}
-              {/* // ! INFORMATION */}
-              <div className="mt-2 text-sm md:text-base flex flex-col">
-                {/* // - DESCRIPTION */}
-                {processInfo.description && (
-                  <div className="pb-4">
-                    <div
-                      className={`${
-                        descriptionExpanded ? '' : 'line-clamp-2'
-                      } md:line-clamp-none font-extralight text-sm`}
-                    >
-                      {processInfo.description}
-                    </div>
-                    <button
-                      type="button"
-                      className="md:hidden mt-1 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
-                      onClick={() => setDescriptionExpanded((v) => !v)}
-                    >
-                      {descriptionExpanded ? t('Read less') : t('Read more')}
-                    </button>
-                  </div>
-                )}
-                <div className="flex flex-row justify-between items-center">
-                  {/* //- PREMIERE & COUNTRY */}
-                  <div className="flex flex-row gap-1 items-center text-sm">
-                    <div className="text-gray-400 text-xs">
-                      {processInfo.yearRelease ? `${t('PREMIERE')}:` : null}
-                    </div>
-                    <div className="text-grayNR text-xs">
-                      {processInfo.yearRelease}
-                    </div>
-                  </div>
-                </div>
-                {/* // - LAST EPISODE & NEXT EPISODE */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  {processInfo.LastAirDate ? (
-                    <div className="flex flex-row gap-2 text-xs items-center">
-                      <div className="text-gray-400">{t('LAST EPISODE')}:</div>
-                      <span>{processInfo.LastAirDate}</span>
-                    </div>
-                  ) : null}
-                  {/* // NEXT EPISODE */}
-                  {processInfo.NextEpAir ? (
-                    <div className="flex flex-row gap-2 text-xs items-center">
-                      <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
-                      <span>{processInfo.NextEpAir}</span>
-                    </div>
-                  ) : null}
-                </div>
-                <button
-                  type="button"
-                  className="md:hidden my-2 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
-                  onClick={() => setCrewExpanded((v) => !v)}
-                >
-                  {crewExpanded ? t('Hide credits') : t('Show credits')}
-                </button>
-                <div
-                  className={`${crewExpanded ? 'block' : 'hidden'} md:block`}
-                >
-                  {/* //-CREATE BY */}
-                  <CreditList
-                    label={t('CREATE BY')}
-                    items={createdByList}
-                    totalCount={created_by?.length || 0}
-                    mediaType={mediaType}
-                    mediaId={id}
-                  />
-                  {/* //-DIRECTED BY & PRODUCER */}
-                  {uniqueDirecting && uniqueDirecting.length > 0 ? (
-                    <>
-                      <CreditList
-                        label={t('DIRECTED BY')}
-                        items={uniqueDirecting}
-                        totalCount={directingAll.length}
-                        mediaType={mediaType}
-                        mediaId={id}
-                      />
-                      <CreditList
-                        label={t('PRODUCER')}
-                        items={processInfo.productCompany}
-                        linkable={false}
-                      />
-                    </>
-                  ) : null}
-                  {/* //-WRITTEN BY */}
-                  <CreditList
-                    label={t('WRITTEN BY')}
-                    items={uniqueWriters}
-                    totalCount={writersAll.length}
-                    mediaType={mediaType}
-                    mediaId={id}
-                  />
-                  {/* //-PRODUCTION  */}
-                  <CreditList
-                    label={t('PRODUCTION')}
-                    items={uniqueProductions}
-                    totalCount={productionsAll.length}
-                    mediaType={mediaType}
-                    mediaId={id}
-                    containerClassName="flex flex-row text-sm mb-4"
-                  />
-                </div>
+
+              <button
+                type="button"
+                className="md:hidden my-2 text-sm text-purpleNR cursor-pointer md:hover:text-gray-400 transition duration-300"
+                onClick={() => setCrewExpanded((v) => !v)}
+              >
+                {crewExpanded ? t('Hide credits') : t('Show credits')}
+              </button>
+              <div className={`${crewExpanded ? 'block' : 'hidden'} md:block`}>
+                {/* //-CREATE BY */}
+                <CreditList
+                  label={t('CREATE BY')}
+                  items={createdByList}
+                  totalCount={created_by?.length || 0}
+                  mediaType={mediaType}
+                  mediaId={id}
+                />
+                {/* //-DIRECTED BY & PRODUCER */}
+                {uniqueDirecting && uniqueDirecting.length > 0 ? (
+                  <>
+                    <CreditList
+                      label={t('DIRECTED BY')}
+                      items={uniqueDirecting}
+                      totalCount={directingAll.length}
+                      mediaType={mediaType}
+                      mediaId={id}
+                    />
+                    <CreditList
+                      label={t('PRODUCER')}
+                      items={processInfo.productCompany}
+                      linkable={false}
+                    />
+                  </>
+                ) : null}
+                {/* //-WRITTEN BY */}
+                <CreditList
+                  label={t('WRITTEN BY')}
+                  items={uniqueWriters}
+                  totalCount={writersAll.length}
+                  mediaType={mediaType}
+                  mediaId={id}
+                />
+                {/* //-PRODUCTION  */}
+                <CreditList
+                  label={t('PRODUCTION')}
+                  items={uniqueProductions}
+                  totalCount={productionsAll.length}
+                  mediaType={mediaType}
+                  mediaId={id}
+                  containerClassName="flex flex-row text-sm mb-4"
+                />
               </div>
             </div>
           </div>

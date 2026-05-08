@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 
 const variantClasses = {
   primary:
-    'cursor-pointer text-purpleNR hover:text-gray-500 transition duration-300',
+    'cursor-pointer text-purpleNR md:hover:text-gray-400 transition duration-300',
   danger:
-    'cursor-pointer text-red-500 hover:text-gray-500 transition duration-200',
+    'cursor-pointer text-red-500 md:hover:text-gray-400 transition duration-200',
   outline:
-    'cursor-pointer border rounded-md border-purpleNR text-purpleNR hover:border-gray-500 hover:text-gray-500 transition duration-300',
+    'cursor-pointer border rounded-md border-purpleNR text-purpleNR hover:border-gray-500 md:hover:text-gray-400 transition duration-300',
   icon: 'cursor-pointer transition ease-in-out md:hover:scale-110 duration-300',
   menu: 'hover:bg-gray-100 text-sm text-gray-700 cursor-pointer w-full text-left',
-  text: 'cursor-pointer text-purpleNR hover:text-gray-500 transition duration-300',
+  text: 'cursor-pointer text-purpleNR md:hover:text-gray-400 transition duration-300',
 };
 
 const sizeClasses = {

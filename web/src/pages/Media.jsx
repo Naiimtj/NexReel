@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DetailsMedia from './Movies/DetailsMedia';
@@ -6,6 +6,12 @@ import Spinner from '../utils/Spinner/Spinner';
 import { getCredits, getMediaDetails } from '../../services/TMDB/services-tmdb';
 import { useAuthContext } from '../context/auth-context';
 import { useMediaContext } from '../context/media-context';
+
+const BLUR_MIN = 5;
+const BLUR_MAX = 90;
+const OPACITY_MIN = 0.8;
+const OPACITY_MAX = 0.8;
+const SCROLL_RANGE = 5000;
 
 const Media = () => {
   const { id, media_type } = useParams();
@@ -21,6 +27,24 @@ const Media = () => {
   const [changeSeenPending, setChangeSeenPending] = useState(false);
   const [loading, setLoading] = useState(true);
   const isFirstRender = useRef(true);
+
+  const overlayRef = useRef(null);
+
+  const handleScroll = useCallback(() => {
+    if (!overlayRef.current) return;
+    const progress = Math.min(window.scrollY / SCROLL_RANGE, 1);
+    const blur = BLUR_MIN + (BLUR_MAX - BLUR_MIN) * progress;
+    const opacity = OPACITY_MIN + (OPACITY_MAX - OPACITY_MIN) * progress;
+    overlayRef.current.style.backdropFilter = `blur(${blur}px)`;
+    overlayRef.current.style.WebkitBackdropFilter = `blur(${blur}px)`;
+    overlayRef.current.style.backgroundColor = `rgba(32, 40, 62, ${opacity})`;
+  }, []);
+
+  useEffect(() => {
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   useEffect(() => {
     if (!id || !media_type) return;
@@ -49,16 +73,19 @@ const Media = () => {
     setDataMediaUser(found || {});
   }, [mediasUser, id, userExist]);
 
-  const backdrop = dataDetails.backdrop_path
-    ? `url(https://image.tmdb.org/t/p/w500${dataDetails.backdrop_path})`
+  const poster = dataDetails.poster_path
+    ? `url(https://image.tmdb.org/t/p/original${dataDetails.poster_path})`
     : undefined;
 
   return (
     <div
-      className="rounded-3xl bg-contain bg-center bg-fixed w-auto h-auto mt-6 ring-2 ring-inset ring-[#20283E]"
-      style={{ backgroundImage: backdrop }}
+      className="rounded-3xl bg-cover bg-top bg-fixed w-auto h-full mt-6 ring-1 ring-inset ring-[#20283E]"
+      style={{ backgroundImage: poster }}
     >
-      <div className="text-gray-200 w-auto bg-local backdrop-blur-3xl bg-[#20283E]/80 rounded-3xl">
+      <div
+        ref={overlayRef}
+        className="text-gray-200 w-auto bg-local rounded-3xl"
+      >
         {loading ? (
           <Spinner result />
         ) : (

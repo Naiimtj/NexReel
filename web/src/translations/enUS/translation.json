@@ -20,5 +20,12 @@
   "Oops! something in your credentials is not correct": "Oops! something in your credentials is not correct",
   "Sign in": "Sign in",
   "Don't have an account yet?": "Don't have an account yet?",
-  "Sign up": "Sign up"
+  "Sign up": "Sign up",
+  "Your Rating": "Your Rating",
+  "Toggle rating": "Toggle rating",
+  "Rate this": "Rate this",
+  "Star rating": "Star rating",
+  "Star half": "{{value}} stars",
+  "Star full value": "{{value}} stars",
+  "Remove rating": "Remove rating"
 }

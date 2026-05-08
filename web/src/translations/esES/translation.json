@@ -514,5 +514,11 @@
   "Save": "Guardar",
   "Repeat": "Repetir",
   "No Repeat": "No Repetir",
-  "Time seen": "Tiempo visto"
+  "Time seen": "Tiempo visto",
+  "Toggle rating": "Abrir/cerrar valoración",
+  "Rate this": "Valorar",
+  "Star rating": "Valoración con estrellas",
+  "Star half": "{{value}} estrellas",
+  "Star full value": "{{value}} estrellas",
+  "Remove rating": "Eliminar valoración"
 }

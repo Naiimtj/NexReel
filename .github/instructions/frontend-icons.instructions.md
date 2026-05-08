@@ -69,15 +69,16 @@ When creating a new toggle button (e.g. `RepeatSeenButton`, `LikeButton`,
 - Do **not** inline raw `<svg>` markup in components for buttons/controls.
   Add the SVG to `iconRegistry` and use `BaseIcon` instead.
 - Do **not** import a hand-rolled SVG component from
-  `web/src/components/Icons/` (e.g. `RepeatSeenActive`, `RepeatSeenNoActive`)
-  and render it directly inside a page or feature component. Wrap it in a
-  `BaseIcon` registry entry first and consume it via `<BaseIcon icon="..." />`.
+  `web/src/components/Icons/` and render it directly anywhere. The files in
+  that folder are legacy/dead code. Inline the SVG paths in a new
+  `XxxIcon.jsx` under `web/src/components/base/icons/` and register it in
+  `iconRegistry`. Consume it via `<BaseIcon icon="..." />`.
 - Do **not** create an icon button without a `tooltip`. The tooltip is the
   accessible label for the action — its absence is a bug.
 
 ## If the icon does not exist in `iconRegistry`
 
-1. Create a new `XxxIcon.jsx` under [web/src/components/base/icons/](../../web/src/components/base/icons/) following the structure of `CloseIcon.jsx` (or, when wrapping an existing hand-rolled SVG, follow `RepeatSeenActiveIcon.jsx`).
+1. Create a new `XxxIcon.jsx` under [web/src/components/base/icons/](../../web/src/components/base/icons/) following the structure of `CloseIcon.jsx` (inline the SVG paths directly — do **not** import a separate SVG component).
 2. Register it in [web/src/components/base/icons/index.js](../../web/src/components/base/icons/index.js) under `iconRegistry` with a lowercase camelCase key.
 3. Use it via `<BaseIcon icon="newKey" ... />`.
 
