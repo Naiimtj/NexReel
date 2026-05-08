@@ -158,9 +158,17 @@ prod-restart-nexreel:
     {{prod_compose}} restart nexreel-web nexreel-fastapi nexreel-postgres nexreel-backup
 
 # Rebuild sin caché + recreate de web y fastapi (uso típico en el servidor tras `git pull`)
-redeploy:
+redeploy-all:
     cd /home/naiim/naiteca && {{compose}} build --no-cache nexreel-web nexreel-fastapi
     cd /home/naiim/naiteca && {{compose}} up -d --force-recreate nexreel-web nexreel-fastapi
+
+redeploy-front:
+    cd /home/naiim/naiteca && {{compose}} build --no-cache nexreel-web
+    cd /home/naiim/naiteca && {{compose}} up -d --force-recreate nexreel-web
+
+redeploy-back:
+    cd /home/naiim/naiteca && {{compose}} build --no-cache nexreel-fastapi
+    cd /home/naiim/naiteca && {{compose}} up -d --force-recreate nexreel-fastapi
 
 # Reconstruye y redeploy del frontend NexReel tras cambios en `web/`
 prod-refresh-web:
