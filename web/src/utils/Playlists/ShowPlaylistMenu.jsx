@@ -197,13 +197,6 @@ const ShowPlaylistMenu = ({
                   <span className="text-white text-center">
                     {t('No playlists')}
                   </span>
-                  <Link
-                    to={`/playlists/${userId}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="font-semibold text-[#7B6EF6] hover:text-white hover:bg-gray-50/20 p-2 rounded-md transition duration-200"
-                  >
-                    {t('Create playlist')}
-                  </Link>
                 </div>
               ) : null}
               {dataUser.map((i, index) => {
