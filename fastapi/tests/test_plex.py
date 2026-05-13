@@ -3,26 +3,34 @@ from __future__ import annotations
 from tests.conftest import register
 
 
-def test_create_plex_returns_record(client):
-    register(client, "plexcreate")
-    resp = client.post("/v1/plex")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "movie" in body
-    assert "tv" in body
-
-
-def test_create_plex_idempotent(client):
-    register(client, "plexidem")
-    first = client.post("/v1/plex").json()
-    second = client.post("/v1/plex").json()
-    assert first["id"] == second["id"]
-
-
-def test_list_plex(client):
+def test_list_plex_returns_200(client):
     register(client, "plexlist")
-    client.post("/v1/plex")
     resp = client.get("/v1/plex")
     assert resp.status_code == 200
+
+
+def test_list_plex_movies_returns_list(client):
+    register(client, "plexmovies")
+    resp = client.get("/v1/plex/movies")
+    assert resp.status_code == 200
     assert isinstance(resp.json(), list)
-    assert len(resp.json()) >= 1
+
+
+def test_list_plex_tv_returns_list(client):
+    register(client, "plextv")
+    resp = client.get("/v1/plex/tv")
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), list)
+
+
+def test_plex_movies_search_returns_list(client):
+    register(client, "plexsearch")
+    resp = client.get("/v1/plex/movies?q=test")
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), list)
+
+
+def test_plex_sync_requires_admin_password(client):
+    register(client, "plexsyncauth")
+    resp = client.post("/v1/plex/sync")
+    assert resp.status_code == 401

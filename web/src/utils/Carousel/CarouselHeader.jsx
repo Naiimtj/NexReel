@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { BaseIcon } from '../../components/base';
+import { BaseIcon, BaseButton } from '../../components/base';
 
 /**
  * Shared header for the Carousel family: title, optional count, and
@@ -16,6 +16,7 @@ const CarouselHeader = ({
   canNext,
   onPrev,
   onNext,
+  onTitleClick,
   titleClassName,
 }) => {
   const [t] = useTranslation('translation');
@@ -27,11 +28,19 @@ const CarouselHeader = ({
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex text-gray-200">
-        <h1 className={titleClassName}>{title}</h1>
-        {showCount && title ? (
-          <p className="ml-1 text-xs">{`( ${count} )`}</p>
-        ) : null}
+      <div className="flex gap-1 text-gray-200 items-center">
+        {onTitleClick ? (
+          <BaseButton
+            variant="primary"
+            onClick={onTitleClick}
+            className={titleClassName}
+          >
+            {title}
+          </BaseButton>
+        ) : (
+          <h1 className={titleClassName}>{title}</h1>
+        )}
+        {showCount && title ? <p>{`( ${count} )`}</p> : null}
       </div>
       {showNav ? (
         <div className="flex">
@@ -68,6 +77,7 @@ CarouselHeader.defaultProps = {
   canNext: false,
   onPrev: () => {},
   onNext: () => {},
+  onTitleClick: undefined,
   titleClassName: 'pl-4 text-sm md:text-2xl uppercase',
 };
 
@@ -80,6 +90,7 @@ CarouselHeader.propTypes = {
   canNext: PropTypes.bool,
   onPrev: PropTypes.func,
   onNext: PropTypes.func,
+  onTitleClick: PropTypes.func,
   titleClassName: PropTypes.string,
 };
 

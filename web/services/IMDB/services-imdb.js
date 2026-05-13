@@ -1,7 +1,7 @@
 import axios from 'axios';
 import mockRatings from '../__mocks__/data/ratings.json';
 
-const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'false';
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_URL_IMDB,
@@ -19,7 +19,7 @@ export async function getRating(id) {
   if (notUseIMDB || !localStorage.getItem('user')) {
     return {};
   }
-  if (USE_MOCKS || apiKeyIMDB) {
+  if (USE_MOCKS) {
     return mockRatings;
   }
   const url = `item/?id=${id}`;
@@ -37,7 +37,7 @@ export async function getImdbPerson(id, lang = 'es-ES') {
   if (notUseIMDB || !localStorage.getItem('user')) {
     return {};
   }
-  if (USE_MOCKS || apiKeyIMDB) {
+  if (USE_MOCKS) {
     return {};
   }
   const langImdb = lang.split('-');

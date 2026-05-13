@@ -128,7 +128,7 @@ def test_playlist_add_and_remove_media(client):
     medias = resp.json()["medias"]
     assert any(m["mediaId"] == movie["mediaId"] for m in medias)
 
-    resp = client.delete(f"/v1/playlists/{pl['id']}/media", json={"mediaIdDelete": movie["mediaId"]})
+    resp = client.request("DELETE", f"/v1/playlists/{pl['id']}/media", json={"mediaIdDelete": movie["mediaId"]})
     assert resp.status_code == 200
     assert not any(m["mediaId"] == movie["mediaId"] for m in resp.json()["medias"])
 

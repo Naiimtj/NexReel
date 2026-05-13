@@ -51,3 +51,7 @@ old-api
 fastapi-example
 web-example
 example-nginx
+# Python
+__pycache__/
+*.pyc
+*.pyo

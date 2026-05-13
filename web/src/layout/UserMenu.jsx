@@ -3,20 +3,24 @@ import PropTypes from 'prop-types';
 import { Menu, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import UserNotifications from './UserNotifications';
 import {
   getFollowersUser,
   patchNotifications,
+  postConfirmFollow,
+  deleteFollower,
 } from '../../services/DB/services-db';
+import { useAuthContext } from '../context/auth-context';
+import BaseModal from '../components/base/BaseModal';
 import PageTitle from '../components/PageTitle';
 
 const UserMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
   const navigate = useNavigate();
   const [t] = useTranslation('translation');
+  const { onReload } = useAuthContext();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showNotifModal, setShowNotifModal] = useState(false);
   const [dataUser, setDataUser] = useState([]);
-  const [changeNotifications, setChangeNotifications] = useState(false);
+  const [notifRead, setNotifRead] = useState(false);
   const menuButtonRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +30,6 @@ const UserMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
         !menuButtonRef.current.contains(event.target)
       ) {
         setMenuOpen(false);
-        setShowDropdown(false);
       }
     };
     document.addEventListener('click', handleClickOutside);
@@ -37,36 +40,76 @@ const UserMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
     getFollowersUser()
       .then(setDataUser)
       .catch((err) => err);
-  }, [changeNotifications]);
+  }, []);
 
   useEffect(() => {
-    if (showDropdown && user.notificationsRead) {
-      patchNotifications({ notificationsRead: false });
-      user.notificationsRead = false;
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-  }, [showDropdown, user]);
+    setNotifRead(user.notificationsRead ?? false);
+  }, [user.notificationsRead]);
 
-  const notifications =
-    dataUser
-      ?.filter((i) => i.UserConfirm === false)
-      .map((i) => (Array.isArray(i.user) ? i.user[0] : i.user))
-      .filter(Boolean) || [];
+  useEffect(() => {
+    if (!showNotifModal) return;
+    getFollowersUser()
+      .then(setDataUser)
+      .catch(() => {});
+  }, [showNotifModal]);
+
+  const notifications = (dataUser || [])
+    .map((item) => ({
+      ...item,
+      user: Array.isArray(item.user) ? item.user[0] : item.user,
+    }))
+    .filter((item) => item.user);
+
+  const hasUnread = notifRead;
 
   const goTo = (path) => () => {
     navigate(path);
     setMenuOpen(false);
   };
 
-  const userNavigation = [
-    { name: translate('Profile'), onclick: goTo('/me') },
-    { name: translate('Notifications'), onclick: () => {} },
-    { name: translate('Playlists'), onclick: goTo(`/playlists/${user.id}`) },
-    { name: translate('Forums'), onclick: goTo('/forums') },
-    { name: translate('Sign out'), onclick: logout },
-  ];
+  const handleConfirm = async (followerId) => {
+    try {
+      await postConfirmFollow(followerId);
+      setDataUser((prev) =>
+        prev.map((n) =>
+          n.UserIDFollower === followerId ? { ...n, UserConfirm: true } : n,
+        ),
+      );
+      onReload();
+    } catch (err) {
+      console.error('Confirm follow error', err);
+    }
+  };
 
-  const hasUnread = notifications.length > 0 && user.notificationsRead;
+  const handleDelete = async (followerId) => {
+    try {
+      await deleteFollower(followerId);
+      setDataUser((prev) =>
+        prev.filter((n) => n.UserIDFollower !== followerId),
+      );
+    } catch (err) {
+      console.error('Delete follow error', err);
+    }
+  };
+
+  const userNavigation = [
+    { key: 'profile', name: translate('Profile'), onclick: goTo('/me') },
+    {
+      key: 'notifications',
+      name: translate('Notifications'),
+      onclick: () => {
+        setMenuOpen(false);
+        setShowNotifModal(true);
+      },
+    },
+    {
+      key: 'playlists',
+      name: translate('Playlists'),
+      onclick: goTo(`/playlists/${user.id}`),
+    },
+    { key: 'forums', name: translate('Forums'), onclick: goTo('/forums') },
+    { key: 'signout', name: translate('Sign out'), onclick: logout },
+  ];
 
   return (
     <div className="ml-2 flex items-center md:ml-2">
@@ -105,36 +148,109 @@ const UserMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
             className="absolute right-0 z-10 mt-1 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           >
             {userNavigation.map((item) => (
-              <Menu.Item key={item.name}>
-                {() =>
-                  item.name === t('Notifications') ? (
-                    <UserNotifications
-                      notifications={notifications}
-                      hasUnreadNotifications={user.notificationsRead}
-                      toggleDropdown={() => setShowDropdown(!showDropdown)}
-                      showDropdown={showDropdown}
-                      changeNotifications={changeNotifications}
-                      setChangeNotifications={setChangeNotifications}
-                    />
-                  ) : (
-                    <div
-                      className={item.name === t('Sign out') ? 'border-t' : ''}
+              <Menu.Item key={item.key}>
+                {() => (
+                  <div className={item.key === 'signout' ? 'border-t' : ''}>
+                    <button
+                      type="button"
+                      onClick={item.onclick}
+                      className="hover:bg-gray-100 px-4 py-2 text-sm text-gray-700 cursor-pointer w-full text-left flex items-center justify-between"
                     >
-                      <button
-                        type="button"
-                        onClick={item.onclick}
-                        className="hover:bg-gray-100 px-4 py-2 text-sm text-gray-700 cursor-pointer w-full text-left"
-                      >
-                        {item.name}
-                      </button>
-                    </div>
-                  )
-                }
+                      {item.name}
+                      {item.key === 'notifications' && hasUnread && (
+                        <span className="relative flex h-2 w-2 ml-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                )}
               </Menu.Item>
             ))}
           </Menu.Items>
         </Transition>
       </Menu>
+
+      <BaseModal
+        visible={showNotifModal}
+        onClose={() => {
+          setShowNotifModal(false);
+          if (notifRead) {
+            patchNotifications({ notificationsRead: false });
+            setNotifRead(false);
+            onReload();
+          }
+        }}
+        title={t('Notifications')}
+        className="bg-gray-800 text-gray-200 w-[90vw] max-w-sm"
+      >
+        <div className="px-4 pb-4">
+          {notifications.length > 0 ? (
+            notifications
+              .filter(
+                (n) =>
+                  n.UserConfirm === false ||
+                  (n.UserConfirm === true && notifRead),
+              )
+              .map((n) => {
+                const isPending = n.UserConfirm === false;
+                const isAccepted = !isPending && n.UserIDFollower === user?.id;
+                return (
+                  <div
+                    key={n.id}
+                    className="flex justify-between items-center py-2 border-b border-gray-700 last:border-0"
+                  >
+                    <div className="flex items-center gap-1 text-sm flex-wrap">
+                      {isAccepted || isPending ? (
+                        <>
+                          <span className="font-semibold capitalize">
+                            {n.user?.username}
+                          </span>
+                          <span className="text-gray-400">
+                            {isAccepted
+                              ? t('accepted your follow')
+                              : t('wants to follow')}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-gray-400">Aceptaste a</span>
+                          <span className="font-semibold capitalize">
+                            {n.user?.username}
+                          </span>
+                          <span className="text-gray-400">para seguirte</span>
+                        </>
+                      )}
+                    </div>
+                    {isPending && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          className="bg-purple-200 hover:bg-purpleNR px-2 py-1 rounded-md transition duration-200 text-gray-800 text-xs"
+                          onClick={() => handleConfirm(n.UserIDFollower)}
+                        >
+                          {t('Confirm')}
+                        </button>
+                        <button
+                          type="button"
+                          className="bg-red-100 hover:bg-red-300 px-2 py-1 rounded-md transition duration-200 text-gray-800 text-xs"
+                          onClick={() => handleDelete(n.UserIDFollower)}
+                        >
+                          {t('Delete')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+          ) : (
+            <div className="text-center text-gray-400 py-4">
+              {t('No notifications')}
+            </div>
+          )}
+        </div>
+      </BaseModal>
     </div>
   );
 };

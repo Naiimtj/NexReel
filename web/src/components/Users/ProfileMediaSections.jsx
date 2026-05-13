@@ -14,15 +14,15 @@ const sectionLinkClass =
 const MediaSectionHeader = ({ title, to, count }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex justify-between pr-2">
+    <div className="flex justify-between text-xl text-gray-400 items-center">
       <BaseButton
         variant="primary"
         onClick={() => navigate(to)}
         className={sectionLinkClass}
       >
         <h1 className="md:pl-4 text-xl">{title}</h1>
-        <p className="ml-1 text-xs">( {count} )</p>
       </BaseButton>
+      <p>( {count} )</p>
     </div>
   );
 };
@@ -142,21 +142,13 @@ const ProfileMediaSections = ({
       {allMedias.length ? (
         <div className="text-gray-200 pt-4">
           <div className="text-gray-200 px-4 md:px-6">
-            <div className="flex justify-end mb-2">
-              <BaseButton
-                variant="primary"
-                onClick={() => navigate(`/all-medias/${userId}`)}
-                className={sectionLinkClass}
-              >
-                {t('See all')}
-              </BaseButton>
-            </div>
             <Carousel
               title={t('All')}
               info={allMedias}
               isUser
               isSetChange={setChangeSeenPending}
               isChange={changeSeenPending}
+              onTitleClick={() => navigate(`/all-medias/${userId}`)}
             />
           </div>
         </div>

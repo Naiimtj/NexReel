@@ -344,9 +344,13 @@ def follow_detail(user_id: str, current_user: dict = Depends(get_current_user), 
         db,
         """
         SELECT * FROM user_followers
-        WHERE follower_id = :follower_id AND following_id = :following_id AND user_confirm = true
+        WHERE user_confirm = true AND (
+            (follower_id = :current_user_id AND following_id = :user_id)
+            OR
+            (follower_id = :user_id AND following_id = :current_user_id)
+        )
         """,
-        {"follower_id": current_user["id"], "following_id": user_id},
+        {"current_user_id": current_user["id"], "user_id": user_id},
         serialize_follower,
     )
     user = fetch_one(db, "SELECT * FROM users WHERE id = :user_id", {"user_id": user_id}, serialize_user)

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
 import { MdViewCarousel } from 'react-icons/md';
 
-const ACTIVE = 'text-gray-500';
+const ACTIVE = 'text-purpleNR';
 const INACTIVE =
-  'cursor-pointer text-[#b1a9fa] md:hover:text-gray-500 transition ease-in-out md:hover:scale-110 duration-200';
+  'cursor-pointer md:hover:text-purpleNR text-gray-500 transition ease-in-out md:hover:scale-110 duration-200';
 
 const ViewToggle = ({ visualDesign, setVisualDesign }) => {
   return (

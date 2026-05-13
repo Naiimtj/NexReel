@@ -6,17 +6,27 @@ import BaseLink from '../components/base/BaseLink';
 import BaseModal from '../components/base/BaseModal';
 import Logo from '/img/logo.svg';
 import { useAuthContext } from '../context/auth-context';
-import { getInfoUser, logoutDB } from '../../services/DB/services-db';
+import {
+  getInfoUser,
+  logoutDB,
+  getFollowersUser,
+  patchNotifications,
+  postConfirmFollow,
+  deleteFollower,
+} from '../../services/DB/services-db';
 import UserMenu from './UserMenu';
 import SearchLayout from './SearchLayout';
 
 const NavBar = () => {
   const [t] = useTranslation('translation');
-  const { user, onLogout } = useAuthContext();
+  const { user, onLogout, onReload } = useAuthContext();
   const [dataUser, setDataUser] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const mobileMenuRef = useRef(null);
+  const [mobileNotifications, setMobileNotifications] = useState([]);
+  const [showMobileNotifications, setShowMobileNotifications] = useState(false);
+  const [notifRead, setNotifRead] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,6 +51,69 @@ const NavBar = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      getFollowersUser()
+        .then((data) => {
+          const notifications = (data || [])
+            .map((item) => ({
+              ...item,
+              user: Array.isArray(item.user) ? item.user[0] : item.user,
+            }))
+            .filter((item) => item.user);
+          setMobileNotifications(notifications);
+        })
+        .catch((err) => err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    setNotifRead(dataUser?.notificationsRead ?? false);
+  }, [dataUser?.notificationsRead]);
+
+  useEffect(() => {
+    if (!showMobileNotifications) return;
+    getFollowersUser()
+      .then((data) => {
+        setMobileNotifications(
+          (data || [])
+            .map((item) => ({
+              ...item,
+              user: Array.isArray(item.user) ? item.user[0] : item.user,
+            }))
+            .filter((item) => item.user),
+        );
+      })
+      .catch(() => {});
+  }, [showMobileNotifications]);
+
+  const hasUnread = notifRead;
+
+  const handleMobileConfirm = async (followerId) => {
+    try {
+      await postConfirmFollow(followerId);
+      setMobileNotifications((prev) =>
+        prev.map((n) =>
+          n.UserIDFollower === followerId ? { ...n, UserConfirm: true } : n,
+        ),
+      );
+      onReload();
+    } catch (err) {
+      console.error('Confirm follow error', err);
+    }
+  };
+
+  const handleMobileDelete = async (followerId) => {
+    try {
+      await deleteFollower(followerId);
+      setMobileNotifications((prev) =>
+        prev.filter((n) => n.UserIDFollower !== followerId),
+      );
+    } catch (err) {
+      console.error('Delete follow error', err);
+    }
+  };
+
   const logout = () => logoutDB().then(onLogout);
 
   return (
@@ -52,7 +125,7 @@ const NavBar = () => {
             src={Logo}
             alt="NaiPlex Logo"
           />
-          <h1 className="text-gray-50 font-bold text-base lg:text-4xl inline-block align-middle">
+          <h1 className="text-gray-50 font-bold text-lg lg:text-4xl inline-block align-middle">
             NexReel
           </h1>
         </Link>
@@ -62,7 +135,7 @@ const NavBar = () => {
             type="button"
             aria-label={t('Search')}
             onClick={() => setSearchModalOpen(true)}
-            className="p-2 rounded-md text-grayNR hover:text-purpleNR focus:outline-none"
+            className="p-2 rounded-md md:hover:text-gray-400 text-purpleNR focus:outline-none"
           >
             <BsSearch className="h-5 w-5 md:h-6 md:w-6" />
           </button>
@@ -97,8 +170,14 @@ const NavBar = () => {
               aria-label={t('Open menu')}
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="relative z-50 p-2 rounded-md bg-gray-900/80 text-grayNR hover:text-purpleNR focus:outline-none"
+              className="relative z-50 p-2 rounded-md bg-gray-900/80 md:hover:text-gray-400 text-purpleNR focus:outline-none"
             >
+              {hasUnread && !mobileMenuOpen && (
+                <span className="flex h-2 w-2 absolute top-1 right-1 z-10">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                </span>
+              )}
               {mobileMenuOpen ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,6 +262,24 @@ const NavBar = () => {
                     >
                       {t('Profile')}
                     </BaseLink>
+
+                    <button
+                      type="button"
+                      className="w-full text-left px-4 py-2 text-grayNR hover:bg-gray-700 text-base flex items-center justify-between"
+                      onClick={() => {
+                        setShowMobileNotifications(true);
+                        closeMobileMenu();
+                      }}
+                    >
+                      <span>{t('Notifications')}</span>
+                      {hasUnread && (
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                        </span>
+                      )}
+                    </button>
+
                     <BaseLink
                       to={`/playlists/${dataUser?.id || user.id}`}
                       variant="nav"
@@ -199,6 +296,7 @@ const NavBar = () => {
                     >
                       {t('Forums')}
                     </BaseLink>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -225,6 +323,85 @@ const NavBar = () => {
           </div>
         </nav>
       </div>
+      <BaseModal
+        visible={showMobileNotifications}
+        onClose={() => {
+          setShowMobileNotifications(false);
+          if (notifRead) {
+            patchNotifications({ notificationsRead: false });
+            setNotifRead(false);
+          }
+        }}
+        title={t('Notifications')}
+        className="bg-gray-800 text-gray-200 w-[90vw] max-w-sm"
+      >
+        <div className="px-4 pb-4">
+          {mobileNotifications.length > 0 ? (
+            mobileNotifications
+              .filter(
+                (n) =>
+                  n.UserConfirm === false ||
+                  (n.UserConfirm === true && notifRead),
+              )
+              .map((n) => {
+                const isPending = n.UserConfirm === false;
+                const isAccepted = !isPending && n.UserIDFollower === user?.id;
+                return (
+                  <div
+                    key={n.id}
+                    className="flex justify-between items-center py-2 border-b border-gray-700 last:border-0"
+                  >
+                    <div className="flex items-center gap-1 text-sm flex-wrap">
+                      {isAccepted || isPending ? (
+                        <>
+                          <span className="font-semibold capitalize">
+                            {n.user?.username}
+                          </span>
+                          <span className="text-gray-400">
+                            {isAccepted
+                              ? t('accepted your follow')
+                              : t('wants to follow')}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-gray-400">Aceptaste a</span>
+                          <span className="font-semibold capitalize">
+                            {n.user?.username}
+                          </span>
+                          <span className="text-gray-400">para seguirte</span>
+                        </>
+                      )}
+                    </div>
+                    {isPending && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          className="bg-purple-200 hover:bg-purpleNR px-2 py-1 rounded-md transition duration-200 text-gray-800 text-xs"
+                          onClick={() => handleMobileConfirm(n.UserIDFollower)}
+                        >
+                          {t('Confirm')}
+                        </button>
+                        <button
+                          type="button"
+                          className="bg-red-100 hover:bg-red-300 px-2 py-1 rounded-md transition duration-200 text-gray-800 text-xs"
+                          onClick={() => handleMobileDelete(n.UserIDFollower)}
+                        >
+                          {t('Delete')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+          ) : (
+            <div className="text-center text-gray-400 py-4">
+              {t('No notifications')}
+            </div>
+          )}
+        </div>
+      </BaseModal>
+
       <BaseModal
         visible={searchModalOpen}
         onClose={() => setSearchModalOpen(false)}

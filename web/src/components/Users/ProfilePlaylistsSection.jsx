@@ -7,31 +7,32 @@ import NewPlaylist from './Playlist/NewPlaylist';
 import { PlaylistsList } from './Playlist/PlaylistsList';
 
 const titleLinkClass =
-  'flex justify-start text-2xl tracking-wide text-purpleNR md:hover:text-gray-500 duration-300 uppercase';
+  'flex justify-start text-xl tracking-wide text-purpleNR md:hover:text-gray-500 duration-300 uppercase';
 
-const sectionGridClass =
-  'p-4 flex flex-col gap-1 md:mt-2';
+const sectionGridClass = 'md:p-4 p-2 flex flex-col gap-1 md:mt-2';
 
 const PlaylistSectionHeader = ({ title, to, count, disabled }) => {
   const navigate = useNavigate();
 
   if (disabled) {
     return (
-      <div className="flex justify-start text-2xl text-grayNR duration-300 tracking-wide">
+      <div className="flex justify-start text-xl text-grayNR duration-300 tracking-wide">
         {title}
       </div>
     );
   }
 
   return (
-    <BaseButton
-      variant="primary"
-      onClick={() => navigate(to)}
-      className={titleLinkClass}
-    >
-      {title}
-      <p className="text-sm ml-1">( {count} )</p>
-    </BaseButton>
+    <div className="flex items-center justify-between text-gray-400">
+      <BaseButton
+        variant="primary"
+        onClick={() => navigate(to)}
+        className={titleLinkClass}
+      >
+        {title}
+      </BaseButton>
+      <p className='pr-4'>( {count} )</p>
+    </div>
   );
 };
 
@@ -112,7 +113,7 @@ const ProfilePlaylistsSection = ({
         />
         <div className={sectionGridClass}>
           {!isOtherUser && createPlaylist ? (
-            <div className="col-span-full">
+            <div className="">
               <NewPlaylist
                 setChangeSeenPending={setChangeSeenPending}
                 changeSeenPending={changeSeenPending}
@@ -141,7 +142,7 @@ const ProfilePlaylistsSection = ({
           ) : null}
 
           {hasPlaylists && playlistData.length > 4 ? (
-            <div className="col-span-4 flex justify-end">
+            <div className="flex justify-end">
               <BaseButton
                 variant="primary"
                 onClick={() => navigate(`/playlists/${user.id}`)}
@@ -185,7 +186,7 @@ const ProfilePlaylistsSection = ({
         )}
 
         {hasFollowedPlaylists && playlistsFollowData.length > 4 ? (
-          <div className="col-span-4 flex justify-end">
+          <div className="flex justify-end">
             <BaseButton
               variant="primary"
               onClick={() => navigate(`/playlistsFollow/${user.id}`)}

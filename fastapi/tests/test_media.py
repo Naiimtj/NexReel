@@ -53,12 +53,12 @@ def test_create_movie(client):
     assert movie["vote"] == 8.0
 
 
-def test_create_movie_duplicate_returns_404(client):
+def test_create_movie_duplicate_returns_409(client):
     register(client, "moviedupe")
     mid = unique("dupmovie")
     _create_movie(client, mid)
     resp = client.post("/v1/medias/movie", json={"mediaId": mid, "media_type": "movie", "runtime": 90})
-    assert resp.status_code == 404
+    assert resp.status_code == 409
 
 
 def test_list_media(client):
@@ -78,10 +78,11 @@ def test_movie_detail(client):
     assert resp.json()["mediaId"] == movie["mediaId"]
 
 
-def test_movie_detail_not_found_returns_404(client):
+def test_movie_detail_not_found_returns_empty(client):
     register(client, "movienotfound")
     resp = client.get("/v1/medias/movie/does-not-exist")
-    assert resp.status_code == 404
+    assert resp.status_code == 200
+    assert resp.json() == {}
 
 
 def test_update_movie(client):
@@ -99,7 +100,7 @@ def test_delete_movie(client):
     resp = client.delete(f"/v1/medias/{movie['mediaId']}")
     assert resp.status_code == 200
     assert resp.json() == {"result": True}
-    assert client.get(f"/v1/medias/movie/{movie['mediaId']}").status_code == 404
+    assert client.get(f"/v1/medias/movie/{movie['mediaId']}").json() == {}
 
 
 # ---------------------------------------------------------------------------

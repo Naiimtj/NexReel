@@ -38,6 +38,7 @@ const Carousel = ({
   setPendingSeenMedia,
   pendingSeenMedia,
   size,
+  onTitleClick,
 }) => {
   const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
   const headerTitleClass =
@@ -116,6 +117,7 @@ const Carousel = ({
         canNext={canNext}
         onPrev={handlePrev}
         onNext={handleNext}
+        onTitleClick={onTitleClick}
         titleClassName={headerTitleClass}
       />
       {/* // - CARDS */}
@@ -174,6 +176,7 @@ Carousel.defaultProps = {
   setPendingSeenMedia: () => {},
   pendingSeenMedia: false,
   size: 'normal',
+  onTitleClick: undefined,
 };
 
 Carousel.propTypes = {
@@ -193,4 +196,5 @@ Carousel.propTypes = {
   setPendingSeenMedia: PropTypes.func,
   pendingSeenMedia: PropTypes.bool,
   size: PropTypes.oneOf(['small', 'normal']),
+  onTitleClick: PropTypes.func,
 };

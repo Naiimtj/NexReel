@@ -114,11 +114,13 @@ export const getUsers = () => safe('all users', () => service.get('users'));
 
 export const patchUser = (data) => {
   const formData = new FormData();
-  formData.append('username', data.username);
-  formData.append('email', data.email);
-  formData.append('region', data.region);
-  formData.append('favoritePhrase', data.favoritePhrase);
-  if (typeof data.avatarURL === 'object') {
+  if (data.username !== undefined) formData.append('username', data.username);
+  if (data.email !== undefined) formData.append('email', data.email);
+  if (data.region !== undefined) formData.append('region', data.region);
+  if (data.favoritePhrase !== undefined)
+    formData.append('favoritePhrase', data.favoritePhrase);
+  if (data.password) formData.append('password', data.password);
+  if (data.avatarURL !== undefined && typeof data.avatarURL === 'object') {
     formData.append('avatarURL', data.avatarURL[0]);
   }
   return service.patch('users/me', formData);

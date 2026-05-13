@@ -64,7 +64,7 @@ const BaseModal = ({
         {!closeButtonHidden && (
           <BaseIcon
             icon="close"
-            className="fill-grayNR transition duration-200 hover:fill-purpleNR mb-1"
+            className="transition duration-200 md:hover:fill-gray-400 fill-purpleNR mb-1"
             wrapperClassName="sticky z-10 top-1 mr-1 flex justify-end"
             onClick={onClose}
             tooltip={t('Close')}
@@ -73,7 +73,7 @@ const BaseModal = ({
         )}
         <div className="md:px-2 px-1 md:pb-2 pb-1">
           {title && (
-            <h2 className="text-2xl font-semibold text-gray-900 md:mb-4 mb-2 text-center">
+            <h2 className="text-2xl font-semibold text-grayNR md:mb-4 mb-2 text-center">
               {title}
             </h2>
           )}
