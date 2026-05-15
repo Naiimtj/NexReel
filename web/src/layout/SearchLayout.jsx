@@ -39,7 +39,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
         setMovies(movies);
         setTvs(tvs);
       });
-    }, 500);
+    }, 1000);
     return () => clearTimeout(timerId);
   }, [searchValue, searching]);
 
@@ -87,7 +87,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
         </div>
       </div>
       {searchValue && (
-        <div className="mt-1 w-full z-50 absolute left-0 grid gap-3 pb-4 pt-4 justify-items-center bg-local backdrop-blur-md bg-[#20283E]/60 rounded-b-lg text-gray-200 text-xl">
+        <div className="mt-1 w-full z-50 absolute left-0 grid gap-3 md:pb-4 pt-4 justify-items-center bg-local backdrop-blur-md bg-[#20283E]/60 rounded-b-lg text-gray-200 text-xl pb-60">
           {personsList.results?.length > 0 && (
             <SearchResults
               listMedias={personsList}

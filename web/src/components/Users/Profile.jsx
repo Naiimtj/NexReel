@@ -129,7 +129,11 @@ const Profile = ({
     'long',
   ).DateTimeConvertLocale();
 
-  const userMedias = [...(user.medias ?? []), ...(user.mediasTv ?? [])];
+  const userMedias = sortByUpdatedAt([
+    ...(user.medias ?? []),
+    ...(user.mediasTv ?? []),
+  ]);
+
   const pendingData = sortByUpdatedAt(
     filterMediasByFlag(userMedias, 'pending'),
   );

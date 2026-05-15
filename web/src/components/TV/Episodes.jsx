@@ -78,7 +78,7 @@ const Episodes = ({ info = {}, idTvShow = '', numSeason = '', userExist = false,
     <div className="flex flex-row justify-between hover:bg-white/10 rounded-xl p-1 ring-1 ring-purpleNR/10 transition duration-300">
       <button
         type="button"
-        className="cursor-pointer flex flex-row items-center gap-4 justify-items-stretch w-full"
+        className="cursor-pointer flex flex-row items-center gap-4 justify-left w-full"
         onClick={() =>
           info && navigate(`/tv/${idTvShow}/${numSeason}/${episode_number}`)
         }
@@ -89,8 +89,8 @@ const Episodes = ({ info = {}, idTvShow = '', numSeason = '', userExist = false,
         </h1>
         {/* //- NAME Y DATE */}
         {/* //-NAME */}
-        <div className="flex flex-col justify-start">
-          <h1 className="font-semibold text-sm">{name}</h1>
+        <div className="flex flex-col">
+          <h1 className="font-semibold text-sm text-left">{name}</h1>
           {/* //-DATE */}
           <div className="flex flex-row items-center gap-2">
             <p className="text-[10px] text-gray-400">({TotalTime})</p>

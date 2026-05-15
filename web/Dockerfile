@@ -5,8 +5,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Enable pnpm via corepack (bundled with Node 20)
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Enable pnpm via corepack — version pinned in package.json#packageManager
+RUN corepack enable
 
 # Install deps with cache-friendly layer
 COPY package.json pnpm-lock.yaml ./

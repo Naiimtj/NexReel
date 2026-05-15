@@ -5,7 +5,7 @@ export function ProviderLogo({ provider }) {
   if (!provider?.logo_path) return null;
   return (
     <img
-      className="inline-block h-5 md:h-7 w-auto rounded-lg md:rounded-lg px-0.5"
+      className="inline-block h-6 md:h-7 w-auto rounded-lg md:rounded-lg px-0.5"
       src={`${TMDB_LOGO_BASE}/${provider.logo_path}`}
       alt={provider.provider_name}
     />

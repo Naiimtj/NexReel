@@ -2,11 +2,12 @@
   "name": "nexreel",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@10.11.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "start http://localhost:3000 && vite",
-    "network": "vite dev --port=3000 --host=0.0.0.0",
+    "start": "start http://localhost:3100 && vite",
+    "network": "vite dev --port=3100 --host=0.0.0.0",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

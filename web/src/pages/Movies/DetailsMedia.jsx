@@ -396,7 +396,7 @@ function DetailsMedia({
   const createdByList = (created_by || []).slice(0, 5);
 
   const typeCountryStatusBlock = (
-    <div className="flex md:flex-col gap-2 md:gap-0 items-end">
+    <div className="flex flex-col gap-0 items-end">
       {/* // . Type and Country */}
       <div className="flex flex-row items-center gap-1 text-xs capitalize text-right">
         {t(processInfo.mediaType)}
@@ -561,7 +561,7 @@ function DetailsMedia({
         <div className="mt-1">
           {isInPlex ? (
             <img
-              className="inline-block h-5 md:h-7 justify-self-center mr-0.5 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
+              className="inline-block h-6 md:h-7 justify-self-center mr-0.5 rounded-md md:rounded-lg border-[1px] border-amber-400/40"
               src={PLEX}
               alt={'Plex Icon'}
             />
@@ -808,7 +808,7 @@ function DetailsMedia({
                           processInfo.numEpis
                         } ${t('Ep')})`}
                     </div>
-                    {processInfo.TotalTimeMarathon ? (
+                    {processInfo.TotalTimeMarathon && processInfo.TotalTimeSeen !== processInfo.TotalTimeMarathon ? (
                       <div className="flex gap-1 text-xs text-gray-400">
                         <p>{t('Binge-watch a series')}: </p>
                         {processInfo.TotalTimeMarathon}
@@ -865,41 +865,46 @@ function DetailsMedia({
                   </div>
                   <button
                     type="button"
-                    className="md:hidden mt-1 text-sm text-purpleNR cursor-pointer hover:text-gray-400 transition duration-300"
+                    className="md:hidden mt-1 text-sm text-purpleNR cursor-pointer md:hover:text-gray-400 transition duration-300"
                     onClick={() => setDescriptionExpanded((v) => !v)}
                   >
                     {descriptionExpanded ? t('Read less') : t('Read more')}
                   </button>
                 </div>
               )}
-              <div className="flex flex-row justify-between items-center pb-2 md:pb-0">
-                {/* //- PREMIERE & COUNTRY */}
-                <div className="flex flex-row gap-1 items-center text-sm">
-                  <div className="text-gray-400 text-xs">
-                    {processInfo.yearRelease ? `${t('PREMIERE')}:` : null}
+              <div className="flex flex-row justify-between items-start pb-2 md:pb-0">
+                <div className="flex flex-col justify-start items-start">
+                  {/* //- PREMIERE & COUNTRY */}
+                  <div className="flex flex-row gap-1 items-center text-sm">
+                    <div className="text-gray-400 text-xs">
+                      {processInfo.yearRelease ? `${t('PREMIERE')}:` : null}
+                    </div>
+                    <div className="text-grayNR text-xs">
+                      {processInfo.yearRelease}
+                    </div>
                   </div>
-                  <div className="text-grayNR text-xs">
-                    {processInfo.yearRelease}
+                  {/* // - LAST EPISODE & NEXT EPISODE */}
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    {processInfo.LastAirDate ? (
+                      <div className="flex flex-row gap-2 text-xs items-center">
+                        <div className="text-gray-400">
+                          {t('LAST EPISODE')}:
+                        </div>
+                        <span>{processInfo.LastAirDate}</span>
+                      </div>
+                    ) : null}
                   </div>
+
+                  {/* // NEXT EPISODE */}
+                  {processInfo.NextEpAir ? (
+                    <div className="flex flex-row gap-2 text-xs items-center">
+                      <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
+                      <span>{processInfo.NextEpAir}</span>
+                    </div>
+                  ) : null}
                 </div>
                 {/* // ! STREAMING */}
                 <div className="md:hidden">{streamingOrWatchProviders}</div>
-              </div>
-              {/* // - LAST EPISODE & NEXT EPISODE */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                {processInfo.LastAirDate ? (
-                  <div className="flex flex-row gap-2 text-xs items-center">
-                    <div className="text-gray-400">{t('LAST EPISODE')}:</div>
-                    <span>{processInfo.LastAirDate}</span>
-                  </div>
-                ) : null}
-                {/* // NEXT EPISODE */}
-                {processInfo.NextEpAir ? (
-                  <div className="flex flex-row gap-2 text-xs items-center">
-                    <div className="text-gray-400">{t('NEXT EPISODE')}:</div>
-                    <span>{processInfo.NextEpAir}</span>
-                  </div>
-                ) : null}
               </div>
 
               <button
@@ -956,6 +961,31 @@ function DetailsMedia({
             </div>
           </div>
         </div>
+        {/* //-COLLECTIONS / SEASONS */}
+        <div className="text-lg">
+          {processInfo.collection ? (
+            <Collections
+              idCollection={processInfo.collection.id}
+              media={mediaType}
+              pendingSeenMedia={pendingSeen}
+              setPendingSeenMedia={setPendingSeen}
+            />
+          ) : (
+            seasons && (
+              <Seasons
+                info={seasons && seasons}
+                idTvShow={id}
+                mediaIsSeen={seen}
+                runTime={processInfo.runTime}
+                setChangeSeenPending={setChangeSeenPending}
+                changeSeenPending={changeSeenPending}
+                numberEpisodes={number_of_episodes}
+                numberSeasons={number_of_seasons}
+                runTimeSeasons={processInfo.runTimeSeasons}
+              />
+            )
+          )}
+        </div>
         {/* // - Complete equipment */}
         <div className="text-purpleNR pr-4 text-right grid justify-center md:justify-end transition ease-in-out md:hover:text-gray-400 duration-300">
           <Link to={`/${mediaType}/${id}/credits`}>
@@ -984,31 +1014,6 @@ function DetailsMedia({
             </div>
           </div>
         ) : null}
-        {/* //-COLLECTIONS / SEASONS */}
-        <div className="text-lg">
-          {processInfo.collection ? (
-            <Collections
-              idCollection={processInfo.collection.id}
-              media={mediaType}
-              pendingSeenMedia={pendingSeen}
-              setPendingSeenMedia={setPendingSeen}
-            />
-          ) : (
-            seasons && (
-              <Seasons
-                info={seasons && seasons}
-                idTvShow={id}
-                mediaIsSeen={seen}
-                runTime={processInfo.runTime}
-                setChangeSeenPending={setChangeSeenPending}
-                changeSeenPending={changeSeenPending}
-                numberEpisodes={number_of_episodes}
-                numberSeasons={number_of_seasons}
-                runTimeSeasons={processInfo.runTimeSeasons}
-              />
-            )
-          )}
-        </div>
         <div className="pb-6">
           {/* //-RECOMMENDATIONS */}
           {info.id === id ? (

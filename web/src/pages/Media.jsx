@@ -69,7 +69,9 @@ const Media = () => {
 
   useEffect(() => {
     if (!userExist) return;
-    const found = mediasUser.find((m) => m.mediaId === id.toString());
+    const found = mediasUser.find(
+      (m) => m.mediaId === id.toString() && m.media_type === media_type,
+    );
     setDataMediaUser(found || {});
   }, [mediasUser, id, userExist]);
 
