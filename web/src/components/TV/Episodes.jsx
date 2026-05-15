@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/auth-context';
@@ -8,7 +7,7 @@ import { SeenPendingEpisode } from '../MediaList/SeenPendingMedia/seenPendingAct
 import DateAndTimeConvert from '../../utils/DateAndTimeConvert';
 import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 
-const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
+const Episodes = ({ info = {}, idTvShow = '', numSeason = '', userExist = false, numberEpisodes = 0 }) => {
   const { onReload } = useAuthContext();
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
@@ -114,18 +113,3 @@ const Episodes = ({ info, idTvShow, numSeason, userExist, numberEpisodes }) => {
 };
 
 export default Episodes;
-
-Episodes.defaultProps = {
-  info: {},
-  idTvShow: '',
-  numSeason: '',
-  userExist: false,
-  numberEpisodes: 0,
-};
-Episodes.propTypes = {
-  info: PropTypes.object,
-  idTvShow: PropTypes.string,
-  numSeason: PropTypes.string,
-  userExist: PropTypes.bool,
-  numberEpisodes: PropTypes.number,
-};

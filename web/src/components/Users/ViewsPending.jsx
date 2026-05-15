@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { getMediaDetails } from '../../../services/TMDB/services-tmdb';
 import Spinner from '../../utils/Spinner/Spinner';
 import MultiList from '../MediaList/MultiList';
 import { getDetailMedia } from '../../../services/DB/services-db';
 
-const ViewsPending = ({ data }) => {
+const ViewsPending = ({ data = {} }) => {
   const [t, i18next] = useTranslation('translation');
   const { media_type, mediaId } = data;
   const [dataMedia, setDataMedia] = useState({});
@@ -41,11 +40,3 @@ const ViewsPending = ({ data }) => {
 };
 
 export default ViewsPending;
-
-ViewsPending.defaultProps = {
-  data: {},
-};
-
-ViewsPending.propTypes = {
-  data: PropTypes.object,
-};

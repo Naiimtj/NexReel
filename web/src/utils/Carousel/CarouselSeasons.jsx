@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // components
 import SeasonSingle from '../../components/TV/SeasonSingle';
 import CarouselHeader from './CarouselHeader';
@@ -9,22 +8,23 @@ import { useSwipe } from './useSwipe';
 const BREAKPOINTS = { sm: 2, md: 4, lg: 6, xl: 7 };
 
 const CarouselSeasons = ({
-  title,
-  info,
-  idTvShow,
-  mediaIsSeen,
-  runTime,
-  setChangeSeenPending,
-  changeSeenPending,
-  numberEpisodes,
-  numberSeasons,
-  runTimeSeasons,
+  title = '',
+  info = [],
+  idTvShow = 0,
+  mediaIsSeen = false,
+  runTime = 0,
+  setChangeSeenPending = () => {},
+  changeSeenPending = false,
+  numberEpisodes = 0,
+  numberSeasons = 0,
+  runTimeSeasons = [],
 }) => {
   const {
     currentPage,
     allCards,
     totalPages,
     visibleCards,
+    prefetchCards,
     hasOverflow,
     canPrev,
     canNext,
@@ -75,6 +75,24 @@ const CarouselSeasons = ({
           />
         ))}
       </div>
+      {prefetchCards.length > 0 && (
+        <div aria-hidden="true" className="hidden">
+          {prefetchCards.map((season) => (
+            <SeasonSingle
+              key={`prefetch-${season.id}`}
+              season={season}
+              idTvShow={idTvShow}
+              mediaIsSeen={mediaIsSeen}
+              runTime={runTime}
+              setChangeSeenPending={setChangeSeenPending}
+              changeSeenPending={changeSeenPending}
+              numberEpisodes={numberEpisodes}
+              numberSeasons={numberSeasons}
+              runTimeSeasons={runTimeSeasons}
+            />
+          ))}
+        </div>
+      )}
       {hasOverflow ? (
         <CarouselDots
           totalPages={totalPages}
@@ -88,29 +106,3 @@ const CarouselSeasons = ({
 };
 
 export default CarouselSeasons;
-
-CarouselSeasons.defaultProps = {
-  title: '',
-  info: [],
-  idTvShow: 0,
-  mediaIsSeen: false,
-  runTime: 0,
-  setChangeSeenPending: () => {},
-  changeSeenPending: false,
-  numberEpisodes: 0,
-  numberSeasons: 0,
-  runTimeSeasons: [],
-};
-
-CarouselSeasons.propTypes = {
-  title: PropTypes.string,
-  info: PropTypes.array,
-  idTvShow: PropTypes.number,
-  mediaIsSeen: PropTypes.bool,
-  runTime: PropTypes.number,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  numberEpisodes: PropTypes.number,
-  numberSeasons: PropTypes.number,
-  runTimeSeasons: PropTypes.array,
-};

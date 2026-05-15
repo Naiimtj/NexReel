@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { IoClose } from 'react-icons/io5';
@@ -306,9 +305,4 @@ const Signup = ({ setModalForm = () => {} }) => {
     </div>
   );
 };
-
-Signup.propTypes = {
-  setModalForm: PropTypes.func,
-};
-
 export default Signup;

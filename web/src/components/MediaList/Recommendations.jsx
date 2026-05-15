@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Carousel from '../../utils/Carousel/Carousel';
 import { getRecommendations } from '../../../services/TMDB/services-tmdb';
 
@@ -19,8 +18,7 @@ const Recommendations = ({
       setList(data);
       isSetChange(false);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang, id, pendingSeenMedia]);
+  }, [lang, id, media]);
 
   if (!list.results?.length) return null;
 
@@ -38,14 +36,4 @@ const Recommendations = ({
     </div>
   );
 };
-
-Recommendations.propTypes = {
-  id: PropTypes.number,
-  title: PropTypes.string,
-  media: PropTypes.string,
-  lang: PropTypes.string,
-  setPendingSeenMedia: PropTypes.func,
-  pendingSeenMedia: PropTypes.bool,
-};
-
 export default Recommendations;

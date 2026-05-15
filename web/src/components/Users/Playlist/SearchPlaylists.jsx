@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { BsSearch } from "react-icons/bs";
 import SearchResults from "../../Search/SearchResults";
 import { getSearchPlaylists } from "../../../../services/DB/services-db";
 
-const SearchPlaylists = ({ hiden }) => {
+const SearchPlaylists = ({ hiden = false }) => {
   const [t] = useTranslation("translation");
   const [playlists, setPlaylists] = useState({});
   const [searchValue, setSearchValue] = useState("");
@@ -67,11 +66,3 @@ const SearchPlaylists = ({ hiden }) => {
 };
 
 export default SearchPlaylists;
-
-SearchPlaylists.defaultProps = {
-  hiden: false,
-};
-
-SearchPlaylists.propTypes = {
-  hiden: PropTypes.bool,
-};

@@ -5,9 +5,12 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Enable pnpm via corepack (bundled with Node 20)
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Install deps with cache-friendly layer
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # Copy sources and build
 COPY . .
@@ -33,7 +36,7 @@ ENV VITE_URL_DB=${VITE_URL_DB} \
     VITE_USE_MOCKS=${VITE_USE_MOCKS} \
     VITE_NOT_USE_IMDB=${VITE_NOT_USE_IMDB}
 
-RUN npm run build
+RUN pnpm build
 
 # ---------------------------------------------------------------------
 # Runtime stage: nginx serving the SPA + reverse-proxying /v1/ to fastapi

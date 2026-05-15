@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../context/auth-context';
@@ -11,7 +10,6 @@ import {
   getTrailer,
   getWatchList,
 } from '../../../services/TMDB/services-tmdb';
-import { getRating } from '../../../services/IMDB/services-imdb';
 import { getUser } from '../../../services/DB/services-db';
 // img
 import {
@@ -27,6 +25,11 @@ import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
 import { BiSolidRightArrow } from 'react-icons/bi';
 // components & utils
 import { BaseButton, BaseIcon } from '../../components/base';
+import {
+  ratingFromImdb,
+  useImdbApiRating,
+  useImdbData,
+} from '../../components/MediaList/mediaCardHelpers';
 import BaseModal from '../../components/base/BaseModal';
 import KeyWords from '../../components/MediaList/KeyWords';
 import Collections from '../../components/Movie/Collections';
@@ -73,13 +76,13 @@ const computeSeasonAverageRuntime = (episodes) => {
 };
 
 function DetailsMedia({
-  info,
-  crews,
-  cast,
-  mediaType,
-  dataMediaUser,
-  setChangeSeenPending,
-  changeSeenPending,
+  info = {},
+  crews = [],
+  cast = [],
+  mediaType = '',
+  dataMediaUser = {},
+  setChangeSeenPending = () => {},
+  changeSeenPending = true,
 }) {
   const [t, i18next] = useTranslation('translation');
   const { user, onReload } = useAuthContext();
@@ -96,7 +99,6 @@ function DetailsMedia({
     runtime,
     production_companies,
     production_countries,
-    imdb_id,
     belongs_to_collection,
     // .tv
     name,
@@ -152,6 +154,7 @@ function DetailsMedia({
     setLangApi(i18next.language);
     setLangTrailer(i18next.language);
   }, [i18next]);
+  const { imdbID, imdbData: imdbList } = useImdbData(mediaType, id, langApi);
 
   // ! SERVICES
   const [detailsWatchList, setDetailsWatchList] = useState({});
@@ -188,22 +191,13 @@ function DetailsMedia({
       setWordsKey(wordsKey);
     }
   }, [mediaType, wordsKeyData]);
-  // -API IMDB y Filmafinity
-  const [imdbList, setImdbList] = useState({});
-  useEffect(() => {
-    if (langApi && imdb_id) {
-      getRating(imdb_id, langApi).then((data) => {
-        setImdbList(data);
-      });
-    }
-  }, [langApi, imdb_id]);
   // - SERVICES PLEX
   const plexFriend = dataUser?.id ? dataUser.isPlexFriend : user?.isPlexFriend;
   const isInPlex = usePlexMatch({
     enabled: !!(userExist && plexFriend),
     mediaType,
     id,
-    imdbId: imdb_id,
+    imdbId: imdbID,
     originalTitle: original_title || original_name,
     title: title || name,
     releaseDate: release_date || first_air_date,
@@ -274,18 +268,19 @@ function DetailsMedia({
   processInfo.numEpis = number_of_episodes;
   processInfo.voteTMDB =
     vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0;
-  processInfo.voteIMDB =
-    imdbList.IMDb?.audience?.rating > 0
-      ? Number(imdbList.IMDb.audience.rating)
-      : null;
-  processInfo.voteFILMA =
-    imdbList.FilmAffinity?.audience?.rating > 0
-      ? Number(imdbList.FilmAffinity.audience.rating)
-      : null;
+  processInfo.voteIMDB = ratingFromImdb(imdbList?.IMDb);
+  processInfo.voteFILMA = ratingFromImdb(imdbList?.FilmAffinity);
+  const { value: _voteIMDBFree, loading: _imdbFreeLoading } = useImdbApiRating(
+    imdbID,
+    userExist,
+  );
+  processInfo.voteIMDBFree = _imdbFreeLoading ? null : _voteIMDBFree;
+
   processInfo.voteAverage = calculateAverageVote(
     processInfo.voteTMDB,
     processInfo.voteIMDB,
     processInfo.voteFILMA,
+    processInfo.voteIMDBFree,
   );
   processInfo.countries = production_countries || origin_country;
   processInfo.description = overview || tmbdEnApi.overview || '';
@@ -625,18 +620,18 @@ function DetailsMedia({
                 <BaseIcon
                   icon="starRating"
                   className={`size-6 md:size-5 ${
-                    isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'
+                    isTmdbOnly ? 'text-orange-400' : 'text-amber-400'
                   }`}
                 />
                 <span
-                  className={isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'}
+                  className={isTmdbOnly ? 'text-orange-400' : 'text-amber-400'}
                 >
                   {processInfo.voteAverage}
                 </span>
                 <BaseIcon
                   icon={showExternalRatings ? 'caretUpSmall' : 'caretDownSmall'}
                   className={`size-6 md:size-5 ${
-                    isTmdbOnly ? 'text-[#01b4e4]' : 'text-amber-400'
+                    isTmdbOnly ? 'text-orange-400' : 'text-amber-400'
                   }`}
                 />
               </button>
@@ -653,6 +648,16 @@ function DetailsMedia({
                     alt={t('IMDB Icon')}
                     value={processInfo.voteIMDB}
                   />
+                  {processInfo.voteIMDBFree > 0 && (
+                    <div>
+                      <span className="inline-block bg-red-600 text-white text-[10px] font-bold px-1.5 py-1 rounded leading-none">
+                        IMDb
+                      </span>
+                      <div className="inline-block text-amber-400 text-xs text-left pl-2">
+                        {processInfo.voteIMDBFree}
+                      </div>
+                    </div>
+                  )}
                   <ExternalRating
                     icon={TMDB}
                     alt={t('TMDB Icon')}
@@ -675,7 +680,7 @@ function DetailsMedia({
         </div>
         <div className="md:hidden">{typeCountryStatusBlock}</div>
 
-        <div className="hidden lg:block absolute right-0 top-0">
+        <div className="hidden md:block absolute right-0 top-0">
           {/* // ! STREAMING */}
           {streamingOrWatchProviders}
         </div>
@@ -1051,22 +1056,3 @@ function DetailsMedia({
 }
 
 export default DetailsMedia;
-
-DetailsMedia.defaultProps = {
-  info: {},
-  crews: [],
-  cast: [],
-  mediaType: '',
-  dataMediaUser: {},
-  setChangeSeenPending: () => {},
-  changeSeenPending: true,
-};
-DetailsMedia.propTypes = {
-  info: PropTypes.object,
-  crews: PropTypes.array,
-  cast: PropTypes.array,
-  mediaType: PropTypes.string,
-  dataMediaUser: PropTypes.object,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-};

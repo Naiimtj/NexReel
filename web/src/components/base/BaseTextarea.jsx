@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import BaseLabel from './BaseLabel';
 import { AlertIcon } from './icons';
 
@@ -61,20 +60,4 @@ const BaseTextarea = ({
     </div>
   );
 };
-
-BaseTextarea.propTypes = {
-  label: PropTypes.node,
-  value: PropTypes.string,
-  placeholder: PropTypes.string,
-  tooltip: PropTypes.string,
-  mandatory: PropTypes.bool,
-  disabled: PropTypes.bool,
-  rows: PropTypes.number,
-  errorMessages: PropTypes.arrayOf(PropTypes.string),
-  onChange: PropTypes.func,
-  onBlur: PropTypes.func,
-  className: PropTypes.string,
-  id: PropTypes.string,
-};
-
 export default BaseTextarea;

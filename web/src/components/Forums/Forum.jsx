@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Spinner from '../../../utils/Spinner/Spinner';
 import { Link } from 'react-router-dom';
@@ -12,7 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import { BaseIcon } from '../base';
 
-const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
+const Forum = ({ data = {}, userId = '', isOtherUser = false, setPopSureDel = () => {}, setIdDelete = () => {} }) => {
   const [t] = useTranslation('translation');
   const { description, id, followersPlaylist, imgPlaylist, medias, title } =
     data;
@@ -144,19 +143,3 @@ const Forum = ({ data, userId, isOtherUser, setPopSureDel, setIdDelete }) => {
 };
 
 export default Forum;
-
-Forum.defaultProps = {
-  data: {},
-  isOtherUser: false,
-  userId: '',
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-};
-
-Forum.propTypes = {
-  data: PropTypes.object,
-  isOtherUser: PropTypes.bool,
-  userId: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-};

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // components
 import Credits from '../Credits';
 import CarouselHeader from '../../utils/Carousel/CarouselHeader';
@@ -18,17 +17,17 @@ const SIZE_CONFIG = {
 };
 
 const CarouselPersons = ({
-  title,
-  id,
-  info,
-  media,
-  isUser,
-  hideSearch,
-  isForum,
-  changeSeenPending,
-  setChangeSeenPending,
-  basicForum,
-  size,
+  title = '',
+  id = 0,
+  info = [],
+  media = '',
+  isUser = false,
+  hideSearch = () => {},
+  isForum = false,
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  basicForum = {},
+  size = 'normal',
 }) => {
   const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
   const headerTitleClass =
@@ -112,35 +111,3 @@ const CarouselPersons = ({
 };
 
 export default CarouselPersons;
-
-CarouselPersons.defaultProps = {
-  title: '',
-  id: 0,
-  info: [],
-  media: '',
-  isUser: false,
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  isPlaylist: '',
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-  isForum: false,
-  hideSearch: () => {},
-  basicForum: {},
-  size: 'normal',
-};
-
-CarouselPersons.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number,
-  info: PropTypes.array,
-  media: PropTypes.string,
-  isUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  isPlaylist: PropTypes.string,
-  isForum: PropTypes.bool,
-  hideSearch: PropTypes.func,
-  basicForum: PropTypes.object,
-  size: PropTypes.oneOf(['small', 'normal']),
-};

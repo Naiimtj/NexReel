@@ -63,7 +63,7 @@ Requisitos: Docker, `just`, Python 3.11+ y Node 18+.
 git clone https://github.com/Naiimtj/NexReel.git
 cd NexReel
 just install        # crea venv y dependencias del backend
-cd web && npm install
+cd web && pnpm install
 ```
 
 ### 2. Variables de entorno
@@ -78,7 +78,7 @@ Solo PostgreSQL y backups en Docker, FastAPI en host:
 ```bash
 just up-local       # levanta Postgres + servicio de backups
 just dev            # arranca FastAPI en http://localhost:8000
-cd web && npm run dev
+cd web && pnpm dev
 ```
 
 Stack completo en contenedores:

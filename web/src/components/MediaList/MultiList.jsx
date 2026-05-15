@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { FaStar } from 'react-icons/fa';
 import { NoImage, PlexTile, star } from '../../assets/image';
 import calculateAverageVote from './calculateAverageVote';
 import { useAuthContext } from '../../context/auth-context';
@@ -13,12 +11,12 @@ import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 import { BaseIcon, DeleteConfirmModal } from '../base';
 import {
   isMediaInPlex,
-  ratingFromImdb,
   resolveDate,
   resolveMediaType,
   resolvePosterUrl,
   resolveTypeIcon,
   roundedVote,
+  useImdbApiRating,
   useMediaData,
   useMediaUserEntry,
 } from './mediaCardHelpers';
@@ -47,10 +45,10 @@ export const MultiList = ({
   const mediaType = resolveMediaType(mediaMovie, mediaTv, media_type);
 
   const [pendingSeen, setPendingSeen] = useState(false);
-  const { dataMedia, imdbID, imdbData } = useMediaData(
-    mediaType,
-    id,
-    i18next.language,
+  const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
+  const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+    imdbID,
+    userExist,
   );
 
   const {
@@ -70,11 +68,10 @@ export const MultiList = ({
   const url = resolvePosterUrl(poster_path, profile_path);
   const processInfo = {
     bgPoster: url || NoImage,
-    voteAverage: calculateAverageVote(
-      roundedVote(vote_average),
-      ratingFromImdb(imdbData?.IMDb),
-      ratingFromImdb(imdbData?.FilmAffinity),
-    ),
+    voteAverage:
+      userExist && !imdbRatingLoading
+        ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+        : null,
     title: title || name,
     date: resolveDate(release_date, first_air_date, known_for_department),
     type: mediaType,
@@ -182,7 +179,7 @@ export const MultiList = ({
                   className="w-7 h-7 rounded-md bg-black/50 p-0.5"
                 />
               )}
-              {processInfo.voteAverage > 0 && showActions && (
+              {userExist && processInfo.voteAverage > 0 && showActions && (
                 <div className="flex flex-row gap-1 items-center pl-1 pr-2 mr-2 backdrop-blur-md bg-black/50 rounded-lg">
                   <img
                     className="inline-block pl-1 py-2 w-4"
@@ -194,10 +191,10 @@ export const MultiList = ({
                   </div>
                   {userExist && vote >= 0 && (
                     <div className="flex items-start">
-                      <FaStar
-                        size={12}
-                        alt={t('Seen')}
-                        className="mr-1 mt-0.5 fill-purpleNR"
+                      <BaseIcon
+                        icon="starFill"
+                        size="x-small"
+                        className="fill-purpleNR mr-1 mt-0.5"
                       />
                       <div className=" text-purpleNR text-xs text-left leading-4">
                         {vote}
@@ -307,20 +304,4 @@ export const MultiList = ({
     </div>
   );
 };
-
-MultiList.propTypes = {
-  info: PropTypes.object,
-  mediaMovie: PropTypes.bool,
-  mediaTv: PropTypes.bool,
-  isUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  isPlaylist: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  setAnswerDel: PropTypes.func,
-  mediasUser: PropTypes.array,
-  showActions: PropTypes.bool,
-};
-
 export default MultiList;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { NoImage } from '../../assets/image';
@@ -82,11 +81,4 @@ export const MultiSmall = ({
     </div>
   );
 };
-
-MultiSmall.propTypes = {
-  info: PropTypes.object,
-  mediaMovie: PropTypes.bool,
-  mediaTv: PropTypes.bool,
-};
-
 export default MultiSmall;

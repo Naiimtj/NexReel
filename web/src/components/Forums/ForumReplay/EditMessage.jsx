@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { BsCheckLg } from "react-icons/bs";
 import { patchMessage } from "../../../../services/DB/services-db";
 
-const EditMessage = ({ setEditMessage, reply, setReply, setIsSender }) => {
+const EditMessage = ({ setEditMessage = () => {}, reply = {}, setReply = () => {}, setIsSender = () => {} }) => {
   const [t] = useTranslation("translation");
   const {
     register,
@@ -120,21 +119,3 @@ const EditMessage = ({ setEditMessage, reply, setReply, setIsSender }) => {
 };
 
 export default EditMessage;
-
-EditMessage.defaultProps = {
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  setEditMessage: () => {},
-  reply: {},
-  setIsSender: () => {},
-  setReply: () => {},
-};
-
-EditMessage.propTypes = {
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  setEditMessage: PropTypes.func,
-  reply: PropTypes.object,
-  setIsSender: PropTypes.func,
-  setReply: PropTypes.func,
-};

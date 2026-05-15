@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseIcon } from '../../components/base';
 
@@ -34,12 +33,4 @@ const SeenPendingButton = ({
     />
   );
 };
-
-SeenPendingButton.propTypes = {
-  condition: PropTypes.bool,
-  text: PropTypes.string,
-  handle: PropTypes.func,
-  className: PropTypes.string,
-};
-
 export default SeenPendingButton;

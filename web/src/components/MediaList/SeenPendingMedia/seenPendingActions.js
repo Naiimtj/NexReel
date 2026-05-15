@@ -9,17 +9,10 @@ import {
 
 const applyAndRefresh = (
   promise,
-  {
-    setPendingSeen,
-    pendingSeen,
-    onReload,
-    setChangeSeenPending,
-    changeSeenPending,
-  },
+  { setPendingSeen, pendingSeen, setChangeSeenPending, changeSeenPending },
 ) =>
   promise.then(() => {
     if (setPendingSeen) setPendingSeen(!pendingSeen);
-    onReload();
     setChangeSeenPending(!changeSeenPending);
   });
 

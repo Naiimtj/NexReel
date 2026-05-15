@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 
 const ButtonIsFollowing = ({
   isFollowing = false,
@@ -28,11 +27,4 @@ const ButtonIsFollowing = ({
     </button>
   );
 };
-
-ButtonIsFollowing.propTypes = {
-  isFollowing: PropTypes.bool,
-  handleFollow: PropTypes.func,
-  handleUnFollow: PropTypes.func,
-};
-
 export default ButtonIsFollowing;

@@ -1,18 +1,17 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import CarouselPersons from './CarouselPersons';
 import PlaylistsList from '../Users/Playlist/PlaylistsList';
 import Carousel from '../../utils/Carousel/Carousel';
 
 const SearchResults = ({
-  title,
-  listMedias,
-  media,
-  hideSearch,
-  isForum,
-  basicForum,
-  changeSeenPending,
-  setChangeSeenPending,
+  title = '',
+  listMedias = {},
+  media = '',
+  hideSearch = () => {},
+  isForum = false,
+  basicForum = {},
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
 }) => {
   const [t] = useTranslation('translation');
   const mediaMovie = media === 'movie' ? true : null;
@@ -120,25 +119,3 @@ const SearchResults = ({
 };
 
 export default SearchResults;
-
-SearchResults.defaultProps = {
-  title: '',
-  listMedias: {},
-  media: '',
-  hideSearch: () => {},
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  basicForum: {},
-  isForum: false,
-};
-
-SearchResults.propTypes = {
-  title: PropTypes.string,
-  listMedias: PropTypes.object,
-  media: PropTypes.string,
-  hideSearch: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  basicForum: PropTypes.object,
-  isForum: PropTypes.bool,
-};

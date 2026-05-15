@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseButton, BaseIcon } from '../base';
 import SearchUsers from './SearchUsers';
@@ -24,15 +23,6 @@ const ProfileActionButton = ({
     {label}
   </BaseButton>
 );
-
-ProfileActionButton.propTypes = {
-  icon: PropTypes.string.isRequired,
-  label: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
-  variant: PropTypes.oneOf(['primary', 'danger', 'text']),
-  className: PropTypes.string,
-};
-
 const FollowRequestStatus = ({ onUnfollow }) => {
   const [t] = useTranslation('translation');
   const [isHovered, setIsHovered] = useState(false);
@@ -57,12 +47,7 @@ const FollowRequestStatus = ({ onUnfollow }) => {
     </div>
   );
 };
-
-FollowRequestStatus.propTypes = {
-  onUnfollow: PropTypes.func.isRequired,
-};
-
-const FollowPreviewList = ({ title, users, isFollowerList }) => {
+const FollowPreviewList = ({ title, users = [], isFollowerList = false }) => {
   const [t] = useTranslation('translation');
 
   if (!users.length) {
@@ -93,30 +78,18 @@ const FollowPreviewList = ({ title, users, isFollowerList }) => {
     </div>
   );
 };
-
-FollowPreviewList.propTypes = {
-  title: PropTypes.node.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object),
-  isFollowerList: PropTypes.bool,
-};
-
-FollowPreviewList.defaultProps = {
-  users: [],
-  isFollowerList: false,
-};
-
 const ProfileOverview = ({
   user,
-  isOtherUser,
-  isFollowing,
-  isConfirm,
-  memberSince,
-  timeTotalSeen,
-  isFollowingOtherUser,
-  followersUser,
-  followingUser,
+  isOtherUser = false,
+  isFollowing = undefined,
+  isConfirm = false,
+  memberSince = '',
+  timeTotalSeen = '',
+  isFollowingOtherUser = false,
+  followersUser = [],
+  followingUser = [],
   searchRef,
-  hiden,
+  hiden = false,
   onFollow,
   onUnfollow,
   onDeleteFollower,
@@ -239,36 +212,4 @@ const ProfileOverview = ({
     </div>
   );
 };
-
-ProfileOverview.propTypes = {
-  user: PropTypes.object.isRequired,
-  isOtherUser: PropTypes.bool,
-  isFollowing: PropTypes.bool,
-  isConfirm: PropTypes.bool,
-  memberSince: PropTypes.string,
-  timeTotalSeen: PropTypes.string,
-  isFollowingOtherUser: PropTypes.bool,
-  followersUser: PropTypes.arrayOf(PropTypes.object),
-  followingUser: PropTypes.arrayOf(PropTypes.object),
-  searchRef: PropTypes.shape({ current: PropTypes.any }).isRequired,
-  hiden: PropTypes.bool,
-  onFollow: PropTypes.func.isRequired,
-  onUnfollow: PropTypes.func.isRequired,
-  onDeleteFollower: PropTypes.func.isRequired,
-  onEditProfile: PropTypes.func.isRequired,
-  onChangePassword: PropTypes.func.isRequired,
-};
-
-ProfileOverview.defaultProps = {
-  isOtherUser: false,
-  isFollowing: undefined,
-  isConfirm: false,
-  memberSince: '',
-  timeTotalSeen: '',
-  isFollowingOtherUser: false,
-  followersUser: [],
-  followingUser: [],
-  hiden: false,
-};
-
 export default ProfileOverview;

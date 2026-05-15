@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { getIconSize } from '../../../utils/sizeIcon';
 
 const StarFillIcon = ({
@@ -23,11 +22,4 @@ const StarFillIcon = ({
     </svg>
   );
 };
-
-StarFillIcon.propTypes = {
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  color: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default StarFillIcon;

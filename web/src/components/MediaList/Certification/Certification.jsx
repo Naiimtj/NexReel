@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 // service
 import { getRelease } from '../../../../services/TMDB/services-tmdb';
 // components/utils
 import ConvertCertifEx from './ConvertCertifEx';
 
-function Certification({ media, id, info, lang }) {
+function Certification({ media = '', id = 0, info = [], lang = '' }) {
   const [loading, setLoading] = useState(true);
   const [ReleaseData, setReleaseData] = useState([]);
   useEffect(() => {
@@ -92,17 +91,3 @@ function Certification({ media, id, info, lang }) {
 }
 
 export default Certification;
-
-Certification.defaultProps = {
-  id: 0,
-  info: [],
-  media: '',
-  lang: '',
-};
-
-Certification.propTypes = {
-  id: PropTypes.number,
-  info: PropTypes.array,
-  media: PropTypes.string,
-  lang: PropTypes.string,
-};

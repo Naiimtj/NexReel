@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseIcon, BaseButton } from '../../components/base';
 
@@ -8,16 +7,16 @@ import { BaseIcon, BaseButton } from '../../components/base';
  * project-wide icon rule) and receive translated tooltips.
  */
 const CarouselHeader = ({
-  title,
-  count,
-  showCount,
-  showNav,
-  canPrev,
-  canNext,
-  onPrev,
-  onNext,
-  onTitleClick,
-  titleClassName,
+  title = '',
+  count = 0,
+  showCount = false,
+  showNav = false,
+  canPrev = false,
+  canNext = false,
+  onPrev = () => {},
+  onNext = () => {},
+  onTitleClick = undefined,
+  titleClassName = 'pl-4 text-sm md:text-2xl uppercase',
 }) => {
   const [t] = useTranslation('translation');
 
@@ -67,31 +66,4 @@ const CarouselHeader = ({
     </div>
   );
 };
-
-CarouselHeader.defaultProps = {
-  title: '',
-  count: 0,
-  showCount: false,
-  showNav: false,
-  canPrev: false,
-  canNext: false,
-  onPrev: () => {},
-  onNext: () => {},
-  onTitleClick: undefined,
-  titleClassName: 'pl-4 text-sm md:text-2xl uppercase',
-};
-
-CarouselHeader.propTypes = {
-  title: PropTypes.string,
-  count: PropTypes.number,
-  showCount: PropTypes.bool,
-  showNav: PropTypes.bool,
-  canPrev: PropTypes.bool,
-  canNext: PropTypes.bool,
-  onPrev: PropTypes.func,
-  onNext: PropTypes.func,
-  onTitleClick: PropTypes.func,
-  titleClassName: PropTypes.string,
-};
-
 export default CarouselHeader;

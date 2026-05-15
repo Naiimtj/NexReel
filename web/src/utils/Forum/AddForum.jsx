@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { IoIosRemove, IoMdAdd } from "react-icons/io";
 import {
@@ -8,12 +7,12 @@ import {
 } from "../../../services/DB/services-db";
 
 const AddForum = ({
-  id,
-  runTime,
-  type,
-  basicForum,
-  changeSeenPending,
-  setChangeSeenPending,
+  id = 0,
+  runTime = 0,
+  type = "",
+  basicForum = {},
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
 }) => {
   const [t] = useTranslation("translation");
   const [errorAddForums, setErrorAddForums] = useState(false);
@@ -112,23 +111,3 @@ const AddForum = ({
 };
 
 export default AddForum;
-
-AddForum.defaultProps = {
-  id: 0,
-  runTime: 0,
-  type: "",
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  basicForum: {},
-  isForum: false,
-};
-
-AddForum.propTypes = {
-  id: PropTypes.number,
-  runTime: PropTypes.number,
-  type: PropTypes.string,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  basicForum: PropTypes.object,
-  isForum: PropTypes.bool,
-};

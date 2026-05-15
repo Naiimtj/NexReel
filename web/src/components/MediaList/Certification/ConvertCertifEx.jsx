@@ -1,7 +1,6 @@
-import PropTypes from "prop-types";
 // Consulting https://en.wikipedia.org/wiki/Motion_picture_content_rating_system
 
-function ConvertCertifEx({ info, media }) {
+function ConvertCertifEx({ info = {}, media = "" }) {
   const processInfo = {
     country: "País de la calificación",
     calification: "La calificación",
@@ -549,13 +548,3 @@ function ConvertCertifEx({ info, media }) {
 }
 
 export default ConvertCertifEx;
-
-ConvertCertifEx.defaultProps = {
-  info: {},
-  media: "",
-};
-
-ConvertCertifEx.propTypes = {
-  info: PropTypes.object,
-  media: PropTypes.string,
-};

@@ -4,6 +4,37 @@ description: 'Known issues and gotchas for NexReel. Use when: debugging startup,
 
 # NexReel — Known Issues & Patterns
 
+## IMDB Ratings Not Showing
+
+- `getRating()` in `services/IMDB/services-imdb.js` returns `{}` early when `VITE_NOT_USE_IMDB === 'true'`.
+- If ratings are absent in `DetailsMedia` or media cards, check that `VITE_NOT_USE_IMDB = "false"` in `web/.env`.
+- Missing or undefined `VITE_NOT_USE_IMDB` behaves the same as `"false"` (API is called), but set it explicitly to avoid confusion.
+
+## `useImdbApiRating` Returns `{ value, loading }` — Not a Raw Number
+
+`useImdbApiRating` was refactored to return `{ value, loading }`. Any component that still reads it as a plain number will silently get `undefined`.
+
+Correct usage:
+
+```js
+const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+  imdbID,
+  userExist,
+);
+```
+
+## Carousel Cards Showing Stale Data After Page Navigation
+
+Carousel components (`Carousel.jsx`, `CarouselCredits.jsx`, `CarouselSeasons.jsx`) use **index-based React keys** (`carrousel2${index}${media}`). React reuses component instances when keys stay the same but props change.
+
+If `useMediaData` only fetches on cache miss and never updates state on a cache hit, the card will show old data after navigation. The fix is already in place: `useMediaData` always calls `setDataMedia` / `setImdbID` — whether the value came from cache or from a fresh fetch.
+
+Do not revert this to a `!cache.has(key)` guard — that breaks re-rendered cards.
+
+## API Response Cache (`services-db.js`)
+
+A module-level `Map` caches all GET responses. If you're seeing stale backend data within a page visit, check that `clearApiCache()` is being called appropriately. The cache is cleared on route change (via `useCacheInvalidator` in `App.jsx`) and on page refresh (module re-evaluation). It is **not** invalidated after mutations — components should refresh their own state after POST/PATCH/DELETE as they already do.
+
 ## Canonical Backend vs Legacy Backend
 
 - Active backend: `fastapi/`

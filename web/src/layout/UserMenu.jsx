@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Menu, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -254,11 +253,4 @@ const UserMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
     </div>
   );
 };
-
-UserMenu.propTypes = {
-  user: PropTypes.object,
-  logout: PropTypes.func,
-  translate: PropTypes.func,
-};
-
 export default UserMenu;

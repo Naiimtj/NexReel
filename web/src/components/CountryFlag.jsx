@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 import { useCountryName } from './CountryName';
 
 const codeToFlagEmoji = (code) => {
@@ -65,10 +64,4 @@ function CountryFlag({ code, className = '' }) {
     </>
   );
 }
-
-CountryFlag.propTypes = {
-  code: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default CountryFlag;

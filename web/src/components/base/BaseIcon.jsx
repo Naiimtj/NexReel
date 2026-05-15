@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 import { iconRegistry } from './icons';
 
 const TooltipWrapper = ({
@@ -163,17 +162,6 @@ const TooltipWrapper = ({
     </>
   );
 };
-
-TooltipWrapper.propTypes = {
-  children: PropTypes.node,
-  tooltip: PropTypes.node,
-  position: PropTypes.string,
-  absoluteMode: PropTypes.bool,
-  showDelay: PropTypes.number,
-  hideDelay: PropTypes.number,
-  wrapperClassName: PropTypes.string,
-};
-
 const BaseIcon = ({
   icon,
   size = 'md',
@@ -220,30 +208,4 @@ const BaseIcon = ({
     </TooltipWrapper>
   );
 };
-
-BaseIcon.propTypes = {
-  icon: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  color: PropTypes.string,
-  className: PropTypes.string,
-  onClick: PropTypes.func,
-  isClicked: PropTypes.bool,
-  tooltip: PropTypes.node,
-  tooltipPosition: PropTypes.oneOf([
-    'top',
-    'bottom',
-    'down',
-    'left',
-    'right',
-    'topleft',
-    'topright',
-    'downleft',
-    'downright',
-  ]),
-  tooltipShowDelay: PropTypes.number,
-  tooltipHideDelay: PropTypes.number,
-  absoluteMode: PropTypes.bool,
-  wrapperClassName: PropTypes.string,
-};
-
 export default BaseIcon;

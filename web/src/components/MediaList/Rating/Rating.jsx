@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseIcon } from '../../base';
 import { patchMedia, postMedia } from '../../../../services/DB/services-db';
@@ -14,12 +13,12 @@ const getStarState = (starIndex, activeValue) => {
 };
 
 const Rating = ({
-  dataMediaUser,
-  setPendingSeen,
-  pendingSeen,
-  mediaId,
-  media_type,
-  runtime,
+  dataMediaUser = {},
+  setPendingSeen = () => {},
+  pendingSeen = false,
+  mediaId = 0,
+  media_type = '',
+  runtime = 0,
 }) => {
   const { t } = useTranslation('translation');
   const { vote } = dataMediaUser;
@@ -252,21 +251,3 @@ const Rating = ({
 };
 
 export default Rating;
-
-Rating.defaultProps = {
-  dataMediaUser: {},
-  setPendingSeen: () => {},
-  pendingSeen: false,
-  mediaId: 0,
-  media_type: '',
-  runtime: 0,
-};
-
-Rating.propTypes = {
-  dataMediaUser: PropTypes.object,
-  setPendingSeen: PropTypes.func,
-  pendingSeen: PropTypes.bool,
-  mediaId: PropTypes.number,
-  media_type: PropTypes.string,
-  runtime: PropTypes.number,
-};

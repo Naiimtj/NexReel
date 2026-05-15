@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '../../context/auth-context';
@@ -9,9 +8,9 @@ import { BsCheckLg } from 'react-icons/bs';
 import { useState } from 'react';
 
 const UpdateProfile = ({
-  setModalForm,
-  setChangeSeenPending,
-  changeSeenPending,
+  setModalForm = () => {},
+  setChangeSeenPending = () => {},
+  changeSeenPending = false,
 }) => {
   const [t] = useTranslation('translation');
   const { user, onLogin } = useAuthContext();
@@ -262,15 +261,3 @@ const UpdateProfile = ({
 };
 
 export default UpdateProfile;
-
-UpdateProfile.defaultProps = {
-  setModalForm: () => {},
-  setChangeSeenPending: () => {},
-  changeSeenPending: false,
-};
-
-UpdateProfile.propTypes = {
-  setModalForm: PropTypes.func,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-};

@@ -1,7 +1,6 @@
-import PropTypes from "prop-types";
 import { CgClose } from "react-icons/cg";
 
-function Trailers({ setModal, trailerVideo }) {
+function Trailers({ setModal = () => {}, trailerVideo = "" }) {
   const videoTrailer = trailerVideo;
   return (
     <button
@@ -27,13 +26,3 @@ function Trailers({ setModal, trailerVideo }) {
 }
 
 export default Trailers;
-
-Trailers.defaultProps = {
-  setModal: () => {},
-  trailerVideo: "",
-};
-
-Trailers.propTypes = {
-  setModal: PropTypes.func,
-  trailerVideo: PropTypes.string,
-};

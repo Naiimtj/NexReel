@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { IoIosRemove } from 'react-icons/io';
 import { getIconSize } from '../../../utils/sizeIcon';
 
@@ -15,11 +14,4 @@ const RemoveIcon = ({
     {...props}
   />
 );
-
-RemoveIcon.propTypes = {
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  color: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default RemoveIcon;

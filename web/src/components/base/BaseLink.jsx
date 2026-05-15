@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 const navBase =
   'text-base lg:text-xl hover:text-gray-300 transition duration-300';
@@ -35,12 +34,4 @@ const BaseLink = ({
     </Link>
   );
 };
-
-BaseLink.propTypes = {
-  to: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['nav', 'primary', 'default']),
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-};
-
 export default BaseLink;

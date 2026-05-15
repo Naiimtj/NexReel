@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { NoImage, tv } from '../../assets/image';
 import { useTranslation } from 'react-i18next';
@@ -9,15 +8,15 @@ import SeenPendingSeason from '../MediaList/SeenPendingMedia/SeenPendingSeason';
 import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 
 export const SeasonSingle = ({
-  season,
-  idTvShow,
-  mediaIsSeen,
-  runTime,
-  setChangeSeenPending,
-  changeSeenPending,
-  numberEpisodes,
-  numberSeasons,
-  runTimeSeasons,
+  season = {},
+  idTvShow = 0,
+  mediaIsSeen = false,
+  runTime = 0,
+  setChangeSeenPending = () => {},
+  changeSeenPending = false,
+  numberEpisodes = 0,
+  numberSeasons = 0,
+  runTimeSeasons = [],
 }) => {
   const [t] = useTranslation('translation');
   const { onReload } = useAuthContext();
@@ -166,27 +165,3 @@ export const SeasonSingle = ({
 };
 
 export default SeasonSingle;
-
-SeasonSingle.defaultProps = {
-  season: {},
-  idTvShow: 0,
-  mediaIsSeen: false,
-  runTime: 0,
-  setChangeSeenPending: () => {},
-  changeSeenPending: false,
-  numberEpisodes: 0,
-  numberSeasons: 0,
-  runTimeSeasons: [],
-};
-
-SeasonSingle.propTypes = {
-  season: PropTypes.object,
-  idTvShow: PropTypes.number,
-  mediaIsSeen: PropTypes.bool,
-  runTime: PropTypes.number,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  numberEpisodes: PropTypes.number,
-  numberSeasons: PropTypes.number,
-  runTimeSeasons: PropTypes.array,
-};

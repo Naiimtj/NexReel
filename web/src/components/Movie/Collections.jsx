@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import Carousel from '../../utils/Carousel/Carousel';
 import { getCollections } from '../../../services/TMDB/services-tmdb';
 import { useEffect, useState } from 'react';
@@ -10,10 +9,10 @@ function compareDates(a, b) {
 }
 
 function Collections({
-  idCollection,
-  media,
-  pendingSeenMedia,
-  setPendingSeenMedia,
+  idCollection = 0,
+  media = '',
+  pendingSeenMedia = false,
+  setPendingSeenMedia = () => {},
 }) {
   const [collectionList, setCollectionList] = useState({});
   const [isChange, isSetChange] = useState(true);
@@ -66,17 +65,3 @@ function Collections({
 }
 
 export default Collections;
-
-Collections.defaultProps = {
-  idCollection: 0,
-  media: '',
-  setPendingSeenMedia: () => {},
-  pendingSeenMedia: false,
-};
-
-Collections.propTypes = {
-  idCollection: PropTypes.number,
-  media: PropTypes.string,
-  setPendingSeenMedia: PropTypes.func,
-  pendingSeenMedia: PropTypes.bool,
-};

@@ -5,8 +5,72 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_URL_DB,
 });
 
+// ─── In-memory GET cache ──────────────────────────────────────────────────────
+// Survives re-renders, clears on page refresh (module re-evaluated).
+// Route-change invalidation is handled externally via clearApiCache().
+const _cache = new Map();
+export const clearApiCache = () => _cache.clear();
+
+const _cacheKey = (url, params) => `${url}__${JSON.stringify(params ?? {})}`;
+
+// Targeted cache invalidation: only evict entries affected by a mutation.
+// Each entry is [urlPrefix, cacheKeyPrefixes[]]. null means clear everything.
+const _INVALIDATION_MAP = [
+  ['login', null],
+  ['logout', null],
+  ['register', null],
+  ['medias', ['medias', 'users/me']],
+  ['seasons', ['seasons', 'medias', 'users/me']],
+  ['episodes', ['episodes', 'seasons', 'medias', 'users/me']],
+  ['playlists', ['playlists', 'users/me']],
+  ['forums', ['forums']],
+  ['messages', ['messages']],
+  ['users', ['user/followers', 'users']],
+  ['user/', ['user/followers']],
+];
+
+const _invalidateForMutation = (url) => {
+  const entry = _INVALIDATION_MAP.find(([prefix]) => url.startsWith(prefix));
+  if (!entry || entry[1] === null) {
+    _cache.clear();
+    return;
+  }
+  const patterns = entry[1];
+  for (const key of _cache.keys()) {
+    if (patterns.some((p) => key.startsWith(p))) _cache.delete(key);
+  }
+};
+
+// Serve cached responses before the request goes out
+service.interceptors.request.use((config) => {
+  if (config.method === 'get') {
+    const key = _cacheKey(config.url, config.params);
+    if (_cache.has(key)) {
+      config.adapter = () =>
+        Promise.resolve({
+          data: _cache.get(key),
+          status: 200,
+          statusText: 'OK (cached)',
+          headers: {},
+          config,
+          request: {},
+        });
+    } else {
+      config._apiCacheKey = key;
+    }
+  }
+  return config;
+});
+
 service.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    if (response.config._apiCacheKey) {
+      _cache.set(response.config._apiCacheKey, response.data);
+    } else if (response.config.method !== 'get') {
+      _invalidateForMutation(response.config.url || '');
+    }
+    return response.data;
+  },
   (error) => {
     if (
       error.response.status === 401 &&

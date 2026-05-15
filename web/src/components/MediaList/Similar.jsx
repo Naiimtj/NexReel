@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Carousel from '../../utils/Carousel/Carousel';
 import { getSimilar } from '../../../services/TMDB/services-tmdb';
 
@@ -40,14 +39,4 @@ const Similar = ({
     </div>
   );
 };
-
-Similar.propTypes = {
-  id: PropTypes.number,
-  title: PropTypes.string,
-  media: PropTypes.string,
-  lang: PropTypes.string,
-  setPendingSeenMedia: PropTypes.func,
-  pendingSeenMedia: PropTypes.bool,
-};
-
 export default Similar;

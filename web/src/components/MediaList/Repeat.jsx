@@ -27,7 +27,6 @@ function Repeat(
 
   patchMedia(id, mediaType, updateData).then(() => {
     setRepeating?.(!repeating);
-    onReload();
     setChangeSeenPending(!changeSeenPending);
   });
 }

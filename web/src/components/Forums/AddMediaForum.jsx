@@ -1,14 +1,13 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { IoAddOutline } from "react-icons/io5";
 import { TbMinus } from "react-icons/tb";
 import SearchMedias from "./SearchMedias";
 
 const AddMediaForum = ({
-  basicForum,
-  changeSeenPending,
-  setChangeSeenPending,
+  basicForum = {},
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
 }) => {
   const [t] = useTranslation("translation");
   const [addMediaForum, setAddMediaForum] = useState(false);
@@ -49,15 +48,5 @@ const AddMediaForum = ({
 };
 
 export default AddMediaForum;
-
-AddMediaForum.defaultProps = {
-    basicForum: {},
-    changeSeenPending: false,
-    setChangeSeenPending: () => {},
-  };
   
-  AddMediaForum.propTypes = {
-    basicForum: PropTypes.object,
-    changeSeenPending: PropTypes.bool,
-    setChangeSeenPending: PropTypes.func,
-  };
+  

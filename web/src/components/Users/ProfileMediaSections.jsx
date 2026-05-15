@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../../utils/Carousel/Carousel';
 import EmptySmall from '../MediaList/EmptySmall';
@@ -11,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const sectionLinkClass =
   'flex tracking-wide text-purpleNR md:hover:text-gray-500 duration-300';
 
-const MediaSectionHeader = ({ title, to, count }) => {
+const MediaSectionHeader = ({ title, to, count = 0 }) => {
   const navigate = useNavigate();
   return (
     <div className="flex justify-between text-xl text-gray-400 items-center">
@@ -22,30 +21,19 @@ const MediaSectionHeader = ({ title, to, count }) => {
       >
         <h1 className="md:pl-4 text-xl">{title}</h1>
       </BaseButton>
-      <p>( {count} )</p>
+      {count}
     </div>
   );
 };
-
-MediaSectionHeader.propTypes = {
-  title: PropTypes.node.isRequired,
-  to: PropTypes.string.isRequired,
-  count: PropTypes.number,
-};
-
-MediaSectionHeader.defaultProps = {
-  count: 0,
-};
-
 const MediaPreviewSection = ({
   title,
   to,
-  items,
-  withDivider,
-  isOtherUser,
-  mediasUser,
-  changeSeenPending,
-  setChangeSeenPending,
+  items = [],
+  withDivider = false,
+  isOtherUser = false,
+  mediasUser = [],
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
 }) => {
   const count = items.length;
   const navigate = useNavigate();
@@ -104,33 +92,12 @@ const MediaPreviewSection = ({
     </div>
   );
 };
-
-MediaPreviewSection.propTypes = {
-  title: PropTypes.node.isRequired,
-  to: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.object),
-  withDivider: PropTypes.bool,
-  isOtherUser: PropTypes.bool,
-  mediasUser: PropTypes.array,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-};
-
-MediaPreviewSection.defaultProps = {
-  items: [],
-  withDivider: false,
-  isOtherUser: false,
-  mediasUser: [],
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-};
-
 const ProfileMediaSections = ({
   userId,
-  allMedias,
-  pendingData,
-  seenData,
-  changeSeenPending,
+  allMedias = [],
+  pendingData = [],
+  seenData = [],
+  changeSeenPending = false,
   setChangeSeenPending,
   isOtherUser,
 }) => {
@@ -178,22 +145,4 @@ const ProfileMediaSections = ({
     </div>
   );
 };
-
-ProfileMediaSections.propTypes = {
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  allMedias: PropTypes.arrayOf(PropTypes.object),
-  pendingData: PropTypes.arrayOf(PropTypes.object),
-  seenData: PropTypes.arrayOf(PropTypes.object),
-  isOtherUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func.isRequired,
-};
-
-ProfileMediaSections.defaultProps = {
-  allMedias: [],
-  pendingData: [],
-  seenData: [],
-  changeSeenPending: false,
-};
-
 export default ProfileMediaSections;

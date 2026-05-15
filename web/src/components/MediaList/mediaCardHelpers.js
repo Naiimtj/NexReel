@@ -4,7 +4,10 @@ import {
   getExternalId,
   getMediaDetails,
 } from '../../../services/TMDB/services-tmdb';
-import { getRating } from '../../../services/IMDB/services-imdb';
+import {
+  getImdbApiRating,
+  getRating,
+} from '../../../services/IMDB/services-imdb';
 
 const POSTER_BASE = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2';
 
@@ -54,32 +57,48 @@ export const isMediaInPlex = (
   return false;
 };
 
+// ─── Module-level caches (cleared on page refresh) ──────────────────────────
+const _detailsCache = new Map();
+const _externalIdCache = new Map();
+const _imdbRatingCache = new Map();
+
 export const useMediaData = (mediaType, id, language) => {
-  const [dataMedia, setDataMedia] = useState({});
-  const [imdbID, setImdbID] = useState('');
-  const [imdbData, setImdbData] = useState({});
+  const detailKey = `${mediaType}__${id}__${language}`;
+  const extKey = `${mediaType}__${id}__${language}`;
+
+  const [dataMedia, setDataMedia] = useState(
+    () => _detailsCache.get(detailKey) ?? {},
+  );
+  const [imdbID, setImdbID] = useState(
+    () => _externalIdCache.get(extKey) ?? '',
+  );
 
   useEffect(() => {
-    if (language && mediaType && id) {
-      getMediaDetails(mediaType, id, language).then(setDataMedia);
+    if (!language || !mediaType || !id) return;
+    if (_detailsCache.has(detailKey)) {
+      setDataMedia(_detailsCache.get(detailKey));
+      return;
     }
-  }, [id, mediaType, language]);
+    getMediaDetails(mediaType, id, language).then((data) => {
+      _detailsCache.set(detailKey, data);
+      setDataMedia(data);
+    });
+  }, [id, mediaType, language, detailKey]);
 
   useEffect(() => {
-    if (language && mediaType && id) {
-      getExternalId(mediaType, id, language).then((data) =>
-        setImdbID(data.imdb_id),
-      );
+    if (!language || !mediaType || !id) return;
+    if (_externalIdCache.has(extKey)) {
+      setImdbID(_externalIdCache.get(extKey));
+      return;
     }
-  }, [language, id, mediaType]);
+    getExternalId(mediaType, id, language).then((data) => {
+      const imdb = data.imdb_id ?? '';
+      _externalIdCache.set(extKey, imdb);
+      setImdbID(imdb);
+    });
+  }, [language, id, mediaType, extKey]);
 
-  useEffect(() => {
-    if (language && mediaType && imdbID) {
-      getRating(imdbID).then((data) => setImdbData(data ?? {}));
-    }
-  }, [language, imdbID, mediaType]);
-
-  return { dataMedia, imdbID, imdbData };
+  return { dataMedia, imdbID };
 };
 
 const EMPTY_MEDIA_USER = {};
@@ -96,8 +115,64 @@ export const useMediaUserEntry = (mediasUser, id, mediaType, deps = []) => {
   return [dataMediaUser, setDataMediaUser];
 };
 
+export const useImdbData = (mediaType, id, language) => {
+  const [imdbID, setImdbID] = useState('');
+  const [imdbData, setImdbData] = useState({});
+
+  useEffect(() => {
+    if (language && mediaType && id) {
+      getExternalId(mediaType, id, language).then((data) =>
+        setImdbID(data.imdb_id),
+      );
+    }
+  }, [language, id, mediaType]);
+
+  useEffect(() => {
+    if (imdbID) {
+      getRating(imdbID).then((data) => setImdbData(data ?? {}));
+    }
+  }, [imdbID]);
+
+  return { imdbID, imdbData };
+};
+
 export const roundedVote = (vote) =>
   vote > 0 ? Math.round(vote * 10) / 10 : 0;
 
 export const ratingFromImdb = (block) =>
   block?.audience?.rating > 0 ? Number(block.audience.rating) : null;
+
+export const useImdbApiRating = (imdbID, userExist) => {
+  const shouldFetch = userExist && !!imdbID;
+
+  const [value, setValue] = useState(() =>
+    shouldFetch && _imdbRatingCache.has(imdbID)
+      ? _imdbRatingCache.get(imdbID)
+      : null,
+  );
+  const [loading, setLoading] = useState(
+    () => shouldFetch && !_imdbRatingCache.has(imdbID),
+  );
+
+  useEffect(() => {
+    if (!shouldFetch) {
+      setValue(null);
+      setLoading(false);
+      return;
+    }
+    if (_imdbRatingCache.has(imdbID)) {
+      setValue(_imdbRatingCache.get(imdbID));
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    getImdbApiRating(imdbID).then((rating) => {
+      const resolved = rating ?? null;
+      _imdbRatingCache.set(imdbID, resolved);
+      setValue(resolved);
+      setLoading(false);
+    });
+  }, [imdbID, userExist, shouldFetch]);
+
+  return { value, loading };
+};

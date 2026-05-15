@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { patchPlaylist } from '../../../../services/DB/services-db';
 import { IoClose } from 'react-icons/io5';
@@ -9,10 +8,10 @@ import { BsCheckLg } from 'react-icons/bs';
 import TagInput from '../../Forums/TagInput';
 
 const EditPlaylist = ({
-  changeSeenPending,
-  setChangeSeenPending,
-  setEditPlaylist,
-  dataPlaylist,
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  setEditPlaylist = () => {},
+  dataPlaylist = {},
 }) => {
   const [t] = useTranslation('translation');
 
@@ -238,17 +237,3 @@ const EditPlaylist = ({
 };
 
 export default EditPlaylist;
-
-EditPlaylist.defaultProps = {
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  setEditPlaylist: () => {},
-  dataPlaylist: {},
-};
-
-EditPlaylist.propTypes = {
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  setEditPlaylist: PropTypes.func,
-  dataPlaylist: PropTypes.object,
-};

@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { NoImage, people } from '../assets/image';
 import { useAuthContext } from '../context/auth-context';
 import { useEffect, useState } from 'react';
@@ -10,18 +9,18 @@ import ShowPlaylistMenu from '../utils/Playlists/ShowPlaylistMenu';
 import { getMediaDetails } from '../../services/TMDB/services-tmdb';
 
 export const Credits = ({
-  repInfo,
-  media,
-  idInfo,
-  isForum,
-  changeSeenPending,
-  setChangeSeenPending,
-  isPlaylist,
-  setPopSureDel,
-  setIdDelete,
-  basicForum,
-  size,
-  playlistLabelVisibility,
+  repInfo = {},
+  media = '',
+  idInfo = 0,
+  isForum = false,
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  isPlaylist = false,
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
+  basicForum = {},
+  size = 'normal',
+  playlistLabelVisibility = 'responsive',
 }) => {
   const [t, i18next] = useTranslation('translation');
   const { user } = useAuthContext();
@@ -243,33 +242,3 @@ export const Credits = ({
 };
 
 export default Credits;
-
-Credits.defaultProps = {
-  idInfo: 0,
-  repInfo: {},
-  media: '',
-  basicForum: {},
-  isForum: false,
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  isPlaylist: false,
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-  size: 'normal',
-  playlistLabelVisibility: 'responsive',
-};
-
-Credits.propTypes = {
-  idInfo: PropTypes.number,
-  repInfo: PropTypes.object,
-  media: PropTypes.string,
-  basicForum: PropTypes.object,
-  isForum: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  isPlaylist: PropTypes.bool,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  size: PropTypes.oneOf(['small', 'normal']),
-  playlistLabelVisibility: PropTypes.oneOf(['responsive', 'always', 'hidden']),
-};

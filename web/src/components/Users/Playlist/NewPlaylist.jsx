@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { postPlaylist } from '../../../../services/DB/services-db';
 import { IoClose } from 'react-icons/io5';
@@ -9,10 +8,10 @@ import { BsCheckLg } from 'react-icons/bs';
 import TagInput from '../../Forums/TagInput';
 
 const NewPlaylist = ({
-  changeSeenPending,
-  setChangeSeenPending,
-  setCreatePlaylist,
-  isAbsolute,
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  setCreatePlaylist = () => {},
+  isAbsolute = true,
 }) => {
   const [t] = useTranslation('translation');
   const {
@@ -238,17 +237,3 @@ const NewPlaylist = ({
 };
 
 export default NewPlaylist;
-
-NewPlaylist.defaultProps = {
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  setCreatePlaylist: () => {},
-  isAbsolute: true,
-};
-
-NewPlaylist.propTypes = {
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  setCreatePlaylist: PropTypes.func,
-  isAbsolute: PropTypes.bool,
-};

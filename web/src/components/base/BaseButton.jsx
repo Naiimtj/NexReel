@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 const variantClasses = {
   primary:
@@ -71,22 +70,4 @@ const BaseButton = ({
     </button>
   );
 };
-
-BaseButton.propTypes = {
-  variant: PropTypes.oneOf([
-    'primary',
-    'danger',
-    'outline',
-    'icon',
-    'menu',
-    'text',
-  ]),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  type: PropTypes.oneOf(['button', 'submit', 'reset']),
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-};
-
 export default BaseButton;

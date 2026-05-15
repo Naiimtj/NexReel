@@ -1,8 +1,7 @@
 import "./Spinner.css";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const Spinner = ({ result }) => {
+const Spinner = ({ result = true }) => {
   const [t] = useTranslation("translation");
   return (
     <>
@@ -23,11 +22,3 @@ const Spinner = ({ result }) => {
 };
 
 export default Spinner;
-
-Spinner.defaultProps = {
-  result: true,
-};
-
-Spinner.propTypes = {
-  result: PropTypes.bool,
-};

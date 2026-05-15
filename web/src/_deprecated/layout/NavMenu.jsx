@@ -1,12 +1,11 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import { Menu, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import UserNotifications from "./UserNotifications";
 import { useTranslation } from "react-i18next";
 import { FaBars } from "react-icons/fa";
 
-const NavMenu = ({ user, logout, translate }) => {
+const NavMenu = ({ user = {}, logout = () => {}, translate = () => {} }) => {
   const navegate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -126,15 +125,3 @@ const NavMenu = ({ user, logout, translate }) => {
 };
 
 export default NavMenu;
-
-NavMenu.defaultProps = {
-  user: {},
-  logout: () => {},
-  translate: () => {},
-};
-
-NavMenu.propTypes = {
-  user: PropTypes.object,
-  logout: PropTypes.func,
-  translate: PropTypes.func,
-};

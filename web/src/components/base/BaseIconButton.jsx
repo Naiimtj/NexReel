@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 const hoverClasses = {
   scale:
@@ -26,12 +25,4 @@ const BaseIconButton = ({
     </button>
   );
 };
-
-BaseIconButton.propTypes = {
-  hover: PropTypes.oneOf(['scale', 'color']),
-  onClick: PropTypes.func,
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-};
-
 export default BaseIconButton;

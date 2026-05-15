@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseIcon } from '../../components/base';
 
@@ -42,7 +41,7 @@ const buildPageWindow = (totalPages, currentPage, maxVisible) => {
  * When totalPages exceeds MAX_VISIBLE_DOTS, the row collapses with ellipsis
  * separators around the current page so it never overflows the viewport.
  */
-const CarouselDots = ({ totalPages, currentPage, onSelect, keyPrefix }) => {
+const CarouselDots = ({ totalPages, currentPage, onSelect, keyPrefix = 'carousel' }) => {
   const [t] = useTranslation('translation');
 
   const pages = useMemo(
@@ -84,16 +83,4 @@ const CarouselDots = ({ totalPages, currentPage, onSelect, keyPrefix }) => {
     </div>
   );
 };
-
-CarouselDots.defaultProps = {
-  keyPrefix: 'carousel',
-};
-
-CarouselDots.propTypes = {
-  totalPages: PropTypes.number.isRequired,
-  currentPage: PropTypes.number.isRequired,
-  onSelect: PropTypes.func.isRequired,
-  keyPrefix: PropTypes.string,
-};
-
 export default CarouselDots;

@@ -1,5 +1,4 @@
 import { useId } from 'react';
-import PropTypes from 'prop-types';
 
 const SIZE_CLASSES = {
   small: 'w-4 h-4',
@@ -90,27 +89,4 @@ const BaseCheckbox = ({
     </div>
   );
 };
-
-BaseCheckbox.propTypes = {
-  label: PropTypes.node,
-  value: PropTypes.bool,
-  checked: PropTypes.bool,
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  labelPosition: PropTypes.oneOf(['left', 'right']),
-  disabled: PropTypes.bool,
-  onChange: PropTypes.func,
-  children: PropTypes.node,
-  color: PropTypes.oneOf([
-    'primary',
-    'secondary',
-    'danger',
-    'success',
-    'warning',
-    'info',
-  ]),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  className: PropTypes.string,
-  labelClassName: PropTypes.string,
-};
-
 export default BaseCheckbox;

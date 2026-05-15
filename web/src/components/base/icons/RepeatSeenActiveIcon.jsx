@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { getIconSize } from '../../../utils/sizeIcon';
 
 const RepeatSeenActiveIcon = ({
@@ -24,11 +23,4 @@ const RepeatSeenActiveIcon = ({
     </svg>
   );
 };
-
-RepeatSeenActiveIcon.propTypes = {
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  color: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default RepeatSeenActiveIcon;

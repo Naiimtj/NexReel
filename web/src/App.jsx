@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import NavBar from './layout/NavBar';
+import useCacheInvalidator from './hooks/useCacheInvalidator';
 // - PAGES
 import Home from './pages/Home';
 import NotFoundPage from './pages/NoFoundPage';
@@ -33,6 +34,7 @@ import ListMedias from './pages/Lists/ListMedias';
 import ListMediasGenres from './pages/Lists/ListMediasGenres';
 
 function App() {
+  useCacheInvalidator();
   return (
     <div className="min-h-screen flex flex-col px-2 pt-5 lg:px-16 xl:px-20">
       <NavBar />

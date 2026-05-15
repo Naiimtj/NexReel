@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
@@ -11,11 +10,11 @@ import { useAuthContext } from '../../../context/auth-context';
 import { BaseIcon } from '../../base';
 
 export const PlaylistsList = ({
-  info,
-  userId,
-  isOtherUser,
-  setPopSureDel,
-  setIdDelete,
+  info = {},
+  userId = '',
+  isOtherUser = false,
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
 }) => {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
@@ -159,19 +158,3 @@ export const PlaylistsList = ({
 };
 
 export default PlaylistsList;
-
-PlaylistsList.defaultProps = {
-  info: {},
-  userId: '',
-  isOtherUser: false,
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-};
-
-PlaylistsList.propTypes = {
-  info: PropTypes.object,
-  userId: PropTypes.string,
-  isOtherUser: PropTypes.bool,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-};

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
@@ -195,14 +194,4 @@ const ArrayPaginator = ({
     </div>
   );
 };
-
-ArrayPaginator.propTypes = {
-  data: PropTypes.array,
-  totalResult: PropTypes.number,
-  totalPages: PropTypes.number,
-  groupSize: PropTypes.number,
-  currentPageIndex: PropTypes.number,
-  setCurrentPageIndex: PropTypes.func,
-};
-
 export default ArrayPaginator;

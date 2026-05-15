@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   deleteFollowPlaylist,
   getFollowPlaylistDetail,
@@ -13,11 +12,11 @@ import { HiUserGroup } from 'react-icons/hi';
 import { BaseIcon } from '../base';
 
 export const ForumsList = ({
-  info,
-  userId,
-  isOtherUser,
-  setPopSureDel,
-  setIdDelete,
+  info = {},
+  userId = '',
+  isOtherUser = false,
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
 }) => {
   const [t] = useTranslation('translation');
   const { user } = useAuthContext();
@@ -148,19 +147,3 @@ export const ForumsList = ({
 };
 
 export default ForumsList;
-
-ForumsList.defaultProps = {
-  info: {},
-  userId: '',
-  isOtherUser: false,
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-};
-
-ForumsList.propTypes = {
-  info: PropTypes.object,
-  userId: PropTypes.string,
-  isOtherUser: PropTypes.bool,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-};

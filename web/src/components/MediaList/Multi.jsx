@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { FaStar } from 'react-icons/fa';
 import { BaseIcon } from '../base';
 import { NoImage, PlexTile, star } from '../../assets/image';
 import calculateAverageVote from './calculateAverageVote';
@@ -14,12 +12,12 @@ import SeenPending from './SeenPendingMedia/SeenPending';
 import SeenPendingButton from '../../utils/Buttons/SeenPendingButton';
 import {
   isMediaInPlex,
-  ratingFromImdb,
   resolveDate,
   resolveMediaType,
   resolvePosterUrl,
   resolveTypeIcon,
   roundedVote,
+  useImdbApiRating,
   useMediaData,
   useMediaUserEntry,
 } from './mediaCardHelpers';
@@ -50,10 +48,10 @@ export const Multi = ({
   const id = isUser ? info.mediaId : info.id;
   const mediaType = resolveMediaType(mediaMovie, mediaTv, media_type);
 
-  const { dataMedia, imdbID, imdbData } = useMediaData(
-    mediaType,
-    id,
-    i18next.language,
+  const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
+  const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+    imdbID,
+    userExist,
   );
 
   const [pendingSeen, setPendingSeen] = useState(false);
@@ -76,11 +74,10 @@ export const Multi = ({
 
   const processInfo = {
     bgPoster: url || NoImage,
-    voteAverage: calculateAverageVote(
-      roundedVote(vote_average),
-      ratingFromImdb(imdbData?.IMDb),
-      ratingFromImdb(imdbData?.FilmAffinity),
-    ),
+    voteAverage:
+      userExist && !imdbRatingLoading
+        ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+        : null,
     title: title || name,
     date: resolveDate(release_date, first_air_date, known_for_department),
     type: mediaType,
@@ -190,7 +187,7 @@ export const Multi = ({
                 />
               )}
               {/* //-AVERAGE RATINGS */}
-              {processInfo.voteAverage > 0 && (
+              {userExist && processInfo.voteAverage > 0 && (
                 <div className="z-10 absolute left-1 top-1 px-1 py-1 max-xs:hidden flex flex-row gap-1 items-center align-middle backdrop-blur-md bg-black/60 rounded-lg">
                   <img alt="Star Icon" className="w-3" src={star} />
                   <div className="text-amber-400 text-xs text-left">
@@ -237,8 +234,12 @@ export const Multi = ({
               </div>
               {/* // * User Vote */}
               {userExist && vote >= 0 && (
-                <div className="flex flex-row gap-1">
-                  <FaStar size={12} color="#FFCA28" alt={t('Seen')} />
+                <div className="flex flex-row gap-1 items-center">
+                  <BaseIcon
+                    icon="starFill"
+                    size="x-small"
+                    className="fill-amber-400"
+                  />
                   <div className="text-amber-400 text-xs text-left leading-4">
                     {vote}
                   </div>
@@ -318,20 +319,3 @@ export const Multi = ({
 };
 
 export default Multi;
-
-Multi.propTypes = {
-  info: PropTypes.object,
-  mediaMovie: PropTypes.bool,
-  mediaTv: PropTypes.bool,
-  isUser: PropTypes.bool,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  isPlaylist: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  hideSearch: PropTypes.func,
-  basicForum: PropTypes.object,
-  isForum: PropTypes.bool,
-  mediasUser: PropTypes.array,
-  size: PropTypes.oneOf(['small', 'normal']),
-};

@@ -105,6 +105,79 @@ const isInMediaUser = mediasUser?.find(
 - `mediaId` = TMDB id stored as VARCHAR in DB
 - Always compare with `Number()` on both sides
 
+## Media Card Helpers (`mediaCardHelpers.js`)
+
+### Module-Level Caches
+
+`mediaCardHelpers.js` holds three module-level `Map`s that cache TMDB / IMDB responses across card mounts:
+
+| Map                | Key                       | What it stores                        |
+| ------------------ | ------------------------- | ------------------------------------- |
+| `_detailsCache`    | `mediaType__id__language` | `getMediaDetails` response            |
+| `_externalIdCache` | `mediaType__id__language` | `imdb_id` string from `getExternalId` |
+| `_imdbRatingCache` | `imdbID`                  | IMDB API rating value                 |
+
+Caches are never cleared — they survive for the lifetime of the browser tab. TMDB/IMDB data is stable enough that this is safe.
+
+### `useMediaData(mediaType, id, language)`
+
+On mount: initialises state from cache if available (zero network requests for seen cards).
+On dep change: if cache hit → `setState` from cache immediately; if miss → fetch → cache → `setState`.
+
+```js
+const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
+```
+
+### `useImdbApiRating(imdbID, userExist)` — returns `{ value, loading }`
+
+**Breaking change from old API** (used to return a raw number).
+
+```js
+const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+  imdbID,
+  userExist,
+);
+```
+
+- `loading: true` while the first fetch is in flight; `false` once resolved (or when not applicable).
+- Cache hit: `loading` is immediately `false` and `value` is the cached number.
+- Use `loading` to defer showing `voteAverage` in cards — prevents the rating from visually changing mid-render:
+
+```js
+voteAverage:
+  userExist && !imdbRatingLoading
+    ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+    : null,
+```
+
+### `calculateAverageVote`
+
+Rounds result to **1 decimal place** (`Math.round(avg * 10) / 10`).
+
+## Carousel Prefetch
+
+All carousel components (`Carousel.jsx`, `CarouselCredits.jsx`, `CarouselSeasons.jsx`) pre-render the **next page's cards** in a hidden `<div aria-hidden="true" className="hidden">`. This mounts the components, triggering image loads and cache population before the user navigates.
+
+`useCarouselPagination` now exposes `prefetchCards` (the next page's item slice):
+
+```js
+const { visibleCards, prefetchCards, ... } = useCarouselPagination({ items, breakpoints });
+```
+
+Render pattern (same inside all three carousel files):
+
+```jsx
+{prefetchCards.length > 0 && (
+  <div aria-hidden="true" className="hidden">
+    {prefetchCards.map((card, index) => (
+      <Multi key={`prefetch${index}${media}`} info={card} ... />
+    ))}
+  </div>
+)}
+```
+
+**Important**: because cards on page N+1 are pre-mounted with the same index-based keys as page N+1 will use, `useMediaData` populates the cache. When the user navigates, the carousel components re-render with new props and `useMediaData` serves data from cache instantly with no network requests.
+
 ### refreshMedias After Mutation
 
 ```jsx
@@ -171,6 +244,38 @@ Key functions:
 - `getPlexMovies()` → `GET /v1/plex/movies`
 - `getPlexTv()` → `GET /v1/plex/tv`
 - `getUser()` → fresh user data from API (use when `user` from localStorage may be stale)
+- `clearApiCache()` — exported; clears the in-memory GET cache (called by `useCacheInvalidator` on route change)
+
+### In-Memory GET Cache (`services-db.js`)
+
+`services-db.js` has a module-level `Map` that caches all successful GET responses:
+
+- **Request interceptor**: on cache hit, replaces the axios adapter to return cached data without a network request.
+- **Response interceptor**: on cache miss, stores `response.data` before returning it.
+- Cache key: `url__JSON(params)` (relative URL + params).
+- **Clears on page refresh** automatically (module re-evaluated).
+- **Clears on route change** via `useCacheInvalidator` (see below).
+- POST / PATCH / DELETE requests are never cached.
+
+```js
+// import to manually clear
+import { clearApiCache } from '../../../services/DB/services-db';
+clearApiCache();
+```
+
+### useCacheInvalidator (`src/hooks/useCacheInvalidator.js`)
+
+Hook that listens to `useLocation` and calls `clearApiCache()` whenever `pathname` changes.
+Must be inside a Router context. Already wired in `App.jsx`:
+
+```js
+function App() {
+  useCacheInvalidator();
+  return ( ... );
+}
+```
+
+Do not add it to any other component — one call at the app root is sufficient.
 
 ## TV Tracking (Frontend Rules)
 
@@ -351,6 +456,44 @@ export default UserNotifications;
 ```
 
 Keep `propTypes` and `default export` as before. No change is needed in the parent (`<Menu.Item>` will assign the ref to the root `<div>`).
+
+## External Ratings in DetailsMedia
+
+`DetailsMedia.jsx` shows up to 4 ratings in a dropdown toggled by the star button:
+
+| Source         | Icon                                     | Component          |
+| -------------- | ---------------------------------------- | ------------------ |
+| FilmAffinity   | `FILMA` image                            | `<ExternalRating>` |
+| IMDB (scraped) | `IMDB` image                             | `<ExternalRating>` |
+| IMDB Free API  | Red inline badge `bg-red-600 text-white` | Raw JSX            |
+| TMDB           | `TMDB` image                             | `<ExternalRating>` |
+
+The red IMDB Free badge is rendered directly (not via `<ExternalRating>` which only accepts image icons):
+
+```jsx
+{
+  processInfo.voteIMDBFree > 0 && (
+    <div>
+      <span className="inline-block bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded leading-none">
+        IMDb
+      </span>
+      <div className="inline-block text-amber-400 text-xs text-left pl-2">
+        {processInfo.voteIMDBFree}
+      </div>
+    </div>
+  );
+}
+```
+
+`processInfo.voteIMDBFree` is derived from `useImdbApiRating` with loading gate:
+
+```js
+const { value: _voteIMDBFree, loading: _imdbFreeLoading } = useImdbApiRating(
+  imdbID,
+  userExist,
+);
+processInfo.voteIMDBFree = _imdbFreeLoading ? null : _voteIMDBFree;
+```
 
 ## DOM Nesting
 

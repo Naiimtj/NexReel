@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 // components
 import Multi from '../../components/MediaList/Multi';
 import { useAuthContext } from '../../context/auth-context';
@@ -22,29 +21,29 @@ const SIZE_CONFIG = {
 };
 
 const Carousel = ({
-  title,
-  info,
-  media,
-  isUser,
-  isPlaylist,
-  setPopSureDel,
-  setIdDelete,
-  isAllCards,
-  hideSearch,
-  isForum,
-  basicForum,
-  isSetChange,
-  isChange,
-  setPendingSeenMedia,
-  pendingSeenMedia,
-  size,
-  onTitleClick,
+  title = '',
+  info = [],
+  media = '',
+  isUser = false,
+  isPlaylist = '',
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
+  isAllCards = false,
+  hideSearch = () => {},
+  isForum = false,
+  basicForum = {},
+  isSetChange = () => {},
+  isChange = false,
+  setPendingSeenMedia = () => {},
+  pendingSeenMedia = false,
+  size = 'normal',
+  onTitleClick = undefined,
 }) => {
   const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
   const headerTitleClass =
     size === 'small'
       ? 'pl-4 text-sm md:text-base uppercase'
-      : 'pl-4 text-sm md:text-2xl uppercase';
+      : 'pl-4 text-base md:text-2xl uppercase';
   const { user } = useAuthContext();
   const userExist = !!user;
   const { mediasUser, refreshMedias } = useMediaContext();
@@ -89,6 +88,7 @@ const Carousel = ({
     allCards,
     totalPages,
     visibleCards,
+    prefetchCards,
     hasOverflow,
     canPrev,
     canNext,
@@ -145,6 +145,29 @@ const Carousel = ({
           />
         ))}
       </div>
+      {prefetchCards.length > 0 && (
+        <div aria-hidden="true" className="hidden">
+          {prefetchCards.map((card, index) => (
+            <Multi
+              key={`prefetch${index}${media}`}
+              info={card}
+              mediaMovie={mediaMovie}
+              mediaTv={mediaTv}
+              isUser={isUser}
+              setChangeSeenPending={isSetChange}
+              changeSeenPending={isChange}
+              isPlaylist={isPlaylist}
+              setPopSureDel={setPopSureDel}
+              setIdDelete={setIdDelete}
+              hideSearch={hideSearch}
+              isForum={isForum}
+              basicForum={ForumData}
+              mediasUser={mediasUser}
+              size={size}
+            />
+          ))}
+        </div>
+      )}
       {hasOverflow ? (
         <CarouselDots
           totalPages={totalPages}
@@ -158,43 +181,3 @@ const Carousel = ({
 };
 
 export default Carousel;
-
-Carousel.defaultProps = {
-  title: '',
-  info: [],
-  media: '',
-  isUser: false,
-  isChange: false,
-  isSetChange: () => {},
-  isPlaylist: '',
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-  isAllCards: false,
-  hideSearch: () => {},
-  basicForum: {},
-  isForum: false,
-  setPendingSeenMedia: () => {},
-  pendingSeenMedia: false,
-  size: 'normal',
-  onTitleClick: undefined,
-};
-
-Carousel.propTypes = {
-  title: PropTypes.string,
-  info: PropTypes.array,
-  media: PropTypes.string,
-  isUser: PropTypes.bool,
-  isChange: PropTypes.bool,
-  isSetChange: PropTypes.func,
-  isPlaylist: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  isAllCards: PropTypes.bool,
-  hideSearch: PropTypes.func,
-  basicForum: PropTypes.object,
-  isForum: PropTypes.bool,
-  setPendingSeenMedia: PropTypes.func,
-  pendingSeenMedia: PropTypes.bool,
-  size: PropTypes.oneOf(['small', 'normal']),
-  onTitleClick: PropTypes.func,
-};

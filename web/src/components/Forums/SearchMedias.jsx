@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { BsSearch } from "react-icons/bs";
 import { getSearch } from "../../../services/TMDB/services-tmdb";
 import SearchResults from "../Search/SearchResults";
 
 const SearchMedias = ({
-  basicForum,
-  hidden,
-  setHidden,
-  changeSeenPending,
-  setChangeSeenPending,
+  basicForum = {},
+  hidden = false,
+  setHidden = () => {},
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
 }) => {
   const [t] = useTranslation("translation");
   const [moviesList, setMovies] = useState([]);
@@ -123,19 +122,3 @@ const SearchMedias = ({
 };
 
 export default SearchMedias;
-
-SearchMedias.defaultProps = {
-  basicForum: {},
-  hidden: false,
-  setHidden: () => {},
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-};
-
-SearchMedias.propTypes = {
-  basicForum: PropTypes.object,
-  hidden: PropTypes.bool,
-  setHidden: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-};

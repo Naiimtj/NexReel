@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import BaseModal from '../BaseModal';
 import BaseButton from '../../base/BaseButton';
@@ -50,17 +49,4 @@ const DeleteConfirmModal = ({
     </BaseModal>
   );
 };
-
-DeleteConfirmModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  title: PropTypes.node,
-  message: PropTypes.node,
-  itemName: PropTypes.node,
-  confirmLabel: PropTypes.node,
-  cancelLabel: PropTypes.node,
-  loading: PropTypes.bool,
-};
-
 export default DeleteConfirmModal;

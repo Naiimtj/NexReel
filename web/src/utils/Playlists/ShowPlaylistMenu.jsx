@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -11,15 +10,15 @@ import {
 import { BaseButton, BaseIcon } from '../../components/base';
 
 const ShowPlaylistMenu = ({
-  userId,
-  id,
-  type,
-  runTime,
-  onReload,
-  changeSeenPending,
-  setChangeSeenPending,
-  size,
-  labelVisibility,
+  userId = '',
+  id = 0,
+  type = '',
+  runTime = 0,
+  onReload = () => {},
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  size = 'normal',
+  labelVisibility = 'responsive',
 }) => {
   const isSmall = size === 'small';
   const LABEL_VISIBILITY_CLASS = {
@@ -247,27 +246,3 @@ const ShowPlaylistMenu = ({
 };
 
 export default ShowPlaylistMenu;
-
-ShowPlaylistMenu.defaultProps = {
-  userId: '',
-  id: 0,
-  type: '',
-  runTime: 0,
-  onReload: () => {},
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  size: 'normal',
-  labelVisibility: 'responsive',
-};
-
-ShowPlaylistMenu.propTypes = {
-  userId: PropTypes.string,
-  id: PropTypes.number,
-  type: PropTypes.string,
-  runTime: PropTypes.number,
-  onReload: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  size: PropTypes.oneOf(['small', 'normal']),
-  labelVisibility: PropTypes.oneOf(['responsive', 'always', 'hidden']),
-};

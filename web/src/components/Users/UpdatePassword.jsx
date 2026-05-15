@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "../../context/auth-context";
@@ -8,9 +7,9 @@ import { BsCheckLg, BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { useState } from "react";
 
 const UpdatePassword = ({
-  setModalPassword,
-  setChangeSeenPending,
-  changeSeenPending,
+  setModalPassword = () => {},
+  setChangeSeenPending = () => {},
+  changeSeenPending = false,
 }) => {
   const [t] = useTranslation("translation");
   const {
@@ -126,15 +125,3 @@ const UpdatePassword = ({
 };
 
 export default UpdatePassword;
-
-UpdatePassword.defaultProps = {
-  setModalPassword: () => {},
-  setChangeSeenPending: () => {},
-  changeSeenPending: false,
-};
-
-UpdatePassword.propTypes = {
-  setModalPassword: PropTypes.func,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-};

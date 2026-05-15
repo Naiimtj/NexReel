@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 const TMDB_LOGO_BASE = 'https://image.tmdb.org/t/p/original';
 
@@ -12,14 +11,6 @@ export function ProviderLogo({ provider }) {
     />
   );
 }
-
-ProviderLogo.propTypes = {
-  provider: PropTypes.shape({
-    logo_path: PropTypes.string,
-    provider_name: PropTypes.string,
-  }).isRequired,
-};
-
 function ProvidersSection({ label, providers }) {
   if (!providers || providers.length === 0) return null;
   return (
@@ -36,10 +27,4 @@ function ProvidersSection({ label, providers }) {
     </div>
   );
 }
-
-ProvidersSection.propTypes = {
-  label: PropTypes.string.isRequired,
-  providers: PropTypes.array,
-};
-
 export default ProvidersSection;

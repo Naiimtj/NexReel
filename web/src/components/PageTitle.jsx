@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import PropTypes from "prop-types";
 
-const PageTitle  = ({ title }) => {
+const PageTitle  = ({ title = "" }) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -10,9 +9,3 @@ const PageTitle  = ({ title }) => {
 };
 
 export default PageTitle ;
-PageTitle.defaultProps = {
-  title: "",
-};
-PageTitle.propTypes = {
-  title: PropTypes.string,
-};

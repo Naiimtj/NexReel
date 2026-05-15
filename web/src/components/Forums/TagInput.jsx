@@ -1,15 +1,14 @@
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { BsCheckLg } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 
 function TagInput({
-  register,
-  setValue,
-  errors,
-  dirtyFields,
-  transl,
-  defaultTags,
+  register = () => {},
+  setValue = () => {},
+  errors = {},
+  dirtyFields = {},
+  transl = () => {},
+  defaultTags = [],
 }) {
   const [tags, setTags] = useState(defaultTags || []);
   const [inputValue, setInputValue] = useState("");
@@ -86,21 +85,3 @@ function TagInput({
 }
 
 export default TagInput;
-
-TagInput.defaultProps = {
-  register: () => {},
-  setValue: () => {},
-  errors: {},
-  dirtyFields: {},
-  transl: () => {},
-  defaultTags: [],
-};
-
-TagInput.propTypes = {
-  register: PropTypes.func,
-  setValue: PropTypes.func,
-  errors: PropTypes.object,
-  dirtyFields: PropTypes.object,
-  transl: PropTypes.func,
-  defaultTags: PropTypes.arrayOf(PropTypes.string),
-};

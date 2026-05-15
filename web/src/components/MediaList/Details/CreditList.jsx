@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -9,12 +8,12 @@ import { useTranslation } from 'react-i18next';
  */
 function CreditList({
   label,
-  items,
-  totalCount,
-  linkable,
-  mediaType,
-  mediaId,
-  containerClassName,
+  items = [],
+  totalCount = null,
+  linkable = true,
+  mediaType = '',
+  mediaId = '',
+  containerClassName = 'flex flex-row text-sm items-center',
 }) {
   const navigate = useNavigate();
   const [t] = useTranslation('translation');
@@ -88,24 +87,4 @@ function CreditList({
     </div>
   );
 }
-
-CreditList.propTypes = {
-  label: PropTypes.string.isRequired,
-  items: PropTypes.array,
-  totalCount: PropTypes.number,
-  linkable: PropTypes.bool,
-  mediaType: PropTypes.string,
-  mediaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  containerClassName: PropTypes.string,
-};
-
-CreditList.defaultProps = {
-  items: [],
-  totalCount: null,
-  linkable: true,
-  mediaType: '',
-  mediaId: '',
-  containerClassName: 'flex flex-row text-sm items-center',
-};
-
 export default CreditList;

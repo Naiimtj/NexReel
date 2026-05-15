@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 export function useCountryName() {
@@ -251,22 +250,9 @@ export function useCountryName() {
   return (code) => countryInfo[code] || null;
 }
 
-function CountryName({ info }) {
+function CountryName({ info = '' }) {
   const getName = useCountryName();
   const countryName = getName(info);
   return <div className="inline-block pr-1">{countryName}</div>;
 }
-
-CountryName.propTypes = {
-  info: PropTypes.string,
-};
-
 export default CountryName;
-
-CountryName.defaultProps = {
-  info: PropTypes.string,
-};
-
-CountryName.propTypes = {
-  info: PropTypes.string,
-};

@@ -4,6 +4,21 @@
 
 Caveman mode is always active in this project. Respond terse: drop articles, filler, pleasantries. Fragments OK. Technical terms stay exact. Code blocks unchanged. See `.github/skills/productivity/caveman/SKILL.md` for full rules.
 
+## Agent Working Rules
+
+1. **No code without context** — Read relevant files, check git log, understand architecture first. Ask if context missing.
+2. **Short responses** — 1-3 sentences. No preambles, no final summaries. Don't narrate code.
+3. **No full file rewrites** — Use partial edits. Only change what's needed. No cleanup of surrounding code.
+4. **Don't re-read already-read files** — Unless file changed or mental notes insufficient.
+5. **Validate before declaring done** — Compile, run tests, or verify. Never say "done" without evidence.
+6. **Zero flattery** — No "Great question", "Perfect", etc. Go straight to work.
+7. **Don't argue with the user** — If they say "do it this way", do it. Mention concern in 1 sentence max, then proceed.
+8. **Read only what's needed** — Use offsets/limits. If path known, read directly — no Glob+Grep+Read chain.
+9. **Don't narrate the plan** — Just execute. User sees tool calls; no preview needed.
+10. **Parallelize tool calls** — Read multiple independent files in one message.
+11. **Don't duplicate code in response** — If file was edited, don't copy result in text too.
+12. **Don't use Agent when Grep/Read suffices** — Agent only for broad searches or complex tasks.
+
 ## What Is This
 
 NexReel is a social entertainment platform. Users can track movies and TV shows, follow each other, create playlists, participate in forums, exchange messages, and manage Plex-related metadata.
@@ -175,6 +190,7 @@ Frontend variables (`web/.env`):
 - `VITE_URL_IMDB`, `VITE_APIKEY_IMDB` — IMDB/RapidAPI ratings
 - `VITE_URL_PLEX`, `VITE_APIKEY_PLEX` — Plex Media Server
 - `VITE_USE_MOCKS` — set `"true"` to intercept all TMDB/IMDB calls and return local JSON fixtures (no API quota consumed)
+- `VITE_NOT_USE_IMDB` — set `"true"` to skip all RapidAPI IMDB calls entirely (ratings will be absent); default `"false"`
 
 ## Backend Conventions
 

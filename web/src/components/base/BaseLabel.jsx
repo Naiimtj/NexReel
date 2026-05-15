@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 
 const BaseLabel = ({
   label,
@@ -46,13 +45,4 @@ const BaseLabel = ({
     </label>
   );
 };
-
-BaseLabel.propTypes = {
-  label: PropTypes.node,
-  tooltip: PropTypes.string,
-  mandatory: PropTypes.bool,
-  htmlFor: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default BaseLabel;

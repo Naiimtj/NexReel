@@ -1,17 +1,16 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import CarouselSeasons from '../../utils/Carousel/CarouselSeasons';
 
 export const Seasons = ({
-  info,
-  idTvShow,
-  mediaIsSeen,
-  runTime,
-  setChangeSeenPending,
-  changeSeenPending,
-  numberEpisodes,
-  numberSeasons,
-  runTimeSeasons,
+  info = [],
+  idTvShow = 0,
+  mediaIsSeen = false,
+  runTime = 0,
+  setChangeSeenPending = () => {},
+  changeSeenPending = false,
+  numberEpisodes = 0,
+  numberSeasons = 0,
+  runTimeSeasons = [],
 }) => {
   const [t] = useTranslation('translation');
   const haveData = info && info.length > 0;
@@ -37,27 +36,3 @@ export const Seasons = ({
 };
 
 export default Seasons;
-
-Seasons.defaultProps = {
-  info: [],
-  idTvShow: 0,
-  mediaIsSeen: false,
-  runTime: 0,
-  setChangeSeenPending: () => {},
-  changeSeenPending: false,
-  numberEpisodes: 0,
-  numberSeasons: 0,
-  runTimeSeasons: [],
-};
-
-Seasons.propTypes = {
-  info: PropTypes.array,
-  idTvShow: PropTypes.number,
-  mediaIsSeen: PropTypes.bool,
-  runTime: PropTypes.number,
-  setChangeSeenPending: PropTypes.func,
-  changeSeenPending: PropTypes.bool,
-  numberEpisodes: PropTypes.number,
-  numberSeasons: PropTypes.number,
-  runTimeSeasons: PropTypes.array,
-};

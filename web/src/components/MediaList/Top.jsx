@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { getTop } from '../../../services/TMDB/services-tmdb';
 import Carousel from '../../utils/Carousel/Carousel';
 import Spinner from '../../utils/Spinner/Spinner';
@@ -35,7 +34,4 @@ const Top = ({ media = '' }) => {
     </div>
   );
 };
-
-Top.propTypes = { media: PropTypes.string };
-
 export default Top;

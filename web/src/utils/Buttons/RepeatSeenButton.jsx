@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BaseIcon } from '../../components/base';
 
@@ -22,11 +21,4 @@ const RepeatSeenButton = ({
     />
   );
 };
-
-RepeatSeenButton.propTypes = {
-  condition: PropTypes.bool,
-  handle: PropTypes.func,
-  className: PropTypes.string,
-};
-
 export default RepeatSeenButton;

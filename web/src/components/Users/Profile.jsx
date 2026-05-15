@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   UnFollow,
   deletePlaylist,
@@ -47,10 +46,10 @@ function getTotalRuntime(medias = []) {
 }
 
 const Profile = ({
-  dataUser,
-  isOtherUser,
-  setChangeOtherUser,
-  currentUser,
+  dataUser = {},
+  isOtherUser = false,
+  setChangeOtherUser = () => {},
+  currentUser = {},
 }) => {
   const [t] = useTranslation('translation');
   const [changeSeenPending, setChangeSeenPending] = useState(false);
@@ -333,17 +332,3 @@ const Profile = ({
 };
 
 export default Profile;
-
-Profile.defaultProps = {
-  dataUser: {},
-  isOtherUser: false,
-  setChangeOtherUser: () => {},
-  currentUser: {},
-};
-
-Profile.propTypes = {
-  dataUser: PropTypes.object,
-  isOtherUser: PropTypes.bool,
-  setChangeOtherUser: PropTypes.func,
-  currentUser: PropTypes.object,
-};

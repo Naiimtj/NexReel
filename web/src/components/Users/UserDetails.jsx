@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { getInfoUser } from "../../../services/DB/services-db";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/auth-context";
 
-const UserDetails = ({ data, isFollower }) => {
+const UserDetails = ({ data = {}, isFollower = false }) => {
   const { user } = useAuthContext();
   const [dataUser, setDataUser] = useState({});
   useEffect(() => {
@@ -38,13 +37,3 @@ const UserDetails = ({ data, isFollower }) => {
 };
 
 export default UserDetails;
-
-UserDetails.defaultProps = {
-  data: {},
-  isFollower: false,
-};
-
-UserDetails.propTypes = {
-  data: PropTypes.object,
-  isFollower: PropTypes.bool,
-};

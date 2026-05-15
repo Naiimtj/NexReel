@@ -1,19 +1,18 @@
-import PropTypes from 'prop-types';
 import { MdModeEditOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { BaseIcon } from '../../base';
 
 const ForumReply = ({
-  reply,
-  isOtherUser,
-  setPopSureDel,
-  setIdDelete,
-  transl,
-  userId,
-  editMessage,
-  setEditMessage,
-  setIsSender,
-  setReply,
+  reply = {},
+  isOtherUser = true,
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
+  transl = () => {},
+  userId = '',
+  editMessage = true,
+  setEditMessage = () => {},
+  setIsSender = () => {},
+  setReply = () => {},
 }) => {
   const handleDeleteMessage = () => {
     setPopSureDel(true);
@@ -89,29 +88,3 @@ const ForumReply = ({
 };
 
 export default ForumReply;
-
-ForumReply.defaultProps = {
-  reply: {},
-  isOtherUser: true,
-  transl: () => {},
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-  userId: '',
-  editMessage: true,
-  setEditMessage: () => {},
-  setIsSender: () => {},
-  setReply: () => {},
-};
-
-ForumReply.propTypes = {
-  reply: PropTypes.object,
-  isOtherUser: PropTypes.bool,
-  transl: PropTypes.func,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  userId: PropTypes.string,
-  editMessage: PropTypes.bool,
-  setEditMessage: PropTypes.func,
-  setIsSender: PropTypes.func,
-  setReply: PropTypes.func,
-};

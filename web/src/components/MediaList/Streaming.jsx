@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { getDiscover } from '../../../services/TMDB/services-tmdb';
 import Carousel from '../../utils/Carousel/Carousel';
 import Spinner from '../../utils/Spinner/Spinner';
@@ -35,7 +34,4 @@ const Streaming = ({ media = '' }) => {
     </div>
   );
 };
-
-Streaming.propTypes = { media: PropTypes.string };
-
 export default Streaming;

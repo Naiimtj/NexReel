@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { NoImage, tv } from "../../assets/image";
 import { useTranslation } from "react-i18next";
@@ -8,7 +7,7 @@ import SeenPending from "../MediaList/SeenPendingMedia/SeenPending";
 import { useAuthContext } from "../../context/auth-context";
 import SeenPendingButton from "../../utils/Buttons/SeenPendingButton";
 
-export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
+export const SeasonList = ({ season = {}, idTvShow = 0, dataUser = {}, runTime = 0 }) => {
   const [t] = useTranslation("translation");
   const { onReload } = useAuthContext();
   const navigate = useNavigate();
@@ -145,17 +144,3 @@ export const SeasonList = ({ season, idTvShow, dataUser, runTime }) => {
 };
 
 export default SeasonList;
-
-SeasonList.defaultProps = {
-  season: {},
-  idTvShow: 0,
-  dataUser: {},
-  runTime: 0,
-};
-
-SeasonList.propTypes = {
-  season: PropTypes.object,
-  idTvShow: PropTypes.number,
-  dataUser: PropTypes.object,
-  runTime: PropTypes.number,
-};

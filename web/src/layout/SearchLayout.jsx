@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BsSearch } from 'react-icons/bs';
 import { getSearch } from '../../services/TMDB/services-tmdb';
@@ -30,15 +29,18 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
 
   useEffect(() => {
     if (!searching) return;
-    Promise.all([
-      getSearch(searchValue, 'person'),
-      getSearch(searchValue, 'movie'),
-      getSearch(searchValue, 'tv'),
-    ]).then(([persons, movies, tvs]) => {
-      setPersons(persons);
-      setMovies(movies);
-      setTvs(tvs);
-    });
+    const timerId = setTimeout(() => {
+      Promise.all([
+        getSearch(searchValue, 'person'),
+        getSearch(searchValue, 'movie'),
+        getSearch(searchValue, 'tv'),
+      ]).then(([persons, movies, tvs]) => {
+        setPersons(persons);
+        setMovies(movies);
+        setTvs(tvs);
+      });
+    }, 500);
+    return () => clearTimeout(timerId);
   }, [searchValue, searching]);
 
   useEffect(() => {
@@ -114,11 +116,4 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
     </div>
   );
 };
-
-SearchLayout.propTypes = {
-  hiden: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  onSelect: PropTypes.func,
-};
-
 export default SearchLayout;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { HiUserGroup } from 'react-icons/hi';
 import { getIconSize } from '../../../utils/sizeIcon';
 
@@ -15,11 +14,4 @@ const UserGroupIcon = ({
     {...props}
   />
 );
-
-UserGroupIcon.propTypes = {
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  color: PropTypes.string,
-  className: PropTypes.string,
-};
-
 export default UserGroupIcon;

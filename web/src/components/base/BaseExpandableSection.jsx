@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import BaseIcon from './BaseIcon';
 
 const BaseExpandableSection = ({
@@ -46,15 +45,4 @@ const BaseExpandableSection = ({
     </div>
   );
 };
-
-BaseExpandableSection.propTypes = {
-  title: PropTypes.node.isRequired,
-  disabledHighlight: PropTypes.bool,
-  styleClass: PropTypes.string,
-  withoutContentPadding: PropTypes.bool,
-  isOpenInitially: PropTypes.bool,
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
-
 export default BaseExpandableSection;

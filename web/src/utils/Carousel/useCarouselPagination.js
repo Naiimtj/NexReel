@@ -55,6 +55,11 @@ export const useCarouselPagination = ({
     startCardIndex,
     startCardIndex + cardsPerPage,
   );
+  const nextPageStart = startCardIndex + cardsPerPage;
+  const prefetchCards = allCards.slice(
+    nextPageStart,
+    nextPageStart + cardsPerPage,
+  );
   const hasOverflow = allCards.length > cardsPerPage;
   const canPrev = currentPage > 1;
   const canNext = startCardIndex + cardsPerPage < allCards.length;
@@ -74,6 +79,7 @@ export const useCarouselPagination = ({
     totalPages,
     startCardIndex,
     visibleCards,
+    prefetchCards,
     hasOverflow,
     canPrev,
     canNext,

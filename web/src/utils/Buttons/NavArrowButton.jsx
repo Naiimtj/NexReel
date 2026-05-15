@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { BaseIcon } from '../../components/base';
 
 const NavArrowButton = ({
@@ -24,13 +23,4 @@ const NavArrowButton = ({
     </button>
   );
 };
-
-NavArrowButton.propTypes = {
-  direction: PropTypes.oneOf(['back', 'forward']),
-  label: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
-  hidden: PropTypes.bool,
-  className: PropTypes.string,
-};
-
 export default NavArrowButton;

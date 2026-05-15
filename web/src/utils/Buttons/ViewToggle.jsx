@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { BsGrid3X2GapFill, BsListUl } from 'react-icons/bs';
 import { MdViewCarousel } from 'react-icons/md';
 
@@ -33,10 +32,4 @@ const ViewToggle = ({ visualDesign, setVisualDesign }) => {
     </div>
   );
 };
-
-ViewToggle.propTypes = {
-  visualDesign: PropTypes.number.isRequired,
-  setVisualDesign: PropTypes.func.isRequired,
-};
-
 export default ViewToggle;

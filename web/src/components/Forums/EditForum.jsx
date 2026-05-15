@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
@@ -9,10 +8,10 @@ import { patchForum } from "../../../services/DB/services-db";
 import TagInput from "./TagInput";
 
 const EditForum = ({
-  changeSeenPending,
-  setChangeSeenPending,
-  setEditForum,
-  dataForum,
+  changeSeenPending = false,
+  setChangeSeenPending = () => {},
+  setEditForum = () => {},
+  dataForum = {},
 }) => {
   const [t] = useTranslation("translation");
   const {
@@ -268,17 +267,3 @@ const EditForum = ({
 };
 
 export default EditForum;
-
-EditForum.defaultProps = {
-  changeSeenPending: false,
-  setChangeSeenPending: () => {},
-  setEditForum: () => {},
-  dataForum: {},
-};
-
-EditForum.propTypes = {
-  changeSeenPending: PropTypes.bool,
-  setChangeSeenPending: PropTypes.func,
-  setEditForum: PropTypes.func,
-  dataForum: PropTypes.object,
-};

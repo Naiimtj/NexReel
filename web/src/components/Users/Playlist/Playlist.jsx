@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Spinner from '../../../utils/Spinner/Spinner';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,11 +12,11 @@ import { BaseIcon } from '../../base';
 import ButtonIsFollowing from '../../../utils/ButtonIsFollowing';
 
 const Playlist = ({
-  data,
-  userId,
-  isOtherUser,
-  setPopSureDel,
-  setIdDelete,
+  data = {},
+  userId = '',
+  isOtherUser = false,
+  setPopSureDel = () => {},
+  setIdDelete = () => {},
   compact = false,
 }) => {
   const [t] = useTranslation('translation');
@@ -225,21 +224,3 @@ const Playlist = ({
 };
 
 export default Playlist;
-
-Playlist.defaultProps = {
-  data: {},
-  isOtherUser: false,
-  userId: '',
-  setPopSureDel: () => {},
-  setIdDelete: () => {},
-  compact: false,
-};
-
-Playlist.propTypes = {
-  data: PropTypes.object,
-  isOtherUser: PropTypes.bool,
-  userId: PropTypes.string,
-  setPopSureDel: PropTypes.func,
-  setIdDelete: PropTypes.func,
-  compact: PropTypes.bool,
-};

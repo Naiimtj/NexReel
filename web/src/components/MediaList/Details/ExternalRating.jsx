@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 
-function ExternalRating({ icon, alt, value, iconClassName }) {
+function ExternalRating({ icon, alt, value = null, iconClassName = 'inline-block pr-1 w-10' }) {
   if (!value || value <= 0) return null;
   return (
     <div>
@@ -11,17 +10,4 @@ function ExternalRating({ icon, alt, value, iconClassName }) {
     </div>
   );
 }
-
-ExternalRating.propTypes = {
-  icon: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  value: PropTypes.number,
-  iconClassName: PropTypes.string,
-};
-
-ExternalRating.defaultProps = {
-  iconClassName: 'inline-block pr-1 w-10',
-  value: null,
-};
-
 export default ExternalRating;

@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { BsCheckLg } from "react-icons/bs";
 import { postMessageForum } from "../../../../services/DB/services-db";
 
-const NewMessage = ({ forumId, change, setChange, setCreateMessage }) => {
+const NewMessage = ({ forumId = "", change = false, setChange = () => {}, setCreateMessage = () => {} }) => {
   const [t] = useTranslation("translation");
   const {
     register,
@@ -113,17 +112,3 @@ const NewMessage = ({ forumId, change, setChange, setCreateMessage }) => {
 };
 
 export default NewMessage;
-
-NewMessage.defaultProps = {
-  change: false,
-  setChange: () => {},
-  setCreateMessage: () => {},
-  forumId: "",
-};
-
-NewMessage.propTypes = {
-  change: PropTypes.bool,
-  setChange: PropTypes.func,
-  setCreateMessage: PropTypes.func,
-  forumId: PropTypes.string,
-};

@@ -10,16 +10,16 @@ Each `SKILL.md` carries a YAML frontmatter `name` + `description` (with a "Use w
 
 ## NexReel-Specific Skills (`engineering/`)
 
-| Skill                 | Path                              | Summary                                                                                 |
-| --------------------- | --------------------------------- | --------------------------------------------------------------------------------------- |
-| API Design            | `engineering/api-design/SKILL.md` | FastAPI router patterns, `/v1` contracts, multipart parsing, response compatibility     |
-| New Entity            | `engineering/new-entity/SKILL.md` | Workflow for adding a new NexReel resource across schema, repository, router, and tests |
-| Database & Migrations | `engineering/database/SKILL.md`   | PostgreSQL schema, `database/schema.sql`, Alembic, repository query patterns            |
-| Docker & Infra        | `engineering/docker/SKILL.md`     | Compose services, `justfile`, local startup, backups, schema bootstrap                  |
-| Code Quality          | `engineering/quality/SKILL.md`    | Naming, error handling, serializer discipline, maintainable FastAPI code                |
-| Security & Auth       | `engineering/security/SKILL.md`   | Session auth, password hashing, CORS, admin backup header, secret handling              |
-| Testing               | `engineering/testing/SKILL.md`    | Pytest and smoke-test strategy for the current NexReel backend                          |
-| Frontend              | `engineering/frontend/SKILL.md`   | React/Vite patterns, context, Plex badge, Carousel `size` prop, SonarQube quality rules |
+| Skill                 | Path                              | Summary                                                                                                                                               |
+| --------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API Design            | `engineering/api-design/SKILL.md` | FastAPI router patterns, `/v1` contracts, multipart parsing, response compatibility                                                                   |
+| New Entity            | `engineering/new-entity/SKILL.md` | Workflow for adding a new NexReel resource across schema, repository, router, and tests                                                               |
+| Database & Migrations | `engineering/database/SKILL.md`   | PostgreSQL schema, `database/schema.sql`, Alembic, repository query patterns                                                                          |
+| Docker & Infra        | `engineering/docker/SKILL.md`     | Compose services, `justfile`, local startup, backups, schema bootstrap                                                                                |
+| Code Quality          | `engineering/quality/SKILL.md`    | Naming, error handling, serializer discipline, maintainable FastAPI code                                                                              |
+| Security & Auth       | `engineering/security/SKILL.md`   | Session auth, password hashing, CORS, admin backup header, secret handling                                                                            |
+| Testing               | `engineering/testing/SKILL.md`    | Pytest and smoke-test strategy for the current NexReel backend                                                                                        |
+| Frontend              | `engineering/frontend/SKILL.md`   | React/Vite patterns, context, caching (DB + TMDB/IMDB), carousel prefetch, `useImdbApiRating` API, `useCacheInvalidator`, Plex badge, SonarQube rules |
 
 ## General Engineering Skills (`engineering/`, imported from mattpocock/skills)
 

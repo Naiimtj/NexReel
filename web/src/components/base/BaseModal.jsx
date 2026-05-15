@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 import BaseIcon from './BaseIcon';
 import { t } from 'i18next';
 
@@ -86,18 +85,4 @@ const BaseModal = ({
   if (typeof document === 'undefined') return null;
   return createPortal(modal, document.body);
 };
-
-BaseModal.propTypes = {
-  visible: PropTypes.bool,
-  title: PropTypes.node,
-  onClose: PropTypes.func,
-  fullscreen: PropTypes.bool,
-  fullHeight: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  closeButtonHidden: PropTypes.bool,
-  className: PropTypes.string,
-  overlayClassName: PropTypes.string,
-  children: PropTypes.node,
-};
-
 export default BaseModal;

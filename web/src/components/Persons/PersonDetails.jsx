@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { BsFillCaretRightFill } from 'react-icons/bs';
@@ -17,12 +16,12 @@ import PageTitle from '../PageTitle';
 import ShowPlaylistMenu from '../../utils/Playlists/ShowPlaylistMenu';
 
 export const PersonDetails = ({
-  info,
-  infoEN,
-  films,
-  media,
-  idMedia,
-  titleMedia,
+  info = {},
+  infoEN = {},
+  films = {},
+  media = '',
+  idMedia = '',
+  titleMedia = '',
 }) => {
   const [t] = useTranslation('translation');
   const { user, onReload } = useAuthContext();
@@ -571,21 +570,3 @@ export const PersonDetails = ({
 };
 
 export default PersonDetails;
-
-PersonDetails.defaultProps = {
-  info: {},
-  infoEN: {},
-  films: {},
-  media: '',
-  idMedia: '',
-  titleMedia: '',
-};
-
-PersonDetails.propTypes = {
-  info: PropTypes.object,
-  infoEN: PropTypes.object,
-  films: PropTypes.object,
-  media: PropTypes.string,
-  idMedia: PropTypes.string,
-  titleMedia: PropTypes.string,
-};

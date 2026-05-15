@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 function KeyWords({ wordsKey, media = '', id = 0 }) {
@@ -20,11 +19,4 @@ function KeyWords({ wordsKey, media = '', id = 0 }) {
     </div>
   );
 }
-
-KeyWords.propTypes = {
-  wordsKey: PropTypes.array,
-  media: PropTypes.string,
-  id: PropTypes.number,
-};
-
 export default KeyWords;

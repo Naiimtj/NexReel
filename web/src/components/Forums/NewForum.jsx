@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
@@ -8,7 +7,7 @@ import { BsCheckLg } from "react-icons/bs";
 import { postForum } from "../../../services/DB/services-db";
 import TagInput from "./TagInput";
 
-const NewForum = ({ change, setChange, setCreateForum, isAbsolute }) => {
+const NewForum = ({ change = false, setChange = () => {}, setCreateForum = () => {}, isAbsolute = true }) => {
   const [t] = useTranslation("translation");
   const {
     register,
@@ -266,17 +265,3 @@ const NewForum = ({ change, setChange, setCreateForum, isAbsolute }) => {
 };
 
 export default NewForum;
-
-NewForum.defaultProps = {
-  change: false,
-  setChange: () => {},
-  setCreateForum: () => {},
-  isAbsolute: true,
-};
-
-NewForum.propTypes = {
-  change: PropTypes.bool,
-  setChange: PropTypes.func,
-  setCreateForum: PropTypes.func,
-  isAbsolute: PropTypes.bool,
-};

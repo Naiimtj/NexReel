@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import {
   deleteMessage,
@@ -9,7 +8,7 @@ import { DeleteConfirmModal } from '../../base';
 import NewMessage from './NewMessage';
 import EditMessage from './EditMessage';
 
-const ForumChat = ({ id, isOtherUser, transl, userId }) => {
+const ForumChat = ({ id = '', isOtherUser = true, transl = () => {}, userId = '' }) => {
   const [change, setChange] = useState(false);
   const [editMessage, setEditMessage] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -125,17 +124,3 @@ const ForumChat = ({ id, isOtherUser, transl, userId }) => {
 };
 
 export default ForumChat;
-
-ForumChat.defaultProps = {
-  id: '',
-  isOtherUser: true,
-  transl: () => {},
-  userId: '',
-};
-
-ForumChat.propTypes = {
-  id: PropTypes.string,
-  isOtherUser: PropTypes.bool,
-  transl: PropTypes.func,
-  userId: PropTypes.string,
-};

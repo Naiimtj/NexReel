@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { BsSearch } from 'react-icons/bs';
 import SearchResults from '../Search/SearchResults';
 import { getSearchUsers } from '../../../services/DB/services-db';
 
-const SearchUsers = ({ hiden }) => {
+const SearchUsers = ({ hiden = false }) => {
   const [t] = useTranslation('translation');
   const [users, setUsers] = useState({});
   const [searchValue, setSearchValue] = useState('');
@@ -51,6 +50,7 @@ const SearchUsers = ({ hiden }) => {
               value={searchValue}
               onChange={onChangeInput}
               type="text"
+              id="search-users-input"
             />
           </div>
         </div>
@@ -69,11 +69,3 @@ const SearchUsers = ({ hiden }) => {
 };
 
 export default SearchUsers;
-
-SearchUsers.defaultProps = {
-  hiden: false,
-};
-
-SearchUsers.propTypes = {
-  hiden: PropTypes.bool,
-};
