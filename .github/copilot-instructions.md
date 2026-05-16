@@ -1,6 +1,6 @@
 # NexReel — Project Context
 
-## Communication Style
+## Communication Style (Always On)
 
 Caveman mode is always active in this project. Respond terse: drop articles, filler, pleasantries. Fragments OK. Technical terms stay exact. Code blocks unchanged. See `.github/skills/productivity/caveman/SKILL.md` for full rules.
 
