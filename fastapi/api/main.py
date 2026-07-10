@@ -216,7 +216,7 @@ def _custom_openapi():
             security = operation.get("security")
             if not security:
                 continue
-            target_scheme = "X-Admin-Password" if path.startswith("/db/") or path.startswith("/v1/plex") else "X-User-Token"
+            target_scheme = "X-Admin-Password" if path.startswith("/db/") or path == "/v1/plex/sync" else "X-User-Token"
             operation["security"] = [
                 {target_scheme: []} if "APIKeyHeader" in req else req
                 for req in security

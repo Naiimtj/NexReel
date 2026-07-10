@@ -40,3 +40,41 @@
 
   injectToggle();
 })();
+
+
+// Redact sensitive header values from rendered curl snippets.
+// The actual network requests are NOT affected — only the displayed text.
+(function () {
+  var SENSITIVE = ['X-Admin-Password', 'X-User-Token'];
+
+  function redactEl(el) {
+    var original = el.innerHTML;
+    var result = original;
+    SENSITIVE.forEach(function (h) {
+      // Matches: -H 'Header: actual-value' or -H "Header: actual-value"
+      var re = new RegExp('(-H\\s+[\'"]' + h + ':\\s*)([^\'"]+)', 'g');
+      result = result.replace(re, '$1***');
+    });
+    if (result !== original) el.innerHTML = result;
+  }
+
+  function scan(root) {
+    var els = (root.querySelectorAll ? root : document).querySelectorAll(
+      '.curl, pre.microlight, .curl-command pre, .curl-command code, .request-url pre'
+    );
+    els.forEach(redactEl);
+  }
+
+  var obs = new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      m.addedNodes.forEach(function (n) {
+        if (n.nodeType !== 1) return;
+        scan(n);
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    obs.observe(document.body, { childList: true, subtree: true });
+  });
+})();
