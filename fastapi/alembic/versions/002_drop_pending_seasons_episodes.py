@@ -10,6 +10,7 @@ Create Date: 2026-05-07
 
 from typing import Sequence, Union
 
+import sqlalchemy as sa
 from alembic import op
 
 revision: str = "002_drop_pending_tv"
@@ -19,16 +20,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.drop_column("media_tv_seasons", "pending")
-    op.drop_column("media_tv_episodes", "pending")
+    op.execute("ALTER TABLE media_tv_seasons DROP COLUMN IF EXISTS pending")
+    op.execute("ALTER TABLE media_tv_episodes DROP COLUMN IF EXISTS pending")
 
 
 def downgrade() -> None:
     op.add_column(
         "media_tv_seasons",
-        op.Column("pending", op.BOOLEAN(), server_default="false", nullable=False),
+        sa.Column("pending", sa.Boolean(), server_default="false", nullable=False),
     )
     op.add_column(
         "media_tv_episodes",
-        op.Column("pending", op.BOOLEAN(), server_default="false", nullable=True),
+        sa.Column("pending", sa.Boolean(), server_default="false", nullable=True),
     )

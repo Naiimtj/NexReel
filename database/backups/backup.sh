@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # Load environment variables (set by entrypoint.sh for cron context)
 source /root/backup.env
@@ -43,7 +43,6 @@ if pg_dump \
     --dbname "$DB_NAME" \
     --clean \
     --if-exists \
-    --single-transaction \
     --no-owner \
     --no-privileges \
     | gzip > "$FILEPATH"; then

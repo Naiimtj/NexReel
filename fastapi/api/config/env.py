@@ -2,14 +2,18 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Resolve .env from project root (works for local dev).
-# In Docker, env vars are injected via env_file — the file not existing is fine.
-_ENV_FILE = Path(__file__).resolve().parents[3] / ".env"
+# Load generic vars from repo-root .env, then service-specific fastapi/.env
+# (later file wins). In Docker these are injected via env_file/environment.
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_FASTAPI_DIR = Path(__file__).resolve().parents[2]
+_ENV_FILES = tuple(
+    str(p) for p in (_REPO_ROOT / ".env", _FASTAPI_DIR / ".env") if p.exists()
+)
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=str(_ENV_FILE) if _ENV_FILE.exists() else None,
+        env_file=_ENV_FILES or None,
         env_file_encoding="utf-8",
         extra="ignore",
     )

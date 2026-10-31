@@ -41,7 +41,6 @@
   injectToggle();
 })();
 
-
 // Redact sensitive header values from rendered curl snippets.
 // The actual network requests are NOT affected — only the displayed text.
 (function () {
@@ -60,7 +59,7 @@
 
   function scan(root) {
     var els = (root.querySelectorAll ? root : document).querySelectorAll(
-      '.curl, pre.microlight, .curl-command pre, .curl-command code, .request-url pre'
+      '.curl, pre.microlight, .curl-command pre, .curl-command code, .request-url pre',
     );
     els.forEach(redactEl);
   }

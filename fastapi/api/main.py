@@ -29,6 +29,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("nexreel-fastapi")
 
 
+class HealthCheckAccessLogFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        arguments = record.args
+        return not (
+            isinstance(arguments, tuple)
+            and len(arguments) >= 3
+            and arguments[1] == "GET"
+            and arguments[2] == "/health"
+        )
+
+
+logging.getLogger("uvicorn.access").addFilter(HealthCheckAccessLogFilter())
+
+
 async def _scheduled_plex_sync() -> None:
     """Daily Plex library sync — mirrors the old-api cron at 04:00."""
     from api.core.plex_sync import sync_plex_data

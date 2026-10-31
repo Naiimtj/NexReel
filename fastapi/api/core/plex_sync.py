@@ -22,12 +22,18 @@ logger = logging.getLogger("nexreel-fastapi")
 
 # Plex library section IDs — mirror the values from old-api/controllers/Plex
 _SECTION_IDS: dict[str, int] = {
-    "movie": 18,
-    "tv": 10,
-    "anime": 11,
-    "animation": 12,
-    "documental": 15,
+    "movie": 1,
+    "tv": 2,
+    "anime": 8,
+    "animation": 6,
+    "documental": 4,
 }
+
+
+class PlexSyncError(RuntimeError):
+    def __init__(self, failed_sections: list[str]):
+        self.failed_sections = failed_sections
+        super().__init__(f"Plex sections could not be fetched: {', '.join(failed_sections)}")
 
 
 async def _fetch_section(
@@ -54,11 +60,15 @@ async def _fetch_all_sections(plex_url: str, plex_api_key: str) -> tuple[list[di
         )
 
     combined: list[dict] = []
+    failed_sections: list[str] = []
     for section_name, result in zip(_SECTION_IDS.keys(), results):
         if isinstance(result, Exception):
-            logger.warning("Failed to fetch Plex section '%s': %s", section_name, result)
+            failed_sections.append(section_name)
         else:
             combined.extend(result)
+
+    if failed_sections:
+        raise PlexSyncError(failed_sections)
 
     def _extract_guids(item: dict) -> dict[str, str | None]:
         guids: dict[str, str | None] = {"imdb_id": None, "tmdb_id": None, "tvdb_id": None}

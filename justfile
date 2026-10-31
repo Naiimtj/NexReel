@@ -137,51 +137,55 @@ ps:
 logs service="fastapi":
     {{compose}} logs -f --tail=150 {{service}}
 
+# ──────────────────────── NexReel con frontend web (perfil web) ────────────────────────
+# El servicio `web` está en el perfil "web"; construir requiere red (node + nginx).
+
+# Construye la imagen del frontend web de NexReel
+build-web:
+    {{compose}} --profile web build web
+
+# Levanta NexReel incluyendo el frontend web
+up-web:
+    {{compose}} --profile web up -d
+
 # ──────────────────────── Despliegue en servidor Debian ────────────────────────
-# Stack real en servidor: /home/naiim/naiteca (servicios nexreel-*)
-prod_compose := "cd /home/naiim/naiteca && docker compose"
+# NexReel se despliega desde ~/nexreel (AUTOMÁTICO: restart unless-stopped).
+# Naiteca tiene su propio justfile en ~/naiteca (MANUAL).
+prod_nexreel := "cd /home/naiim/nexreel && docker compose"
 
-# Construye todas las imágenes del stack productivo (komga + nexreel + proxy)
+# Construye imágenes de NexReel (API + frontend web)
 prod-build:
-    {{prod_compose}} build nexreel-web nexreel-fastapi
+    {{prod_nexreel}} --profile web build fastapi web
 
-# Levanta el stack productivo completo en segundo plano
+# Levanta NexReel completo (db + api + backup + web)
 prod-up:
-    {{prod_compose}} up -d nexreel-web nexreel-fastapi nexreel-postgres nexreel-backup
+    {{prod_nexreel}} --profile web up -d
 
-# Apaga el stack productivo
+# Apaga NexReel
 prod-down:
-    {{prod_compose}} stop nexreel-web nexreel-fastapi nexreel-postgres nexreel-backup
+    {{prod_nexreel}} down
 
-# Reinicia solo los servicios de NexReel sin tocar Komga ni el proxy
-prod-restart-nexreel:
-    {{prod_compose}} restart nexreel-web nexreel-fastapi nexreel-postgres nexreel-backup
+# Reinicia NexReel
+prod-restart:
+    {{prod_nexreel}} --profile web restart
 
-# Rebuild sin caché + recreate de web y fastapi (uso típico en el servidor tras `git pull`)
+# Rebuild sin caché + recreate de web y api (uso típico tras `git pull`)
 redeploy-all:
-    {{prod_compose}} build --no-cache nexreel-web nexreel-fastapi
-    {{prod_compose}} up -d --force-recreate nexreel-web nexreel-fastapi
+    {{prod_nexreel}} --profile web build --no-cache fastapi web
+    {{prod_nexreel}} --profile web up -d --force-recreate fastapi web
 
 redeploy-front:
-    {{prod_compose}} build --no-cache nexreel-web
-    {{prod_compose}} up -d --force-recreate nexreel-web
+    {{prod_nexreel}} --profile web build --no-cache web
+    {{prod_nexreel}} --profile web up -d --force-recreate web
 
 redeploy-back:
-    {{prod_compose}} build --no-cache nexreel-fastapi
-    {{prod_compose}} up -d --force-recreate nexreel-fastapi
+    {{prod_nexreel}} build --no-cache fastapi
+    {{prod_nexreel}} up -d --force-recreate fastapi
 
-# Reconstruye y redeploy del frontend NexReel tras cambios en `web/`
-prod-refresh-web:
-    {{prod_compose}} up -d --build --force-recreate nexreel-web
+# Logs de un servicio de NexReel (por defecto: fastapi)
+prod-logs service="fastapi":
+    {{prod_nexreel}} logs -f --tail=150 {{service}}
 
-# Reconstruye y redeploy de la API NexReel tras cambios en `fastapi/`
-prod-refresh-api:
-    {{prod_compose}} up -d --build --force-recreate nexreel-fastapi
-
-# Logs de un servicio del stack productivo (por defecto: nexreel-fastapi)
-prod-logs service="nexreel-fastapi":
-    {{prod_compose}} logs -f --tail=150 {{service}}
-
-# Estado de todos los contenedores del stack productivo
+# Estado de NexReel
 prod-ps:
-    {{prod_compose}} ps
+    {{prod_nexreel}} ps

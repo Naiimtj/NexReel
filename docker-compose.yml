@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-nexreel}
       POSTGRES_USER: ${POSTGRES_USER:-nexreel}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexreel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       TZ: ${TZ:-Europe/Madrid}
     healthcheck:
       test:
@@ -18,10 +18,12 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    networks:
+      - nexreel_net
 
   fastapi:
     build:
@@ -31,27 +33,38 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    # App-specific vars → fastapi/.env (opcional; si falta, usa defaults).
+    env_file:
+      - path: ./fastapi/.env
+        required: false
     environment:
+      # Infra compartida (desde el .env de la raíz vía sustitución de Compose).
       POSTGRES_HOST: postgres
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_DB: ${POSTGRES_DB:-nexreel}
       POSTGRES_USER: ${POSTGRES_USER:-nexreel}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexreel}
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-nexreel}:${POSTGRES_PASSWORD:-nexreel}@postgres:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-nexreel}
-      SESSION_SECRET: ${SESSION_SECRET:-change-me}
-      BACKUP_ADMIN_PASSWORD: ${BACKUP_ADMIN_PASSWORD:-change-me}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://127.0.0.1:5173,http://127.0.0.1:5172,http://localhost:5173,http://localhost:5172}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-nexreel}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-nexreel}
       BACKUP_DATA_DIR: /app/data/backup_data
-      CLOUDINARY_KEY: ${CLOUDINARY_KEY:-}
-      CLOUDINARY_SECRET: ${CLOUDINARY_SECRET:-}
       TZ: ${TZ:-Europe/Madrid}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
-      ADMIN_USER: ${ADMIN_USER:-}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     volumes:
       - ./database/backup_data:/app/data/backup_data
     ports:
-      - '8000:8000'
+      - '127.0.0.1:8000:8000'
+    networks:
+      - nexreel_net
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'python',
+          '-c',
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   backup:
     build:
@@ -66,10 +79,44 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_DB: ${POSTGRES_DB:-nexreel}
       POSTGRES_USER: ${POSTGRES_USER:-nexreel}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexreel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       TZ: ${TZ:-Europe/Madrid}
     volumes:
       - ./database/backup_data:/backups
+    networks:
+      - nexreel_net
+
+  # ─── Frontend (SPA + proxy interno a FastAPI) ───────────────────────────
+  web:
+    build:
+      # Las VITE_* se leen de web/.env en tiempo de build (Vite). Ver web/.env.template.
+      context: ./web
+    container_name: nexreel-web
+    restart: unless-stopped
+    depends_on:
+      fastapi:
+        condition: service_healthy
+    volumes:
+      - ./nexreel-docs.htpasswd:/etc/nginx/.htpasswd:ro
+    ports:
+      - '127.0.0.1:${NEXREEL_WEB_PORT:-8080}:80'
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST:-nexreel.duckdns.org}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST:-nexreel.duckdns.org}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL:-naiim.taefy.company@gmail.com}
+      - VIRTUAL_PORT=80
+    networks:
+      - nexreel_net
+      - web
+
+networks:
+  nexreel_net:
+    driver: bridge
+    name: nexreel_net
+  web:
+    external: true
+    name: server_proxy
 
 volumes:
   postgres_data:
+    name: ${POSTGRES_VOLUME_NAME:-nexreel_postgres_data}

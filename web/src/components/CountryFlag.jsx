@@ -2,23 +2,21 @@ import { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useCountryName } from './CountryName';
 
-const codeToFlagEmoji = (code) => {
-  if (!code || typeof code !== 'string' || code.length !== 2) return '';
-  const upper = code.toUpperCase();
-  return String.fromCodePoint(
-    127397 + upper.codePointAt(0),
-    127397 + upper.codePointAt(1),
-  );
+const normalizeCountryCode = (code) => {
+  if (!code || typeof code !== 'string') return '';
+  const normalized = code.trim().toUpperCase();
+  return normalized.length === 2 ? normalized : '';
 };
 
 function CountryFlag({ code, className = '' }) {
   const getName = useCountryName();
-  const name = getName(code);
-  const flag = codeToFlagEmoji(code);
+  const normalizedCode = normalizeCountryCode(code);
+  const name = getName(normalizedCode);
   const wrapperRef = useRef(null);
   const [coords, setCoords] = useState(null);
+  const [imageFailed, setImageFailed] = useState(false);
 
-  if (!flag) return null;
+  if (!normalizedCode) return null;
 
   const showTooltip = () => {
     if (!wrapperRef.current) return;
@@ -35,7 +33,7 @@ function CountryFlag({ code, className = '' }) {
     <>
       <span
         ref={wrapperRef}
-        className={`inline-block cursor-default ${className}`.trim()}
+        className={`inline-flex h-5 min-w-7 items-center justify-center cursor-default ${className}`.trim()}
         aria-label={label}
         role="img"
         onMouseEnter={showTooltip}
@@ -43,7 +41,18 @@ function CountryFlag({ code, className = '' }) {
         onFocus={showTooltip}
         onBlur={hideTooltip}
       >
-        {flag}
+        {!imageFailed ? (
+          <img
+            src={`https://flagcdn.com/w40/${normalizedCode.toLowerCase()}.png`}
+            alt=""
+            className="h-4 w-6 object-cover"
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <span className="text-[0.65rem] font-semibold leading-none">
+            {normalizedCode}
+          </span>
+        )}
       </span>
       {coords &&
         typeof document !== 'undefined' &&

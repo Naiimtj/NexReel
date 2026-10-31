@@ -12,29 +12,9 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy sources and build
+# Copy sources and build.
+# Las VITE_* se leen de web/.env (incluido en el contexto de build) por Vite.
 COPY . .
-
-# Build-time env vars (passed via docker compose `args`)
-ARG VITE_URL_DB=/v1/
-ARG VITE_URL_TMDB=https://api.themoviedb.org/3/
-ARG VITE_APIKEY_TMDB=""
-ARG VITE_URL_IMDB=""
-ARG VITE_APIKEY_IMDB=""
-ARG VITE_URL_PLEX=""
-ARG VITE_APIKEY_PLEX=""
-ARG VITE_USE_MOCKS="false"
-ARG VITE_NOT_USE_IMDB="false"
-
-ENV VITE_URL_DB=${VITE_URL_DB} \
-    VITE_URL_TMDB=${VITE_URL_TMDB} \
-    VITE_APIKEY_TMDB=${VITE_APIKEY_TMDB} \
-    VITE_URL_IMDB=${VITE_URL_IMDB} \
-    VITE_APIKEY_IMDB=${VITE_APIKEY_IMDB} \
-    VITE_URL_PLEX=${VITE_URL_PLEX} \
-    VITE_APIKEY_PLEX=${VITE_APIKEY_PLEX} \
-    VITE_USE_MOCKS=${VITE_USE_MOCKS} \
-    VITE_NOT_USE_IMDB=${VITE_NOT_USE_IMDB}
 
 RUN pnpm build
 

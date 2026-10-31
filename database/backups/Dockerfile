@@ -1,9 +1,8 @@
-FROM debian:bookworm-slim
+FROM postgres:16-bookworm
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         cron \
-        postgresql-client \
         bash \
     && rm -rf /var/lib/apt/lists/*
 
