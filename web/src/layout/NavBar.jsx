@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BsSearch } from 'react-icons/bs';
 import BaseLink from '../components/base/BaseLink';
 import BaseModal from '../components/base/BaseModal';
+import { BaseIcon } from '../components/base';
 import Logo from '/img/logo.svg';
 import { useAuthContext } from '../context/auth-context';
 import {
@@ -16,6 +16,7 @@ import {
 } from '../../services/DB/services-db';
 import UserMenu from './UserMenu';
 import SearchLayout from './SearchLayout';
+import QuickSearch from './QuickSearch';
 
 const NavBar = () => {
   const [t] = useTranslation('translation');
@@ -23,6 +24,11 @@ const NavBar = () => {
   const [dataUser, setDataUser] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const openFullSearch = (query = '') => {
+    setSearchQuery(query);
+    setSearchModalOpen(true);
+  };
   const mobileMenuRef = useRef(null);
   const [mobileNotifications, setMobileNotifications] = useState([]);
   const [showMobileNotifications, setShowMobileNotifications] = useState(false);
@@ -130,15 +136,17 @@ const NavBar = () => {
           </h1>
         </Link>
 
-        <div className="flex justify-center">
-          <button
-            type="button"
-            aria-label={t('Search')}
-            onClick={() => setSearchModalOpen(true)}
-            className="p-2 rounded-md md:hover:text-gray-400 text-purpleNR focus:outline-none"
-          >
-            <BsSearch className="h-5 w-5 md:h-6 md:w-6" />
-          </button>
+        <div className="flex flex-1 justify-center px-4">
+          <div className="hidden w-full max-w-[16rem] md:block lg:max-w-xs">
+            <QuickSearch onOpenFull={openFullSearch} />
+          </div>
+          <BaseIcon
+            icon="search"
+            onClick={() => openFullSearch()}
+            tooltip={t('Search')}
+            className="text-purpleNR md:hover:text-gray-400"
+            wrapperClassName="p-2 md:hidden"
+          />
         </div>
 
         <nav className="text-right flex justify-end items-center">
@@ -413,6 +421,7 @@ const NavBar = () => {
           <SearchLayout
             hiden={!searchModalOpen}
             fullWidth
+            initialQuery={searchQuery}
             onSelect={() => setSearchModalOpen(false)}
           />
         </div>

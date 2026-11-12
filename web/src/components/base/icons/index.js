@@ -31,6 +31,7 @@ import StarOutlineIcon from './StarOutlineIcon';
 import CaretDownSmallIcon from './CaretDownSmallIcon';
 import CaretUpSmallIcon from './CaretUpSmallIcon';
 import StarRatingIcon from './StarRatingIcon';
+import SearchIcon from './SearchIcon';
 
 export const iconRegistry = {
   close: CloseIcon,
@@ -66,6 +67,7 @@ export const iconRegistry = {
   caretDownSmall: CaretDownSmallIcon,
   caretUpSmall: CaretUpSmallIcon,
   starRating: StarRatingIcon,
+  search: SearchIcon,
 };
 
 export {
@@ -100,4 +102,5 @@ export {
   CaretDownSmallIcon,
   CaretUpSmallIcon,
   StarRatingIcon,
+  SearchIcon,
 };

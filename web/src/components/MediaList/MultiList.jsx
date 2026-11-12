@@ -16,9 +16,9 @@ import {
   resolvePosterUrl,
   resolveTypeIcon,
   roundedVote,
-  useImdbApiRating,
   useMediaData,
   useMediaUserEntry,
+  useOmdbRating,
 } from './mediaCardHelpers';
 
 export const MultiList = ({
@@ -46,7 +46,7 @@ export const MultiList = ({
 
   const [pendingSeen, setPendingSeen] = useState(false);
   const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
-  const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+  const { value: omdbRating, loading: omdbLoading } = useOmdbRating(
     imdbID,
     userExist,
   );
@@ -69,8 +69,8 @@ export const MultiList = ({
   const processInfo = {
     bgPoster: url || NoImage,
     voteAverage:
-      userExist && !imdbRatingLoading
-        ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+      userExist && !omdbLoading
+        ? calculateAverageVote(roundedVote(vote_average), omdbRating)
         : null,
     title: title || name,
     date: resolveDate(release_date, first_air_date, known_for_department),

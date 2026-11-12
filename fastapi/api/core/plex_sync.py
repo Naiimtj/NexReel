@@ -20,7 +20,7 @@ from api.core.nexreel.repository import fetch_one, save_one, serialize_plex
 
 logger = logging.getLogger("nexreel-fastapi")
 
-# Plex library section IDs — mirror the values from old-api/controllers/Plex
+# Plex library section keys, as listed by GET /library/sections
 _SECTION_IDS: dict[str, int] = {
     "movie": 1,
     "tv": 2,

@@ -20,9 +20,9 @@ function paramsKey() {
 function mediaID(media) {
   switch (media) {
     case "movie":
-      return 18;
+      return 1;
     case "tv":
-      return 10; // 11 Anime, 12 Animación Infantil y 15 Documentales
+      return 2; // 8 Anime, 6 Animación Infantil y 4 Documentales
     default:
       break;
   }

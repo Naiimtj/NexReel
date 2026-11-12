@@ -3,10 +3,6 @@ import mockRatings from '../__mocks__/data/ratings.json';
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
 
-const imdbApiService = axios.create({
-  baseURL: 'https://api.imdbapi.dev/',
-});
-
 const service = axios.create({
   baseURL: import.meta.env.VITE_URL_IMDB,
   headers: {
@@ -15,19 +11,13 @@ const service = axios.create({
   },
 });
 
-const apiKeyIMDB = import.meta.env.VITE_APIKEY_IMDB || '';
-const notUseIMDB = import.meta.env.VITE_NOT_USE_IMDB === 'true';
+const omdbService = axios.create({ baseURL: 'https://www.omdbapi.com/' });
 
-// Throttle queue: max 1 concurrent request, 300ms between calls
-let _imdbQueue = Promise.resolve();
-function _enqueue(fn) {
-  const result = _imdbQueue
-    .then(() => new Promise((res) => setTimeout(res, 300)))
-    .then(fn);
-  // Absorb errors in the chain so queue never breaks
-  _imdbQueue = result.catch(() => {});
-  return result;
-}
+const apiKeyIMDB = import.meta.env.VITE_APIKEY_IMDB || '';
+const apiKeyOMDB = import.meta.env.VITE_APIKEY_OMDB || '';
+const notUseIMDB = import.meta.env.VITE_NOT_USE_IMDB === 'true';
+// Set on a 401 (bad key or 1,000/day limit) so the session stops calling OMDb.
+let omdbDisabled = false;
 
 // . Rating
 export async function getRating(id) {
@@ -47,17 +37,24 @@ export async function getRating(id) {
   }
 }
 
-// . IMDB API rating (aggregateRating on 0-10 scale)
-export async function getImdbApiRating(imdbId) {
-  if (!imdbId || notUseIMDB || USE_MOCKS) return null;
-  return _enqueue(async () => {
-    try {
-      const response = await imdbApiService.get(`titles/${imdbId}`);
-      return response.data?.rating?.aggregateRating ?? null;
-    } catch (err) {
-      return null;
+// . OMDb IMDb rating (0-10)
+export async function getOmdbRating(imdbId) {
+  if (USE_MOCKS || notUseIMDB || !apiKeyOMDB || !imdbId || omdbDisabled) {
+    return null;
+  }
+  try {
+    const { data } = await omdbService.get('', {
+      params: { i: imdbId, apikey: apiKeyOMDB },
+    });
+    const rating = Number(data?.imdbRating);
+    return rating > 0 ? rating : null;
+  } catch (err) {
+    if (err.response?.status === 401) {
+      omdbDisabled = true;
+      console.warn('OMDb disabled:', err.response.data?.Error);
     }
-  });
+    return null;
+  }
 }
 
 // . Rating

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Carousel from '../../utils/Carousel/Carousel';
 import { getSimilar } from '../../../services/TMDB/services-tmdb';
+import useTmdbPages from '../../hooks/useTmdbPages';
 
 const Similar = ({
   title = '',
@@ -10,11 +11,14 @@ const Similar = ({
   pendingSeenMedia = false,
   setPendingSeenMedia = () => {},
 }) => {
-  const [similarList, setSimilarList] = useState([]);
+  const fetchPage = useCallback(
+    (page) => getSimilar(media, id, lang, page),
+    [media, id, lang],
+  );
+  const { items, hasMore, loadMore } = useTmdbPages(fetchPage);
   const [isChange, isSetChange] = useState(false);
 
   useEffect(() => {
-    getSimilar(media, id, lang).then(setSimilarList);
     isSetChange(false);
   }, [lang, id, media]);
 
@@ -23,18 +27,19 @@ const Similar = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  if (!similarList.results) return null;
+  if (!items.length) return null;
 
   return (
     <div className="text-gray-200 px-4 md:px-6 text-lg pt-4">
       <Carousel
-        title={similarList?.length !== 0 ? title : null}
-        info={similarList.results}
+        title={title}
+        info={items}
         media={media}
         isSetChange={isSetChange}
         isChange={isChange}
         setPendingSeenMedia={setPendingSeenMedia}
         pendingSeenMedia={pendingSeenMedia}
+        onEndReached={hasMore ? loadMore : undefined}
       />
     </div>
   );

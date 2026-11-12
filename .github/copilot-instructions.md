@@ -188,9 +188,10 @@ Frontend variables (`web/.env`):
 - `VITE_URL_DB` — FastAPI base URL (e.g. `http://localhost:8000/v1/`)
 - `VITE_URL_TMDB`, `VITE_APIKEY_TMDB` — The Movie Database API
 - `VITE_URL_IMDB`, `VITE_APIKEY_IMDB` — IMDB/RapidAPI ratings
+- `VITE_APIKEY_OMDB` — OMDb API key (IMDb rating on cards and details; free tier 1,000 requests/day)
 - `VITE_URL_PLEX`, `VITE_APIKEY_PLEX` — Plex Media Server
 - `VITE_USE_MOCKS` — set `"true"` to intercept all TMDB/IMDB calls and return local JSON fixtures (no API quota consumed)
-- `VITE_NOT_USE_IMDB` — set `"true"` to skip all RapidAPI IMDB calls entirely (ratings will be absent); default `"false"`
+- `VITE_NOT_USE_IMDB` — set `"true"` to skip all IMDB calls entirely (RapidAPI and OMDb; ratings will be absent); default `"false"`
 
 ## Backend Conventions
 

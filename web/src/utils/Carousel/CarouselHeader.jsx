@@ -20,14 +20,16 @@ const CarouselHeader = ({
 }) => {
   const [t] = useTranslation('translation');
 
-  const baseArrowClass =
-    'transition ease-in-out md:hover:scale-110 duration-300';
-  const enabledArrowClass = `text-[#6676a7] md:hover:text-gray-200 ${baseArrowClass}`;
-  const disabledArrowClass = 'text-gray-700';
+  const arrowClass = (enabled) =>
+    `size-8 rounded-full p-1.5 ring-1 ring-inset transition duration-200 ${
+      enabled
+        ? 'bg-white/5 text-gray-200 ring-white/10 md:hover:bg-white/15 md:hover:ring-white/25'
+        : 'text-gray-500 ring-white/5 opacity-40'
+    }`;
 
   return (
-    <div className="flex justify-between items-center">
-      <div className="flex gap-1 text-gray-200 items-center">
+    <div className="flex items-center justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-2 text-gray-200">
         {onTitleClick ? (
           <BaseButton
             variant="primary"
@@ -39,28 +41,26 @@ const CarouselHeader = ({
         ) : (
           <h1 className={titleClassName}>{title}</h1>
         )}
-        {showCount && title ? <p>{`( ${count} )`}</p> : null}
+        {showCount && title ? (
+          <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium text-gray-300">
+            {count}
+          </span>
+        ) : null}
       </div>
       {showNav ? (
-        <div className="flex">
-          <div className="align-middle">
-            <BaseIcon
-              icon="arrowLeft"
-              size="large"
-              onClick={canPrev ? onPrev : undefined}
-              tooltip={t('Previous')}
-              className={canPrev ? enabledArrowClass : disabledArrowClass}
-            />
-          </div>
-          <div className="align-middle">
-            <BaseIcon
-              icon="arrowRight"
-              size="large"
-              onClick={canNext ? onNext : undefined}
-              tooltip={t('Next')}
-              className={canNext ? enabledArrowClass : disabledArrowClass}
-            />
-          </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <BaseIcon
+            icon="arrowLeft"
+            onClick={canPrev ? onPrev : undefined}
+            tooltip={t('Previous')}
+            className={arrowClass(canPrev)}
+          />
+          <BaseIcon
+            icon="arrowRight"
+            onClick={canNext ? onNext : undefined}
+            tooltip={t('Next')}
+            className={arrowClass(canNext)}
+          />
         </div>
       ) : null}
     </div>

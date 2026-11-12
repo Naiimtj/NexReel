@@ -51,7 +51,7 @@ const fetchTmdb = async (label, url, params, fallback = {}) => {
 };
 
 // < SEARCH
-export async function getSearch(searchValue, media) {
+export async function getSearch(searchValue, media, lang) {
   if (USE_MOCKS) {
     if (media === 'movie') return mockListMovies;
     if (media === 'tv') return mockListTv;
@@ -62,14 +62,30 @@ export async function getSearch(searchValue, media) {
     query: searchValue,
     api_key: apiKeyTMDB,
     adult: false,
+    language: lang,
   });
 }
 
-// . Discover
-export async function getDiscover(media, id, lang = 'es-ES') {
+// . Discover: latest releases (popularity order would repeat the TOP carousel)
+const RELEASE_DATE_FIELD = {
+  movie: 'primary_release_date',
+  tv: 'first_air_date',
+};
+
+export async function getDiscover(media, lang = 'es-ES', page = 1) {
   if (USE_MOCKS) return media === 'tv' ? mockListTv : mockListMovies;
-  const url = `/discover/${media}?include_adult=false&include_video=false&language=${lang}&region=ES&&page=2`;
-  return fetchTmdb('Discover', url, paramsKeyLang(lang));
+  const dateField = RELEASE_DATE_FIELD[media];
+  return fetchTmdb('Discover', `/discover/${media}`, {
+    ...paramsKeyLang(lang),
+    include_adult: false,
+    include_video: false,
+    region: 'ES',
+    sort_by: `${dateField}.desc`,
+    [`${dateField}.lte`]: new Date().toISOString().slice(0, 10),
+    // Skips obscure titles with barely any votes.
+    'vote_count.gte': 50,
+    page,
+  });
 }
 // . External Id
 export async function getExternalId(media, id, lang = 'es-ES') {
@@ -82,18 +98,22 @@ export async function getExternalId(media, id, lang = 'es-ES') {
   );
 }
 // . Top
-export async function getTop(media, lang = 'es-ES') {
+export async function getTop(media, lang = 'es-ES', page = 1) {
   if (USE_MOCKS) return media === 'tv' ? mockListTv : mockListMovies;
   const region = lang.split('-')[1];
   return fetchTmdb('Top', `/${media}/popular`, {
     ...paramsKeyLang(lang),
     region,
+    page,
   });
 }
 // . Trending
-export async function getTrending(lang = 'es-ES') {
+export async function getTrending(lang = 'es-ES', page = 1) {
   if (USE_MOCKS) return mockListTrending;
-  return fetchTmdb('Trending', '/trending/all/day', paramsKeyLang(lang));
+  return fetchTmdb('Trending', '/trending/all/day', {
+    ...paramsKeyLang(lang),
+    page,
+  });
 }
 // . Media Details English
 export async function getMediaDetailsEN(media, id) {
@@ -162,18 +182,20 @@ export async function getRelease(media, id, lang = 'es-ES') {
   return fetchTmdb('Release', `/${media}/${id}/${data}`, paramsKeyLang(lang));
 }
 // . Similar
-export async function getSimilar(media, id, lang = 'es-ES') {
+export async function getSimilar(media, id, lang = 'es-ES', page = 1) {
   if (USE_MOCKS) return media === 'tv' ? mockListTv : mockListMovies;
-  return fetchTmdb('Similar', `/${media}/${id}/similar`, paramsKeyLang(lang));
+  return fetchTmdb('Similar', `/${media}/${id}/similar`, {
+    ...paramsKeyLang(lang),
+    page,
+  });
 }
 // . Recommendations
-export async function getRecommendations(media, id, lang = 'es-ES') {
+export async function getRecommendations(media, id, lang = 'es-ES', page = 1) {
   if (USE_MOCKS) return media === 'tv' ? mockListTv : mockListMovies;
-  return fetchTmdb(
-    'Recommendations',
-    `/${media}/${id}/recommendations`,
-    paramsKeyLang(lang),
-  );
+  return fetchTmdb('Recommendations', `/${media}/${id}/recommendations`, {
+    ...paramsKeyLang(lang),
+    page,
+  });
 }
 // < TV SHOW
 // . Season

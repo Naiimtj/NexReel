@@ -27,8 +27,8 @@ import { BiSolidRightArrow } from 'react-icons/bi';
 import { BaseButton, BaseIcon } from '../../components/base';
 import {
   ratingFromImdb,
-  useImdbApiRating,
   useImdbData,
+  useOmdbRating,
 } from '../../components/MediaList/mediaCardHelpers';
 import BaseModal from '../../components/base/BaseModal';
 import KeyWords from '../../components/MediaList/KeyWords';
@@ -54,6 +54,13 @@ import ProvidersSection, {
 import ExternalRating from '../../components/MediaList/Details/ExternalRating';
 import CreditList from '../../components/MediaList/Details/CreditList';
 import usePlexMatch from '../../components/MediaList/Details/usePlexMatch';
+
+const ratingSourceColors = {
+  tmdb: 'bg-[#06b6d4]',
+  imdb: 'bg-[#f5c518]',
+  filma: 'bg-[#7c83ff]',
+  omdb: 'bg-[#fb7185]',
+};
 
 const uniqueById = (list, limit) => {
   const seen = new Map();
@@ -270,17 +277,17 @@ function DetailsMedia({
     vote_average > 0 ? Math.round(vote_average * 10) / 10 : 0;
   processInfo.voteIMDB = ratingFromImdb(imdbList?.IMDb);
   processInfo.voteFILMA = ratingFromImdb(imdbList?.FilmAffinity);
-  const { value: _voteIMDBFree, loading: _imdbFreeLoading } = useImdbApiRating(
+  const { value: omdbRating, loading: omdbLoading } = useOmdbRating(
     imdbID,
     userExist,
   );
-  processInfo.voteIMDBFree = _imdbFreeLoading ? null : _voteIMDBFree;
+  processInfo.voteOMDB = omdbLoading ? null : omdbRating;
 
   processInfo.voteAverage = calculateAverageVote(
-    processInfo.voteTMDB,
+    processInfo.voteTMDB || null,
     processInfo.voteIMDB,
     processInfo.voteFILMA,
-    processInfo.voteIMDBFree,
+    processInfo.voteOMDB,
   );
   processInfo.countries = production_countries || origin_country;
   processInfo.description = overview || tmbdEnApi.overview || '';
@@ -594,17 +601,23 @@ function DetailsMedia({
     </span>
   ) : null;
 
-  const isTmdbOnly = !processInfo.voteIMDB && !processInfo.voteFILMA;
-
+  const ratingSources = [
+    processInfo.voteTMDB > 0 && 'tmdb',
+    processInfo.voteIMDB > 0 && 'imdb',
+    processInfo.voteFILMA > 0 && 'filma',
+    processInfo.voteOMDB > 0 && 'omdb',
+  ].filter(Boolean);
   const titleRating = (
     <div className="w-full flex-row">
       {/* //- NAME AND MEDIA */}
       <div className="relative flex justify-between items-stretch">
-        <div className="justify-start font-semibold text-lg md:text-2xl w-[95%]">
+        <div className="min-w-0 flex-1 justify-start font-semibold text-lg md:text-2xl">
           {processInfo.title}
           {mediaDate}
         </div>
-        <div className="hidden md:block">{typeCountryStatusBlock}</div>
+        <div className="hidden md:block shrink-0 pl-2">
+          {typeCountryStatusBlock}
+        </div>
       </div>
       {/* //! RATING */}
       <div className="relative flex items-center gap-2 justify-between">
@@ -613,26 +626,28 @@ function DetailsMedia({
             <div className="relative" ref={externalRatingsRef}>
               <button
                 type="button"
-                className="cursor-pointer flex flex-row gap-1 items-center leading-none"
+                className="cursor-pointer flex flex-row gap-1 items-center leading-none text-amber-400 md:hover:text-amber-200"
                 onClick={() => setShowExternalRatings((v) => !v)}
                 aria-label={t('Show external ratings')}
               >
-                <BaseIcon
-                  icon="starRating"
-                  className={`size-6 md:size-5 ${
-                    isTmdbOnly ? 'text-orange-400' : 'text-amber-400'
-                  }`}
-                />
-                <span
-                  className={isTmdbOnly ? 'text-orange-400' : 'text-amber-400'}
-                >
-                  {processInfo.voteAverage}
+                <BaseIcon icon="starRating" className="size-6 md:size-5" />
+                <span className="flex flex-col items-center gap-0.5">
+                  <span
+                    className="flex items-center gap-0.5"
+                    aria-hidden="true"
+                  >
+                    {ratingSources.map((source) => (
+                      <span
+                        key={source}
+                        className={`size-1 rounded-full ${ratingSourceColors[source]}`}
+                      />
+                    ))}
+                  </span>
+                  <span>{processInfo.voteAverage}</span>
                 </span>
                 <BaseIcon
                   icon={showExternalRatings ? 'caretUpSmall' : 'caretDownSmall'}
-                  className={`size-6 md:size-5 ${
-                    isTmdbOnly ? 'text-orange-400' : 'text-amber-400'
-                  }`}
+                  className="size-6 md:size-5"
                 />
               </button>
               {showExternalRatings && (
@@ -648,13 +663,13 @@ function DetailsMedia({
                     alt={t('IMDB Icon')}
                     value={processInfo.voteIMDB}
                   />
-                  {processInfo.voteIMDBFree > 0 && (
+                  {processInfo.voteOMDB > 0 && (
                     <div>
                       <span className="inline-block bg-red-600 text-white text-[10px] font-bold px-1.5 py-1 rounded leading-none">
                         IMDb
                       </span>
                       <div className="inline-block text-amber-400 text-xs text-left pl-2">
-                        {processInfo.voteIMDBFree}
+                        {processInfo.voteOMDB}
                       </div>
                     </div>
                   )}
@@ -741,7 +756,7 @@ function DetailsMedia({
               ) : null}
             </div>
           </div>
-          <div className="mt-4 md:mt-6">
+          <div className="mt-4 min-w-0 w-full flex-1 md:mt-6">
             {titleRating}
             {/* //-ORIGINAL NAME, YEAR & KEYWORDS */}
             <div className="flex flex-row justify-between items-stretch">
@@ -808,7 +823,9 @@ function DetailsMedia({
                           processInfo.numEpis
                         } ${t('Ep')})`}
                     </div>
-                    {processInfo.TotalTimeMarathon && processInfo.TotalTimeSeen !== processInfo.TotalTimeMarathon ? (
+                    {processInfo.TotalTimeMarathon &&
+                    processInfo.TotalTimeSeen !==
+                      processInfo.TotalTimeMarathon ? (
                       <div className="flex gap-1 text-xs text-gray-400">
                         <p>{t('Binge-watch a series')}: </p>
                         {processInfo.TotalTimeMarathon}

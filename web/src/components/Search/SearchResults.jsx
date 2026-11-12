@@ -44,7 +44,6 @@ const SearchResults = ({
                 basicForum={basicForum}
                 isChange={changeSeenPending}
                 isSetChange={setChangeSeenPending}
-                isAllCards
                 size="small"
               />
             ) : null}

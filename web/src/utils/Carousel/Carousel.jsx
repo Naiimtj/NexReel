@@ -4,20 +4,14 @@ import Multi from '../../components/MediaList/Multi';
 import { useAuthContext } from '../../context/auth-context';
 import { useMediaContext } from '../../context/media-context';
 import { getDetailForum } from '../../../services/DB/services-db';
-import CarouselHeader from './CarouselHeader';
-import CarouselDots from './CarouselDots';
-import { useCarouselPagination } from './useCarouselPagination';
-import { useSwipe } from './useSwipe';
+import CarouselRow from './CarouselRow';
 
-const SIZE_CONFIG = {
-  small: {
-    cardsPerPage: { sm: 2, md: 4, lg: 6, xl: 8 },
-    gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
-  },
-  normal: {
-    cardsPerPage: { sm: 2, md: 4, lg: 5, xl: 6 },
-    gridClass: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
-  },
+// Cards per view (--n) by breakpoint, peek of the next card and gap; see CarouselRow.
+const COLUMNS_BY_SIZE = {
+  small:
+    '[--n:2] md:[--n:4] lg:[--n:6] xl:[--n:8] [--peek:0.25] [--gap:0.5rem] md:[--gap:0.75rem]',
+  normal:
+    '[--n:2] md:[--n:4] lg:[--n:5] xl:[--n:6] [--peek:0.25] [--gap:0.5rem] md:[--gap:0.75rem]',
 };
 
 const Carousel = ({
@@ -28,7 +22,6 @@ const Carousel = ({
   isPlaylist = '',
   setPopSureDel = () => {},
   setIdDelete = () => {},
-  isAllCards = false,
   hideSearch = () => {},
   isForum = false,
   basicForum = {},
@@ -38,8 +31,9 @@ const Carousel = ({
   pendingSeenMedia = false,
   size = 'normal',
   onTitleClick = undefined,
+  onEndReached = undefined,
 }) => {
-  const sizeConfig = SIZE_CONFIG[size] || SIZE_CONFIG.normal;
+  const columnsClass = COLUMNS_BY_SIZE[size] || COLUMNS_BY_SIZE.normal;
   const headerTitleClass =
     size === 'small'
       ? 'pl-4 text-sm md:text-base uppercase'
@@ -73,7 +67,6 @@ const Carousel = ({
     if (isForum && isChange) {
       ForumData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChange, basicForum.id, isForum]);
   const ForumData = {
     id: dataForum.id,
@@ -83,100 +76,36 @@ const Carousel = ({
   const mediaMovie = media === 'movie';
   const mediaTv = media === 'tv';
 
-  const {
-    currentPage,
-    allCards,
-    totalPages,
-    visibleCards,
-    prefetchCards,
-    hasOverflow,
-    canPrev,
-    canNext,
-    handleNext,
-    handlePrev,
-    goToPage,
-  } = useCarouselPagination({
-    items: info,
-    breakpoints: sizeConfig.cardsPerPage,
-    trimTrailing: !isAllCards && !isUser,
-  });
-
-  const swipeHandlers = useSwipe({
-    onSwipeLeft: handleNext,
-    onSwipeRight: handlePrev,
-  });
-
   return (
-    <>
-      <CarouselHeader
-        title={title}
-        count={allCards.length}
-        showCount={isUser}
-        showNav={hasOverflow}
-        canPrev={canPrev}
-        canNext={canNext}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onTitleClick={onTitleClick}
-        titleClassName={headerTitleClass}
-      />
-      {/* // - CARDS */}
-      <div
-        className={`my-2 grid ${sizeConfig.gridClass} gap-2 touch-pan-y`}
-        {...swipeHandlers}
-      >
-        {visibleCards.map((card, index) => (
-          <Multi
-            key={`carrousel2${index}${media}`}
-            info={card}
-            mediaMovie={mediaMovie}
-            mediaTv={mediaTv}
-            isUser={isUser}
-            setChangeSeenPending={isSetChange}
-            changeSeenPending={isChange}
-            isPlaylist={isPlaylist}
-            setPopSureDel={setPopSureDel}
-            setIdDelete={setIdDelete}
-            hideSearch={hideSearch}
-            isForum={isForum}
-            basicForum={ForumData}
-            mediasUser={mediasUser}
-            size={size}
-          />
-        ))}
-      </div>
-      {prefetchCards.length > 0 && (
-        <div aria-hidden="true" className="hidden">
-          {prefetchCards.map((card, index) => (
-            <Multi
-              key={`prefetch${index}${media}`}
-              info={card}
-              mediaMovie={mediaMovie}
-              mediaTv={mediaTv}
-              isUser={isUser}
-              setChangeSeenPending={isSetChange}
-              changeSeenPending={isChange}
-              isPlaylist={isPlaylist}
-              setPopSureDel={setPopSureDel}
-              setIdDelete={setIdDelete}
-              hideSearch={hideSearch}
-              isForum={isForum}
-              basicForum={ForumData}
-              mediasUser={mediasUser}
-              size={size}
-            />
-          ))}
-        </div>
-      )}
-      {hasOverflow ? (
-        <CarouselDots
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onSelect={goToPage}
-          keyPrefix={`carousel-${media}`}
+    <CarouselRow
+      title={title}
+      count={info.length}
+      showCount={isUser}
+      onTitleClick={onTitleClick}
+      titleClassName={headerTitleClass}
+      items={info}
+      columnsClassName={columnsClass}
+      trackClassName="my-2"
+      onEndReached={onEndReached}
+      renderItem={(card) => (
+        <Multi
+          info={card}
+          mediaMovie={mediaMovie}
+          mediaTv={mediaTv}
+          isUser={isUser}
+          setChangeSeenPending={isSetChange}
+          changeSeenPending={isChange}
+          isPlaylist={isPlaylist}
+          setPopSureDel={setPopSureDel}
+          setIdDelete={setIdDelete}
+          hideSearch={hideSearch}
+          isForum={isForum}
+          basicForum={ForumData}
+          mediasUser={mediasUser}
+          size={size}
         />
-      ) : null}
-    </>
+      )}
+    />
   );
 };
 

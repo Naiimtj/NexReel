@@ -24,5 +24,9 @@ export default defineConfig({
     host: 'localhost',
     port: 3100,
     open: true,
+    // Mirrors the nginx /v1/ proxy so VITE_URL_DB="/v1/" also works in dev.
+    proxy: {
+      '/v1': 'http://127.0.0.1:8000',
+    },
   },
 });

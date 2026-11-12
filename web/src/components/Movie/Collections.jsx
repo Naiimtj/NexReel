@@ -24,7 +24,6 @@ function Collections({
         isSetChange(false);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idCollection]);
   // -ORDER BY DATE
   // .Filter Repeats
@@ -55,7 +54,6 @@ function Collections({
               isSetChange={isSetChange}
               setPendingSeenMedia={setPendingSeenMedia}
               pendingSeenMedia={pendingSeenMedia}
-              isAllCards
             />
           </div>
         </div>

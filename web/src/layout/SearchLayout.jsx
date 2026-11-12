@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BsSearch } from 'react-icons/bs';
 import { getSearch } from '../../services/TMDB/services-tmdb';
 import SearchResults from '../components/Search/SearchResults';
 import { BaseIcon } from '../components/base';
 
-const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
+const SearchLayout = ({
+  hiden = false,
+  fullWidth = false,
+  initialQuery = '',
+  onSelect,
+}) => {
   const [t] = useTranslation('translation');
   const [moviesList, setMovies] = useState([]);
   const [tvList, setTvs] = useState([]);
@@ -13,6 +17,7 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
   const [searchValue, setSearchValue] = useState('');
   const [searching, setSearching] = useState(false);
   const inputRef = useRef(null);
+  const skipDebounceRef = useRef(false);
 
   const reset = () => {
     setSearchValue('');
@@ -29,6 +34,8 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
 
   useEffect(() => {
     if (!searching) return;
+    const delay = skipDebounceRef.current ? 0 : 1000;
+    skipDebounceRef.current = false;
     const timerId = setTimeout(() => {
       Promise.all([
         getSearch(searchValue, 'person'),
@@ -39,14 +46,23 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
         setMovies(movies);
         setTvs(tvs);
       });
-    }, 1000);
+    }, delay);
     return () => clearTimeout(timerId);
   }, [searchValue, searching]);
 
   useEffect(() => {
-    if (hiden) reset();
-    else inputRef.current?.focus();
-  }, [hiden]);
+    if (hiden) {
+      reset();
+      return;
+    }
+    inputRef.current?.focus();
+    if (initialQuery) {
+      // Opened from the quick search: the query is already typed, search now.
+      skipDebounceRef.current = true;
+      setSearchValue(initialQuery);
+      setSearching(true);
+    }
+  }, [hiden, initialQuery]);
 
   const onChangeInput = (e) => {
     setSearchValue(e.target.value);
@@ -62,9 +78,12 @@ const SearchLayout = ({ hiden = false, fullWidth = false, onSelect }) => {
       >
         <div className="border-2 rounded-xl border-gray-600 flex flex-row p-1 w-full">
           <div className="relative w-full">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400">
-              <BsSearch />
-            </span>
+            <BaseIcon
+              icon="search"
+              size="x-small"
+              className="text-slate-400"
+              wrapperClassName="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2"
+            />
             <input
               ref={inputRef}
               className="placeholder:italic placeholder:text-slate-400 block bg-transparent w-full min-w-0 border border-transparent pl-9 pr-8 shadow-sm focus:outline-none sm:text-sm text-grayNR"

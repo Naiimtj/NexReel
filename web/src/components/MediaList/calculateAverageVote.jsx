@@ -1,5 +1,5 @@
-const calculateAverageVote = (voteTMDB, voteIMDB, voteFILMA, voteIMDBFree) => {
-  const values = [voteTMDB, voteIMDB, voteFILMA, voteIMDBFree].filter(
+const calculateAverageVote = (voteTMDB, voteIMDB, voteFILMA, voteOMDB) => {
+  const values = [voteTMDB, voteIMDB, voteFILMA, voteOMDB].filter(
     (v) => v !== null && v !== undefined,
   );
   if (!values.length) return null;

@@ -17,9 +17,9 @@ import {
   resolvePosterUrl,
   resolveTypeIcon,
   roundedVote,
-  useImdbApiRating,
   useMediaData,
   useMediaUserEntry,
+  useOmdbRating,
 } from './mediaCardHelpers';
 
 export const Multi = ({
@@ -49,7 +49,7 @@ export const Multi = ({
   const mediaType = resolveMediaType(mediaMovie, mediaTv, media_type);
 
   const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
-  const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+  const { value: omdbRating, loading: omdbLoading } = useOmdbRating(
     imdbID,
     userExist,
   );
@@ -75,8 +75,8 @@ export const Multi = ({
   const processInfo = {
     bgPoster: url || NoImage,
     voteAverage:
-      userExist && !imdbRatingLoading
-        ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+      userExist && !omdbLoading
+        ? calculateAverageVote(roundedVote(vote_average), omdbRating)
         : null,
     title: title || name,
     date: resolveDate(release_date, first_air_date, known_for_department),
@@ -151,11 +151,7 @@ export const Multi = ({
   const navigatePath = `/${mediaType}/${id}`;
   const inPlex = isMediaInPlex(mediaType, id, imdbID, plex);
 
-  let titleSizeClass = 'text-sm';
-  if (size === 'small') titleSizeClass = 'text-xs line-clamp-2';
-  else if (isUser) titleSizeClass = 'text-sm line-clamp-3';
-  const titleClampClass =
-    size === 'small' ? 'line-clamp-2' : 'line-clamp-3 h-max-[4.5rem]';
+  const titleSizeClass = size === 'small' ? 'text-xs' : 'text-sm';
 
   return (
     // BACKGROUND
@@ -265,7 +261,10 @@ export const Multi = ({
             <div
               className={`font-semibold ${titleSizeClass} pb-2 cursor-pointer`}
             >
-              <p className={titleClampClass}>{processInfo.title}</p>
+              {/* Always 3 lines on mobile and 2 from md, so cards in a row share one height. */}
+              <p className="line-clamp-3 h-[3lh] md:line-clamp-2 md:h-[2lh]">
+                {processInfo.title}
+              </p>
             </div>
           </div>
         </button>

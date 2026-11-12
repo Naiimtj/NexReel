@@ -109,15 +109,15 @@ const isInMediaUser = mediasUser?.find(
 
 ### Module-Level Caches
 
-`mediaCardHelpers.js` holds three module-level `Map`s that cache TMDB / IMDB responses across card mounts:
+`mediaCardHelpers.js` holds three module-level `Map`s that cache TMDB / OMDb responses across card mounts:
 
 | Map                | Key                       | What it stores                        |
 | ------------------ | ------------------------- | ------------------------------------- |
 | `_detailsCache`    | `mediaType__id__language` | `getMediaDetails` response            |
 | `_externalIdCache` | `mediaType__id__language` | `imdb_id` string from `getExternalId` |
-| `_imdbRatingCache` | `imdbID`                  | IMDB API rating value                 |
+| `_omdbRatingCache` | `imdbID`                  | OMDb IMDb rating (number or `null`)   |
 
-Caches are never cleared — they survive for the lifetime of the browser tab. TMDB/IMDB data is stable enough that this is safe.
+Caches are never cleared — they survive for the lifetime of the browser tab. TMDB/IMDb data is stable enough that this is safe.
 
 ### `useMediaData(mediaType, id, language)`
 
@@ -128,25 +128,19 @@ On dep change: if cache hit → `setState` from cache immediately; if miss → f
 const { dataMedia, imdbID } = useMediaData(mediaType, id, i18next.language);
 ```
 
-### `useImdbApiRating(imdbID, userExist)` — returns `{ value, loading }`
+### `useOmdbRating(imdbID, userExist)` — returns `{ value, loading }`
 
-**Breaking change from old API** (used to return a raw number).
+Fetches the IMDb rating from OMDb (`getOmdbRating`, key `VITE_APIKEY_OMDB`) only for logged-in users. `value` is a number or `null`; `loading` is `true` while the first fetch for that `imdbID` is in flight. Cards gate `voteAverage` on it so the rating does not change mid-render:
 
 ```js
-const { value: imdbApiRating, loading: imdbRatingLoading } = useImdbApiRating(
+const { value: omdbRating, loading: omdbLoading } = useOmdbRating(
   imdbID,
   userExist,
 );
-```
-
-- `loading: true` while the first fetch is in flight; `false` once resolved (or when not applicable).
-- Cache hit: `loading` is immediately `false` and `value` is the cached number.
-- Use `loading` to defer showing `voteAverage` in cards — prevents the rating from visually changing mid-render:
-
-```js
+// ...
 voteAverage:
-  userExist && !imdbRatingLoading
-    ? calculateAverageVote(roundedVote(vote_average), imdbApiRating, null)
+  userExist && !omdbLoading
+    ? calculateAverageVote(roundedVote(vote_average), omdbRating)
     : null,
 ```
 
@@ -154,29 +148,16 @@ voteAverage:
 
 Rounds result to **1 decimal place** (`Math.round(avg * 10) / 10`).
 
-## Carousel Prefetch
+## Carousels (`CarouselRow`)
 
-All carousel components (`Carousel.jsx`, `CarouselCredits.jsx`, `CarouselSeasons.jsx`) pre-render the **next page's cards** in a hidden `<div aria-hidden="true" className="hidden">`. This mounts the components, triggering image loads and cache population before the user navigates.
+All carousels (`Carousel`, `CarouselCredits`, `CarouselSeasons`, `CarouselPersons`) render through `utils/Carousel/CarouselRow.jsx`: a `CarouselHeader` (title, count pill, round prev/next arrows) plus a horizontal scroll-snap track. Trackpad, touch and shift+wheel scroll it natively; the arrows call `scrollBy` with 90% of the view and snapping settles on the next card. `useCarouselScroll` keeps `canPrev`/`canNext` in sync with the scroll position (scroll listener + `ResizeObserver`).
 
-`useCarouselPagination` now exposes `prefetchCards` (the next page's item slice):
-
-```js
-const { visibleCards, prefetchCards, ... } = useCarouselPagination({ items, breakpoints });
-```
-
-Render pattern (same inside all three carousel files):
-
-```jsx
-{prefetchCards.length > 0 && (
-  <div aria-hidden="true" className="hidden">
-    {prefetchCards.map((card, index) => (
-      <Multi key={`prefetch${index}${media}`} info={card} ... />
-    ))}
-  </div>
-)}
-```
-
-**Important**: because cards on page N+1 are pre-mounted with the same index-based keys as page N+1 will use, `useMediaData` populates the cache. When the user navigates, the carousel components re-render with new props and `useMediaData` serves data from cache instantly with no network requests.
+- Layout comes from CSS vars passed per carousel in `columnsClassName`: `--n` (full cards per view, per breakpoint), `--peek` (fraction of the next card left visible) and `--gap`. Avatar carousels (`CarouselCredits`, `CarouselPersons`) use `--peek:0` because `Credits` avatars have fixed sizes.
+- Tailwind only scans `.jsx` files (`tailwind.config.cjs`), so keep these class strings in `.jsx`.
+- Cards mount lazily: the first 12 right away, the rest when an `IntersectionObserver` (root = track, `rootMargin: '0px 100%'`) sees them within one view. This replaces the old hidden next-page prefetch and keeps TMDB/OMDb requests bounded on long user lists.
+- Infinite loading: `onEndReached` (`Carousel` → `CarouselRow`) adds a pulsing, non-snapping placeholder slot at the end of the track and is called when that slot is within one view (re-checked after every `items` update). Pass `undefined` when nothing is left. Pages come from `useTmdbPages(fetchPage)` (`src/hooks/`; memoized fetcher, a new one restarts at page 1, dedupes by `media_type-id`, `isLoading` for first-load spinners), used by `Trending`, `Top`, `Streaming` (Discover: latest releases, so it does not repeat TOP's popular order), `Recommendations` and `Similar`.
+- The track has `overflow-x: auto`, so absolutely positioned popovers inside cards get clipped; render them in a portal like `ShowPlaylistMenu`.
+- The track sits inside a `grid grid-cols-1` wrapper (`minmax(0, 1fr)`): without it the summed card widths became the track's min-content and widened shrink-to-fit parents such as the search results grid.
 
 ### refreshMedias After Mutation
 
@@ -465,35 +446,10 @@ Keep `propTypes` and `default export` as before. No change is needed in the pare
 | -------------- | ---------------------------------------- | ------------------ |
 | FilmAffinity   | `FILMA` image                            | `<ExternalRating>` |
 | IMDB (scraped) | `IMDB` image                             | `<ExternalRating>` |
-| IMDB Free API  | Red inline badge `bg-red-600 text-white` | Raw JSX            |
+| IMDb (OMDb)    | Red inline badge `bg-red-600 text-white` | Raw JSX            |
 | TMDB           | `TMDB` image                             | `<ExternalRating>` |
 
-The red IMDB Free badge is rendered directly (not via `<ExternalRating>` which only accepts image icons):
-
-```jsx
-{
-  processInfo.voteIMDBFree > 0 && (
-    <div>
-      <span className="inline-block bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded leading-none">
-        IMDb
-      </span>
-      <div className="inline-block text-amber-400 text-xs text-left pl-2">
-        {processInfo.voteIMDBFree}
-      </div>
-    </div>
-  );
-}
-```
-
-`processInfo.voteIMDBFree` is derived from `useImdbApiRating` with loading gate:
-
-```js
-const { value: _voteIMDBFree, loading: _imdbFreeLoading } = useImdbApiRating(
-  imdbID,
-  userExist,
-);
-processInfo.voteIMDBFree = _imdbFreeLoading ? null : _voteIMDBFree;
-```
+`processInfo.voteOMDB` comes from `useOmdbRating` (`null` while loading) and is the 4th argument of `calculateAverageVote`.
 
 ## DOM Nesting
 
@@ -523,22 +479,26 @@ When a clickable card uses an outer `<button>` for navigation and also exposes a
 
 Same rule applies to `ShowPlaylistMenu` / `SeenPendingButton` rows in `MultiList`/`Multi`/`MultiSmall`.
 
+## Search (quick + full)
+
+- `layout/QuickSearch.jsx` (navbar, `md+`): movie-only TMDB search (`getSearch(term, 'movie', i18n.language)`), 300 ms debounce, up to 6 rows (thumb, title, year) linking to `/movie/:id`. Enter or the "Full search" footer calls `onOpenFull(term)`.
+- `layout/SearchLayout.jsx` (full search modal opened from `NavBar`): people, movies and TV carousels with a 1 s debounce. `initialQuery` prefills it and skips the debounce. On mobile the navbar search icon opens it directly.
+
 ## Carousel `size` Prop (compact mode)
 
 `Carousel`, `CarouselPersons`, `Multi`, `Credits`, `PlaylistsList` and `ShowPlaylistMenu` accept a `size` prop: `'normal'` (default) or `'small'`.
 
-- `Carousel` / `CarouselPersons` use a `SIZE_CONFIG` table to switch:
-  - `cardsPerPage` per breakpoint (more cards per page in `small`).
-  - Tailwind grid columns (`gridClass`).
+- `Carousel` / `CarouselPersons` use a `COLUMNS_BY_SIZE` table to switch:
+  - Cards per view per breakpoint (`--n` CSS var; more cards in `small`).
   - Header title (`text-xs md:text-base` vs `text-sm md:text-2xl`).
-- They reset `currentPage` to `1` via `useEffect(() => setCurrentPage(1), [info])` so navigating between movies/collections never leaves the user on a now-empty page.
 - They forward `size` to the inner card (`Multi` or `Credits`).
 - `Multi` shrinks the title and the `Seen`/`Pending` icon sizes when `size === 'small'`.
+- `Multi` titles always take exactly 3 lines below `md` and 2 from `md` (`line-clamp-3 h-[3lh] md:line-clamp-2 md:h-[2lh]`), so every card in a row has the same height.
 - `Credits` shrinks poster (`h-16/h-24` vs `h-28/h-40`), placeholder icon, name, and character text.
 - `ShowPlaylistMenu` shrinks the trigger text/icon, the dropdown width, and the per-item padding.
 - `PlaylistsList` shrinks poster (`70x40`), title (`text-sm line-clamp-1`) and inner padding.
 
-Use `size="small"` from compact contexts like `SearchResults`. Default everywhere else; do not introduce new size variants without extending the `SIZE_CONFIG` tables and the `PropTypes.oneOf([...])` lists.
+Use `size="small"` from compact contexts like `SearchResults`. Default everywhere else; do not introduce new size variants without extending the `COLUMNS_BY_SIZE` tables and the `PropTypes.oneOf([...])` lists.
 
 ## ShowPlaylistMenu Toggle Behavior
 

@@ -4,10 +4,7 @@ import {
   getExternalId,
   getMediaDetails,
 } from '../../../services/TMDB/services-tmdb';
-import {
-  getImdbApiRating,
-  getRating,
-} from '../../../services/IMDB/services-imdb';
+import { getOmdbRating, getRating } from '../../../services/IMDB/services-imdb';
 
 const POSTER_BASE = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2';
 
@@ -60,7 +57,7 @@ export const isMediaInPlex = (
 // ─── Module-level caches (cleared on page refresh) ──────────────────────────
 const _detailsCache = new Map();
 const _externalIdCache = new Map();
-const _imdbRatingCache = new Map();
+const _omdbRatingCache = new Map();
 
 export const useMediaData = (mediaType, id, language) => {
   const detailKey = `${mediaType}__${id}__${language}`;
@@ -142,37 +139,41 @@ export const roundedVote = (vote) =>
 export const ratingFromImdb = (block) =>
   block?.audience?.rating > 0 ? Number(block.audience.rating) : null;
 
-export const useImdbApiRating = (imdbID, userExist) => {
+export const useOmdbRating = (imdbID, userExist) => {
   const shouldFetch = userExist && !!imdbID;
 
   const [value, setValue] = useState(() =>
-    shouldFetch && _imdbRatingCache.has(imdbID)
-      ? _imdbRatingCache.get(imdbID)
+    shouldFetch && _omdbRatingCache.has(imdbID)
+      ? _omdbRatingCache.get(imdbID)
       : null,
   );
   const [loading, setLoading] = useState(
-    () => shouldFetch && !_imdbRatingCache.has(imdbID),
+    () => shouldFetch && !_omdbRatingCache.has(imdbID),
   );
 
   useEffect(() => {
     if (!shouldFetch) {
       setValue(null);
       setLoading(false);
-      return;
+      return undefined;
     }
-    if (_imdbRatingCache.has(imdbID)) {
-      setValue(_imdbRatingCache.get(imdbID));
+    if (_omdbRatingCache.has(imdbID)) {
+      setValue(_omdbRatingCache.get(imdbID));
       setLoading(false);
-      return;
+      return undefined;
     }
+    let active = true;
     setLoading(true);
-    getImdbApiRating(imdbID).then((rating) => {
-      const resolved = rating ?? null;
-      _imdbRatingCache.set(imdbID, resolved);
-      setValue(resolved);
+    getOmdbRating(imdbID).then((rating) => {
+      _omdbRatingCache.set(imdbID, rating);
+      if (!active) return;
+      setValue(rating);
       setLoading(false);
     });
-  }, [imdbID, userExist, shouldFetch]);
+    return () => {
+      active = false;
+    };
+  }, [imdbID, shouldFetch]);
 
   return { value, loading };
 };

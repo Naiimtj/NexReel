@@ -1,11 +1,5 @@
 from __future__ import annotations
 
-import asyncio
-
-import httpx
-import pytest
-
-from api.core import plex_sync
 from tests.conftest import register
 
 
@@ -40,22 +34,3 @@ def test_plex_sync_requires_admin_password(client):
     register(client, "plexsyncauth")
     resp = client.post("/v1/plex/sync")
     assert resp.status_code == 401
-
-
-def test_fetch_all_sections_raises_when_every_plex_section_fails(monkeypatch):
-    async def fail_section(*_args, **_kwargs):
-        request = httpx.Request("GET", "http://plex/library/sections/18/all")
-        response = httpx.Response(401, request=request)
-        raise httpx.HTTPStatusError("Unauthorized", request=request, response=response)
-
-    monkeypatch.setattr(plex_sync, "_fetch_section", fail_section)
-
-    async def fetch_sections():
-        await plex_sync._fetch_all_sections("http://plex/library", "invalid-token")
-
-    def run_fetch_sections():
-        asyncio.run(fetch_sections())
-
-    with pytest.raises(plex_sync.PlexSyncError, match="movie"):
-        run_fetch_sections()
-

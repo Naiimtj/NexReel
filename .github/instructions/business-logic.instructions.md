@@ -36,7 +36,7 @@ Only admin-level users should access destructive or operational flows such as ba
 ## Plex Sync Rules
 
 - `POST /v1/plex/sync` is admin-only and calls `api/core/plex_sync.py`.
-- Sync does a full refresh: TRUNCATE `plex_movie` and `plex_tv`, then bulk INSERT all items fetched from Plex sections (movie=18, tv=10, anime=11, animation=12, documental=15).
+- Sync does a full refresh: TRUNCATE `plex_movie` and `plex_tv`, then bulk INSERT all items fetched from Plex sections (movie=1, tv=2, anime=8, animation=6, documental=4).
 - After inserting rows, the single `plex_data` summary row is upserted with updated `movie_count`, `tv_count`, and `synced_at`.
 - APScheduler runs the same sync daily at 04:00 (Europe/Madrid) via `main.py` lifespan.
 - `GET /v1/plex/movies` and `GET /v1/plex/tv` query `plex_movie`/`plex_tv` tables directly; both support optional `?q=` search parameter.

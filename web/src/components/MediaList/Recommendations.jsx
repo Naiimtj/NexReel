@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Carousel from '../../utils/Carousel/Carousel';
 import { getRecommendations } from '../../../services/TMDB/services-tmdb';
+import useTmdbPages from '../../hooks/useTmdbPages';
 
 const Recommendations = ({
   title = '',
@@ -10,28 +11,30 @@ const Recommendations = ({
   pendingSeenMedia = false,
   setPendingSeenMedia = () => {},
 }) => {
-  const [list, setList] = useState({});
+  const fetchPage = useCallback(
+    (page) => getRecommendations(media, id, lang, page),
+    [media, id, lang],
+  );
+  const { items, hasMore, loadMore } = useTmdbPages(fetchPage);
   const [isChange, isSetChange] = useState(false);
 
   useEffect(() => {
-    getRecommendations(media, id, lang).then((data) => {
-      setList(data);
-      isSetChange(false);
-    });
+    isSetChange(false);
   }, [lang, id, media]);
 
-  if (!list.results?.length) return null;
+  if (!items.length) return null;
 
   return (
     <div className="text-gray-200 text-lg pt-4 px-4 md:px-6">
       <Carousel
-        title={list?.length !== 0 ? title : null}
-        info={list.results}
+        title={title}
+        info={items}
         media={media}
         isSetChange={isSetChange}
         isChange={isChange}
         setPendingSeenMedia={setPendingSeenMedia}
         pendingSeenMedia={pendingSeenMedia}
+        onEndReached={hasMore ? loadMore : undefined}
       />
     </div>
   );

@@ -520,5 +520,9 @@
   "Star rating": "Valoración con estrellas",
   "Star half": "{{value}} estrellas",
   "Star full value": "{{value}} estrellas",
-  "Remove rating": "Eliminar valoración"
+  "Remove rating": "Eliminar valoración",
+  "Search": "Buscar",
+  "Search movies...": "Buscar películas...",
+  "Searching...": "Buscando...",
+  "Full search": "Búsqueda completa"
 }
