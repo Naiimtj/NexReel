@@ -11,7 +11,11 @@ const MAX_RESULTS = 6;
  * Navbar movie-only search with instant suggestions. Enter or the footer
  * opens the full search (people, movies and TV) with the same query.
  */
-const QuickSearch = ({ onOpenFull = () => {} }) => {
+const QuickSearch = ({
+  onOpenFull = () => {},
+  onSelect,
+  autoFocus = false,
+}) => {
   const [t, i18next] = useTranslation('translation');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
@@ -63,6 +67,7 @@ const QuickSearch = ({ onOpenFull = () => {} }) => {
       />
       <input
         type="text"
+        autoFocus={autoFocus}
         value={query}
         onChange={(event) => {
           setQuery(event.target.value);
@@ -93,7 +98,10 @@ const QuickSearch = ({ onOpenFull = () => {} }) => {
                 <li key={movie.id}>
                   <Link
                     to={`/movie/${movie.id}`}
-                    onClick={close}
+                    onClick={() => {
+                      close();
+                      onSelect?.();
+                    }}
                     className="flex items-center gap-3 px-3 py-1.5 transition hover:bg-white/5"
                   >
                     {movie.poster_path ? (

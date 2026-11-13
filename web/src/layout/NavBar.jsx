@@ -24,9 +24,11 @@ const NavBar = () => {
   const [dataUser, setDataUser] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const openFullSearch = (query = '') => {
     setSearchQuery(query);
+    setMobileSearchOpen(false);
     setSearchModalOpen(true);
   };
   const mobileMenuRef = useRef(null);
@@ -142,7 +144,7 @@ const NavBar = () => {
           </div>
           <BaseIcon
             icon="search"
-            onClick={() => openFullSearch()}
+            onClick={() => setMobileSearchOpen((open) => !open)}
             tooltip={t('Search')}
             className="text-purpleNR md:hover:text-gray-400"
             wrapperClassName="p-2 md:hidden"
@@ -330,6 +332,15 @@ const NavBar = () => {
             )}
           </div>
         </nav>
+        {mobileSearchOpen && (
+          <div className="absolute inset-x-0 top-full z-50 bg-[#20283E] px-2 py-2 md:hidden">
+            <QuickSearch
+              autoFocus
+              onOpenFull={openFullSearch}
+              onSelect={() => setMobileSearchOpen(false)}
+            />
+          </div>
+        )}
       </div>
       <BaseModal
         visible={showMobileNotifications}
